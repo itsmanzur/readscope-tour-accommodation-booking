@@ -86,7 +86,7 @@ class SeoService
 
         echo "\n<!-- Tourivo Schema.org JSON-LD Structured Data -->\n";
         echo '<script type="application/ld+json">' . "\n";
-        echo wp_json_encode($schema, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON-LD; the JSON_HEX_* flags keep it safe inside a script tag.
+        echo wp_json_encode($schema, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_PRETTY_PRINT) . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON-LD; the JSON_HEX_* flags keep it safe inside a script tag.
         echo "</script>\n<!-- /Tourivo Schema -->\n\n";
     }
 

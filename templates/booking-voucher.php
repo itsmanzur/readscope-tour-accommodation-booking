@@ -42,8 +42,8 @@ $tourivoMethod   = ucwords(str_replace('_', ' ', (string) $tourivoBooking->payme
 <body>
 
     <div class="action-bar">
-        <button class="btn btn-close" onclick="window.close();">← <?php esc_html_e('Close', 'tourivo'); ?></button>
-        <button class="btn btn-print" onclick="window.print();">🖨️ <?php esc_html_e('Print Booking Voucher', 'tourivo'); ?></button>
+        <button class="btn btn-close" data-tourivo-action="close">← <?php esc_html_e('Close', 'tourivo'); ?></button>
+        <button class="btn btn-print" data-tourivo-action="print">🖨️ <?php esc_html_e('Print Booking Voucher', 'tourivo'); ?></button>
     </div>
 
     <div class="voucher-container">
@@ -167,5 +167,6 @@ $tourivoMethod   = ucwords(str_replace('_', ' ', (string) $tourivoBooking->payme
         </div>
     </div>
 
+<?php wp_print_scripts(\Tourivo\Support\PortalAssets::handle('voucher')); ?>
 </body>
 </html>

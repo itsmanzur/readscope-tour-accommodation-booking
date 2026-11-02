@@ -1176,6 +1176,9 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     if (!function_exists('wp_add_inline_script')) {
         function wp_add_inline_script(string $handle, string $data, string $position = 'after'): bool { $GLOBALS['tourivo_test_assets']['inline'][$handle][] = $data; return true; }
     }
+    if (!function_exists('wp_print_scripts')) {
+        function wp_print_scripts(mixed $handles = false): array { return []; }
+    }
     if (!function_exists('wp_print_styles')) {
         function wp_print_styles(mixed $handles = false): array { return []; }
     }

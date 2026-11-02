@@ -22,6 +22,7 @@ require_once __DIR__ . '/Integration/InventoryHoldTest.php';
 require_once __DIR__ . '/Integration/BookingHygieneTest.php';
 require_once __DIR__ . '/Integration/MediumFixesTest.php';
 require_once __DIR__ . '/Integration/LowFixesTest.php';
+require_once __DIR__ . '/Integration/HtmlAllowListTest.php';
 require_once __DIR__ . '/Integration/BookingEngineTest.php';
 require_once __DIR__ . '/Integration/BookingStatusTransitionTest.php';
 require_once __DIR__ . '/Integration/ConcurrencyOverbookingTest.php';
@@ -57,6 +58,7 @@ $testClasses = [
     \Tourivo\Tests\Integration\BookingHygieneTest::class,
     \Tourivo\Tests\Integration\MediumFixesTest::class,
     \Tourivo\Tests\Integration\LowFixesTest::class,
+    \Tourivo\Tests\Integration\HtmlAllowListTest::class,
     \Tourivo\Tests\Integration\BookingEngineTest::class,
     \Tourivo\Tests\Integration\BookingStatusTransitionTest::class,
     \Tourivo\Tests\Integration\ConcurrencyOverbookingTest::class,

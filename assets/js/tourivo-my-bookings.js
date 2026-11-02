@@ -193,3 +193,16 @@ if (document.readyState === 'loading') {
 } else {
     window.TourivoMyBookings.init();
 }
+
+document.addEventListener('click', function(e) {
+    var trigger = e.target.closest('[data-tourivo-action]');
+    if (!trigger) {
+        return;
+    }
+    var action = trigger.getAttribute('data-tourivo-action');
+    if (action === 'close-details') {
+        window.TourivoMyBookings.closeDetailsModal();
+    } else if (action === 'close-cancel') {
+        window.TourivoMyBookings.closeCancelModal();
+    }
+});

@@ -122,3 +122,17 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('[data-wizard-step]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            TourivoWizard.goToStep(parseInt(btn.getAttribute('data-wizard-step'), 10));
+        });
+    });
+    ['wizardFormStep1', 'wizardFormStep2'].forEach(function(id) {
+        var form = document.getElementById(id);
+        if (form) {
+            form.addEventListener('submit', function(e) { e.preventDefault(); });
+        }
+    });
+});

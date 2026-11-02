@@ -104,6 +104,8 @@ final class Html
         $tags['button']    = $global + ['type' => true, 'name' => true, 'value' => true, 'disabled' => true];
         $tags['textarea']  = $global + ['name' => true, 'rows' => true, 'cols' => true, 'placeholder' => true, 'required' => true, 'disabled' => true, 'maxlength' => true];
         $tags['datalist']  = $global;
+        $tags['fieldset']  = $global + ['disabled' => true, 'name' => true, 'form' => true];
+        $tags['legend']    = $global;
 
         return $tags;
     }

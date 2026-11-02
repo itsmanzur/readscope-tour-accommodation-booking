@@ -843,6 +843,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         filterWrappers.forEach(wrap => {
             const form = wrap.querySelector('.tourivo-filter-form');
+            if (form) {
+                form.addEventListener('submit', e => e.preventDefault());
+            }
             const rangeInput = wrap.querySelector('.tourivo-filter-range');
             const priceIndicator = wrap.querySelector('.price-val-indicator');
             const resultsGrid = wrap.querySelector('.tourivo-live-results');

@@ -68,7 +68,7 @@ class FilterSearchShortcode
              data-count="<?php echo esc_attr((string) $count); ?>">
 
             <!-- Filter Controls Bar -->
-            <form class="tourivo-filter-form" onsubmit="return false;">
+            <form class="tourivo-filter-form">
                 <div class="tourivo-filter-grid">
                     <!-- Keyword Search -->
                     <div class="tourivo-filter-col filter-keyword">

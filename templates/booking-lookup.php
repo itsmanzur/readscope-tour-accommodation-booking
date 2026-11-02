@@ -42,7 +42,7 @@ $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('t
             <p class="tourivo-lookup-desc"><?php echo esc_html($tourivoDesc); ?></p>
         </div>
 
-        <form class="tourivo-lookup-form" id="tourivoLookupForm" onsubmit="return false;">
+        <form class="tourivo-lookup-form" id="tourivoLookupForm">
             <input type="hidden" name="nonce" id="tourivo_lookup_nonce" value="<?php echo esc_attr($tourivoLookupToken); ?>">
             <!-- Honeypot anti-spam -->
             <input type="text" name="tourivo_hp_check" id="tourivo_hp_check" style="display:none;" tabindex="-1" autocomplete="off">

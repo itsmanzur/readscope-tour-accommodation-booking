@@ -28,7 +28,7 @@ final class PortalAssets
         'thank-you'    => ['style' => 'css/tourivo-thank-you.css', 'script' => 'js/tourivo-thank-you.js', 'global' => 'tourivoThankYouConfig'],
         'my-bookings'  => ['style' => 'css/tourivo-my-bookings.css', 'script' => 'js/tourivo-my-bookings.js', 'global' => 'tourivoMyBookingsConfig'],
         'lookup'       => ['style' => 'css/tourivo-booking-lookup.css', 'script' => 'js/tourivo-booking-lookup.js', 'global' => 'tourivoLookupConfig'],
-        'voucher'      => ['style' => 'css/tourivo-voucher.css'],
+        'voucher'      => ['style' => 'css/tourivo-voucher.css', 'script' => 'js/tourivo-voucher.js'],
         'setup-wizard' => ['style' => 'css/tourivo-setup-wizard.css', 'script' => 'js/tourivo-setup-wizard.js', 'global' => 'tourivoWizardConfig'],
     ];
 

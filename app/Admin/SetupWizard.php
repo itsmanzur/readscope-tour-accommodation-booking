@@ -101,7 +101,7 @@ class SetupWizard
                         <p><?php esc_html_e('Configure your business name and default pricing currency.', 'tourivo'); ?></p>
                     </div>
 
-                    <form id="wizardFormStep1" onsubmit="return false;">
+                    <form id="wizardFormStep1">
                         <input type="hidden" name="nonce" value="<?php echo esc_attr($nonce); ?>">
 
                         <div class="wizard-form-group">
@@ -159,7 +159,7 @@ class SetupWizard
                         <p><?php esc_html_e('Select the default pages you would like Tourivo to automatically generate on your website.', 'tourivo'); ?></p>
                     </div>
 
-                    <form id="wizardFormStep2" onsubmit="return false;">
+                    <form id="wizardFormStep2">
                         <div class="wizard-checklist">
                             <label class="wizard-check-item">
                                 <input type="checkbox" name="pages[]" value="tours" checked>
@@ -227,7 +227,7 @@ class SetupWizard
                         </div>
 
                         <div class="wizard-footer">
-                            <button type="button" class="wizard-btn wizard-btn-secondary" onclick="TourivoWizard.goToStep(1);">← <?php esc_html_e('Back', 'tourivo'); ?></button>
+                            <button type="button" class="wizard-btn wizard-btn-secondary" data-wizard-step="1">← <?php esc_html_e('Back', 'tourivo'); ?></button>
                             <button type="button" class="wizard-btn wizard-btn-primary" id="btnCreatePages">
                                 <?php esc_html_e('Generate Pages & Next →', 'tourivo'); ?>
                             </button>
@@ -259,7 +259,7 @@ class SetupWizard
                     </div>
 
                     <div class="wizard-footer">
-                        <button type="button" class="wizard-btn wizard-btn-secondary" onclick="TourivoWizard.goToStep(4);"><?php esc_html_e('Skip Demo Import', 'tourivo'); ?></button>
+                        <button type="button" class="wizard-btn wizard-btn-secondary" data-wizard-step="4"><?php esc_html_e('Skip Demo Import', 'tourivo'); ?></button>
                         <button type="button" class="wizard-btn wizard-btn-success" id="btnImportDemo">
                             <?php esc_html_e('Import Demo Data Now', 'tourivo'); ?>
                         </button>

@@ -292,13 +292,13 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
         <div class="tourivo-modal-box">
             <div class="tourivo-modal-header">
                 <h3 class="tourivo-modal-title"><?php esc_html_e('Reservation Details', 'tourivo'); ?></h3>
-                <button type="button" class="tourivo-modal-close" onclick="TourivoMyBookings.closeDetailsModal();" aria-label="<?php esc_attr_e('Close', 'tourivo'); ?>">×</button>
+                <button type="button" class="tourivo-modal-close" data-tourivo-action="close-details" aria-label="<?php esc_attr_e('Close', 'tourivo'); ?>">×</button>
             </div>
             <div class="tourivo-modal-body" id="tourivoDetailsBody">
                 <div class="tourivo-modal-loader"><?php esc_html_e('Loading details...', 'tourivo'); ?></div>
             </div>
             <div class="tourivo-modal-footer">
-                <button type="button" class="tourivo-btn-account tourivo-btn-outline" onclick="TourivoMyBookings.closeDetailsModal();">
+                <button type="button" class="tourivo-btn-account tourivo-btn-outline" data-tourivo-action="close-details">
                     <?php esc_html_e('Close', 'tourivo'); ?>
                 </button>
             </div>
@@ -310,7 +310,7 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
         <div class="tourivo-modal-box">
             <div class="tourivo-modal-header">
                 <h3 class="tourivo-modal-title"><?php esc_html_e('Confirm Cancellation', 'tourivo'); ?></h3>
-                <button type="button" class="tourivo-modal-close" onclick="TourivoMyBookings.closeCancelModal();" aria-label="<?php esc_attr_e('Close', 'tourivo'); ?>">×</button>
+                <button type="button" class="tourivo-modal-close" data-tourivo-action="close-cancel" aria-label="<?php esc_attr_e('Close', 'tourivo'); ?>">×</button>
             </div>
             <div class="tourivo-modal-body">
                 <p style="margin-top:0; color:#475569;">
@@ -325,7 +325,7 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
                 <div id="trvCancelFeedback" style="display:none; padding:10px; border-radius:6px; font-size: var(--trv-text-sm); margin-bottom:12px;"></div>
             </div>
             <div class="tourivo-modal-footer">
-                <button type="button" class="tourivo-btn-account tourivo-btn-outline" onclick="TourivoMyBookings.closeCancelModal();">
+                <button type="button" class="tourivo-btn-account tourivo-btn-outline" data-tourivo-action="close-cancel">
                     <?php esc_html_e('Nevermind, Keep Booking', 'tourivo'); ?>
                 </button>
                 <button type="button" class="tourivo-btn-account tourivo-btn-danger" id="btnConfirmCancel">
