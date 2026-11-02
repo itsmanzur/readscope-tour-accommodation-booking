@@ -147,7 +147,7 @@ for ($run = 1; $run <= $runs; $run++) {
         $date
     ));
 
-    $runDir = (getenv('TRV_TMP_DIR') ?: sys_get_temp_dir()) . '/trv_ug_' . bin2hex(random_bytes(6));
+    $runDir = (getenv('TRV_TMP_DIR') ?: sys_get_temp_dir()) . '/tourivo_ug_' . bin2hex(random_bytes(6));
     mkdir($runDir);
 
     // book_loop: default capacity 6. shrink_loop: random capacities 0..8.

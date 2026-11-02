@@ -167,7 +167,7 @@ class AdminServiceProvider extends ServiceProvider
             'tourivo',
             [$this, 'renderDashboardPage'],
             'dashicons-palmtree',
-            25
+            85.5
         );
 
         add_submenu_page(
@@ -242,6 +242,12 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function enqueueAdminAssets(string $hook): void
     {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only screen check.
+        $page = isset($_GET['page']) ? sanitize_key(wp_unslash((string) $_GET['page'])) : '';
+        if ('tourivo-setup-wizard' === $page) {
+            SetupWizard::enqueueAssets();
+        }
+
         $isTourivoScreen = str_contains($hook, 'tourivo') || in_array($hook, ['index.php', 'plugins.php', 'edit.php'], true);
         if (!$isTourivoScreen) {
             return;
@@ -466,7 +472,7 @@ class AdminServiceProvider extends ServiceProvider
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $expiresAt = isset($_GET['exp']) ? (int) $_GET['exp'] : 0;
 
-        if (!\Tourivo\Support\RateLimiter::hit('trv_verify_' . md5(\Tourivo\Support\ClientIp::get()), 20, 600)) {
+        if (!\Tourivo\Support\RateLimiter::hit('tourivo_verify_' . md5(\Tourivo\Support\ClientIp::get()), 20, 600)) {
             wp_die(esc_html__('Too many attempts. Please try again later.', 'tourivo'), '', ['response' => 429]);
         }
 
@@ -677,8 +683,23 @@ class AdminServiceProvider extends ServiceProvider
     {
         check_ajax_referer('tourivo_frontend_nonce', 'nonce');
 
+        // Only the inquiry form's own fields are read, each one sanitized for its type. The nonce was checked above.
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Every key is sanitized by RequestInput::pick().
+        $data = \Tourivo\Support\RequestInput::pick($_POST, [
+            'item_id'        => 'int',
+            'item_type'      => 'key',
+            'customer_name'  => 'text',
+            'customer_email' => 'email',
+            'customer_phone' => 'text',
+            'travel_date'    => 'text',
+            'guests'         => 'int',
+            'message'        => 'textarea',
+            'consent'        => 'bool',
+            'tourivo_inq_hp' => 'text',
+        ]);
+
         $inquiryService = Container::getInstance()->get(InquiryService::class);
-        $res = $inquiryService->createInquiry($_POST);
+        $res = $inquiryService->createInquiry($data);
 
         if ($res['success']) {
             wp_send_json_success($res);
@@ -968,8 +989,8 @@ class AdminServiceProvider extends ServiceProvider
         header('Cache-Control: no-cache, no-store, must-revalidate');
         header('Pragma: no-cache');
         header('Expires: 0');
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo $ics;
+        // iCalendar file download (text/calendar), not HTML; values are escaped while the feed is built.
+        echo $ics; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         exit;
     }
 

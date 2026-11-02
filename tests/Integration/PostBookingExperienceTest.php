@@ -369,19 +369,27 @@ class PostBookingExperienceTest extends TestCase
         $_GET['code']  = $bookingCode;
         $_GET['token'] = $validToken;
 
+        $GLOBALS['tourivo_test_assets'] = ['registered' => [], 'enqueued' => [], 'inline' => []];
+
         $html = ThankYouShortcode::render();
 
-        $this->assertStringContainsString('dataLayer.push', $html, 'dataLayer.push script must be rendered when enable_datalayer is true.');
-        $this->assertStringContainsString('tourivo_booking', $html, 'dataLayer event name must be tourivo_booking.');
-        $this->assertStringContainsString('sessionStorage', $html, 'Must use sessionStorage guard.');
-        $this->assertStringContainsString($bookingCode, $html, 'Must include booking_id / code in dataLayer.');
+        $this->assertStringNotContainsString('<script', $html, 'The page must not print inline scripts.');
+        $this->assertTrue(wp_script_is('tourivo-thank-you'), 'The thank-you script must be enqueued.');
 
-        // Verify NO PII is included in the script tag
-        preg_match('/<script>(.*?)<\/script>/s', $html, $scriptMatch);
-        $scriptContent = $scriptMatch[1] ?? '';
-        $this->assertNotEmpty($scriptContent, 'Must render script block.');
-        $this->assertStringNotContainsString('gtm@example.com', $scriptContent, 'dataLayer snippet must not contain email.');
-        $this->assertStringNotContainsString('+8801711111111', $scriptContent, 'dataLayer snippet must not contain phone.');
-        $this->assertStringNotContainsString('Tag Manager User', $scriptContent, 'dataLayer snippet must not contain customer name.');
+        // The booking data reaches the script as one JSON object.
+        $inline = implode("\n", $GLOBALS['tourivo_test_assets']['inline']['tourivo-thank-you'] ?? []);
+        $this->assertStringContainsString('tourivoThankYouConfig', $inline);
+        $this->assertStringContainsString($bookingCode, $inline, 'Must include booking_id / code in dataLayer data.');
+
+        // The tracking script itself pushes the event once per session.
+        $script = (string) file_get_contents(TOURIVO_PLUGIN_DIR . 'assets/js/tourivo-thank-you.js');
+        $this->assertStringContainsString('dataLayer.push', $script, 'dataLayer.push must be in the thank-you script.');
+        $this->assertStringContainsString('tourivo_booking', $script, 'dataLayer event name must be tourivo_booking.');
+        $this->assertStringContainsString('sessionStorage', $script, 'Must use sessionStorage guard.');
+
+        // Verify NO PII is handed to the page.
+        $this->assertStringNotContainsString('gtm@example.com', $inline, 'dataLayer data must not contain email.');
+        $this->assertStringNotContainsString('+8801711111111', $inline, 'dataLayer data must not contain phone.');
+        $this->assertStringNotContainsString('Tag Manager User', $inline, 'dataLayer data must not contain customer name.');
     }
 }

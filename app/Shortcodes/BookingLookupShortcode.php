@@ -123,13 +123,13 @@ class BookingLookupShortcode
     public static function handleLookupAjax(): void
     {
         // Check Honeypot spam field
-        if (!empty($_POST['trv_hp_check'])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
+        if (!empty($_POST['tourivo_hp_check'])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
             wp_send_json_error(['message' => __('Submission blocked.', 'tourivo')], 400);
         }
 
         $ip = ClientIp::get();
         // Rate limiting: max 10 lookup attempts per 5 minutes per IP
-        if (!RateLimiter::hit('trv_lookup_' . md5($ip), 10, 300)) {
+        if (!RateLimiter::hit('tourivo_lookup_' . md5($ip), 10, 300)) {
             wp_send_json_error([
                 'message' => __('Too many lookup attempts. Please wait a few minutes before trying again.', 'tourivo'),
             ], 429);
@@ -183,7 +183,7 @@ class BookingLookupShortcode
      */
     public static function handleCancellationAjax(): void
     {
-        if (!empty($_POST['trv_hp_check'])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
+        if (!empty($_POST['tourivo_hp_check'])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
             wp_send_json_error(['message' => __('Submission blocked.', 'tourivo')], 400);
             return;
         }
@@ -219,7 +219,7 @@ class BookingLookupShortcode
         $ip = ClientIp::get();
 
         // Rate limiting: max 10 attempts per 5 minutes per IP
-        if (!RateLimiter::hit('trv_cancel_req_' . md5($ip), 10, 300)) {
+        if (!RateLimiter::hit('tourivo_cancel_req_' . md5($ip), 10, 300)) {
             return [
                 'success' => false,
                 'code'    => 429,

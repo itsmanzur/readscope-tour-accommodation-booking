@@ -559,10 +559,12 @@ class ReportingService
         check_admin_referer('tourivo_reports_action', 'tourivo_reports_nonce');
 
         // phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended
-        $req       = !empty($_POST) ? $_POST : $_GET;
-        $period    = isset($req['period']) ? sanitize_text_field(wp_unslash($req['period'])) : 'this_month';
-        $startDate = isset($req['start_date']) ? sanitize_text_field(wp_unslash($req['start_date'])) : null;
-        $endDate   = isset($req['end_date']) ? sanitize_text_field(wp_unslash($req['end_date'])) : null;
+        // Only the filter fields are read, each one sanitized. The nonce was checked above.
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Every key is sanitized by RequestInput::pick().
+        $req       = \Tourivo\Support\RequestInput::pick(!empty($_POST) ? $_POST : $_GET, ['period' => 'text', 'start_date' => 'text', 'end_date' => 'text']);
+        $period    = $req['period'] ?? 'this_month';
+        $startDate = $req['start_date'] ?? null;
+        $endDate   = $req['end_date'] ?? null;
         // phpcs:enable WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended
 
         $range    = $this->resolveDateRange($period, $startDate, $endDate);

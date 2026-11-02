@@ -105,7 +105,6 @@ class TourGridWidget extends \Elementor\Widget_Base
             'destination' => isset($settings['destination']) ? sanitize_text_field($settings['destination']) : '',
         ]);
 
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo $content;
+        \Tourivo\Support\Html::print($content);
     }
 }

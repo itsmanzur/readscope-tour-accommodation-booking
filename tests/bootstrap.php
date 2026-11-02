@@ -1153,6 +1153,32 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     if (!function_exists('wp_slash')) {
         function wp_slash(mixed $val): mixed { return is_string($val) ? addslashes($val) : $val; }
     }
+    // Asset registry: records what the plugin registers, enqueues and attaches as inline data.
+    $GLOBALS['tourivo_test_assets'] = ['registered' => [], 'enqueued' => [], 'inline' => []];
+    if (!function_exists('wp_register_style')) {
+        function wp_register_style(string $handle, string $src = '', array $deps = [], mixed $ver = false): bool { $GLOBALS['tourivo_test_assets']['registered']['style:' . $handle] = $src; return true; }
+    }
+    if (!function_exists('wp_register_script')) {
+        function wp_register_script(string $handle, string $src = '', array $deps = [], mixed $ver = false, mixed $args = []): bool { $GLOBALS['tourivo_test_assets']['registered']['script:' . $handle] = $src; return true; }
+    }
+    if (!function_exists('wp_enqueue_style')) {
+        function wp_enqueue_style(string $handle, string $src = '', array $deps = [], mixed $ver = false): void { $GLOBALS['tourivo_test_assets']['enqueued']['style:' . $handle] = true; }
+    }
+    if (!function_exists('wp_enqueue_script')) {
+        function wp_enqueue_script(string $handle, string $src = '', array $deps = [], mixed $ver = false, mixed $args = []): void { $GLOBALS['tourivo_test_assets']['enqueued']['script:' . $handle] = true; }
+    }
+    if (!function_exists('wp_style_is')) {
+        function wp_style_is(string $handle, string $status = 'enqueued'): bool { return isset($GLOBALS['tourivo_test_assets'][$status]['style:' . $handle]); }
+    }
+    if (!function_exists('wp_script_is')) {
+        function wp_script_is(string $handle, string $status = 'enqueued'): bool { return isset($GLOBALS['tourivo_test_assets'][$status]['script:' . $handle]); }
+    }
+    if (!function_exists('wp_add_inline_script')) {
+        function wp_add_inline_script(string $handle, string $data, string $position = 'after'): bool { $GLOBALS['tourivo_test_assets']['inline'][$handle][] = $data; return true; }
+    }
+    if (!function_exists('wp_print_styles')) {
+        function wp_print_styles(mixed $handles = false): array { return []; }
+    }
     if (!function_exists('wp_json_encode')) {
         function wp_json_encode(mixed $data, int $options = 0, int $depth = 512): string { return json_encode($data, $options, $depth) ?: ''; }
     }

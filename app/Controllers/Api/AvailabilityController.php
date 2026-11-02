@@ -147,7 +147,7 @@ class AvailabilityController extends Controller
     {
         // Rate Limiting (Max 10 holds per 10 minutes per IP)
         $ip = ClientIp::get();
-        if (!RateLimiter::hit('trv_rl_hold_' . md5($ip), 10, 600)) {
+        if (!RateLimiter::hit('tourivo_rl_hold_' . md5($ip), 10, 600)) {
             return new WP_Error(
                 'too_many_holds',
                 __('Too many hold requests initiated. Please complete your existing reservation.', 'tourivo'),
@@ -157,7 +157,7 @@ class AvailabilityController extends Controller
 
         // Cap concurrently active holds per client so one visitor cannot lock the whole calendar.
         $ownerKey  = md5($ip);
-        $activeKey = 'trv_hold_active_' . $ownerKey;
+        $activeKey = 'tourivo_hold_active_' . $ownerKey;
         $stored    = get_transient($activeKey);
         $active    = array_values(array_filter(
             is_array($stored) ? $stored : [],

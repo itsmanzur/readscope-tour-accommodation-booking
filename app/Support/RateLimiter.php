@@ -26,7 +26,7 @@ class RateLimiter
     /**
      * Register one attempt against $key and report whether it is still within the limit.
      *
-     * @param string $key    Unique bucket key (e.g. 'trv_rl_booking_' . md5($ip)).
+     * @param string $key    Unique bucket key (e.g. 'tourivo_rl_booking_' . md5($ip)).
      * @param int    $limit  Maximum attempts allowed per window.
      * @param int    $window Window length in seconds.
      * @return bool True when the attempt is allowed, false when the limit is exhausted.

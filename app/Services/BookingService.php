@@ -146,7 +146,7 @@ class BookingService
         // Per-address throttle: stops one inbox being flooded with booking mail from rotating IPs.
         if (!$trusted) {
             $emailLimit = max(1, (int) apply_filters('tourivo/booking/email_rate_limit', 5));
-            if (!RateLimiter::hit('trv_rl_email_' . md5(strtolower($customerEmail)), $emailLimit, 3600)) {
+            if (!RateLimiter::hit('tourivo_rl_email_' . md5(strtolower($customerEmail)), $emailLimit, 3600)) {
                 return ['success' => false, 'message' => __('Too many booking requests were made for this email address. Please try again later.', 'tourivo')];
             }
         }

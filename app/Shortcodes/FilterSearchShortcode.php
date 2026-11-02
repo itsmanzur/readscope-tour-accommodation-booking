@@ -166,12 +166,11 @@ class FilterSearchShortcode
                 <div class="tourivo-grid tourivo-live-results" style="--trv-grid-cols: <?php echo esc_attr((string)$cols); ?>;">
                     <!-- Pre-rendered Initial Posts -->
                     <?php
-                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                    echo self::queryAndRender([
+                    \Tourivo\Support\Html::print(self::queryAndRender([
                         'type'     => sanitize_key($type),
                         'columns'  => absint($cols),
                         'count'    => absint($count),
-                    ]);
+                    ]));
                     ?>
                 </div>
             </div>

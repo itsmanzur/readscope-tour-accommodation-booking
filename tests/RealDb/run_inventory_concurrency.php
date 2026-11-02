@@ -76,7 +76,7 @@ function resetTable(wpdb $db, \Tourivo\Database\Migrations\CreateInventoriesTabl
  */
 function fire(array $workers, int $itemId, string $date, int $defaultCapacity, array $flags, string $dbName, string $prefix, string $host, int $port, string $user, string $pass, wpdb $db): array
 {
-    $runDir = (getenv('TRV_TMP_DIR') ?: sys_get_temp_dir()) . '/trv_inv_' . bin2hex(random_bytes(6));
+    $runDir = (getenv('TRV_TMP_DIR') ?: sys_get_temp_dir()) . '/tourivo_inv_' . bin2hex(random_bytes(6));
     mkdir($runDir);
 
     $env = array_merge(getenv(), [

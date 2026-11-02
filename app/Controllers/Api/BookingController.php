@@ -62,7 +62,7 @@ class BookingController extends Controller
 
         // 2. IP-based Rate Limiting (5 requests per 10 minutes)
         $ip = ClientIp::get();
-        if (!RateLimiter::hit('trv_rl_booking_' . md5($ip), 5, 600)) {
+        if (!RateLimiter::hit('tourivo_rl_booking_' . md5($ip), 5, 600)) {
             return new WP_Error(
                 'too_many_requests',
                 __('Too many booking requests submitted. Please wait a few minutes before trying again.', 'tourivo'),

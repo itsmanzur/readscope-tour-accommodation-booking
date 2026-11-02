@@ -3088,8 +3088,8 @@ msgid "Thank you for booking with us! We have successfully received your reserva
 msgstr "আমাদের সাথে বুকিং করার জন্য ধন্যবাদ! আপনার বুকিং বিবরণ সফলভাবে গৃহীত হয়েছে:"
 
 #: templates/booking-voucher.php:396
-msgid "Thank you for traveling with us! Powered by Tourivo Travel Engine."
-msgstr "আমাদের সাথে ভ্রমণ করার জন্য ধন্যবাদ! Powered by Tourivo Travel Engine."
+msgid "Thank you for traveling with us!"
+msgstr "আমাদের সাথে ভ্রমণ করার জন্য ধন্যবাদ!"
 
 #: app/Services/InquiryService.php:158
 msgid "Thank you! Your inquiry has been sent to our travel specialists. We will get back to you shortly."

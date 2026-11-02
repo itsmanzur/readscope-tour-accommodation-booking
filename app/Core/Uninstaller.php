@@ -64,8 +64,8 @@ class Uninstaller
             // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query(
                 "DELETE FROM {$wpdb->options} 
-                 WHERE option_name LIKE '_transient_trv_%' 
-                    OR option_name LIKE '_transient_timeout_trv_%'"
+                 WHERE option_name LIKE '_transient_tourivo_%' 
+                    OR option_name LIKE '_transient_timeout_tourivo_%'"
             );
 
             // Purge checkout hold records

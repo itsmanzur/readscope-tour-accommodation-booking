@@ -533,16 +533,30 @@ class ExportService
         check_ajax_referer('tourivo_admin_nonce', 'nonce');
 
         // phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended
-        $req = !empty($_POST) ? $_POST : $_GET;
+        // Only the filter fields are read, each one sanitized by RequestInput::pick().
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Every key is sanitized by RequestInput::pick().
+        $req = \Tourivo\Support\RequestInput::pick(
+            !empty($_POST) ? $_POST : $_GET,
+            [
+                'status'         => 'text',
+                'payment_status' => 'text',
+                'date_type'      => 'text',
+                'start_date'     => 'text',
+                'end_date'       => 'text',
+                'item_id'        => 'int',
+                'item_type'      => 'text',
+                's'              => 'text',
+            ]
+        );
         $filters = [
-            'status'         => isset($req['status']) ? sanitize_text_field(wp_unslash($req['status'])) : 'all',
-            'payment_status' => isset($req['payment_status']) ? sanitize_text_field(wp_unslash($req['payment_status'])) : 'all',
-            'date_type'      => isset($req['date_type']) ? sanitize_text_field(wp_unslash($req['date_type'])) : 'booking_date',
-            'start_date'     => isset($req['start_date']) ? sanitize_text_field(wp_unslash($req['start_date'])) : '',
-            'end_date'       => isset($req['end_date']) ? sanitize_text_field(wp_unslash($req['end_date'])) : '',
-            'item_id'        => isset($req['item_id']) ? absint($req['item_id']) : 0,
-            'item_type'      => isset($req['item_type']) ? sanitize_text_field(wp_unslash($req['item_type'])) : 'all',
-            'search'         => isset($req['s']) ? sanitize_text_field(wp_unslash($req['s'])) : '',
+            'status'         => $req['status'] ?? 'all',
+            'payment_status' => $req['payment_status'] ?? 'all',
+            'date_type'      => $req['date_type'] ?? 'booking_date',
+            'start_date'     => $req['start_date'] ?? '',
+            'end_date'       => $req['end_date'] ?? '',
+            'item_id'        => $req['item_id'] ?? 0,
+            'item_type'      => $req['item_type'] ?? 'all',
+            'search'         => $req['s'] ?? '',
         ];
         // phpcs:enable WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended
 

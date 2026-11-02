@@ -6030,7 +6030,7 @@ msgid "For inquiries, date changes, or support, please contact our team with you
 msgstr ""
 
 #: templates/booking-voucher.php:396
-msgid "Thank you for traveling with us! Powered by Tourivo Travel Engine."
+msgid "Thank you for traveling with us!"
 msgstr ""
 
 #: templates/cards/hotel-card.php:31

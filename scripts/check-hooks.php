@@ -30,8 +30,8 @@ foreach (['core' => $core, 'pro' => $pro] as $label => $path) {
     }
 }
 
-const TRV_FIRE   = ['do_action', 'do_action_ref_array', 'do_action_deprecated', 'apply_filters', 'apply_filters_ref_array', 'apply_filters_deprecated'];
-const TRV_LISTEN = ['add_action', 'add_filter', 'has_action', 'has_filter', 'remove_action', 'remove_filter', 'remove_all_actions', 'remove_all_filters'];
+const TOURIVO_FIRE   = ['do_action', 'do_action_ref_array', 'do_action_deprecated', 'apply_filters', 'apply_filters_ref_array', 'apply_filters_deprecated'];
+const TOURIVO_LISTEN = ['add_action', 'add_filter', 'has_action', 'has_filter', 'remove_action', 'remove_filter', 'remove_all_actions', 'remove_all_filters'];
 const TRV_SKIP   = ['vendor', 'node_modules', 'tests', 'dist', 'bin', 'scripts', '.git'];
 
 /**
@@ -39,7 +39,7 @@ const TRV_SKIP   = ['vendor', 'node_modules', 'tests', 'dist', 'bin', 'scripts',
  *
  * @return string[]
  */
-function trv_php_files(string $root): array
+function tourivo_php_files(string $root): array
 {
     $files    = [];
     $iterator = new RecursiveIteratorIterator(
@@ -63,7 +63,7 @@ function trv_php_files(string $root): array
  * @param string[] $functions
  * @return array<int, array{name: string, dynamic: bool, function: string, file: string, line: int}>
  */
-function trv_hook_calls(string $file, array $functions, string $root): array
+function tourivo_hook_calls(string $file, array $functions, string $root): array
 {
     $tokens = token_get_all((string) file_get_contents($file));
     $found  = [];
@@ -123,22 +123,22 @@ function trv_hook_calls(string $file, array $functions, string $root): array
 /**
  * @return array{fired: array<int, array<string, mixed>>, listened: array<int, array<string, mixed>>}
  */
-function trv_scan(string $root, string $label): array
+function tourivo_scan(string $root, string $label): array
 {
     $fired = $listened = [];
-    foreach (trv_php_files($root) as $file) {
-        foreach (trv_hook_calls($file, TRV_FIRE, $root) as $call) {
+    foreach (tourivo_php_files($root) as $file) {
+        foreach (tourivo_hook_calls($file, TOURIVO_FIRE, $root) as $call) {
             $fired[] = $call + ['repo' => $label];
         }
-        foreach (trv_hook_calls($file, TRV_LISTEN, $root) as $call) {
+        foreach (tourivo_hook_calls($file, TOURIVO_LISTEN, $root) as $call) {
             $listened[] = $call + ['repo' => $label];
         }
     }
     return ['fired' => $fired, 'listened' => $listened];
 }
 
-$coreScan = trv_scan($core, 'core');
-$proScan  = trv_scan($pro, 'pro');
+$coreScan = tourivo_scan($core, 'core');
+$proScan  = tourivo_scan($pro, 'pro');
 
 // Pro may listen to hooks fired by core or by Pro itself.
 $fired = array_merge($coreScan['fired'], $proScan['fired']);

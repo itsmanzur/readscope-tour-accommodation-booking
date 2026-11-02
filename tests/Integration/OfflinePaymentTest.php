@@ -332,8 +332,8 @@ class OfflinePaymentTest extends TestCase
         $payloadBank = $this->createBookingPayload([
             'item_id'        => $tourId,
             'item_type'      => 'tour',
-            'check_in'       => '2026-11-01',
-            'check_out'      => '2026-11-01',
+            'check_in'       => gmdate('Y-m-d', strtotime('+30 days')),
+            'check_out'      => gmdate('Y-m-d', strtotime('+30 days')),
             'adults'         => 1,
             'customer_name'  => 'Bank Traveler',
             'customer_email' => 'bank@example.com',
@@ -350,8 +350,8 @@ class OfflinePaymentTest extends TestCase
         $payloadCash = $this->createBookingPayload([
             'item_id'        => $tourId,
             'item_type'      => 'tour',
-            'check_in'       => '2026-11-02',
-            'check_out'      => '2026-11-02',
+            'check_in'       => gmdate('Y-m-d', strtotime('+31 days')),
+            'check_out'      => gmdate('Y-m-d', strtotime('+31 days')),
             'adults'         => 1,
             'customer_name'  => 'Cash Traveler',
             'customer_email' => 'cash@example.com',

@@ -70,7 +70,6 @@ class SearchBarWidget extends \Elementor\Widget_Base
 
     protected function render(): void
     {
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo SearchBarShortcode::render();
+        \Tourivo\Support\Html::print(SearchBarShortcode::render());
     }
 }

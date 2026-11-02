@@ -43,12 +43,13 @@ class TemplateServiceProvider extends ServiceProvider
 
         // Frontend assets and Tourivo's own listing pages
         $this->addAction('wp_enqueue_scripts', [$this, 'enqueueFrontendAssets']);
+        \Tourivo\Support\PortalAssets::boot();
         \Tourivo\Support\Typography::registerThemeFontScript();
         $this->addAction('pre_get_posts', [$this, 'filterTourSearch']);
         $this->addFilter('render_block', [$this, 'prependSearchSummary'], 10, 2);
         $this->addFilter('render_block', [$this, 'appendDestinationChips'], 10, 2);
-        $this->addFilter('tourivo/place_search', [$this, 'listingSearchMarkup']);
-        $this->addFilter('tourivo/related_place', [$this, 'relatedPlaceMarkup']);
+        $this->addAction('tourivo/place_search', [$this, 'printListingSearch']);
+        $this->addAction('tourivo/related_place', [$this, 'printRelatedPlace']);
         $this->addAction('loop_start', [$this, 'renderTourSearchSummary']);
 
         // The site's homepage, footer and menus belong to the owner: change them only when they opt in.
@@ -772,9 +773,9 @@ class TemplateServiceProvider extends ServiceProvider
         }
 
         if (is_tax('tourivo_destination') || is_post_type_archive(['tourivo_tour', 'tourivo_hotel'])) {
-            echo $this->destinationSearchMarkup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            \Tourivo\Support\Html::print($this->destinationSearchMarkup());
         }
-        echo $this->searchSummaryMarkup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        \Tourivo\Support\Html::print($this->searchSummaryMarkup());
     }
 
     /**
@@ -904,7 +905,7 @@ class TemplateServiceProvider extends ServiceProvider
             return;
         }
 
-        echo $this->homeSearchMarkup(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        \Tourivo\Support\Html::print($this->homeSearchMarkup());
     }
 
     /**
@@ -1140,33 +1141,33 @@ class TemplateServiceProvider extends ServiceProvider
     }
 
     /**
-     * Search bar shown above a single tour or hotel.
+     * Print the search bar above a single tour or hotel.
      */
-    public function listingSearchMarkup(string $markup = ''): string
+    public function printListingSearch(): void
     {
-        return $this->destinationSearchMarkup();
+        \Tourivo\Support\Html::print($this->destinationSearchMarkup());
     }
 
     /**
-     * Other tours and hotels that share this listing's destination.
+     * Print other tours and hotels that share this listing's destination.
      */
-    public function relatedPlaceMarkup(string $markup = ''): string
+    public function printRelatedPlace(): void
     {
-        if ($markup !== '' || is_admin() || !is_singular(['tourivo_tour', 'tourivo_hotel'])) {
-            return $markup;
+        if (is_admin() || !is_singular(['tourivo_tour', 'tourivo_hotel'])) {
+            return;
         }
 
         $post = get_queried_object();
         if (!$post instanceof \WP_Post) {
-            return '';
+            return;
         }
 
         $terms = get_the_terms($post, 'tourivo_destination');
         if (!is_array($terms) || !isset($terms[0]) || !$terms[0] instanceof \WP_Term) {
-            return '';
+            return;
         }
 
-        return $this->relatedPlaceCards($post, $terms[0]);
+        \Tourivo\Support\Html::print($this->relatedPlaceCards($post, $terms[0]));
     }
 
     /**

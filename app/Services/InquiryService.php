@@ -31,7 +31,7 @@ class InquiryService
     /**
      * Submit a new customer inquiry.
      *
-     * @param array<string, mixed> $data
+     * @param array<string, mixed> $data Request values, already unslashed.
      * @return array{success: bool, inquiry_id?: int, message: string}
      */
     public function createInquiry(array $data): array
@@ -46,22 +46,22 @@ class InquiryService
 
         // 2. IP Rate Limiting (5 inquiries per 10 minutes)
         $ip = \Tourivo\Support\ClientIp::get();
-        if (!\Tourivo\Support\RateLimiter::hit('trv_rl_inq_' . md5($ip), 5, 600)) {
+        if (!\Tourivo\Support\RateLimiter::hit('tourivo_rl_inq_' . md5($ip), 5, 600)) {
             return [
                 'success' => false,
                 'message' => __('Too many inquiries submitted. Please wait a few minutes before trying again.', 'tourivo'),
             ];
         }
 
-        // 3. Unslash and Sanitize
+        // 3. Sanitize
         $itemId    = isset($data['item_id']) ? (int) $data['item_id'] : 0;
-        $itemType  = isset($data['item_type']) ? sanitize_text_field(wp_unslash((string) $data['item_type'])) : 'tour';
-        $name      = isset($data['customer_name']) ? sanitize_text_field(wp_unslash((string) $data['customer_name'])) : '';
-        $email     = isset($data['customer_email']) ? sanitize_email(wp_unslash((string) $data['customer_email'])) : '';
-        $phone     = isset($data['customer_phone']) ? sanitize_text_field(wp_unslash((string) $data['customer_phone'])) : '';
-        $rawDate   = !empty($data['travel_date']) ? sanitize_text_field(wp_unslash((string) $data['travel_date'])) : null;
+        $itemType  = isset($data['item_type']) ? sanitize_text_field((string) $data['item_type']) : 'tour';
+        $name      = isset($data['customer_name']) ? sanitize_text_field((string) $data['customer_name']) : '';
+        $email     = isset($data['customer_email']) ? sanitize_email((string) $data['customer_email']) : '';
+        $phone     = isset($data['customer_phone']) ? sanitize_text_field((string) $data['customer_phone']) : '';
+        $rawDate   = !empty($data['travel_date']) ? sanitize_text_field((string) $data['travel_date']) : null;
         $guests    = isset($data['guests']) ? max(1, min(50, (int) $data['guests'])) : 1;
-        $message   = isset($data['message']) ? sanitize_textarea_field(wp_unslash((string) $data['message'])) : '';
+        $message   = isset($data['message']) ? sanitize_textarea_field((string) $data['message']) : '';
 
         // Consent verification
         $requireConsent = (bool) \Tourivo\Config\Config::get('require_consent', false);

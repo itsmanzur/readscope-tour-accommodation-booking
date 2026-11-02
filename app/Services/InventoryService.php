@@ -319,7 +319,7 @@ class InventoryService
      */
     public function getHold(?string $holdToken): ?array
     {
-        if (empty($holdToken) || !str_starts_with($holdToken, 'trv_hold_')) {
+        if (empty($holdToken) || !str_starts_with($holdToken, 'tourivo_hold_')) {
             return null;
         }
 
@@ -399,7 +399,7 @@ class InventoryService
             $reservedDates[] = $date;
         }
 
-        $holdToken = 'trv_hold_' . bin2hex(random_bytes(16));
+        $holdToken = 'tourivo_hold_' . bin2hex(random_bytes(16));
         update_option(self::HOLD_OPTION_PREFIX . $holdToken, [
             'item_id'    => $itemId,
             'item_type'  => $itemType,
@@ -516,7 +516,7 @@ class InventoryService
      */
     public function releaseHold(string $holdToken): bool
     {
-        if (!str_starts_with($holdToken, 'trv_hold_')) {
+        if (!str_starts_with($holdToken, 'tourivo_hold_')) {
             return false;
         }
 
@@ -596,10 +596,10 @@ class InventoryService
      */
     protected function maybeReleaseExpiredHolds(): void
     {
-        if (get_transient('trv_hold_sweep')) {
+        if (get_transient('tourivo_hold_sweep')) {
             return;
         }
-        set_transient('trv_hold_sweep', 1, 60);
+        set_transient('tourivo_hold_sweep', 1, 60);
         $this->releaseExpiredHolds();
     }
 

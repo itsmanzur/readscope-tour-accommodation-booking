@@ -92,7 +92,6 @@ class BookingPanelWidget extends \Elementor\Widget_Base
             'item_type' => sanitize_key($settings['item_type'] ?? 'tour'),
         ]);
 
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo $content;
+        \Tourivo\Support\Html::print($content);
     }
 }

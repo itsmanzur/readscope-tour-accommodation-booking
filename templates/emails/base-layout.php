@@ -165,7 +165,7 @@ if (function_exists('tourivo_current_locale')) {
         </div>
 
         <div class="tourivo-email-content">
-            <?php echo $emailBodyContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+            <?php echo $emailBodyContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Email body built from escaped template parts in EmailService; kses would strip the inline styles mail clients need. ?>
         </div>
 
         <div class="tourivo-email-footer">

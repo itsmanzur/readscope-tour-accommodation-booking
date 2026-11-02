@@ -76,7 +76,7 @@ if (!function_exists('tourivo_place_search')) {
      */
     function tourivo_place_search(): void
     {
-        echo apply_filters('tourivo/place_search', ''); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        do_action('tourivo/place_search');
     }
 }
 
@@ -86,7 +86,7 @@ if (!function_exists('tourivo_related_place')) {
      */
     function tourivo_related_place(): void
     {
-        echo apply_filters('tourivo/related_place', ''); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        do_action('tourivo/related_place');
     }
 }
 

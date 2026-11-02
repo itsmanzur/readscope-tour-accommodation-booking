@@ -67,6 +67,34 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
     </div>
 
 <?php else : ?>
+    <?php
+    \Tourivo\Support\PortalAssets::enqueue(
+        'my-bookings',
+        [
+            'nonce'   => $nonce,
+            'ajaxUrl' => admin_url('admin-ajax.php'),
+            'i18n'    => [
+                'processing' => __('Processing...', 'tourivo'),
+                'confirmCancellation' => __('Confirm Cancellation', 'tourivo'),
+                'cancellationSubmittedSuccessfully' => __('Cancellation submitted successfully.', 'tourivo'),
+                'failedToProcessCancellation' => __('Failed to process cancellation.', 'tourivo'),
+                'aNetworkErrorOccurred' => __('A network error occurred. Please try again.', 'tourivo'),
+                'loadingBookingDetails' => __('Loading booking details...', 'tourivo'),
+                'bookingReference' => __('Booking Reference', 'tourivo'),
+                'placedOn' => __('Placed on:', 'tourivo'),
+                'reservedItems' => __('Reserved Items', 'tourivo'),
+                'paymentFinancialSummary' => __('Payment & Financial Summary', 'tourivo'),
+                'paymentMethod' => __('Payment Method:', 'tourivo'),
+                'paymentStatus' => __('Payment Status:', 'tourivo'),
+                'tax' => __('Tax:', 'tourivo'),
+                'total' => __('Total:', 'tourivo'),
+                'yourNotes' => __('Your Notes:', 'tourivo'),
+                'failedToLoadBooking' => __('Failed to load booking details.', 'tourivo'),
+                'networkErrorShort' => __('A network error occurred.', 'tourivo'),
+            ],
+        ]
+    );
+    ?>
     <!-- 2. Authenticated Traveler Dashboard State -->
     <div class="tourivo-my-bookings-dashboard">
         <!-- Top Welcome Header -->
@@ -307,298 +335,7 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
         </div>
     </div>
 
-    <!-- Inline Modern CSS Styles -->
-    <style>
-        .tourivo-my-bookings-container {
-            max-width: 1100px;
-            margin: 30px auto;
-            font-family: var(--trv-font, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif);
-            color: #0f172a;
-            box-sizing: border-box;
-        }
-        .tourivo-my-bookings-container * { box-sizing: border-box; }
-        .tourivo-prompt-card {
-            background: #ffffff;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 48px 24px;
-            text-align: center;
-            max-width: 580px;
-            margin: 40px auto;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-        }
-        .tourivo-prompt-icon { margin-bottom: 16px; }
-        .tourivo-prompt-title { font-size: var(--trv-text-2xl); font-weight: 700; margin: 0 0 10px; color: #0f172a; }
-        .tourivo-prompt-desc { font-size: var(--trv-text-base); color: #64748b; line-height: 1.6; margin: 0 0 24px; }
-        .tourivo-prompt-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 24px; }
-        .tourivo-prompt-guest-lookup { font-size: var(--trv-text-sm); color: #64748b; border-top: 1px solid #f1f5f9; padding-top: 20px; }
-        .tourivo-guest-link { color: var(--trv-primary); font-weight: 600; text-decoration: none; display: block; margin-top: 6px; }
-        .tourivo-guest-link:hover { text-decoration: underline; }
 
-        .tourivo-dashboard-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
-        .tourivo-traveler-welcome { font-size: var(--trv-text-sm); color: #64748b; font-weight: 500; display: block; margin-bottom: 4px; }
-        .tourivo-dashboard-title { font-size: var(--trv-text-3xl); font-weight: 700; margin: 0; color: #0f172a; letter-spacing: -0.5px; }
-        .tourivo-link-lookup { font-size: var(--trv-text-sm); font-weight: 600; color: var(--trv-primary); text-decoration: none; padding: 6px 12px; background: #f0fdfa; border-radius: 6px; }
-
-        .tourivo-stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; margin-bottom: 28px; }
-        .tourivo-stat-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; display: flex; align-items: center; gap: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.02); }
-        .tourivo-stat-icon { font-size: 28px; line-height: 1; }
-        .tourivo-stat-value { font-size: var(--trv-text-2xl); font-weight: 700; color: #0f172a; display: block; line-height: 1.2; }
-        .tourivo-stat-label { font-size: var(--trv-text-sm); color: #64748b; font-weight: 500; }
-
-        .tourivo-bookings-tabs { display: flex; gap: 8px; border-bottom: 2px solid #e2e8f0; margin-bottom: 24px; overflow-x: auto; padding-bottom: 2px; }
-        .tourivo-tab-btn { background: none; border: none; padding: 10px 16px; font-size: var(--trv-text-base); font-weight: 600; color: #64748b; cursor: pointer; border-radius: 6px 6px 0 0; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; transition: color 0.15s, border-color 0.15s; }
-        .tourivo-tab-btn:hover { color: #0f172a; }
-        .tourivo-tab-btn.active { color: var(--trv-primary); border-bottom: 2px solid var(--trv-primary); margin-bottom: -2px; }
-        .tourivo-tab-count { background: #f1f5f9; color: #475569; font-size: var(--trv-text-xs); font-weight: 700; padding: 2px 7px; border-radius: 10px; }
-        .tourivo-tab-btn.active .tourivo-tab-count { background: #ccfbf1; color: #0f766e; }
-
-        .tourivo-booking-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 16px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); transition: box-shadow 0.2s, border-color 0.2s; }
-        .tourivo-booking-card:hover { border-color: #cbd5e1; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.06); }
-        .tourivo-card-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; }
-        .tourivo-ref-label { font-size: var(--trv-text-xs); color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; display: block; }
-        .tourivo-ref-code { font-size: var(--trv-text-base); font-weight: 700; color: #0f172a; }
-        .tourivo-card-badges { display: flex; gap: 8px; }
-        .tourivo-badge { display: inline-block; font-size: var(--trv-text-xs); font-weight: 700; padding: 4px 10px; border-radius: 6px; line-height: 1.2; text-transform: capitalize; }
-
-        .tourivo-card-body { margin-bottom: 16px; }
-        .tourivo-item-type-badge { font-size: var(--trv-text-xs); text-transform: uppercase; font-weight: 700; color: #6366f1; background: #e0e7ff; padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 6px; letter-spacing: 0.5px; }
-        .tourivo-item-title { font-size: var(--trv-text-lg); font-weight: 700; margin: 0 0 14px; color: #0f172a; line-height: 1.3; }
-        .tourivo-meta-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; background: #f8fafc; padding: 12px 16px; border-radius: 8px; border: 1px solid #f1f5f9; }
-        .tourivo-meta-label { font-size: var(--trv-text-xs); color: #64748b; display: block; margin-bottom: 2px; }
-        .tourivo-meta-val { font-size: var(--trv-text-sm); font-weight: 600; color: #334155; }
-
-        .tourivo-card-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; padding-top: 8px; }
-        .tourivo-btn-sm { padding: 8px 14px; font-size: var(--trv-text-sm); font-weight: 600; border-radius: 6px; text-decoration: none; cursor: pointer; border: 1px solid transparent; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s; }
-        .tourivo-btn-outline { background: #ffffff; border-color: #cbd5e1; color: #334155; }
-        .tourivo-btn-outline:hover { background: #f8fafc; border-color: #94a3b8; color: #0f172a; }
-        .tourivo-btn-danger { background: #fff1f2; border-color: #fecdd3; color: #e11d48; }
-        .tourivo-btn-danger:hover { background: #ffe4e6; color: #be123c; }
-        .tourivo-cancel-pending-pill { font-size: var(--trv-text-xs); font-weight: 600; color: #b45309; background: #fef3c7; padding: 6px 12px; border-radius: 6px; }
-
-        .tourivo-btn-account { padding: 10px 20px; font-size: var(--trv-text-sm); font-weight: 600; border-radius: 8px; text-decoration: none; cursor: pointer; border: 1px solid transparent; display: inline-flex; align-items: center; justify-content: center; transition: all 0.15s; }
-        .tourivo-btn-primary { background: var(--trv-primary); color: #ffffff; }
-        .tourivo-btn-primary:hover { opacity: 0.92; }
-
-        .tourivo-no-bookings { text-align: center; padding: 48px 24px; background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 12px; color: #64748b; }
-        .tourivo-no-bookings h3 { margin: 0 0 6px; color: #0f172a; }
-
-        /* Modals */
-        .tourivo-modal-backdrop { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); display: flex; align-items: center; justify-content: center; z-index: 99999; padding: 16px; }
-        .tourivo-modal-box { background: #ffffff; border-radius: 12px; max-width: 580px; width: 100%; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); overflow: hidden; animation: tourivoFadeIn 0.2s ease; }
-        .tourivo-modal-header { padding: 18px 24px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
-        .tourivo-modal-title { margin: 0; font-size: var(--trv-text-lg); font-weight: 700; color: #0f172a; }
-        .tourivo-modal-close { background: none; border: none; font-size: 24px; color: #94a3b8; cursor: pointer; line-height: 1; }
-        .tourivo-modal-close:hover { color: #0f172a; }
-        .tourivo-modal-body { padding: 24px; max-height: 70vh; overflow-y: auto; }
-        .tourivo-modal-footer { padding: 16px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 12px; }
-        .tourivo-input-textarea { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: var(--trv-text-sm); resize: vertical; box-sizing: border-box; }
-        .tourivo-input-textarea:focus { outline: none; border-color: var(--trv-primary); }
-
-        @keyframes tourivoFadeIn {
-            from { opacity: 0; transform: scale(0.96); }
-            to { opacity: 1; transform: scale(1); }
-        }
-    </style>
-
-    <!-- Inline Vanilla JS Engine -->
-    <script>
-        window.TourivoMyBookings = {
-            nonce: "<?php echo esc_js($nonce); ?>",
-            ajaxUrl: "<?php echo esc_url_raw(admin_url('admin-ajax.php')); ?>",
-            targetBookingId: 0,
-
-            init: function() {
-                // Tab switching
-                var tabBtns = document.querySelectorAll('.tourivo-tab-btn');
-                tabBtns.forEach(function(btn) {
-                    btn.addEventListener('click', function() {
-                        tabBtns.forEach(function(b) { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
-                        btn.classList.add('active');
-                        btn.setAttribute('aria-selected', 'true');
-                        TourivoMyBookings.filterCards(btn.getAttribute('data-tab'));
-                    });
-                });
-
-                // Open Cancel Modal
-                document.querySelectorAll('.btnOpenCancelModal').forEach(function(btn) {
-                    btn.addEventListener('click', function() {
-                        TourivoMyBookings.targetBookingId = parseInt(btn.getAttribute('data-booking-id'), 10);
-                        document.getElementById('trvCancelReason').value = '';
-                        var feedback = document.getElementById('trvCancelFeedback');
-                        feedback.style.display = 'none';
-                        feedback.innerHTML = '';
-                        document.getElementById('tourivoCancelModal').style.display = 'flex';
-                    });
-                });
-
-                // Confirm Cancellation
-                var btnConfirm = document.getElementById('btnConfirmCancel');
-                if (btnConfirm) {
-                    btnConfirm.addEventListener('click', function() {
-                        TourivoMyBookings.submitCancellation();
-                    });
-                }
-
-                // View Details
-                document.querySelectorAll('.btnViewDetails').forEach(function(btn) {
-                    btn.addEventListener('click', function() {
-                        var id = parseInt(btn.getAttribute('data-booking-id'), 10);
-                        TourivoMyBookings.fetchDetails(id);
-                    });
-                });
-            },
-
-            filterCards: function(tab) {
-                var cards = document.querySelectorAll('.tourivo-booking-card');
-                cards.forEach(function(card) {
-                    var category = card.getAttribute('data-category');
-                    if (tab === 'all' || category === tab) {
-                        card.style.display = 'block';
-                    } else {
-                        card.style.display = 'none';
-                    }
-                });
-            },
-
-            closeCancelModal: function() {
-                document.getElementById('tourivoCancelModal').style.display = 'none';
-                TourivoMyBookings.targetBookingId = 0;
-            },
-
-            closeDetailsModal: function() {
-                document.getElementById('tourivoDetailsModal').style.display = 'none';
-            },
-
-            submitCancellation: function() {
-                var btn = document.getElementById('btnConfirmCancel');
-                var reason = document.getElementById('trvCancelReason').value.trim();
-                var feedback = document.getElementById('trvCancelFeedback');
-
-                btn.disabled = true;
-                btn.textContent = "<?php echo esc_js(__('Processing...', 'tourivo')); ?>";
-
-                var formData = new FormData();
-                formData.append('action', 'tourivo_my_bookings_cancel');
-                formData.append('nonce', TourivoMyBookings.nonce);
-                formData.append('booking_id', TourivoMyBookings.targetBookingId);
-                formData.append('reason', reason);
-
-                fetch(TourivoMyBookings.ajaxUrl, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(function(res) { return res.json(); })
-                .then(function(res) {
-                    btn.disabled = false;
-                    btn.textContent = "<?php echo esc_js(__('Confirm Cancellation', 'tourivo')); ?>";
-
-                    if (res && res.success) {
-                        feedback.style.display = 'block';
-                        feedback.style.background = '#dcfce7';
-                        feedback.style.color = '#15803d';
-                        feedback.style.border = '1px solid #86efac';
-                        feedback.textContent = res.data && res.data.message ? res.data.message : "<?php echo esc_js(__('Cancellation submitted successfully.', 'tourivo')); ?>";
-
-                        setTimeout(function() {
-                            window.location.reload();
-                        }, 1200);
-                    } else {
-                        feedback.style.display = 'block';
-                        feedback.style.background = '#fee2e2';
-                        feedback.style.color = '#b91c1c';
-                        feedback.style.border = '1px solid #fca5a5';
-                        feedback.textContent = res && res.data && res.data.message ? res.data.message : "<?php echo esc_js(__('Failed to process cancellation.', 'tourivo')); ?>";
-                    }
-                })
-                .catch(function(err) {
-                    btn.disabled = false;
-                    btn.textContent = "<?php echo esc_js(__('Confirm Cancellation', 'tourivo')); ?>";
-                    feedback.style.display = 'block';
-                    feedback.style.background = '#fee2e2';
-                    feedback.style.color = '#b91c1c';
-                    feedback.textContent = "<?php echo esc_js(__('A network error occurred. Please try again.', 'tourivo')); ?>";
-                });
-            },
-
-            fetchDetails: function(bookingId) {
-                var modal = document.getElementById('tourivoDetailsModal');
-                var body = document.getElementById('tourivoDetailsBody');
-                modal.style.display = 'flex';
-                body.innerHTML = '<div style="text-align:center; padding:30px; color:#64748b;"><?php echo esc_js(__('Loading booking details...', 'tourivo')); ?></div>';
-
-                var formData = new FormData();
-                formData.append('action', 'tourivo_my_bookings_details');
-                formData.append('nonce', TourivoMyBookings.nonce);
-                formData.append('booking_id', bookingId);
-
-                fetch(TourivoMyBookings.ajaxUrl, {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(function(res) { return res.json(); })
-                .then(function(res) {
-                    if (res && res.success && res.data) {
-                        var b = res.data.booking;
-                        var items = res.data.items || [];
-                        var esc = function(value) {
-                            return String(value == null ? '' : value)
-                                .replace(/&/g, '&amp;')
-                                .replace(/</g, '&lt;')
-                                .replace(/>/g, '&gt;')
-                                .replace(/"/g, '&quot;')
-                                .replace(/'/g, '&#039;');
-                        };
-                        var html = '<div style="margin-bottom:16px; border-bottom:1px solid #e2e8f0; padding-bottom:12px;">';
-                        html += '<div style="font-size: var(--trv-text-xs); color:#64748b; text-transform:uppercase;"><?php echo esc_js(__('Booking Reference', 'tourivo')); ?></div>';
-                        html += '<strong style="font-size: var(--trv-text-xl); color:#0f172a;">#' + esc(b.booking_code) + '</strong>';
-                        html += '<div style="margin-top:4px; font-size: var(--trv-text-sm); color:#64748b;"><?php echo esc_js(__('Placed on:', 'tourivo')); ?> ' + esc(b.created_at) + '</div>';
-                        html += '</div>';
-
-                        html += '<h4 style="margin:16px 0 8px; font-size: var(--trv-text-base); color:#0f172a;"><?php echo esc_js(__('Reserved Items', 'tourivo')); ?></h4>';
-                        items.forEach(function(it) {
-                            var range = it.check_out ? (esc(it.check_in) + ' → ' + esc(it.check_out)) : esc(it.check_in);
-                            html += '<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; margin-bottom:8px;">';
-                            html += '<div style="display:flex; justify-content:space-between; font-weight:700; color:#0f172a;">';
-                            html += '<span>' + esc(it.item_title) + '</span>';
-                            html += '<span>' + esc(it.total_price) + '</span>';
-                            html += '</div>';
-                            html += '<div style="font-size: var(--trv-text-sm); color:#64748b; margin-top:4px;">';
-                            html += '📅 ' + range + (it.time_slot ? (' &bull; ⏰ ' + esc(it.time_slot)) : '') + ' &bull; 👥 Qty: ' + esc(it.quantity);
-                            html += '</div>';
-                            html += '</div>';
-                        });
-
-                        html += '<h4 style="margin:16px 0 8px; font-size: var(--trv-text-base); color:#0f172a;"><?php echo esc_js(__('Payment & Financial Summary', 'tourivo')); ?></h4>';
-                        html += '<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; font-size: var(--trv-text-sm);">';
-                        html += '<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span><?php echo esc_js(__('Payment Method:', 'tourivo')); ?></span><strong>' + esc(b.payment_method) + '</strong></div>';
-                        html += '<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span><?php echo esc_js(__('Payment Status:', 'tourivo')); ?></span><strong>' + esc(b.payment_status) + '</strong></div>';
-                        html += '<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span><?php echo esc_js(__('Tax:', 'tourivo')); ?></span><span>' + esc(b.tax_amount) + '</span></div>';
-                        html += '<div style="display:flex; justify-content:space-between; font-size: var(--trv-text-base); font-weight: 700; color:#0f172a; border-top:1px solid #e2e8f0; padding-top:6px; margin-top:6px;"><span><?php echo esc_js(__('Total:', 'tourivo')); ?></span><span>' + esc(b.total_amount) + '</span></div>';
-                        html += '</div>';
-
-                        if (b.customer_notes) {
-                            html += '<h4 style="margin:16px 0 8px; font-size: var(--trv-text-base); color:#0f172a;"><?php echo esc_js(__('Your Notes:', 'tourivo')); ?></h4>';
-                            html += '<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px; font-size: var(--trv-text-sm); color:#475569;">' + esc(b.customer_notes) + '</div>';
-                        }
-
-                        body.innerHTML = html;
-                    } else {
-                        body.innerHTML = '<div style="color:#b91c1c; padding:20px; text-align:center;"><?php echo esc_js(__('Failed to load booking details.', 'tourivo')); ?></div>';
-                    }
-                })
-                .catch(function(err) {
-                    body.innerHTML = '<div style="color:#b91c1c; padding:20px; text-align:center;"><?php echo esc_js(__('A network error occurred.', 'tourivo')); ?></div>';
-                });
-            }
-        };
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', window.TourivoMyBookings.init);
-        } else {
-            window.TourivoMyBookings.init();
-        }
-    </script>
 <?php endif; ?>
 
 </div>
