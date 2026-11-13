@@ -46,7 +46,7 @@ class PostBookingExperienceTest extends TestCase
         $GLOBALS['tourivo_mock_filters'] = [];
         $GLOBALS['tourivo_mock_action_callbacks'] = [];
         $GLOBALS['tourivo_mock_options']['admin_email'] = 'admin@example.com';
-        $GLOBALS['tourivo_mock_options']['blogname'] = 'Tourivo Test Site';
+        $GLOBALS['tourivo_mock_options']['blogname'] = 'Readscope Test Site';
 
         $invRepo = new InventoryRepository();
         $this->inventoryService = new InventoryService($invRepo);

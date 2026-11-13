@@ -69,7 +69,7 @@ namespace Tourivo\Tests {
         public function run(): void
         {
             echo "==================================================" . PHP_EOL;
-            echo "Running Tourivo ClientIp Anti-Spoofing Test Suite" . PHP_EOL;
+            echo "Running Readscope Booking ClientIp Anti-Spoofing Test Suite" . PHP_EOL;
             echo "==================================================" . PHP_EOL;
 
             // Test 1: Direct mode ('disabled') ignores spoofed headers

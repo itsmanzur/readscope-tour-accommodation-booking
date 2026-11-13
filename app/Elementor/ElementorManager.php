@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class ElementorManager
  *
- * Integrates Tourivo with Elementor Page Builder.
+ * Integrates Readscope Booking with Elementor Page Builder.
  *
  * @package Tourivo\Elementor
  */
@@ -33,7 +33,7 @@ class ElementorManager
     }
 
     /**
-     * Register Tourivo custom category in Elementor widget panel.
+     * Register Readscope Booking custom category in Elementor widget panel.
      *
      * @param \Elementor\Elements_Manager $elementsManager
      * @return void
@@ -43,7 +43,7 @@ class ElementorManager
         $elementsManager->add_category(
             'tourivo-elements',
             [
-                'title' => esc_html__('Tourivo Elements', 'tourivo'),
+                'title' => esc_html__('Readscope Booking Elements', 'the-readscope-tour-and-accommodation-booking'),
                 'icon'  => 'fa fa-plug',
             ]
         );

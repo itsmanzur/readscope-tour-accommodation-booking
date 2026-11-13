@@ -1,6 +1,6 @@
 <?php
 /**
- * Tourivo Base TestCase
+ * Readscope Booking Base TestCase
  */
 
 declare(strict_types=1);
@@ -16,7 +16,7 @@ if (class_exists('WP_UnitTestCase')) {
 }
 
 /**
- * Base TestCase for Tourivo test suite.
+ * Base TestCase for Readscope Booking test suite.
  */
 abstract class TestCase extends BaseTestCaseParent
 {
@@ -198,6 +198,7 @@ abstract class TestCase extends BaseTestCaseParent
             $wpdb->inventories = [];
             $wpdb->inquiries = [];
             $wpdb->logs = [];
+            $wpdb->rl_rows = [];
         }
         $tourivo_mock_usermeta = [];
     }
@@ -209,5 +210,9 @@ abstract class TestCase extends BaseTestCaseParent
     {
         global $tourivo_mock_transients;
         $tourivo_mock_transients = [];
+        global $wpdb;
+        if ($wpdb) {
+            $wpdb->rl_rows = [];
+        }
     }
 }

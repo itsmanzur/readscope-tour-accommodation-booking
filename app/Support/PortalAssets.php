@@ -80,13 +80,37 @@ final class PortalAssets
             wp_enqueue_script(self::handle($key));
 
             if (isset($def['global'])) {
-                wp_add_inline_script(
-                    self::handle($key),
-                    'var ' . $def['global'] . ' = ' . wp_json_encode($data) . ';',
-                    'before'
-                );
+                $script = self::inlineConfigScript($def['global'], $data);
+                if ($script !== '') {
+                    wp_add_inline_script(self::handle($key), $script, 'before');
+                }
             }
         }
+    }
+
+    /**
+     * Build the inline `var Global = {...};` statement for a script's data.
+     *
+     * Values are JSON-encoded with the HEX flags (<, >, &, ' and " become \uXXXX escapes) so they cannot
+     * close the script tag or break out of a string. The global name is a hard-coded identifier from
+     * ASSETS, validated here anyway; an invalid name emits nothing.
+     *
+     * @param string               $global JavaScript global name.
+     * @param array<string, mixed> $data   Values for the global.
+     * @return string Script source, or '' when the name is not a valid identifier.
+     */
+    public static function inlineConfigScript(string $global, array $data): string
+    {
+        if (preg_match('/^[A-Za-z_$][A-Za-z0-9_$]*$/', $global) !== 1) {
+            return '';
+        }
+
+        $json = wp_json_encode($data, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT);
+        if (!is_string($json) || $json === '') {
+            $json = '{}';
+        }
+
+        return 'var ' . $global . ' = ' . $json . ';';
     }
 
     /**

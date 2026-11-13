@@ -1,6 +1,6 @@
 <?php
 /**
- * Tourivo ↔ Tourivo Pro hook compatibility check.
+ * Readscope Booking ↔ Readscope Booking Pro hook compatibility check.
  *
  * Scans both repositories with the PHP tokenizer and lists every tourivo/... hook that Pro listens to
  * (add_action, add_filter, has_*, remove_*) but nobody fires (do_action*, apply_filters*).
@@ -8,8 +8,8 @@
  * Usage:
  *   php scripts/check-hooks.php [--core=<path>] [--pro=<path>] [--verbose]
  *
- *   --core     Tourivo (free) checkout. Default: the folder above this script.
- *   --pro      Tourivo Pro checkout. Default: ../tourivo-pro next to the core folder.
+ *   --core     Readscope Booking (free) checkout. Default: the folder above this script.
+ *   --pro      Readscope Booking Pro checkout. Default: ../tourivo-pro next to the core folder.
  *   --verbose  Also list every matched hook with the files that fire and listen to it.
  *
  * Exit code: 0 = no mismatch, 1 = mismatches found, 2 = a path is missing.
@@ -174,7 +174,7 @@ foreach ($proScan['listened'] as $l) {
     $missing[] = "{$name}  {$where}";
 }
 
-echo "Tourivo hook compatibility\n";
+echo "Readscope Booking hook compatibility\n";
 echo "  core: {$core}\n  pro:  {$pro}\n";
 echo sprintf(
     "  core fires %d tourivo/ hook names, pro fires %d; pro listens to %d.\n\n",

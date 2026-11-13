@@ -1,8 +1,8 @@
 <?php
 /**
- * Tourivo Reviews & Star Rating Section Template
+ * Readscope Booking Reviews & Star Rating Section Template
  *
- * @package Tourivo
+ * @package Readscope Booking
  * @var int $postId
  */
 
@@ -27,7 +27,7 @@ $tourivoComments      = get_comments([
 
 <div class="tourivo-block-section tourivo-reviews-block" id="tourivo-reviews">
     <h2 class="section-heading">
-        ⭐ <?php esc_html_e('Traveler Reviews & Ratings', 'tourivo'); ?>
+        ⭐ <?php esc_html_e('Traveler Reviews & Ratings', 'the-readscope-tour-and-accommodation-booking'); ?>
         <?php if ($tourivoBreakdown['total'] > 0) : ?>
             <span class="reviews-total-badge">(<?php echo esc_html((string) $tourivoBreakdown['total']); ?>)</span>
         <?php endif; ?>
@@ -50,7 +50,7 @@ $tourivoComments      = get_comments([
                 echo esc_html(
                     sprintf(
                         /* translators: %d: Number of reviews */
-                        _n('Based on %d review', 'Based on %d reviews', $tourivoBreakdown['total'], 'tourivo'),
+                        _n('Based on %d review', 'Based on %d reviews', $tourivoBreakdown['total'], 'the-readscope-tour-and-accommodation-booking'),
                         $tourivoBreakdown['total']
                     )
                 );
@@ -90,8 +90,8 @@ $tourivoComments      = get_comments([
                             <h4 class="author-name">
                                 <?php echo esc_html($tourivoComment->comment_author); ?>
                                 <?php if ($tourivoIsVerifiedUser) : ?>
-                                    <span class="verified-badge" title="<?php esc_attr_e('Verified Booking Traveler', 'tourivo'); ?>">
-                                        ✓ <?php esc_html_e('Verified Traveler', 'tourivo'); ?>
+                                    <span class="verified-badge" title="<?php esc_attr_e('Verified Booking Traveler', 'the-readscope-tour-and-accommodation-booking'); ?>">
+                                        ✓ <?php esc_html_e('Verified Traveler', 'the-readscope-tour-and-accommodation-booking'); ?>
                                     </span>
                                 <?php endif; ?>
                             </h4>
@@ -114,20 +114,20 @@ $tourivoComments      = get_comments([
             <?php endforeach; ?>
         <?php else : ?>
             <p class="no-reviews-msg" style="color: #64748b; padding: 20px 0;">
-                <?php esc_html_e('No reviews yet. Be the first to share your travel experience!', 'tourivo'); ?>
+                <?php esc_html_e('No reviews yet. Be the first to share your travel experience!', 'the-readscope-tour-and-accommodation-booking'); ?>
             </p>
         <?php endif; ?>
     </div>
 
     <!-- Leave a Review Form -->
     <div class="tourivo-leave-review-form-wrap">
-        <h3>✍️ <?php esc_html_e('Write a Review', 'tourivo'); ?></h3>
+        <h3>✍️ <?php esc_html_e('Write a Review', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
         
         <?php if (comments_open($tourivoPostId)) : ?>
             <form action="<?php echo esc_url(site_url('/wp-comments-post.php')); ?>" method="post" class="tourivo-review-form">
                 <!-- Interactive Star Selector -->
                 <div class="form-row rating-picker-row">
-                    <label><strong><?php esc_html_e('Your Rating *', 'tourivo'); ?></strong></label>
+                    <label><strong><?php esc_html_e('Your Rating *', 'the-readscope-tour-and-accommodation-booking'); ?></strong></label>
                     <div class="tourivo-star-picker" id="tourivo-star-picker">
                         <span class="picker-star" data-val="1">★</span>
                         <span class="picker-star" data-val="2">★</span>
@@ -140,18 +140,18 @@ $tourivoComments      = get_comments([
 
                 <div class="form-row-group" style="display: flex; gap: 14px;">
                     <div class="form-row" style="flex: 1;">
-                        <label for="author"><?php esc_html_e('Your Name *', 'tourivo'); ?></label>
+                        <label for="author"><?php esc_html_e('Your Name *', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                         <input type="text" name="author" id="author" required value="<?php echo esc_attr(wp_get_current_user()->display_name ?? ''); ?>">
                     </div>
                     <div class="form-row" style="flex: 1;">
-                        <label for="email"><?php esc_html_e('Your Email *', 'tourivo'); ?></label>
+                        <label for="email"><?php esc_html_e('Your Email *', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                         <input type="email" name="email" id="email" required value="<?php echo esc_attr(wp_get_current_user()->user_email ?? ''); ?>">
                     </div>
                 </div>
 
                 <div class="form-row" style="margin-top: 12px;">
-                    <label for="comment"><?php esc_html_e('Your Review / Feedback *', 'tourivo'); ?></label>
-                    <textarea name="comment" id="comment" rows="4" required placeholder="<?php esc_attr_e('What did you love about this trip? How was the guide, accommodation, and itinerary?', 'tourivo'); ?>"></textarea>
+                    <label for="comment"><?php esc_html_e('Your Review / Feedback *', 'the-readscope-tour-and-accommodation-booking'); ?></label>
+                    <textarea name="comment" id="comment" rows="4" required placeholder="<?php esc_attr_e('What did you love about this trip? How was the guide, accommodation, and itinerary?', 'the-readscope-tour-and-accommodation-booking'); ?>"></textarea>
                 </div>
 
                 <input type="hidden" name="comment_post_ID" value="<?php echo esc_attr((string) $tourivoPostId); ?>">
@@ -159,12 +159,12 @@ $tourivoComments      = get_comments([
 
                 <div class="form-row form-submit-row" style="margin-top: 14px;">
                     <button type="submit" class="tourivo-btn tourivo-btn-primary">
-                        🚀 <?php esc_html_e('Submit Review', 'tourivo'); ?>
+                        🚀 <?php esc_html_e('Submit Review', 'the-readscope-tour-and-accommodation-booking'); ?>
                     </button>
                 </div>
             </form>
         <?php else : ?>
-            <p style="color: #64748b;"><?php esc_html_e('Comments and reviews are closed for this trip.', 'tourivo'); ?></p>
+            <p style="color: #64748b;"><?php esc_html_e('Comments and reviews are closed for this trip.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
         <?php endif; ?>
     </div>
 </div>

@@ -62,7 +62,7 @@ class TravelHomepageOptInTest extends TestCase
         foreach (self::SITE_WIDE_CALLBACKS as $callback) {
             $this->assertNotContains($callback, $names, "{$callback} must not run unless the owner opts in.");
         }
-        $this->assertContains('prependSearchSummary', $names, 'Tourivo listing pages keep their search summary.');
+        $this->assertContains('prependSearchSummary', $names, 'Readscope Booking listing pages keep their search summary.');
         $this->assertContains('filterTourSearch', $names);
     }
 

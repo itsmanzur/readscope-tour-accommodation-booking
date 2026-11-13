@@ -2,48 +2,49 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Tourivo 1.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/tourivo\n"
+"Project-Id-Version: The Readscope Tour and Accommodation Booking 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/the-readscope-tour-and-accommodation-booking\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-23T17:59:39+00:00\n"
+"POT-Creation-Date: 2026-11-06T00:00:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
-"X-Domain: tourivo\n"
+"X-Domain: the-readscope-tour-and-accommodation-booking\n"
 
 #. Plugin Name of the plugin
-#: tourivo.php
-#: app/Providers/AdminServiceProvider.php:163
+#: the-readscope-tour-and-accommodation-booking.php
 #: app/Providers/AdminServiceProvider.php:164
-#: app/Support/Privacy.php:161
-msgid "Tourivo"
+msgid "The Readscope Tour and Accommodation Booking"
 msgstr ""
 
-#. Plugin URI of the plugin
-#: tourivo.php
-msgid "https://thereadscope.com/tourivo"
+#. Author URI of the plugin
+#: the-readscope-tour-and-accommodation-booking.php
+msgid "https://thereadscope.com"
 msgstr ""
 
 #. Description of the plugin
-#: tourivo.php
+#: the-readscope-tour-and-accommodation-booking.php
 msgid "The Next-Gen Travel, Tour & Accommodation Booking Engine for WordPress."
 msgstr ""
 
 #. Author of the plugin
-#: tourivo.php
-msgid "itsmanzur"
+#: the-readscope-tour-and-accommodation-booking.php
+msgid "The Readscope"
 msgstr ""
 
-#. Author URI of the plugin
-#: tourivo.php
-msgid "https://thereadscope.com"
+#: app/Providers/AdminServiceProvider.php:165
+msgid "Readscope"
+msgstr ""
+
+#: app/Support/Privacy.php:163
+msgid "Readscope Booking"
 msgstr ""
 
 #: app/Admin/AdminDashboard.php:56
-msgid "Tourivo Dashboard"
+msgid "Readscope Booking Dashboard"
 msgstr ""
 
 #: app/Admin/AdminDashboard.php:57
@@ -138,7 +139,7 @@ msgid "1-Click Demo Travel & Hotel Data"
 msgstr ""
 
 #: app/Admin/AdminDashboard.php:159
-msgid "Quickly test Tourivo by importing ready-made tours (Bali, Swiss Alps, Dubai) and boutique hotels with rooms."
+msgid "Quickly test Readscope Booking by importing ready-made tours (Bali, Swiss Alps, Dubai) and boutique hotels with rooms."
 msgstr ""
 
 #: app/Admin/AdminDashboard.php:161
@@ -703,11 +704,11 @@ msgid "The Complete Agency Guide & Feature Showcase"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:34
-msgid "Tourivo Docs & Features Hub"
+msgid "Readscope Booking Docs & Features Hub"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:36
-msgid "Tourivo is your all-in-one travel booking engine and tour management powerhouse for WordPress. Explore our complete feature catalog, step-by-step guides, and copyable shortcodes to launch your booking website effortlessly—no coding required!"
+msgid "Readscope Booking is your all-in-one travel booking engine and tour management powerhouse for WordPress. Explore our complete feature catalog, step-by-step guides, and copyable shortcodes to launch your booking website effortlessly—no coding required!"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:40
@@ -747,15 +748,15 @@ msgid "7. 📅 Availability & Pricing Manager"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:61
-msgid "8. Tourivo Pro Features"
+msgid "8. Readscope Booking Pro Features"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:70
-msgid "What is Tourivo and How Does it Work?"
+msgid "What is Readscope Booking and How Does it Work?"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:72
-msgid "Think of Tourivo as your private booking engine (similar to Booking.com, Airbnb, or Viator) operating directly inside your own WordPress website."
+msgid "Think of Readscope Booking as your private booking engine (similar to Booking.com, Airbnb, or Viator) operating directly inside your own WordPress website."
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:78
@@ -791,7 +792,7 @@ msgid "Set Your Currency & Details"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:101
-msgid "Go to Tourivo -> Settings. Select your currency code (e.g. USD $, EUR €, BDT ৳), symbol position, and sender email."
+msgid "Go to Readscope Booking -> Settings. Select your currency code (e.g. USD $, EUR €, BDT ৳), symbol position, and sender email."
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:102
@@ -823,7 +824,7 @@ msgid "Publish on Pages via Shortcode or Elementor"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:129
-msgid "Paste shortcodes like [tourivo_tours] or [tourivo_filter_search] on any page or drag Tourivo widgets into Elementor."
+msgid "Paste shortcodes like [tourivo_tours] or [tourivo_filter_search] on any page or drag Readscope Booking widgets into Elementor."
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:130
@@ -831,11 +832,11 @@ msgid "View Shortcodes Table"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:138
-msgid "✨ Complete Tourivo Feature Catalog"
+msgid "✨ Complete Readscope Booking Feature Catalog"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:140
-msgid "Explore the complete roster of features engineered into Tourivo to power modern travel agencies, tour operators, and boutique hoteliers."
+msgid "Explore the complete roster of features engineered into Readscope Booking to power modern travel agencies, tour operators, and boutique hoteliers."
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:144
@@ -997,7 +998,7 @@ msgid "Download traveler manifest lists with UTF-8 BOM encoding for seamless vie
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:244
-msgid "Tourivo Pro Enterprise Upgrades"
+msgid "Readscope Booking Pro Enterprise Upgrades"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:247
@@ -1062,7 +1063,7 @@ msgid "How to Create & Configure Tour Packages"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:283
-msgid "Navigate to Tours -> Add New Tour in your WordPress admin menu. Tourivo uses a structured tabbed interface:"
+msgid "Navigate to Tours -> Add New Tour in your WordPress admin menu. Readscope Booking uses a structured tabbed interface:"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:288
@@ -1190,7 +1191,7 @@ msgid "Understanding the 2-Level Hotel Structure"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:333
-msgid "Tourivo handles accommodation in an industry-standard 2-level hierarchy: 1. Hotel Property (the building / resort) and 2. Room Types (the bookable units)."
+msgid "Readscope Booking handles accommodation in an industry-standard 2-level hierarchy: 1. Hotel Property (the building / resort) and 2. Room Types (the bookable units)."
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:338
@@ -1254,7 +1255,7 @@ msgid "How Travelers Experience Your Hotel Page:"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:364
-msgid "When travelers open any Hotel page, Tourivo displays all linked room types with their nightly prices, specs, bed styles, and an interactive \"Reserve Room\" dropdown for each room."
+msgid "When travelers open any Hotel page, Readscope Booking displays all linked room types with their nightly prices, specs, bed styles, and an interactive \"Reserve Room\" dropdown for each room."
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:370
@@ -1262,7 +1263,7 @@ msgid "Displaying Tours, Hotels & Search Bars on Your Pages"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:372
-msgid "You can embed Tourivo elements on your Homepage, Destination pages, or any Custom page using Gutenberg, Elementor, or simple Shortcodes."
+msgid "You can embed Readscope Booking elements on your Homepage, Destination pages, or any Custom page using Gutenberg, Elementor, or simple Shortcodes."
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:376
@@ -1437,7 +1438,7 @@ msgid "In the WordPress standard block editor, click (+) and search for \"Touriv
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:496
-msgid "Tourivo Tour Grid:"
+msgid "Readscope Tour Grid:"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:496
@@ -1445,7 +1446,7 @@ msgid "Live preview grid block."
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:497
-msgid "Tourivo Hotel Grid:"
+msgid "Readscope Hotel Grid:"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:497
@@ -1453,7 +1454,7 @@ msgid "Hotel showcase block."
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:498
-msgid "Tourivo Search Bar:"
+msgid "Readscope Search Bar:"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:498
@@ -1461,7 +1462,7 @@ msgid "Traveler destination lookup block."
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:499
-msgid "Tourivo Booking Panel:"
+msgid "Readscope Booking Panel:"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:499
@@ -1473,7 +1474,7 @@ msgid "Managing Traveler Bookings & Inquiries"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:509
-msgid "Tourivo gives your front desk and agency administrators full control over customer reservations and pre-sale inquiries."
+msgid "Readscope Booking gives your front desk and agency administrators full control over customer reservations and pre-sale inquiries."
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:514
@@ -1481,13 +1482,12 @@ msgid "Orders & Bookings Table"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:515
-msgid "Open Tourivo -> Bookings:"
+msgid "Open Readscope Booking -> Bookings:"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:517
 #: templates/emails/admin-booking-cancelled.php:49
 #: templates/emails/admin-new-booking.php:48
-#: templates/emails/booking-confirmation.php:73
 msgid "Booking Code:"
 msgstr ""
 
@@ -1524,7 +1524,7 @@ msgid "Trip Inquiries & Leads Table"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:526
-msgid "Open Tourivo -> Inquiries:"
+msgid "Open Readscope Booking -> Inquiries:"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:528
@@ -1632,11 +1632,11 @@ msgid "ENTERPRISE EXTENSIONS"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:584
-msgid "Unlock the Full Potential with Tourivo Pro"
+msgid "Unlock the Full Potential with Readscope Booking Pro"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:586
-msgid "Tourivo Pro upgrades your booking engine into a fully automated travel marketplace with WooCommerce payments, calendar sync, and ticket check-in."
+msgid "Readscope Booking Pro upgrades your booking engine into a fully automated travel marketplace with WooCommerce payments, calendar sync, and ticket check-in."
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:593
@@ -2018,7 +2018,7 @@ msgid "Sent to site administrator when a traveler submits the trip inquiry popup
 msgstr ""
 
 #: app/Admin/SettingsPage.php:346
-msgid "Tourivo Settings"
+msgid "Readscope Booking Settings"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:347
@@ -2323,7 +2323,7 @@ msgid "Site Default (WordPress Locale: %s)"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:622
-msgid "Choose whether Tourivo displays in English or Bengali across the admin panel, booking forms, vouchers, and notifications."
+msgid "Choose whether Readscope Booking displays in English or Bengali across the admin panel, booking forms, vouchers, and notifications."
 msgstr ""
 
 #: app/Admin/SettingsPage.php:627
@@ -2379,7 +2379,7 @@ msgid "Account Name / Beneficiary"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:674
-msgid "e.g. Tourivo Holidays Ltd."
+msgid "e.g. Readscope Holidays Ltd."
 msgstr ""
 
 #: app/Admin/SettingsPage.php:678
@@ -2449,7 +2449,7 @@ msgid "Brand Color Customizer & Styling"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:735
-msgid "Match Tourivo booking widgets, cards, and buttons with your active WordPress theme styling."
+msgid "Match Readscope Booking booking widgets, cards, and buttons with your active WordPress theme styling."
 msgstr ""
 
 #: app/Admin/SettingsPage.php:739
@@ -2513,7 +2513,7 @@ msgid "Your theme's fonts, Bengali in Anek Bangla"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:787
-msgid "Anek Bangla keeps forms, prices and buttons crisp on any theme and covers Bengali and English. Headings follow your theme so Tourivo pages still look like your site. Choose your theme's fonts only if its text font is a clear sans-serif with several weights."
+msgid "Anek Bangla keeps forms, prices and buttons crisp on any theme and covers Bengali and English. Headings follow your theme so Readscope Booking pages still look like your site. Choose your theme's fonts only if its text font is a clear sans-serif with several weights."
 msgstr ""
 
 #: app/Admin/SettingsPage.php:794
@@ -2589,7 +2589,7 @@ msgid "days before tour departure or hotel check-in date."
 msgstr ""
 
 #: app/Admin/SettingsPage.php:866
-msgid "Set to 0 to disable automated daily trip reminder emails. Tourivo runs a daily background cron check to dispatch reminders."
+msgid "Set to 0 to disable automated daily trip reminder emails. Readscope Booking runs a daily background cron check to dispatch reminders."
 msgstr ""
 
 #: app/Admin/SettingsPage.php:870
@@ -2785,7 +2785,7 @@ msgid "Require checkbox agreement before checkout and inquiry submission."
 msgstr ""
 
 #: app/Admin/SettingsPage.php:1079
-msgid "When enabled, bookings and inquiries cannot proceed without agreeing to terms. Tourivo records the exact timestamp and policy version SHA-256 hash."
+msgid "When enabled, bookings and inquiries cannot proceed without agreeing to terms. Readscope Booking records the exact timestamp and policy version SHA-256 hash."
 msgstr ""
 
 #: app/Admin/SettingsPage.php:1083
@@ -2797,7 +2797,7 @@ msgid "— Use WordPress Core Privacy Policy Page —"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:1094
-msgid "By default, Tourivo links to the WordPress site privacy policy defined under Settings → Privacy."
+msgid "By default, Readscope Booking links to the WordPress site privacy policy defined under Settings → Privacy."
 msgstr ""
 
 #: app/Admin/SettingsPage.php:1098
@@ -2877,7 +2877,7 @@ msgid "WordPress Core Privacy Tools Integration"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:1171
-msgid "Tourivo is fully integrated with standard WordPress privacy compliance features:"
+msgid "Readscope Booking is fully integrated with standard WordPress privacy compliance features:"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:1173
@@ -2969,7 +2969,7 @@ msgid "System Information"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:1235
-msgid "Tourivo Core Version"
+msgid "Readscope Booking Core Version"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:1239
@@ -3067,7 +3067,7 @@ msgid "Create Essential Pages"
 msgstr ""
 
 #: app/Admin/SetupWizard.php:137
-msgid "Select the default pages you would like Tourivo to automatically generate on your website."
+msgid "Select the default pages you would like Readscope Booking to automatically generate on your website."
 msgstr ""
 
 #: app/Admin/SetupWizard.php:145
@@ -3173,7 +3173,7 @@ msgid "Your Booking Engine is Ready!"
 msgstr ""
 
 #: app/Admin/SetupWizard.php:252
-msgid "Tourivo has been successfully configured. You are ready to accept bookings, manage travel itineraries, and publish hotel rooms."
+msgid "Readscope Booking has been successfully configured. You are ready to accept bookings, manage travel itineraries, and publish hotel rooms."
 msgstr ""
 
 #: app/Admin/SetupWizard.php:258
@@ -3209,7 +3209,7 @@ msgid "Add your custom itinerary"
 msgstr ""
 
 #: app/Admin/SetupWizard.php:280
-msgid "Go to Tourivo Dashboard"
+msgid "Go to Readscope Booking Dashboard"
 msgstr ""
 
 #: app/Admin/SetupWizard.php:612
@@ -3225,11 +3225,11 @@ msgid "Failed to import demo data. Please check logs."
 msgstr ""
 
 #: app/Blocks/BlockManager.php:40
-msgid "Tourivo Travel Engine"
+msgid "Readscope Travel Engine"
 msgstr ""
 
 #: app/Blocks/BlockManager.php:63
-msgid "Tourivo Tour Grid"
+msgid "Readscope Tour Grid"
 msgstr ""
 
 #: app/Blocks/BlockManager.php:66
@@ -3237,7 +3237,7 @@ msgid "Display tours in a modern responsive grid layout."
 msgstr ""
 
 #: app/Blocks/BlockManager.php:79
-msgid "Tourivo Hotel Grid"
+msgid "Readscope Hotel Grid"
 msgstr ""
 
 #: app/Blocks/BlockManager.php:82
@@ -3245,7 +3245,7 @@ msgid "Display hotels and resorts in a responsive grid."
 msgstr ""
 
 #: app/Blocks/BlockManager.php:94
-msgid "Tourivo Search Bar"
+msgid "Readscope Search Bar"
 msgstr ""
 
 #: app/Blocks/BlockManager.php:97
@@ -3253,7 +3253,7 @@ msgid "Destination, date and traveler search filter bar."
 msgstr ""
 
 #: app/Blocks/BlockManager.php:104
-msgid "Tourivo Filter & Search Grid"
+msgid "Readscope Filter & Search Grid"
 msgstr ""
 
 #: app/Blocks/BlockManager.php:107
@@ -3261,7 +3261,7 @@ msgid "Live AJAX filtering by destination, price slider, and duration."
 msgstr ""
 
 #: app/Blocks/BlockManager.php:118
-msgid "Tourivo Booking Panel"
+msgid "Readscope Booking Panel"
 msgstr ""
 
 #: app/Blocks/BlockManager.php:121
@@ -3269,7 +3269,7 @@ msgid "Interactive booking panel with instant pricing and checkout."
 msgstr ""
 
 #: app/Blocks/BlockManager.php:132
-msgid "Tourivo Track My Booking"
+msgid "Readscope Track My Booking"
 msgstr ""
 
 #: app/Blocks/BlockManager.php:135
@@ -3277,7 +3277,7 @@ msgid "Self-service portal for travelers to check reservation status and downloa
 msgstr ""
 
 #: app/Blocks/BlockManager.php:142
-msgid "Tourivo Traveler Wishlist"
+msgid "Readscope Traveler Wishlist"
 msgstr ""
 
 #: app/Blocks/BlockManager.php:145
@@ -3285,7 +3285,7 @@ msgid "Display saved favorite tours and hotels for the traveler."
 msgstr ""
 
 #: app/Blocks/BlockManager.php:155
-msgid "Tourivo My Bookings Portal"
+msgid "Readscope My Bookings Portal"
 msgstr ""
 
 #: app/Blocks/BlockManager.php:158
@@ -3317,11 +3317,11 @@ msgid "Unknown booking action \"%s\". Use list, get, or set-status."
 msgstr ""
 
 #: app/Cli/TourivoCli.php:184
-msgid "Running Tourivo database migrations..."
+msgid "Running Readscope Booking database migrations..."
 msgstr ""
 
 #: app/Cli/TourivoCli.php:186
-msgid "Tourivo database schema migrated successfully."
+msgid "Readscope Booking database schema migrated successfully."
 msgstr ""
 
 #. translators: %s: Unknown command name
@@ -3414,7 +3414,7 @@ msgid "Sample data successfully imported! Created %1$d Tours, %2$d Hotels, and %
 msgstr ""
 
 #: app/Elementor/ElementorManager.php:46
-msgid "Tourivo Elements"
+msgid "Readscope Booking Elements"
 msgstr ""
 
 #: app/Elementor/Widgets/BookingPanelWidget.php:33
@@ -3854,7 +3854,7 @@ msgid "Settings"
 msgstr ""
 
 #: app/Providers/AdminServiceProvider.php:333
-msgid "Welcome to Tourivo! Want to explore with ready-made demo content?"
+msgid "Welcome to Readscope Booking! Want to explore with ready-made demo content?"
 msgstr ""
 
 #: app/Providers/AdminServiceProvider.php:336
@@ -4276,7 +4276,7 @@ msgid "%1$d Adults, %2$d Children"
 msgstr ""
 
 #: app/Providers/RouteServiceProvider.php:102
-msgid "Every 5 minutes (Tourivo)"
+msgid "Every 5 minutes (Readscope Booking)"
 msgstr ""
 
 #: app/Providers/RouteServiceProvider.php:183
@@ -4724,7 +4724,6 @@ msgid "Your Booking Confirmation #{booking_code} - {site_name}"
 msgstr ""
 
 #: app/Services/EmailService.php:675
-#: templates/emails/booking-confirmation.php:51
 #: templates/emails/customer-booking-confirmed.php:47
 msgid "Booking Confirmed!"
 msgstr ""
@@ -4878,7 +4877,7 @@ msgid "Booking Date"
 msgstr ""
 
 #: app/Services/ExportService.php:453
-msgid "Tourivo Bookings Financial Summary Report"
+msgid "Readscope Bookings Financial Summary Report"
 msgstr ""
 
 #: app/Services/ExportService.php:454
@@ -5235,7 +5234,7 @@ msgid "Invalid webhook URL format. HTTPS is required."
 msgstr ""
 
 #: app/Services/WebhookService.php:414
-msgid "This is a test webhook payload from Tourivo."
+msgid "This is a test webhook payload from Readscope Booking."
 msgstr ""
 
 #. translators: %d: HTTP Status Code
@@ -5576,19 +5575,19 @@ msgid "Terms and Conditions"
 msgstr ""
 
 #: app/Support/Privacy.php:129
-msgid "Tourivo Bookings & Inquiries"
+msgid "Readscope Bookings & Inquiries"
 msgstr ""
 
 #: app/Support/Privacy.php:145
-msgid "Tourivo Personal Data Eraser"
+msgid "Readscope Personal Data Eraser"
 msgstr ""
 
 #: app/Support/Privacy.php:177
-msgid "Personal Data Collected by Tourivo"
+msgid "Personal Data Collected by Readscope Booking"
 msgstr ""
 
 #: app/Support/Privacy.php:178
-msgid "When travelers book a tour or submit a trip inquiry through Tourivo, we collect the following personal information: customer name, email address, phone number, billing address, and special customer requests. If IP address collection is enabled, IP addresses are logged alongside bookings for fraud detection and security auditing."
+msgid "When travelers book a tour or submit a trip inquiry through Readscope Booking, we collect the following personal information: customer name, email address, phone number, billing address, and special customer requests. If IP address collection is enabled, IP addresses are logged alongside bookings for fraud detection and security auditing."
 msgstr ""
 
 #: app/Support/Privacy.php:180
@@ -5612,7 +5611,7 @@ msgid "Cookies & Local Browser Storage"
 msgstr ""
 
 #: app/Support/Privacy.php:187
-msgid "Tourivo utilizes browser local storage (localStorage) exclusively for client-side user experience enhancements, including favorite wishlist tours and selected currency preferences. No sensitive personal information is stored in client cookies."
+msgid "Readscope Booking utilizes browser local storage (localStorage) exclusively for client-side user experience enhancements, including favorite wishlist tours and selected currency preferences. No sensitive personal information is stored in client cookies."
 msgstr ""
 
 #: app/Support/Privacy.php:189
@@ -5620,7 +5619,7 @@ msgid "Security & Rate Limiting"
 msgstr ""
 
 #: app/Support/Privacy.php:190
-msgid "To protect our booking endpoints against spam, automated abuse, and brute-force attempts, Tourivo stores transient cryptographic hash representations of client IP addresses. These security transients expire automatically within short windows (10 minutes)."
+msgid "To protect our booking endpoints against spam, automated abuse, and brute-force attempts, Readscope Booking stores transient cryptographic hash representations of client IP addresses. These security transients expire automatically within short windows (10 minutes)."
 msgstr ""
 
 #: app/Support/Privacy.php:196
@@ -5634,7 +5633,7 @@ msgid "This site is configured to transmit booking and inquiry event payloads to
 msgstr ""
 
 #: app/Support/Privacy.php:258
-msgid "Tourivo Bookings"
+msgid "Readscope Bookings"
 msgstr ""
 
 #: app/Support/Privacy.php:263
@@ -5666,7 +5665,7 @@ msgid "Created Date"
 msgstr ""
 
 #: app/Support/Privacy.php:293
-msgid "Tourivo Inquiries"
+msgid "Readscope Inquiries"
 msgstr ""
 
 #: app/Support/Privacy.php:296
@@ -5998,7 +5997,6 @@ msgid "Subtotal:"
 msgstr ""
 
 #: templates/booking-voucher.php:368
-#: templates/emails/booking-confirmation.php:120
 #: templates/emails/customer-booking-confirmed.php:88
 #: templates/emails/customer-booking-received.php:87
 #: templates/thank-you.php:142
@@ -6006,7 +6004,6 @@ msgid "Discount:"
 msgstr ""
 
 #: templates/booking-voucher.php:374
-#: templates/emails/booking-confirmation.php:126
 #: templates/emails/customer-booking-confirmed.php:94
 #: templates/emails/customer-booking-received.php:93
 #: templates/thank-you.php:148
@@ -6146,7 +6143,6 @@ msgid "Customer Phone:"
 msgstr ""
 
 #: templates/emails/admin-new-booking.php:73
-#: templates/emails/booking-confirmation.php:84
 #: templates/emails/customer-booking-confirmed.php:64
 #: templates/emails/customer-booking-received.php:63
 #: templates/emails/customer-trip-reminder.php:70
@@ -6154,7 +6150,6 @@ msgid "Check-in Date:"
 msgstr ""
 
 #: templates/emails/admin-new-booking.php:79
-#: templates/emails/booking-confirmation.php:90
 #: templates/emails/customer-booking-confirmed.php:70
 #: templates/emails/customer-booking-received.php:69
 #: templates/emails/customer-trip-reminder.php:76
@@ -6166,7 +6161,6 @@ msgid "Travelers:"
 msgstr ""
 
 #: templates/emails/admin-new-booking.php:86
-#: templates/emails/booking-confirmation.php:97
 #: templates/emails/customer-booking-confirmed.php:77
 #: templates/emails/customer-booking-received.php:76
 #: templates/emails/customer-trip-reminder.php:83
@@ -6174,7 +6168,6 @@ msgid "Adult(s)"
 msgstr ""
 
 #: templates/emails/admin-new-booking.php:88
-#: templates/emails/booking-confirmation.php:99
 #: templates/emails/customer-booking-confirmed.php:79
 #: templates/emails/customer-booking-received.php:78
 #: templates/emails/customer-trip-reminder.php:85
@@ -6182,7 +6175,6 @@ msgid "Child(ren)"
 msgstr ""
 
 #: templates/emails/admin-new-booking.php:91
-#: templates/emails/booking-confirmation.php:102
 #: templates/emails/customer-booking-confirmed.php:82
 #: templates/emails/customer-booking-received.php:81
 #: templates/emails/customer-trip-reminder.php:88
@@ -6234,25 +6226,14 @@ msgid "View & Reply in Inquiries Manager"
 msgstr ""
 
 #: templates/emails/base-layout.php:161
-#: templates/emails/booking-confirmation.php:49
 msgid "TEST NOTIFICATION"
 msgstr ""
 
 #: templates/emails/base-layout.php:172
-#: templates/emails/booking-confirmation.php:143
 msgid "All rights reserved."
 msgstr ""
 
-#: templates/emails/booking-confirmation.php:24
-msgid "Booking Confirmation"
-msgstr ""
-
-#: templates/emails/booking-confirmation.php:52
-msgid "Travel & Tours Reservation"
-msgstr ""
-
 #. translators: %s: Customer Name
-#: templates/emails/booking-confirmation.php:61
 #: templates/emails/customer-booking-cancelled.php:32
 #: templates/emails/customer-booking-confirmed.php:36
 #: templates/emails/customer-booking-received.php:35
@@ -6262,11 +6243,6 @@ msgstr ""
 msgid "Hello %s,"
 msgstr ""
 
-#: templates/emails/booking-confirmation.php:68
-msgid "Thank you for booking with us! We have successfully received your reservation details below:"
-msgstr ""
-
-#: templates/emails/booking-confirmation.php:78
 #: templates/emails/customer-booking-cancelled.php:54
 #: templates/emails/customer-booking-confirmed.php:58
 #: templates/emails/customer-booking-received.php:57
@@ -6274,27 +6250,10 @@ msgstr ""
 msgid "Trip / Stay:"
 msgstr ""
 
-#: templates/emails/booking-confirmation.php:95
 #: templates/emails/customer-booking-confirmed.php:75
 #: templates/emails/customer-booking-received.php:74
 #: templates/emails/customer-trip-reminder.php:81
 msgid "Travelers / Guests:"
-msgstr ""
-
-#: templates/emails/booking-confirmation.php:108
-msgid "Contact Phone:"
-msgstr ""
-
-#: templates/emails/booking-confirmation.php:114
-msgid "Special Notes:"
-msgstr ""
-
-#: templates/emails/booking-confirmation.php:133
-msgid "Grand Total Amount"
-msgstr ""
-
-#: templates/emails/booking-confirmation.php:138
-msgid "If you have questions about your itinerary or need to make adjustments, please reply directly to this email."
 msgstr ""
 
 #: templates/emails/customer-booking-cancelled.php:39
@@ -6835,9 +6794,9 @@ msgid "Use our online lookup portal anytime to check live status or submit trip 
 msgstr ""
 
 #. translators: 1: Required PHP version, 2: Current PHP version
-#: tourivo.php:35
+#: the-readscope-tour-and-accommodation-booking.php:35
 #, php-format
-msgid "Tourivo requires PHP version %1$s or greater. You are running version %2$s. Please upgrade your PHP version."
+msgid "Readscope Booking requires PHP version %1$s or greater. You are running version %2$s. Please upgrade your PHP version."
 msgstr ""
 
 #: views/admin/metaboxes/availability-metabox.php:21

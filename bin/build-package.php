@@ -1,6 +1,6 @@
 <?php
 /**
- * Tourivo Plugin Distribution Package Builder
+ * Readscope Booking Plugin Distribution Package Builder
  *
  * Usage:
  *   php bin/build-package.php
@@ -12,13 +12,13 @@ $startTime = microtime(true);
 $pluginRoot = dirname(__DIR__);
 
 echo "=====================================================\n";
-echo "           Tourivo Distribution Builder\n";
+echo "           Readscope Booking Distribution Builder\n";
 echo "=====================================================\n\n";
 
-// 1. Detect Version from tourivo.php
-$mainFileContent = file_get_contents($pluginRoot . '/tourivo.php');
+// 1. Detect Version from the-readscope-tour-and-accommodation-booking.php
+$mainFileContent = file_get_contents($pluginRoot . '/the-readscope-tour-and-accommodation-booking.php');
 if (!preg_match('/Version:\s*([0-9]+\.[0-9]+\.[0-9]+(?:-[a-zA-Z0-9.]+)?)/i', $mainFileContent, $vMatches)) {
-    fwrite(STDERR, "Error: Could not extract version from tourivo.php\n");
+    fwrite(STDERR, "Error: Could not extract version from the-readscope-tour-and-accommodation-booking.php\n");
     exit(1);
 }
 $version = $vMatches[1];
@@ -60,7 +60,7 @@ if ($phpErrors > 0) {
 echo "    Checked $checkedCount PHP files: All Syntax OK!\n";
 
 // 3. Ensure Languages Directory has .mo
-$moFile = $pluginRoot . '/languages/tourivo-bn_BD.mo';
+$moFile = $pluginRoot . '/languages/the-readscope-tour-and-accommodation-booking-bn_BD.mo';
 if (!file_exists($moFile)) {
     echo "==> Notice: .mo file missing, searching .po to compile...\n";
 } else {
@@ -92,7 +92,7 @@ $includedEntries = [
     'languages',
     'templates',
     'views',
-    'tourivo.php',
+    'the-readscope-tour-and-accommodation-booking.php',
     'readme.txt',
     'LICENSE',
     'uninstall.php',
@@ -126,8 +126,8 @@ $excludedPatterns = [
 ];
 
 $zipFiles = [
-    $distDir . "/tourivo-{$version}.zip",
-    $distDir . "/tourivo.zip",
+    $distDir . "/the-readscope-tour-and-accommodation-booking-{$version}.zip",
+    $distDir . "/the-readscope-tour-and-accommodation-booking.zip",
 ];
 
 // Clean old zips
@@ -155,7 +155,7 @@ foreach ($includedEntries as $entry) {
     }
 
     if (is_file($fullPath)) {
-        $zipPath = 'tourivo/' . $entry;
+        $zipPath = 'the-readscope-tour-and-accommodation-booking/' . $entry;
         $zip->addFile($fullPath, $zipPath);
         $fileCount++;
         $uncompressedBytes += filesize($fullPath);
@@ -181,7 +181,7 @@ foreach ($includedEntries as $entry) {
                 continue;
             }
 
-            $zipPath = 'tourivo/' . $normalizedRel;
+            $zipPath = 'the-readscope-tour-and-accommodation-booking/' . $normalizedRel;
             if ($item->isDir()) {
                 $zip->addEmptyDir($zipPath);
             } else {
@@ -195,7 +195,7 @@ foreach ($includedEntries as $entry) {
 
 $zip->close();
 
-// Copy to generic tourivo.zip as well
+// Copy to generic the-readscope-tour-and-accommodation-booking.zip as well
 copy($zipFiles[0], $zipFiles[1]);
 
 $compressedBytes = filesize($zipFiles[0]);
@@ -205,8 +205,8 @@ $duration = round(microtime(true) - $startTime, 2);
 echo "\n=====================================================\n";
 echo "           BUILD SUCCESSFUL ($duration s)\n";
 echo "=====================================================\n";
-echo "Package (Versioned): dist/tourivo-{$version}.zip\n";
-echo "Package (Generic):   dist/tourivo.zip\n";
+echo "Package (Versioned): dist/the-readscope-tour-and-accommodation-booking-{$version}.zip\n";
+echo "Package (Generic):   dist/the-readscope-tour-and-accommodation-booking.zip\n";
 echo "Files Packaged:      " . number_format($fileCount) . " files\n";
 echo "Uncompressed Size:   " . round($uncompressedBytes / 1024 / 1024, 2) . " MB (" . number_format($uncompressedBytes) . " bytes)\n";
 echo "Compressed Size:     " . round($compressedBytes / 1024 / 1024, 2) . " MB (" . number_format($compressedBytes) . " bytes)\n";

@@ -306,7 +306,7 @@ class WebhookService
                 LogService::log(
                     $bookingId,
                     'webhook_skipped',
-                    __('Webhook was not sent because no signing secret is configured.', 'tourivo')
+                    __('Webhook was not sent because no signing secret is configured.', 'the-readscope-tour-and-accommodation-booking')
                 );
             }
 
@@ -316,7 +316,7 @@ class WebhookService
         $headers = [
             'Content-Type'    => 'application/json; charset=utf-8',
             'X-Tourivo-Event' => $event,
-            'User-Agent'      => 'Tourivo-Webhook/' . TOURIVO_VERSION,
+            'User-Agent'      => 'Readscope Booking-Webhook/' . TOURIVO_VERSION,
         ];
         $headers += self::signatureHeaders($jsonPayload, $secret);
 
@@ -351,7 +351,7 @@ class WebhookService
                     'webhook_dispatched',
                     sprintf(
                         /* translators: 1: Webhook event name, 2: HTTP status code, 3: Delivery attempt number */
-                        __('Webhook [%1$s] delivered successfully (HTTP %2$d, attempt %3$d).', 'tourivo'),
+                        __('Webhook [%1$s] delivered successfully (HTTP %2$d, attempt %3$d).', 'the-readscope-tour-and-accommodation-booking'),
                         $event,
                         $statusCode,
                         $attempt
@@ -363,7 +363,7 @@ class WebhookService
                     'webhook_failed',
                     sprintf(
                         /* translators: 1: Webhook event name, 2: Error message, 3: Delivery attempt number */
-                        __('Webhook [%1$s] delivery failed (Reason: %2$s, attempt %3$d).', 'tourivo'),
+                        __('Webhook [%1$s] delivery failed (Reason: %2$s, attempt %3$d).', 'the-readscope-tour-and-accommodation-booking'),
                         $event,
                         $errorMsg,
                         $attempt
@@ -402,7 +402,7 @@ class WebhookService
     public function sendTestWebhook(string $url, string $secret = ''): array
     {
         if (!$this->isValidUrl($url)) {
-            return ['success' => false, 'message' => __('Invalid webhook URL format. HTTPS is required.', 'tourivo')];
+            return ['success' => false, 'message' => __('Invalid webhook URL format. HTTPS is required.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         $testPayload = [
@@ -411,7 +411,7 @@ class WebhookService
             'source'    => esc_url_raw(home_url()),
             'version'   => TOURIVO_VERSION,
             'data'      => [
-                'message' => __('This is a test webhook payload from Tourivo.', 'tourivo'),
+                'message' => __('This is a test webhook payload from Readscope Booking.', 'the-readscope-tour-and-accommodation-booking'),
                 'site'    => get_bloginfo('name'),
             ],
         ];
@@ -421,7 +421,7 @@ class WebhookService
         $headers = [
             'Content-Type'    => 'application/json; charset=utf-8',
             'X-Tourivo-Event' => 'test.ping',
-            'User-Agent'      => 'Tourivo-Webhook/' . TOURIVO_VERSION,
+            'User-Agent'      => 'Readscope Booking-Webhook/' . TOURIVO_VERSION,
         ];
         $headers += self::signatureHeaders((string) $json, $secret);
 
@@ -446,7 +446,7 @@ class WebhookService
             'success'     => $code >= 200 && $code < 300,
             'status_code' => $code,
             /* translators: %d: HTTP Status Code */
-            'message'     => sprintf(__('Endpoint responded with HTTP status %d.', 'tourivo'), $code),
+            'message'     => sprintf(__('Endpoint responded with HTTP status %d.', 'the-readscope-tour-and-accommodation-booking'), $code),
         ];
     }
 }

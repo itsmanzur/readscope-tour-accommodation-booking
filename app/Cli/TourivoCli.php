@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Manage Tourivo bookings, inventory, migrations, and stats from the command line.
+ * Manage Readscope Booking bookings, inventory, migrations, and stats from the command line.
  *
  * ## EXAMPLES
  *
@@ -41,7 +41,7 @@ if (!defined('ABSPATH')) {
 class TourivoCli extends WP_CLI_Command
 {
     /**
-     * Manage Tourivo bookings.
+     * Manage Readscope Booking bookings.
      *
      * ## OPTIONS
      *
@@ -108,7 +108,7 @@ class TourivoCli extends WP_CLI_Command
                 }
 
                 if (empty($results)) {
-                    WP_CLI::log(__('No bookings found matching your criteria.', 'tourivo'));
+                    WP_CLI::log(__('No bookings found matching your criteria.', 'the-readscope-tour-and-accommodation-booking'));
                     return;
                 }
 
@@ -118,14 +118,14 @@ class TourivoCli extends WP_CLI_Command
             case 'get':
                 $id = isset($args[1]) ? (int) $args[1] : 0;
                 if ($id <= 0) {
-                    WP_CLI::error(__('Please provide a valid numeric booking ID. Example: wp tourivo booking get 12', 'tourivo'));
+                    WP_CLI::error(__('Please provide a valid numeric booking ID. Example: wp tourivo booking get 12', 'the-readscope-tour-and-accommodation-booking'));
                 }
 
                 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $booking = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tourivo_bookings WHERE id = %d", $id), ARRAY_A);
                 if (!$booking) {
                     /* translators: %d: Numeric booking ID */
-                    WP_CLI::error(sprintf(__('Booking #%d not found.', 'tourivo'), $id));
+                    WP_CLI::error(sprintf(__('Booking #%d not found.', 'the-readscope-tour-and-accommodation-booking'), $id));
                 }
 
                 $format = $assocArgs['format'] ?? 'table';
@@ -145,7 +145,7 @@ class TourivoCli extends WP_CLI_Command
                 $newStatus = isset($args[2]) ? sanitize_text_field($args[2]) : '';
 
                 if ($id <= 0 || empty($newStatus)) {
-                    WP_CLI::error(__('Usage: wp tourivo booking set-status <id> <status>', 'tourivo'));
+                    WP_CLI::error(__('Usage: wp tourivo booking set-status <id> <status>', 'the-readscope-tour-and-accommodation-booking'));
                 }
 
                 $bookingService = \Tourivo\Common\Container::getInstance()->get(\Tourivo\Services\BookingService::class);
@@ -160,12 +160,12 @@ class TourivoCli extends WP_CLI_Command
 
             default:
                 /* translators: %s: Action name */
-                WP_CLI::error(sprintf(__('Unknown booking action "%s". Use list, get, or set-status.', 'tourivo'), $action));
+                WP_CLI::error(sprintf(__('Unknown booking action "%s". Use list, get, or set-status.', 'the-readscope-tour-and-accommodation-booking'), $action));
         }
     }
 
     /**
-     * Run Tourivo database migrations.
+     * Run Readscope Booking database migrations.
      *
      * ## EXAMPLES
      *
@@ -181,12 +181,12 @@ class TourivoCli extends WP_CLI_Command
         $sub = $args[0] ?? 'migrate';
 
         if ($sub === 'migrate') {
-            WP_CLI::log(__('Running Tourivo database migrations...', 'tourivo'));
+            WP_CLI::log(__('Running Readscope Booking database migrations...', 'the-readscope-tour-and-accommodation-booking'));
             Schema::migrate();
-            WP_CLI::success(__('Tourivo database schema migrated successfully.', 'tourivo'));
+            WP_CLI::success(__('Readscope Booking database schema migrated successfully.', 'the-readscope-tour-and-accommodation-booking'));
         } else {
             /* translators: %s: Unknown command name */
-            WP_CLI::error(sprintf(__('Unknown db command "%s". Use: wp tourivo db migrate', 'tourivo'), $sub));
+            WP_CLI::error(sprintf(__('Unknown db command "%s". Use: wp tourivo db migrate', 'the-readscope-tour-and-accommodation-booking'), $sub));
         }
     }
 
@@ -220,7 +220,7 @@ class TourivoCli extends WP_CLI_Command
     {
         $itemId = isset($args[0]) ? (int) $args[0] : 0;
         if ($itemId <= 0) {
-            WP_CLI::error(__('Please specify a valid item ID. Example: wp tourivo inventory 15', 'tourivo'));
+            WP_CLI::error(__('Please specify a valid item ID. Example: wp tourivo inventory 15', 'the-readscope-tour-and-accommodation-booking'));
         }
 
         $postType = get_post_type($itemId);
@@ -235,13 +235,13 @@ class TourivoCli extends WP_CLI_Command
         $avail = $inventoryService->checkAvailability($itemId, $itemType, $checkIn, $checkOut, $timeSlot, 1);
 
         /* translators: 1: Item ID, 2: Item title, 3: Date string */
-        WP_CLI::line(sprintf(__('Item: #%1$d (%2$s) | Date: %3$s', 'tourivo'), $itemId, get_the_title($itemId), $checkIn));
+        WP_CLI::line(sprintf(__('Item: #%1$d (%2$s) | Date: %3$s', 'the-readscope-tour-and-accommodation-booking'), $itemId, get_the_title($itemId), $checkIn));
         if ($avail['available']) {
             /* translators: %d: Remaining capacity count */
-            WP_CLI::success(sprintf(__('Available! Remaining capacity: %d spots.', 'tourivo'), $avail['available_spots']));
+            WP_CLI::success(sprintf(__('Available! Remaining capacity: %d spots.', 'the-readscope-tour-and-accommodation-booking'), $avail['available_spots']));
         } else {
             /* translators: %s: Error message reason */
-            WP_CLI::warning(sprintf(__('Unavailable: %s', 'tourivo'), $avail['message']));
+            WP_CLI::warning(sprintf(__('Unavailable: %s', 'the-readscope-tour-and-accommodation-booking'), $avail['message']));
         }
     }
 

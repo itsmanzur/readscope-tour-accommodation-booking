@@ -55,7 +55,7 @@ class ReviewService
             return;
         }
 
-        // phpcs:disable WordPress.Security.NonceVerification.Missing
+        // phpcs:disable WordPress.Security.NonceVerification.Missing -- runs on core's comment_post after wp-comments-post.php accepted the comment (public comment form has no nonce by design); value is clamped to 1-5.
         if (isset($_POST['tourivo_rating'])) {
             $rating = max(1, min(5, (int) sanitize_text_field(wp_unslash((string) $_POST['tourivo_rating']))));
             update_comment_meta($commentId, self::META_RATING, $rating);

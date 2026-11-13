@@ -29,7 +29,7 @@ class HotelMetaBox extends MetaBox
 
     public function getTitle(): string
     {
-        return __('Hotel & Property Settings', 'tourivo');
+        return __('Hotel & Property Settings', 'the-readscope-tour-and-accommodation-booking');
     }
 
     public function render(WP_Post $post): void
@@ -65,7 +65,7 @@ class HotelMetaBox extends MetaBox
     public function save(int $postId, WP_Post $post): void
     {
         // Nonce is verified by parent handleSave(), but documented here for PHPCS
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- MetaBox::handleSave() verifies the nonce and edit_post capability before save() runs.
         if (empty($_POST)) {
             return;
         }
@@ -84,7 +84,7 @@ class HotelMetaBox extends MetaBox
             '_tourivo_policy'        => 'sanitize_textarea_field',
         ];
 
-        // phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        // phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce and capability verified in MetaBox::handleSave(); each field is sanitized by its type below.
         foreach ($fields as $field => $sanitizer) {
             if (isset($_POST[$field])) {
                 $val = wp_unslash($_POST[$field]);

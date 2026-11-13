@@ -20,7 +20,7 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./app</directory>
-            <file>./tourivo.php</file>
+            <file>./the-readscope-tour-and-accommodation-booking.php</file>
             <exclude>
                 <directory>./vendor</directory>
                 <directory>./tests</directory>

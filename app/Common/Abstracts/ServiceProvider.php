@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class ServiceProvider
  *
- * Abstract base class for all Tourivo service providers.
+ * Abstract base class for all Readscope Booking service providers.
  *
  * @package Tourivo\Common\Abstracts
  */

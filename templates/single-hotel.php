@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/tourivo/single-hotel.php.
  *
- * @package Tourivo
+ * @package Readscope Booking
  */
 
 if (!defined('ABSPATH')) {
@@ -24,7 +24,7 @@ $tourivoSymbol  = (string) apply_filters('tourivo/currency_symbol', '$');
         <?php tourivo_place_search(); ?>
         <!-- Top Breadcrumbs / Back link -->
         <div class="tourivo-top-meta">
-            <a href="<?php echo esc_url(get_post_type_archive_link('tourivo_hotel')); ?>" class="back-link">&larr; <?php echo esc_html(_x('Hotels', 'public archive title', 'tourivo')); ?></a>
+            <a href="<?php echo esc_url(get_post_type_archive_link('tourivo_hotel')); ?>" class="back-link">&larr; <?php echo esc_html(_x('Hotels', 'public archive title', 'the-readscope-tour-and-accommodation-booking')); ?></a>
         </div>
 
         <header class="tourivo-header-section">
@@ -45,7 +45,7 @@ $tourivoSymbol  = (string) apply_filters('tourivo/currency_symbol', '$');
                 echo esc_html(
                     sprintf(
                         /* translators: 1: Check-in time, 2: Check-out time */
-                        __('Check-in: %1$s | Check-out: %2$s', 'tourivo'),
+                        __('Check-in: %1$s | Check-out: %2$s', 'the-readscope-tour-and-accommodation-booking'),
                         $tourivoHotel->getCheckInTime(),
                         $tourivoHotel->getCheckOutTime()
                     )
@@ -53,11 +53,11 @@ $tourivoSymbol  = (string) apply_filters('tourivo/currency_symbol', '$');
                 ?></span>
                 <?php if ($tourivoHotel->getReviewCount() > 0) : ?>
                     <a href="#tourivo-reviews" class="meta-tag meta-rating-link">
-                        <span class="rating-star">★</span> <?php echo esc_html(number_format($tourivoHotel->getAverageRating(), 1)); ?> (<?php echo esc_html((string)$tourivoHotel->getReviewCount()); ?> <?php esc_html_e('reviews', 'tourivo'); ?>)
+                        <span class="rating-star">★</span> <?php echo esc_html(number_format($tourivoHotel->getAverageRating(), 1)); ?> (<?php echo esc_html((string)$tourivoHotel->getReviewCount()); ?> <?php esc_html_e('reviews', 'the-readscope-tour-and-accommodation-booking'); ?>)
                     </a>
                 <?php endif; ?>
                 <button type="button" class="tourivo-wishlist-toggle-single" data-id="<?php echo esc_attr((string)$tourivoHotelId); ?>" data-type="hotel">
-                    <span class="dashicons dashicons-heart"></span> <span class="wishlist-btn-label"><?php esc_html_e('Save', 'tourivo'); ?></span>
+                    <span class="dashicons dashicons-heart"></span> <span class="wishlist-btn-label"><?php esc_html_e('Save', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                 </button>
             </div>
         </header>
@@ -75,7 +75,7 @@ $tourivoSymbol  = (string) apply_filters('tourivo/currency_symbol', '$');
         if (!empty($tourivoAmenities)) : 
         ?>
             <div class="tourivo-block-section">
-                <h2 class="section-heading"><?php esc_html_e('Property Amenities & Highlights', 'tourivo'); ?></h2>
+                <h2 class="section-heading"><?php esc_html_e('Property Amenities & Highlights', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                 <div class="tourivo-amenities-tags">
                     <?php foreach ($tourivoAmenities as $tourivoAmenity) : ?>
                         <span class="amenity-badge"><span class="dashicons dashicons-yes"></span> <?php echo esc_html($tourivoAmenity->name); ?></span>
@@ -86,7 +86,7 @@ $tourivoSymbol  = (string) apply_filters('tourivo/currency_symbol', '$');
 
         <!-- Hotel Overview -->
         <div class="tourivo-block-section">
-            <h2 class="section-heading"><?php esc_html_e('About this Property', 'tourivo'); ?></h2>
+            <h2 class="section-heading"><?php esc_html_e('About this Property', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
             <div class="entry-content">
                 <?php the_content(); ?>
             </div>
@@ -94,7 +94,7 @@ $tourivoSymbol  = (string) apply_filters('tourivo/currency_symbol', '$');
 
         <!-- Available Rooms Section -->
         <div class="tourivo-block-section">
-            <h2 class="section-heading"><?php esc_html_e('Available Room Types & Rates', 'tourivo'); ?></h2>
+            <h2 class="section-heading"><?php esc_html_e('Available Room Types & Rates', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
 
             <?php if (!empty($tourivoRooms)) : ?>
                 <div class="tourivo-rooms-list">
@@ -115,7 +115,7 @@ $tourivoSymbol  = (string) apply_filters('tourivo/currency_symbol', '$');
                                     echo esc_html(
                                         sprintf(
                                             /* translators: %d: Maximum guests */
-                                            __('Up to %d Guests', 'tourivo'),
+                                            __('Up to %d Guests', 'the-readscope-tour-and-accommodation-booking'),
                                             $tourivoRoom->getMaxGuests()
                                         )
                                     );
@@ -135,11 +135,11 @@ $tourivoSymbol  = (string) apply_filters('tourivo/currency_symbol', '$');
                             <div class="room-price-col">
                                 <div class="price-tag">
                                     <span class="amount"><?php echo esc_html($tourivoRoom->getFormattedPrice()); ?></span>
-                                    <span class="unit">/ <?php esc_html_e('night', 'tourivo'); ?></span>
+                                    <span class="unit">/ <?php esc_html_e('night', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 </div>
                                 <div class="room-booking-widget-wrap">
                                     <details class="room-reserve-dropdown">
-                                        <summary class="tourivo-btn tourivo-btn-primary"><?php esc_html_e('Reserve Room', 'tourivo'); ?></summary>
+                                        <summary class="tourivo-btn tourivo-btn-primary"><?php esc_html_e('Reserve Room', 'the-readscope-tour-and-accommodation-booking'); ?></summary>
                                         <div class="room-dropdown-content">
                                             <?php 
                                             tourivo_get_template('booking-panel.php', [
@@ -155,7 +155,7 @@ $tourivoSymbol  = (string) apply_filters('tourivo/currency_symbol', '$');
                     <?php endforeach; ?>
                 </div>
             <?php else : ?>
-                <p class="no-rooms-msg"><?php esc_html_e('No rooms currently available for this property.', 'tourivo'); ?></p>
+                <p class="no-rooms-msg"><?php esc_html_e('No rooms currently available for this property.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
             <?php endif; ?>
         </div>
 

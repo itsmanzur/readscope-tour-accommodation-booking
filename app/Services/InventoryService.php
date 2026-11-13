@@ -166,7 +166,7 @@ class InventoryService
                 'total_price'     => 0.0,
                 'currency_symbol' => $currencySymbol,
                 'dates_checked'   => [],
-                'message'         => __('Invalid date range specified.', 'tourivo'),
+                'message'         => __('Invalid date range specified.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -178,7 +178,7 @@ class InventoryService
                 'total_price'     => 0.0,
                 'currency_symbol' => $currencySymbol,
                 'dates_checked'   => $dates,
-                'message'         => __('This departure has no capacity configured yet.', 'tourivo'),
+                'message'         => __('This departure has no capacity configured yet.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -228,8 +228,8 @@ class InventoryService
             'dates_checked'   => $dates,
             'message'         => $allAvailable
                 /* translators: %d: Number of spots left */
-                ? sprintf(__('Available (%d spots left)', 'tourivo'), $minAvailableSpots)
-                : __('Selected dates or quantity are not available.', 'tourivo'),
+                ? sprintf(__('Available (%d spots left)', 'the-readscope-tour-and-accommodation-booking'), $minAvailableSpots)
+                : __('Selected dates or quantity are not available.', 'the-readscope-tour-and-accommodation-booking'),
         ];
     }
 
@@ -681,14 +681,14 @@ class InventoryService
         if (empty($itemType)) {
             return [
                 'success' => false,
-                'message' => __('Invalid item type. Must be tour or room.', 'tourivo'),
+                'message' => __('Invalid item type. Must be tour or room.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
         if ($itemId <= 0) {
             return [
                 'success' => false,
-                'message' => __('Invalid item ID.', 'tourivo'),
+                'message' => __('Invalid item ID.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -696,7 +696,7 @@ class InventoryService
         if (!$post) {
             return [
                 'success' => false,
-                'message' => __('Selected item was not found.', 'tourivo'),
+                'message' => __('Selected item was not found.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -704,7 +704,7 @@ class InventoryService
         if ($post->post_type !== $expectedPostType) {
             return [
                 'success' => false,
-                'message' => __('Selected item does not match the given item type.', 'tourivo'),
+                'message' => __('Selected item does not match the given item type.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -712,7 +712,7 @@ class InventoryService
         if (isset($changes['capacity']) && (!is_numeric($changes['capacity']) || (int) $changes['capacity'] < 0)) {
             return [
                 'success' => false,
-                'message' => __('Capacity must be a non-negative whole number.', 'tourivo'),
+                'message' => __('Capacity must be a non-negative whole number.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -721,7 +721,7 @@ class InventoryService
             if (!is_numeric($changes['price_override']) || (float) $changes['price_override'] < 0) {
                 return [
                     'success' => false,
-                    'message' => __('Price override must be a non-negative number.', 'tourivo'),
+                    'message' => __('Price override must be a non-negative number.', 'the-readscope-tour-and-accommodation-booking'),
                 ];
             }
         }
@@ -731,7 +731,7 @@ class InventoryService
         if (empty($dates)) {
             return [
                 'success' => false,
-                'message' => __('Invalid date range specified. Range must be valid Y-m-d format and maximum 365 days.', 'tourivo'),
+                'message' => __('Invalid date range specified. Range must be valid Y-m-d format and maximum 365 days.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -749,7 +749,7 @@ class InventoryService
         if (empty($dates)) {
             return [
                 'success' => false,
-                'message' => __('No dates matched the day-of-week filter.', 'tourivo'),
+                'message' => __('No dates matched the day-of-week filter.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -786,7 +786,7 @@ class InventoryService
                     'success' => false,
                     'message' => sprintf(
                         /* translators: 1: Active booked count, 2: Date */
-                        __('Cannot set capacity below active bookings (%1$d booked/held on %2$s).', 'tourivo'),
+                        __('Cannot set capacity below active bookings (%1$d booked/held on %2$s).', 'the-readscope-tour-and-accommodation-booking'),
                         $activeSpots,
                         $date
                     ),
@@ -799,7 +799,7 @@ class InventoryService
                     'success' => false,
                     'message' => sprintf(
                         /* translators: 1: Date, 2: Active booked count */
-                        __('Date %1$s has active bookings (%2$d booked/held). Use the "Force Block" option to block future bookings without cancelling existing ones.', 'tourivo'),
+                        __('Date %1$s has active bookings (%2$d booked/held). Use the "Force Block" option to block future bookings without cancelling existing ones.', 'the-readscope-tour-and-accommodation-booking'),
                         $date,
                         $activeSpots
                     ),
@@ -846,13 +846,13 @@ class InventoryService
                     return [
                         'success' => false,
                         /* translators: %s: Date */
-                        'message' => sprintf(__('Cannot set capacity below active bookings on %s: new bookings arrived while saving. Reload and try again.', 'tourivo'), $r['date']),
+                        'message' => sprintf(__('Cannot set capacity below active bookings on %s: new bookings arrived while saving. Reload and try again.', 'the-readscope-tour-and-accommodation-booking'), $r['date']),
                     ];
                 }
                 return [
                     'success' => false,
                     /* translators: %s: Date */
-                    'message' => sprintf(__('Failed to save availability record for %s.', 'tourivo'), $r['date']),
+                    'message' => sprintf(__('Failed to save availability record for %s.', 'the-readscope-tour-and-accommodation-booking'), $r['date']),
                 ];
             }
             $updatedCount++;
@@ -904,7 +904,7 @@ class InventoryService
             'success'       => true,
             'message'       => sprintf(
                 /* translators: %d: Number of updated days */
-                __('Availability successfully updated for %d date(s).', 'tourivo'),
+                __('Availability successfully updated for %d date(s).', 'the-readscope-tour-and-accommodation-booking'),
                 $updatedCount
             ),
             'updated_count' => $updatedCount,

@@ -68,6 +68,14 @@ class Uninstaller
                     OR option_name LIKE '_transient_timeout_tourivo_%'"
             );
 
+            // Purge rate-limit counter rows
+            $wpdb->query(
+                $wpdb->prepare(
+                    "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
+                    $wpdb->esc_like('tourivo_rl_') . '%'
+                )
+            );
+
             // Purge checkout hold records
             $wpdb->query(
                 $wpdb->prepare(
@@ -76,7 +84,7 @@ class Uninstaller
                 )
             );
 
-            // Purge Tourivo user meta
+            // Purge Readscope Booking user meta
             $wpdb->query(
                 "DELETE FROM {$wpdb->usermeta} 
                  WHERE meta_key IN ('_tourivo_wishlist', 'tourivo_dismiss_welcome_notice')"

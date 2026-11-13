@@ -64,8 +64,8 @@ class BookingLookupShortcode
     public static function render(array|string $atts = []): string
     {
         $attributes = shortcode_atts([
-            'title'       => __('Track Your Booking', 'tourivo'),
-            'description' => __('Enter your booking reference code and email to check your reservation status and download your voucher.', 'tourivo'),
+            'title'       => __('Track Your Booking', 'the-readscope-tour-and-accommodation-booking'),
+            'description' => __('Enter your booking reference code and email to check your reservation status and download your voucher.', 'the-readscope-tour-and-accommodation-booking'),
         ], (array) $atts, 'tourivo_booking_lookup');
 
         ob_start();
@@ -100,7 +100,7 @@ class BookingLookupShortcode
      */
     protected static function hasValidNonce(): bool
     {
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- This line reads the nonce itself, for wp_verify_nonce() below.
         $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash((string) $_POST['nonce'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
 
         if ($nonce !== '' && wp_verify_nonce($nonce, 'tourivo_lookup_nonce')) {
@@ -108,7 +108,7 @@ class BookingLookupShortcode
         }
 
         wp_send_json_error([
-            'message' => __('Security token expired. Please refresh the page and try again.', 'tourivo'),
+            'message' => __('Security token expired. Please refresh the page and try again.', 'the-readscope-tour-and-accommodation-booking'),
             'code'    => 'nonce_expired',
         ], 403);
 
@@ -124,14 +124,14 @@ class BookingLookupShortcode
     {
         // Check Honeypot spam field
         if (!empty($_POST['tourivo_hp_check'])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
-            wp_send_json_error(['message' => __('Submission blocked.', 'tourivo')], 400);
+            wp_send_json_error(['message' => __('Submission blocked.', 'the-readscope-tour-and-accommodation-booking')], 400);
         }
 
         $ip = ClientIp::get();
         // Rate limiting: max 10 lookup attempts per 5 minutes per IP
         if (!RateLimiter::hit('tourivo_lookup_' . md5($ip), 10, 300)) {
             wp_send_json_error([
-                'message' => __('Too many lookup attempts. Please wait a few minutes before trying again.', 'tourivo'),
+                'message' => __('Too many lookup attempts. Please wait a few minutes before trying again.', 'the-readscope-tour-and-accommodation-booking'),
             ], 429);
             return;
         }
@@ -145,7 +145,7 @@ class BookingLookupShortcode
 
         if (empty($bookingCode) || empty($email) || !is_email($email)) {
             wp_send_json_error([
-                'message' => __('Please enter a valid Booking Reference Code and Email Address.', 'tourivo'),
+                'message' => __('Please enter a valid Booking Reference Code and Email Address.', 'the-readscope-tour-and-accommodation-booking'),
             ], 400);
         }
 
@@ -162,7 +162,7 @@ class BookingLookupShortcode
 
         if (!$booking) {
             wp_send_json_error([
-                'message' => __('No reservation found matching the provided Booking Code and Email Address. Please check your confirmation details.', 'tourivo'),
+                'message' => __('No reservation found matching the provided Booking Code and Email Address. Please check your confirmation details.', 'the-readscope-tour-and-accommodation-booking'),
             ], 404);
         }
 
@@ -184,7 +184,7 @@ class BookingLookupShortcode
     public static function handleCancellationAjax(): void
     {
         if (!empty($_POST['tourivo_hp_check'])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
-            wp_send_json_error(['message' => __('Submission blocked.', 'tourivo')], 400);
+            wp_send_json_error(['message' => __('Submission blocked.', 'the-readscope-tour-and-accommodation-booking')], 400);
             return;
         }
 
@@ -223,7 +223,7 @@ class BookingLookupShortcode
             return [
                 'success' => false,
                 'code'    => 429,
-                'message' => __('Too many cancellation requests submitted. Please try again later.', 'tourivo'),
+                'message' => __('Too many cancellation requests submitted. Please try again later.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -231,7 +231,7 @@ class BookingLookupShortcode
             return [
                 'success' => false,
                 'code'    => 400,
-                'message' => __('Please provide both a valid Booking Code and Email Address.', 'tourivo'),
+                'message' => __('Please provide both a valid Booking Code and Email Address.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -250,7 +250,7 @@ class BookingLookupShortcode
             return [
                 'success' => false,
                 'code'    => 404,
-                'message' => __('No reservation found matching the provided Booking Code and Email Address.', 'tourivo'),
+                'message' => __('No reservation found matching the provided Booking Code and Email Address.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -260,7 +260,7 @@ class BookingLookupShortcode
             return [
                 'success' => false,
                 'code'    => 400,
-                'message' => __('This reservation has already been cancelled.', 'tourivo'),
+                'message' => __('This reservation has already been cancelled.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -269,7 +269,7 @@ class BookingLookupShortcode
             return [
                 'success' => false,
                 'code'    => 403,
-                'message' => __('Online cancellation requests are disabled. Please contact customer support.', 'tourivo'),
+                'message' => __('Online cancellation requests are disabled. Please contact customer support.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -305,14 +305,14 @@ class BookingLookupShortcode
                 return [
                     'success' => true,
                     'mode'    => 'cancelled',
-                    'message' => __('Your reservation has been successfully cancelled and inventory released.', 'tourivo'),
+                    'message' => __('Your reservation has been successfully cancelled and inventory released.', 'the-readscope-tour-and-accommodation-booking'),
                 ];
             }
 
             return [
                 'success' => false,
                 'code'    => 500,
-                'message' => $changeRes['message'] ?: __('Could not cancel reservation.', 'tourivo'),
+                'message' => $changeRes['message'] ?: __('Could not cancel reservation.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -322,7 +322,7 @@ class BookingLookupShortcode
             return [
                 'success' => true,
                 'mode'    => 'requested',
-                'message' => __('Your cancellation request has already been received. Our team will review and process it shortly.', 'tourivo'),
+                'message' => __('Your cancellation request has already been received. Our team will review and process it shortly.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -344,8 +344,8 @@ class BookingLookupShortcode
             'cancel_requested',
             sprintf(
                 /* translators: %s: Reason for cancellation */
-                __('Traveler submitted cancellation request via lookup portal. Reason: %s', 'tourivo'),
-                $reason ?: __('No reason provided', 'tourivo')
+                __('Traveler submitted cancellation request via lookup portal. Reason: %s', 'the-readscope-tour-and-accommodation-booking'),
+                $reason ?: __('No reason provided', 'the-readscope-tour-and-accommodation-booking')
             ),
             0
         );
@@ -360,9 +360,9 @@ class BookingLookupShortcode
                 'customer_name'       => (string) $booking->customer_name,
                 'customer_email'      => (string) $booking->customer_email,
                 'customer_phone'      => (string) $booking->customer_phone,
-                'item_title'          => $item ? (string) $item->item_title : __('Tour / Room', 'tourivo'),
+                'item_title'          => $item ? (string) $item->item_title : __('Tour / Room', 'the-readscope-tour-and-accommodation-booking'),
                 'total_amount'        => Money::format((float) $booking->total_amount),
-                'cancellation_reason' => $reason ?: __('No reason specified', 'tourivo'),
+                'cancellation_reason' => $reason ?: __('No reason specified', 'the-readscope-tour-and-accommodation-booking'),
             ];
             // Enqueue admin alert
             $emailService->enqueue('admin_booking_cancelled', $adminEmail, $bookingData);
@@ -373,7 +373,7 @@ class BookingLookupShortcode
         return [
             'success' => true,
             'mode'    => 'requested',
-            'message' => __('Your cancellation request has been received. Our team will review and process your request shortly.', 'tourivo'),
+            'message' => __('Your cancellation request has been received. Our team will review and process your request shortly.', 'the-readscope-tour-and-accommodation-booking'),
         ];
     }
 
@@ -418,7 +418,7 @@ class BookingLookupShortcode
             $checkInFormatted  = !empty($item->check_in) ? SiteTime::formatTripDate((string) $item->check_in) : '—';
             $checkOutFormatted = !empty($item->check_out) ? SiteTime::formatTripDate((string) $item->check_out) : '';
             $dateRange = $checkOutFormatted ? "{$checkInFormatted} → {$checkOutFormatted}" : $checkInFormatted;
-            $typeLabel = ($item->item_type === 'room' || $item->item_type === 'hotel_room') ? esc_html__('Hotel Stay', 'tourivo') : esc_html__('Tour Package', 'tourivo');
+            $typeLabel = ($item->item_type === 'room' || $item->item_type === 'hotel_room') ? esc_html__('Hotel Stay', 'the-readscope-tour-and-accommodation-booking') : esc_html__('Tour Package', 'the-readscope-tour-and-accommodation-booking');
 
             $itemsHtml .= '<div class="tourivo-lookup-item-row" style="padding: 12px; background: #f8fafc; border-radius: 8px; margin-bottom: 8px; border: 1px solid #e2e8f0;">';
             $itemsHtml .= '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 4px;">';
@@ -426,19 +426,19 @@ class BookingLookupShortcode
             $itemsHtml .= '<div style="font-weight:700; color:#0f172a;">' . esc_html(Money::format((float) $item->total_price, $currencySymbol)) . '</div>';
             $itemsHtml .= '</div>';
             $itemsHtml .= '<div style="font-size: var(--trv-text-sm); color:#64748b;">';
-            $itemsHtml .= '📅 <strong>' . esc_html__('Dates:', 'tourivo') . '</strong> ' . esc_html($dateRange) . ' &bull; ';
+            $itemsHtml .= '📅 <strong>' . esc_html__('Dates:', 'the-readscope-tour-and-accommodation-booking') . '</strong> ' . esc_html($dateRange) . ' &bull; ';
             $partyBits = [];
             if (!empty($item->adults_count)) {
-                $partyBits[] = sprintf('%d %s', (int) $item->adults_count, __('adults', 'tourivo'));
+                $partyBits[] = sprintf('%d %s', (int) $item->adults_count, __('adults', 'the-readscope-tour-and-accommodation-booking'));
             }
             if (!empty($item->children_count)) {
-                $partyBits[] = sprintf('%d %s', (int) $item->children_count, __('children', 'tourivo'));
+                $partyBits[] = sprintf('%d %s', (int) $item->children_count, __('children', 'the-readscope-tour-and-accommodation-booking'));
             }
             if (!empty($item->infants_count)) {
-                $partyBits[] = sprintf('%d %s', (int) $item->infants_count, __('infants', 'tourivo'));
+                $partyBits[] = sprintf('%d %s', (int) $item->infants_count, __('infants', 'the-readscope-tour-and-accommodation-booking'));
             }
             $partyLabel = $partyBits !== [] ? implode(', ', $partyBits) : (string) $item->quantity;
-            $itemsHtml .= '👥 <strong>' . esc_html__('Qty / Pax:', 'tourivo') . '</strong> ' . esc_html($partyLabel);
+            $itemsHtml .= '👥 <strong>' . esc_html__('Qty / Pax:', 'the-readscope-tour-and-accommodation-booking') . '</strong> ' . esc_html($partyLabel);
             $itemsHtml .= '</div>';
             $itemsHtml .= '</div>';
         }

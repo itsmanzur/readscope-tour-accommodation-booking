@@ -1,10 +1,10 @@
 /**
- * Tourivo Admin Dashboard & Documentation Styles
+ * Readscope Booking Admin Dashboard & Documentation Styles
  */
 
 /* =======================================================
    ADMIN UI KIT
-   Shared by every Tourivo and Tourivo Pro screen (body.tourivo-admin-screen).
+   Shared by every Readscope Booking and Readscope Booking Pro screen (body.tourivo-admin-screen).
    ======================================================= */
 body.tourivo-admin-screen {
     --trv-ui-primary: #0d9488;
@@ -82,7 +82,7 @@ body.tourivo-admin-screen {
     white-space: nowrap;
 }
 
-/* Buttons in the Tourivo colour. */
+/* Buttons in the Readscope Booking colour. */
 .tourivo-admin-screen #wpbody-content .button,
 .tourivo-admin-screen #wpbody-content .button-primary,
 .tourivo-admin-screen #wpbody-content .button-secondary {
@@ -238,7 +238,7 @@ body.tourivo-admin-screen {
     box-shadow: none;
 }
 
-/* Tables on Tourivo pages. */
+/* Tables on Readscope Booking pages. */
 .tourivo-admin-screen #wpbody-content table.widefat {
     border-color: var(--trv-ui-border);
     border-radius: var(--trv-ui-radius);

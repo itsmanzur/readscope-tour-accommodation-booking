@@ -57,7 +57,7 @@ class BookingController extends Controller
 
         // 1. Honeypot check
         if (!empty($rawParams['tourivo_hp_check'])) {
-            return new WP_Error('spam_detected', __('Submission blocked.', 'tourivo'), ['status' => 400]);
+            return new WP_Error('spam_detected', __('Submission blocked.', 'the-readscope-tour-and-accommodation-booking'), ['status' => 400]);
         }
 
         // 2. IP-based Rate Limiting (5 requests per 10 minutes)
@@ -65,7 +65,7 @@ class BookingController extends Controller
         if (!RateLimiter::hit('tourivo_rl_booking_' . md5($ip), 5, 600)) {
             return new WP_Error(
                 'too_many_requests',
-                __('Too many booking requests submitted. Please wait a few minutes before trying again.', 'tourivo'),
+                __('Too many booking requests submitted. Please wait a few minutes before trying again.', 'the-readscope-tour-and-accommodation-booking'),
                 ['status' => 429]
             );
         }
@@ -76,11 +76,11 @@ class BookingController extends Controller
         $rooms    = max(1, min(25, (int) ($rawParams['rooms'] ?? 1)));
 
         if (($adults + $children) < 1) {
-            return new WP_Error('invalid_guest_count', __('Please add at least one adult or child.', 'tourivo'), ['status' => 400]);
+            return new WP_Error('invalid_guest_count', __('Please add at least one adult or child.', 'the-readscope-tour-and-accommodation-booking'), ['status' => 400]);
         }
 
         if (($adults + $children) > 50) {
-            return new WP_Error('invalid_guest_count', __('For group reservations of more than 50 travelers, please contact our support.', 'tourivo'), ['status' => 400]);
+            return new WP_Error('invalid_guest_count', __('For group reservations of more than 50 travelers, please contact our support.', 'the-readscope-tour-and-accommodation-booking'), ['status' => 400]);
         }
 
         $selectedAddons = [];

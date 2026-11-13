@@ -101,16 +101,16 @@ class ThankYouShortcode
         }
         nocache_headers();
 
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Capability URL authenticated by the HMAC thank-you token (verifyThankYouToken, hash_equals) below; a nonce cannot work in a shared link.
         $bookingCode = isset($_GET['code']) ? strtoupper(sanitize_text_field(wp_unslash((string) $_GET['code']))) : '';
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Capability URL authenticated by the HMAC thank-you token (verifyThankYouToken, hash_equals) below; a nonce cannot work in a shared link.
         $token       = isset($_GET['token']) ? sanitize_text_field(wp_unslash((string) $_GET['token'])) : '';
 
         $lookupPageId = (int) Config::get('lookup_page_id', 0);
         $lookupUrl    = $lookupPageId > 0 ? get_permalink($lookupPageId) : home_url('/');
 
         if (empty($bookingCode) || empty($token)) {
-            return self::renderInvalidTokenState(__('Missing booking reference or security token.', 'tourivo'), $lookupUrl);
+            return self::renderInvalidTokenState(__('Missing booking reference or security token.', 'the-readscope-tour-and-accommodation-booking'), $lookupUrl);
         }
 
         global $wpdb;
@@ -124,12 +124,12 @@ class ThankYouShortcode
         ));
 
         if (!$booking) {
-            return self::renderInvalidTokenState(__('No reservation was found matching this reference code.', 'tourivo'), $lookupUrl);
+            return self::renderInvalidTokenState(__('No reservation was found matching this reference code.', 'the-readscope-tour-and-accommodation-booking'), $lookupUrl);
         }
 
         // Verify signed token
         if (!self::verifyThankYouToken((int) $booking->id, $token)) {
-            return self::renderInvalidTokenState(__('We could not securely verify your booking confirmation link or the link has expired (links remain active for 72 hours).', 'tourivo'), $lookupUrl);
+            return self::renderInvalidTokenState(__('We could not securely verify your booking confirmation link or the link has expired (links remain active for 72 hours).', 'the-readscope-tour-and-accommodation-booking'), $lookupUrl);
         }
 
         $items = (array) $wpdb->get_results($wpdb->prepare(
@@ -187,15 +187,15 @@ class ThankYouShortcode
         ?>
         <div class="tourivo-thankyou-wrapper" style="max-width: 680px; margin: 40px auto; padding: 32px 24px; background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-family: inherit;">
             <div style="font-size: var(--trv-text-display); margin-bottom: 12px;">🔒</div>
-            <h3 style="margin: 0 0 8px; color: #1e293b; font-size: var(--trv-text-2xl); font-weight: 700;"><?php esc_html_e('Unable to Display Booking Details', 'tourivo'); ?></h3>
+            <h3 style="margin: 0 0 8px; color: #1e293b; font-size: var(--trv-text-2xl); font-weight: 700;"><?php esc_html_e('Unable to Display Booking Details', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
             <p style="color: #64748b; font-size: var(--trv-text-sm); line-height: 1.6; margin: 0 0 24px;">
                 <?php echo esc_html($message); ?>
             </p>
             <p style="color: #475569; font-size: var(--trv-text-sm); margin: 0 0 20px;">
-                <?php esc_html_e('You can view and manage your reservation anytime by entering your booking reference code and email on our self-service portal:', 'tourivo'); ?>
+                <?php esc_html_e('You can view and manage your reservation anytime by entering your booking reference code and email on our self-service portal:', 'the-readscope-tour-and-accommodation-booking'); ?>
             </p>
             <a href="<?php echo esc_url($lookupUrl); ?>" class="button button-primary" style="display: inline-block; background: #0d9488; color: #ffffff; padding: 10px 22px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: var(--trv-text-sm);">
-                🔍 <?php esc_html_e('Track My Booking on Lookup Portal', 'tourivo'); ?>
+                🔍 <?php esc_html_e('Track My Booking on Lookup Portal', 'the-readscope-tour-and-accommodation-booking'); ?>
             </a>
         </div>
         <?php
@@ -223,9 +223,9 @@ class ThankYouShortcode
         $item = \Tourivo\Support\BookingItems::summaryRow(\Tourivo\Support\BookingItems::forBooking($bookingId), $bookingId);
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
-        $siteName = get_bloginfo('name') ?: 'Tourivo';
+        $siteName = get_bloginfo('name') ?: 'Readscope Booking';
         $host     = wp_parse_url(home_url(), PHP_URL_HOST) ?: 'tourivo.local';
-        $title    = $item ? (string) $item->item_title : __('Tour / Hotel Reservation', 'tourivo');
+        $title    = $item ? (string) $item->item_title : __('Tour / Hotel Reservation', 'the-readscope-tour-and-accommodation-booking');
         $code     = (string) $booking->booking_code;
         $uid      = "tourivo-booking-{$bookingId}-{$code}@{$host}";
         $nowStamp = gmdate('Ymd\THis\Z');
@@ -243,7 +243,7 @@ class ThankYouShortcode
 
         $summary = sprintf(
             /* translators: 1: Item title, 2: Booking code */
-            __('%1$s (Booking #%2$s)', 'tourivo'),
+            __('%1$s (Booking #%2$s)', 'the-readscope-tour-and-accommodation-booking'),
             $title,
             $code
         );
@@ -251,13 +251,13 @@ class ThankYouShortcode
         // Real newlines here; escapeIcsText() turns them into the RFC 5545 "\n" escape.
         $description = implode("\n", [
             /* translators: %s: Booking reference code */
-            sprintf(__('Reservation Reference: #%s', 'tourivo'), $code),
+            sprintf(__('Reservation Reference: #%s', 'the-readscope-tour-and-accommodation-booking'), $code),
             /* translators: %s: Customer name */
-            sprintf(__('Traveler: %s', 'tourivo'), $booking->customer_name),
+            sprintf(__('Traveler: %s', 'the-readscope-tour-and-accommodation-booking'), $booking->customer_name),
             /* translators: %s: Total amount */
-            sprintf(__('Total: %s', 'tourivo'), Money::format((float) $booking->total_amount)),
+            sprintf(__('Total: %s', 'the-readscope-tour-and-accommodation-booking'), Money::format((float) $booking->total_amount)),
             /* translators: %s: Site name */
-            sprintf(__('Organized by: %s', 'tourivo'), $siteName),
+            sprintf(__('Organized by: %s', 'the-readscope-tour-and-accommodation-booking'), $siteName),
         ]);
 
         $icsStatus = match ((string) $booking->booking_status) {
@@ -274,7 +274,7 @@ class ThankYouShortcode
         $lines = [
             'BEGIN:VCALENDAR',
             'VERSION:2.0',
-            'PRODID:-//Tourivo//Tourivo Booking System//EN',
+            'PRODID:-//Readscope Booking//Readscope Booking System//EN',
             'CALSCALE:GREGORIAN',
             'METHOD:PUBLISH',
             'BEGIN:VEVENT',

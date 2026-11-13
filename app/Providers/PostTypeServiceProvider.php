@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class PostTypeServiceProvider
  *
- * Registers all Tourivo custom post types and taxonomies.
+ * Registers all Readscope Booking custom post types and taxonomies.
  *
  * @package Tourivo\Providers
  */

@@ -66,7 +66,7 @@ class CurrencySwitcherShortcode
             <label for="tourivo-currency-select" class="currency-label">
                 <span class="dashicons dashicons-money-alt"></span>
             </label>
-            <select id="tourivo-currency-select" class="tourivo-currency-select" aria-label="<?php esc_attr_e('Select Currency', 'tourivo'); ?>">
+            <select id="tourivo-currency-select" class="tourivo-currency-select" aria-label="<?php esc_attr_e('Select Currency', 'the-readscope-tour-and-accommodation-booking'); ?>">
                 <?php foreach ($currencies as $code => $cur) : ?>
                     <option value="<?php echo esc_attr($code); ?>" 
                             data-symbol="<?php echo esc_attr($cur['symbol']); ?>" 

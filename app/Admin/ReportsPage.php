@@ -29,13 +29,13 @@ class ReportsPage
     public static function render(): void
     {
         if (!current_user_can('manage_tourivo_bookings')) {
-            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'tourivo'), 403);
+            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'the-readscope-tour-and-accommodation-booking'), 403);
         }
 
         /** @var ReportingService $reporting */
         $reporting = Container::getInstance()->get(ReportingService::class);
 
-        // phpcs:disable WordPress.Security.NonceVerification.Recommended
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Read-only report filters; current_user_can() is checked at the top of render().
         $period    = isset($_GET['period']) ? sanitize_text_field(wp_unslash($_GET['period'])) : 'this_month';
         $startDate = isset($_GET['start_date']) ? sanitize_text_field(wp_unslash($_GET['start_date'])) : null;
         $endDate   = isset($_GET['end_date']) ? sanitize_text_field(wp_unslash($_GET['end_date'])) : null;
@@ -51,23 +51,23 @@ class ReportsPage
         $adminUrl = admin_url('admin.php?page=tourivo-reports');
 
         $presets = [
-            'today'       => __('Today', 'tourivo'),
-            'last_7_days' => __('Last 7 Days', 'tourivo'),
-            'this_month'  => __('This Month', 'tourivo'),
-            'last_month'  => __('Last Month', 'tourivo'),
-            'this_year'   => __('This Year', 'tourivo'),
+            'today'       => __('Today', 'the-readscope-tour-and-accommodation-booking'),
+            'last_7_days' => __('Last 7 Days', 'the-readscope-tour-and-accommodation-booking'),
+            'this_month'  => __('This Month', 'the-readscope-tour-and-accommodation-booking'),
+            'last_month'  => __('Last Month', 'the-readscope-tour-and-accommodation-booking'),
+            'this_year'   => __('This Year', 'the-readscope-tour-and-accommodation-booking'),
         ];
         ?>
         <div class="wrap tourivo-admin-wrap tourivo-reports-wrap">
             <!-- Header & Filter Bar -->
             <div class="tourivo-page-header tourivo-reports-header">
                 <div class="tourivo-page-header__text">
-                    <h1><?php esc_html_e('Analytics & Business Reports', 'tourivo'); ?></h1>
+                    <h1><?php esc_html_e('Analytics & Business Reports', 'the-readscope-tour-and-accommodation-booking'); ?></h1>
                     <p class="tourivo-subtitle">
                         <?php
                         printf(
                             /* translators: 1: Filter date range label */
-                            esc_html__('Monitoring sales, occupancy rates, and tax filings for: %s', 'tourivo'),
+                            esc_html__('Monitoring sales, occupancy rates, and tax filings for: %s', 'the-readscope-tour-and-accommodation-booking'),
                             '<strong>' . esc_html($range['label']) . '</strong>'
                         );
                         ?>
@@ -82,7 +82,7 @@ class ReportsPage
                         <?php wp_nonce_field('tourivo_reports_action', 'tourivo_reports_nonce'); ?>
                         <button type="submit" class="button button-primary">
                             <span class="dashicons dashicons-media-spreadsheet" aria-hidden="true"></span>
-                            <?php esc_html_e('Export Accounting & Tax CSV', 'tourivo'); ?>
+                            <?php esc_html_e('Export Accounting & Tax CSV', 'the-readscope-tour-and-accommodation-booking'); ?>
                         </button>
                     </form>
                 </div>
@@ -105,11 +105,11 @@ class ReportsPage
                         <input type="hidden" name="page" value="tourivo-reports">
                         <input type="hidden" name="period" value="custom">
                         <div class="date-inputs-wrap">
-                            <label for="reports-start-date"><?php esc_html_e('From:', 'tourivo'); ?></label>
+                            <label for="reports-start-date"><?php esc_html_e('From:', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                             <input type="date" id="reports-start-date" name="start_date" value="<?php echo esc_attr(substr($range['start'], 0, 10)); ?>" required>
-                            <label for="reports-end-date"><?php esc_html_e('To:', 'tourivo'); ?></label>
+                            <label for="reports-end-date"><?php esc_html_e('To:', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                             <input type="date" id="reports-end-date" name="end_date" value="<?php echo esc_attr(substr($range['end'], 0, 10)); ?>" required>
-                            <button type="submit" class="button button-secondary"><?php esc_html_e('Filter', 'tourivo'); ?></button>
+                            <button type="submit" class="button button-secondary"><?php esc_html_e('Filter', 'the-readscope-tour-and-accommodation-booking'); ?></button>
                         </div>
                     </form>
                 </div>
@@ -121,13 +121,13 @@ class ReportsPage
                 <div class="kpi-card">
                     <div class="kpi-icon icon-bookings"><span class="dashicons dashicons-calendar-alt"></span></div>
                     <div class="kpi-info">
-                        <span class="kpi-title"><?php esc_html_e('Total Bookings', 'tourivo'); ?></span>
+                        <span class="kpi-title"><?php esc_html_e('Total Bookings', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                         <span class="kpi-number"><?php echo esc_html((string) $metrics['total_bookings']); ?></span>
                         <span class="kpi-subtext">
                             <?php
                             printf(
                                 /* translators: 1: Confirmed bookings count, 2: Pending count */
-                                esc_html__('%1$d confirmed &bull; %2$d pending', 'tourivo'),
+                                esc_html__('%1$d confirmed &bull; %2$d pending', 'the-readscope-tour-and-accommodation-booking'),
                                 (int) $metrics['confirmed_bookings'],
                                 (int) $metrics['pending_bookings']
                             );
@@ -140,13 +140,13 @@ class ReportsPage
                 <div class="kpi-card">
                     <div class="kpi-icon icon-revenue"><span class="dashicons dashicons-chart-line"></span></div>
                     <div class="kpi-info">
-                        <span class="kpi-title"><?php esc_html_e('Gross Revenue', 'tourivo'); ?></span>
+                        <span class="kpi-title"><?php esc_html_e('Gross Revenue', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                         <span class="kpi-number"><?php echo esc_html(Money::format($metrics['gross_revenue'])); ?></span>
                         <span class="kpi-subtext">
                             <?php
                             printf(
                                 /* translators: 1: Net Revenue amount */
-                                esc_html__('Net: %s', 'tourivo'),
+                                esc_html__('Net: %s', 'the-readscope-tour-and-accommodation-booking'),
                                 esc_html(Money::format($metrics['net_revenue']))
                             );
                             ?>
@@ -158,13 +158,13 @@ class ReportsPage
                 <div class="kpi-card">
                     <div class="kpi-icon icon-tax"><span class="dashicons dashicons-vault"></span></div>
                     <div class="kpi-info">
-                        <span class="kpi-title"><?php esc_html_e('Tax Collected', 'tourivo'); ?></span>
+                        <span class="kpi-title"><?php esc_html_e('Tax Collected', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                         <span class="kpi-number"><?php echo esc_html(Money::format($metrics['total_tax'])); ?></span>
                         <span class="kpi-subtext">
                             <?php
                             printf(
                                 /* translators: 1: Discounts applied */
-                                esc_html__('Discounts: %s', 'tourivo'),
+                                esc_html__('Discounts: %s', 'the-readscope-tour-and-accommodation-booking'),
                                 esc_html(Money::format($metrics['total_discount']))
                             );
                             ?>
@@ -176,7 +176,7 @@ class ReportsPage
                 <div class="kpi-card">
                     <div class="kpi-icon icon-occupancy"><span class="dashicons dashicons-building"></span></div>
                     <div class="kpi-info">
-                        <span class="kpi-title"><?php esc_html_e('Occupancy Rate', 'tourivo'); ?></span>
+                        <span class="kpi-title"><?php esc_html_e('Occupancy Rate', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                         <span class="kpi-number"><?php echo esc_html(number_format($occupancy['rate'], 1)); ?>%</span>
                         <div class="tourivo-progress-bar-wrap" title="<?php echo esc_attr(sprintf('%d booked / %d total capacity', $occupancy['total_booked'], $occupancy['total_capacity'])); ?>">
                             <div class="tourivo-progress-bar" style="width: <?php echo esc_attr((string) min(100.0, $occupancy['rate'])); ?>%;"></div>
@@ -188,9 +188,9 @@ class ReportsPage
                 <div class="kpi-card">
                     <div class="kpi-icon icon-travelers"><span class="dashicons dashicons-groups"></span></div>
                     <div class="kpi-info">
-                        <span class="kpi-title"><?php esc_html_e('Total Guests / Travelers', 'tourivo'); ?></span>
+                        <span class="kpi-title"><?php esc_html_e('Total Guests / Travelers', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                         <span class="kpi-number"><?php echo esc_html((string) $metrics['total_travelers']); ?></span>
-                        <span class="kpi-subtext"><?php esc_html_e('Adults & children served', 'tourivo'); ?></span>
+                        <span class="kpi-subtext"><?php esc_html_e('Adults & children served', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                     </div>
                 </div>
 
@@ -198,13 +198,13 @@ class ReportsPage
                 <div class="kpi-card">
                     <div class="kpi-icon icon-aov"><span class="dashicons dashicons-tag"></span></div>
                     <div class="kpi-info">
-                        <span class="kpi-title"><?php esc_html_e('Average Booking Value', 'tourivo'); ?></span>
+                        <span class="kpi-title"><?php esc_html_e('Average Booking Value', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                         <span class="kpi-number"><?php echo esc_html(Money::format($metrics['average_order_value'])); ?></span>
                         <span class="kpi-subtext">
                             <?php
                             printf(
                                 /* translators: 1: Outstanding due amount */
-                                esc_html__('Unpaid due: %s', 'tourivo'),
+                                esc_html__('Unpaid due: %s', 'the-readscope-tour-and-accommodation-booking'),
                                 esc_html(Money::format($metrics['due_amount']))
                             );
                             ?>
@@ -216,15 +216,15 @@ class ReportsPage
             <!-- Sales & Bookings Timeline Visualizer -->
             <div class="tourivo-card-box tourivo-chart-card">
                 <div class="box-header">
-                    <h2><?php esc_html_e('Sales & Booking Volume Timeline', 'tourivo'); ?></h2>
+                    <h2><?php esc_html_e('Sales & Booking Volume Timeline', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                     <span class="tourivo-chart-legend">
-                        <span class="legend-dot"></span> <?php esc_html_e('Daily Revenue', 'tourivo'); ?>
+                        <span class="legend-dot"></span> <?php esc_html_e('Daily Revenue', 'the-readscope-tour-and-accommodation-booking'); ?>
                     </span>
                 </div>
                 <div class="tourivo-timeline-chart-container">
                     <?php if (empty($timeline)) : ?>
                         <div class="tourivo-no-data-notice">
-                            <p><?php esc_html_e('No booking transactions recorded during this selected date range.', 'tourivo'); ?></p>
+                            <p><?php esc_html_e('No booking transactions recorded during this selected date range.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                         </div>
                     <?php else :
                         $maxRev = 1.0;
@@ -259,11 +259,11 @@ class ReportsPage
                     <div class="box-header">
                         <h2>
                             <span class="dashicons dashicons-palmtree"></span>
-                            <?php esc_html_e('Top Tour Packages', 'tourivo'); ?>
+                            <?php esc_html_e('Top Tour Packages', 'the-readscope-tour-and-accommodation-booking'); ?>
                         </h2>
                     </div>
                     <?php if (empty($topItems['tours'])) : ?>
-                        <p class="tourivo-empty-text"><?php esc_html_e('No tour bookings found in this period.', 'tourivo'); ?></p>
+                        <p class="tourivo-empty-text"><?php esc_html_e('No tour bookings found in this period.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                     <?php else :
                         $maxTourSales = max(1.0, (float) ($topItems['tours'][0]['total_sales'] ?? 1.0));
                     ?>
@@ -285,11 +285,11 @@ class ReportsPage
                                         <div class="ranked-progress-fill" style="width: <?php echo esc_attr((string) $share); ?>%;"></div>
                                     </div>
                                     <div class="ranked-meta">
-                                        <span><?php echo esc_html(sprintf(/* translators: %d: count */ _n('%d ticket sold', '%d tickets sold', $tour['units_sold'], 'tourivo'), $tour['units_sold'])); ?></span>
+                                        <span><?php echo esc_html(sprintf(/* translators: %d: count */ _n('%d ticket sold', '%d tickets sold', $tour['units_sold'], 'the-readscope-tour-and-accommodation-booking'), $tour['units_sold'])); ?></span>
                                         <span>&bull;</span>
-                                        <span><?php echo esc_html(sprintf(/* translators: %d: count */ _n('%d traveler', '%d travelers', $tour['traveler_count'], 'tourivo'), $tour['traveler_count'])); ?></span>
+                                        <span><?php echo esc_html(sprintf(/* translators: %d: count */ _n('%d traveler', '%d travelers', $tour['traveler_count'], 'the-readscope-tour-and-accommodation-booking'), $tour['traveler_count'])); ?></span>
                                         <span>&bull;</span>
-                                        <span><?php echo esc_html(sprintf(/* translators: %d: count */ _n('%d booking', '%d bookings', $tour['bookings_count'], 'tourivo'), $tour['bookings_count'])); ?></span>
+                                        <span><?php echo esc_html(sprintf(/* translators: %d: count */ _n('%d booking', '%d bookings', $tour['bookings_count'], 'the-readscope-tour-and-accommodation-booking'), $tour['bookings_count'])); ?></span>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -302,11 +302,11 @@ class ReportsPage
                     <div class="box-header">
                         <h2>
                             <span class="dashicons dashicons-admin-home"></span>
-                            <?php esc_html_e('Top Hotel Stays & Rooms', 'tourivo'); ?>
+                            <?php esc_html_e('Top Hotel Stays & Rooms', 'the-readscope-tour-and-accommodation-booking'); ?>
                         </h2>
                     </div>
                     <?php if (empty($topItems['rooms'])) : ?>
-                        <p class="tourivo-empty-text"><?php esc_html_e('No hotel room bookings found in this period.', 'tourivo'); ?></p>
+                        <p class="tourivo-empty-text"><?php esc_html_e('No hotel room bookings found in this period.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                     <?php else :
                         $maxRoomSales = max(1.0, (float) ($topItems['rooms'][0]['total_sales'] ?? 1.0));
                     ?>
@@ -328,11 +328,11 @@ class ReportsPage
                                         <div class="ranked-progress-fill ranked-fill-room" style="width: <?php echo esc_attr((string) $share); ?>%;"></div>
                                     </div>
                                     <div class="ranked-meta">
-                                        <span><?php echo esc_html(sprintf(/* translators: %d: count */ _n('%d night/unit', '%d nights/units', $room['units_sold'], 'tourivo'), $room['units_sold'])); ?></span>
+                                        <span><?php echo esc_html(sprintf(/* translators: %d: count */ _n('%d night/unit', '%d nights/units', $room['units_sold'], 'the-readscope-tour-and-accommodation-booking'), $room['units_sold'])); ?></span>
                                         <span>&bull;</span>
-                                        <span><?php echo esc_html(sprintf(/* translators: %d: count */ _n('%d guest', '%d guests', $room['traveler_count'], 'tourivo'), $room['traveler_count'])); ?></span>
+                                        <span><?php echo esc_html(sprintf(/* translators: %d: count */ _n('%d guest', '%d guests', $room['traveler_count'], 'the-readscope-tour-and-accommodation-booking'), $room['traveler_count'])); ?></span>
                                         <span>&bull;</span>
-                                        <span><?php echo esc_html(sprintf(/* translators: %d: count */ _n('%d booking', '%d bookings', $room['bookings_count'], 'tourivo'), $room['bookings_count'])); ?></span>
+                                        <span><?php echo esc_html(sprintf(/* translators: %d: count */ _n('%d booking', '%d bookings', $room['bookings_count'], 'the-readscope-tour-and-accommodation-booking'), $room['bookings_count'])); ?></span>
                                     </div>
                                 </div>
                             <?php endforeach; ?>

@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
  * Class ReportingService
  *
  * Provides business analytics, sales metrics, tax filing calculations, occupancy stats,
- * and accounting CSV exports for Tourivo administrators.
+ * and accounting CSV exports for Readscope Booking administrators.
  *
  * @package Tourivo\Services
  */
@@ -37,7 +37,7 @@ class ReportingService
                 return [
                     'start'  => $today . ' 00:00:00',
                     'end'    => $today . ' 23:59:59',
-                    'label'  => __('Today', 'tourivo'),
+                    'label'  => __('Today', 'the-readscope-tour-and-accommodation-booking'),
                     'period' => 'today',
                 ];
 
@@ -46,7 +46,7 @@ class ReportingService
                 return [
                     'start'  => $yesterday . ' 00:00:00',
                     'end'    => $yesterday . ' 23:59:59',
-                    'label'  => __('Yesterday', 'tourivo'),
+                    'label'  => __('Yesterday', 'the-readscope-tour-and-accommodation-booking'),
                     'period' => 'yesterday',
                 ];
 
@@ -55,7 +55,7 @@ class ReportingService
                 return [
                     'start'  => $sevenDaysAgo . ' 00:00:00',
                     'end'    => $today . ' 23:59:59',
-                    'label'  => __('Last 7 Days', 'tourivo'),
+                    'label'  => __('Last 7 Days', 'the-readscope-tour-and-accommodation-booking'),
                     'period' => 'last_7_days',
                 ];
 
@@ -65,7 +65,7 @@ class ReportingService
                 return [
                     'start'  => $startLastMonth . ' 00:00:00',
                     'end'    => $endLastMonth . ' 23:59:59',
-                    'label'  => __('Last Month', 'tourivo'),
+                    'label'  => __('Last Month', 'the-readscope-tour-and-accommodation-booking'),
                     'period' => 'last_month',
                 ];
 
@@ -74,7 +74,7 @@ class ReportingService
                 return [
                     'start'  => $startYear . ' 00:00:00',
                     'end'    => $today . ' 23:59:59',
-                    'label'  => __('This Year', 'tourivo'),
+                    'label'  => __('This Year', 'the-readscope-tour-and-accommodation-booking'),
                     'period' => 'this_year',
                 ];
 
@@ -99,7 +99,7 @@ class ReportingService
                 return [
                     'start'  => $startMonth . ' 00:00:00',
                     'end'    => $today . ' 23:59:59',
-                    'label'  => __('This Month', 'tourivo'),
+                    'label'  => __('This Month', 'the-readscope-tour-and-accommodation-booking'),
                     'period' => 'this_month',
                 ];
         }
@@ -309,7 +309,7 @@ class ReportingService
                 if (!isset($roomMap[$itemId])) {
                     $roomMap[$itemId] = [
                         'item_id'        => $itemId,
-                        'item_title'     => $title ?: sprintf(/* translators: %d: item ID */ __('Item #%d', 'tourivo'), $itemId),
+                        'item_title'     => $title ?: sprintf(/* translators: %d: item ID */ __('Item #%d', 'the-readscope-tour-and-accommodation-booking'), $itemId),
                         'item_type'      => $type,
                         'bookings_count' => 0,
                         'units_sold'     => 0,
@@ -325,7 +325,7 @@ class ReportingService
                 if (!isset($tourMap[$itemId])) {
                     $tourMap[$itemId] = [
                         'item_id'        => $itemId,
-                        'item_title'     => $title ?: sprintf(/* translators: %d: item ID */ __('Item #%d', 'tourivo'), $itemId),
+                        'item_title'     => $title ?: sprintf(/* translators: %d: item ID */ __('Item #%d', 'the-readscope-tour-and-accommodation-booking'), $itemId),
                         'item_type'      => $type,
                         'bookings_count' => 0,
                         'units_sold'     => 0,
@@ -451,23 +451,23 @@ class ReportingService
 
         // 2. Accounting Report Headers
         $headers = [
-            __('Booking Code', 'tourivo'),
-            __('Booking Date', 'tourivo'),
-            __('Check-In Date', 'tourivo'),
-            __('Customer Name', 'tourivo'),
-            __('Customer Email', 'tourivo'),
-            __('Customer Phone', 'tourivo'),
-            __('Item Title', 'tourivo'),
-            __('Item Type', 'tourivo'),
-            __('Quantity', 'tourivo'),
-            __('Subtotal (Excl. Tax)', 'tourivo'),
-            __('Tax Amount', 'tourivo'),
-            __('Discount Amount', 'tourivo'),
-            __('Gross Total', 'tourivo'),
-            __('Payment Status', 'tourivo'),
-            __('Payment Method', 'tourivo'),
-            __('Transaction ID', 'tourivo'),
-            __('Booking Status', 'tourivo'),
+            __('Booking Code', 'the-readscope-tour-and-accommodation-booking'),
+            __('Booking Date', 'the-readscope-tour-and-accommodation-booking'),
+            __('Check-In Date', 'the-readscope-tour-and-accommodation-booking'),
+            __('Customer Name', 'the-readscope-tour-and-accommodation-booking'),
+            __('Customer Email', 'the-readscope-tour-and-accommodation-booking'),
+            __('Customer Phone', 'the-readscope-tour-and-accommodation-booking'),
+            __('Item Title', 'the-readscope-tour-and-accommodation-booking'),
+            __('Item Type', 'the-readscope-tour-and-accommodation-booking'),
+            __('Quantity', 'the-readscope-tour-and-accommodation-booking'),
+            __('Subtotal (Excl. Tax)', 'the-readscope-tour-and-accommodation-booking'),
+            __('Tax Amount', 'the-readscope-tour-and-accommodation-booking'),
+            __('Discount Amount', 'the-readscope-tour-and-accommodation-booking'),
+            __('Gross Total', 'the-readscope-tour-and-accommodation-booking'),
+            __('Payment Status', 'the-readscope-tour-and-accommodation-booking'),
+            __('Payment Method', 'the-readscope-tour-and-accommodation-booking'),
+            __('Transaction ID', 'the-readscope-tour-and-accommodation-booking'),
+            __('Booking Status', 'the-readscope-tour-and-accommodation-booking'),
         ];
         fputcsv($stream, $headers);
 
@@ -488,7 +488,7 @@ class ReportingService
                     $this->sanitizeCsvCell((string) ($b['customer_name'] ?? '')),
                     $this->sanitizeCsvCell((string) ($b['customer_email'] ?? '')),
                     $this->sanitizeCsvCell((string) ($b['customer_phone'] ?? '')),
-                    $this->sanitizeCsvCell(__('Direct Booking', 'tourivo')),
+                    $this->sanitizeCsvCell(__('Direct Booking', 'the-readscope-tour-and-accommodation-booking')),
                     $this->sanitizeCsvCell('booking'),
                     '1',
                     number_format($subtotal, 2, '.', ''),
@@ -553,12 +553,12 @@ class ReportingService
     public function handleExportRequest(): void
     {
         if (!current_user_can('manage_tourivo_bookings')) {
-            wp_die(esc_html__('Unauthorized access. You do not have permission to export reports.', 'tourivo'), 403);
+            wp_die(esc_html__('Unauthorized access. You do not have permission to export reports.', 'the-readscope-tour-and-accommodation-booking'), 403);
         }
 
         check_admin_referer('tourivo_reports_action', 'tourivo_reports_nonce');
 
-        // phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended
+        // phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended -- current_user_can() and the nonce are verified at the top of this method, before any input is read.
         // Only the filter fields are read, each one sanitized. The nonce was checked above.
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Every key is sanitized by RequestInput::pick().
         $req       = \Tourivo\Support\RequestInput::pick(!empty($_POST) ? $_POST : $_GET, ['period' => 'text', 'start_date' => 'text', 'end_date' => 'text']);

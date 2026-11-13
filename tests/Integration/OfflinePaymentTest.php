@@ -115,7 +115,7 @@ class OfflinePaymentTest extends TestCase
         update_option('tourivo_settings', [
             'bank_transfer_enabled'        => true,
             'bank_name'                    => 'Standard Chartered',
-            'bank_account_name'            => 'Tourivo Holidays Ltd.',
+            'bank_account_name'            => 'Readscope Holidays Ltd.',
             'bank_account_number'          => '01-2345678-01',
             'bank_iban'                    => 'SCBL12345678',
             'bank_swift_routing'           => 'SCBLBDDH',
@@ -140,7 +140,7 @@ class OfflinePaymentTest extends TestCase
         update_option('tourivo_settings', array_merge(Config::getDefaults(), [
             'bank_transfer_enabled' => true,
             'bank_name'             => 'City Bank Global',
-            'bank_account_name'     => 'Tourivo Agency',
+            'bank_account_name'     => 'Readscope Booking Agency',
             'bank_account_number'   => '98765432100',
             'bank_iban'             => 'GB29NWBK60161331926819',
             'bank_swift_routing'    => 'CIBLBDDH',

@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class Schema
  *
- * Runs database migrations and manages Tourivo custom tables.
+ * Runs database migrations and manages Readscope Booking custom tables.
  *
  * @package Tourivo\Database
  */

@@ -18,7 +18,7 @@ use Tourivo\Tests\TestCase;
 /**
  * Class EmailSystemTest
  *
- * Comprehensive integration tests for Tourivo email notification engine:
+ * Comprehensive integration tests for Readscope Booking email notification engine:
  * - Async dispatching & non-blocking booking request cycle
  * - Hook-based trigger separation (no direct email calls from createBooking)
  * - State transition emails (received, confirmed, cancelled)

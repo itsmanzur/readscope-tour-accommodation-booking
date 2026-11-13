@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class SetupWizard
  *
- * Interactive Onboarding & Setup Wizard for Tourivo.
+ * Interactive Onboarding & Setup Wizard for Readscope Booking.
  * Guides site administrators through currency settings, core pages generation, and 1-click demo data import.
  *
  * @package Tourivo\Admin
@@ -35,10 +35,10 @@ class SetupWizard
                 'nonce'   => wp_create_nonce('tourivo_wizard_nonce'),
                 'ajaxUrl' => admin_url('admin-ajax.php'),
                 'i18n'    => [
-                    'saving' => __('Saving...', 'tourivo'),
-                    'continueToPages' => __('Continue to Pages →', 'tourivo'),
-                    'creatingPages' => __('Creating Pages...', 'tourivo'),
-                    'generatePagesNext' => __('Generate Pages & Next →', 'tourivo'),
+                    'saving' => __('Saving...', 'the-readscope-tour-and-accommodation-booking'),
+                    'continueToPages' => __('Continue to Pages →', 'the-readscope-tour-and-accommodation-booking'),
+                    'creatingPages' => __('Creating Pages...', 'the-readscope-tour-and-accommodation-booking'),
+                    'generatePagesNext' => __('Generate Pages & Next →', 'the-readscope-tour-and-accommodation-booking'),
                 ],
             ]
         );
@@ -52,7 +52,7 @@ class SetupWizard
     public static function render(): void
     {
         if (!current_user_can('manage_tourivo_settings')) {
-            wp_die(esc_html__('You do not have permission to access the setup wizard.', 'tourivo'));
+            wp_die(esc_html__('You do not have permission to access the setup wizard.', 'the-readscope-tour-and-accommodation-booking'));
         }
 
         $currency       = Config::get('currency', 'USD');
@@ -69,55 +69,55 @@ class SetupWizard
                 <div class="tourivo-wizard-header">
                     <div class="tourivo-wizard-brand">
                         <span class="brand-icon dashicons dashicons-palmtree" aria-hidden="true"></span>
-                        <h1 class="brand-title">Tourivo</h1>
+                        <h1 class="brand-title">Readscope Booking</h1>
                     </div>
-                    <p class="brand-tagline"><?php esc_html_e('Quick Setup & Configuration Wizard', 'tourivo'); ?></p>
+                    <p class="brand-tagline"><?php esc_html_e('Quick Setup & Configuration Wizard', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                 </div>
 
                 <!-- Step Navigation Progress Bar -->
                 <div class="tourivo-wizard-steps">
                     <div class="wizard-step active" id="step-nav-1">
                         <span class="step-num">1</span>
-                        <span class="step-label"><?php esc_html_e('Store & Currency', 'tourivo'); ?></span>
+                        <span class="step-label"><?php esc_html_e('Store & Currency', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                     </div>
                     <div class="wizard-step" id="step-nav-2">
                         <span class="step-num">2</span>
-                        <span class="step-label"><?php esc_html_e('Core Pages', 'tourivo'); ?></span>
+                        <span class="step-label"><?php esc_html_e('Core Pages', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                     </div>
                     <div class="wizard-step" id="step-nav-3">
                         <span class="step-num">3</span>
-                        <span class="step-label"><?php esc_html_e('Demo Content', 'tourivo'); ?></span>
+                        <span class="step-label"><?php esc_html_e('Demo Content', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                     </div>
                     <div class="wizard-step" id="step-nav-4">
                         <span class="step-num">4</span>
-                        <span class="step-label"><?php esc_html_e('Ready!', 'tourivo'); ?></span>
+                        <span class="step-label"><?php esc_html_e('Ready!', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                     </div>
                 </div>
 
                 <!-- Step 1: Store & Currency -->
                 <div class="wizard-content-card" id="wizard-card-1">
                     <div class="card-intro">
-                        <h2><?php esc_html_e('Agency & Currency Setup', 'tourivo'); ?></h2>
-                        <p><?php esc_html_e('Configure your business name and default pricing currency.', 'tourivo'); ?></p>
+                        <h2><?php esc_html_e('Agency & Currency Setup', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
+                        <p><?php esc_html_e('Configure your business name and default pricing currency.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                     </div>
 
                     <form id="wizardFormStep1">
                         <input type="hidden" name="nonce" value="<?php echo esc_attr($nonce); ?>">
 
                         <div class="wizard-form-group">
-                            <label for="wz_agency_name"><strong><?php esc_html_e('Agency / Site Name', 'tourivo'); ?></strong></label>
+                            <label for="wz_agency_name"><strong><?php esc_html_e('Agency / Site Name', 'the-readscope-tour-and-accommodation-booking'); ?></strong></label>
                             <input type="text" id="wz_agency_name" name="agency_name" class="wizard-input" value="<?php echo esc_attr($fromName); ?>" required>
                         </div>
 
                         <div class="wizard-form-group">
-                            <label for="wz_notify_email"><strong><?php esc_html_e('Booking Notification Email', 'tourivo'); ?></strong></label>
+                            <label for="wz_notify_email"><strong><?php esc_html_e('Booking Notification Email', 'the-readscope-tour-and-accommodation-booking'); ?></strong></label>
                             <input type="email" id="wz_notify_email" name="notify_email" class="wizard-input" value="<?php echo esc_attr($notifyEmail); ?>" required>
-                            <small class="wizard-hint"><?php esc_html_e('New booking alerts and customer inquiry notifications will be sent here.', 'tourivo'); ?></small>
+                            <small class="wizard-hint"><?php esc_html_e('New booking alerts and customer inquiry notifications will be sent here.', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                         </div>
 
                         <div class="wizard-form-row">
                             <div class="wizard-form-group">
-                                <label for="wz_currency_code"><strong><?php esc_html_e('Base Currency', 'tourivo'); ?></strong></label>
+                                <label for="wz_currency_code"><strong><?php esc_html_e('Base Currency', 'the-readscope-tour-and-accommodation-booking'); ?></strong></label>
                                 <select id="wz_currency_code" name="currency_code" class="wizard-select">
                                     <?php foreach ($currencies as $code => $info) : ?>
                                         <option value="<?php echo esc_attr($code); ?>" data-symbol="<?php echo esc_attr($info['symbol']); ?>" <?php selected($currency, $code); ?>>
@@ -128,25 +128,25 @@ class SetupWizard
                             </div>
 
                             <div class="wizard-form-group">
-                                <label for="wz_currency_symbol"><strong><?php esc_html_e('Currency Symbol', 'tourivo'); ?></strong></label>
+                                <label for="wz_currency_symbol"><strong><?php esc_html_e('Currency Symbol', 'the-readscope-tour-and-accommodation-booking'); ?></strong></label>
                                 <input type="text" id="wz_currency_symbol" name="currency_symbol" class="wizard-input" value="<?php echo esc_attr($currencySymbol); ?>" required>
                             </div>
 
                             <div class="wizard-form-group">
-                                <label for="wz_currency_pos"><strong><?php esc_html_e('Symbol Position', 'tourivo'); ?></strong></label>
+                                <label for="wz_currency_pos"><strong><?php esc_html_e('Symbol Position', 'the-readscope-tour-and-accommodation-booking'); ?></strong></label>
                                 <select id="wz_currency_pos" name="currency_position" class="wizard-select">
-                                    <option value="left" <?php selected($currencyPos, 'left'); ?>><?php esc_html_e('Left ($100)', 'tourivo'); ?></option>
-                                    <option value="right" <?php selected($currencyPos, 'right'); ?>><?php esc_html_e('Right (100$)', 'tourivo'); ?></option>
-                                    <option value="left_space" <?php selected($currencyPos, 'left_space'); ?>><?php esc_html_e('Left with space ($ 100)', 'tourivo'); ?></option>
-                                    <option value="right_space" <?php selected($currencyPos, 'right_space'); ?>><?php esc_html_e('Right with space (100 $)', 'tourivo'); ?></option>
+                                    <option value="left" <?php selected($currencyPos, 'left'); ?>><?php esc_html_e('Left ($100)', 'the-readscope-tour-and-accommodation-booking'); ?></option>
+                                    <option value="right" <?php selected($currencyPos, 'right'); ?>><?php esc_html_e('Right (100$)', 'the-readscope-tour-and-accommodation-booking'); ?></option>
+                                    <option value="left_space" <?php selected($currencyPos, 'left_space'); ?>><?php esc_html_e('Left with space ($ 100)', 'the-readscope-tour-and-accommodation-booking'); ?></option>
+                                    <option value="right_space" <?php selected($currencyPos, 'right_space'); ?>><?php esc_html_e('Right with space (100 $)', 'the-readscope-tour-and-accommodation-booking'); ?></option>
                                 </select>
                             </div>
                         </div>
 
                         <div class="wizard-footer">
-                            <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo')); ?>" class="wizard-skip-link"><?php esc_html_e('Skip Setup', 'tourivo'); ?></a>
+                            <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo')); ?>" class="wizard-skip-link"><?php esc_html_e('Skip Setup', 'the-readscope-tour-and-accommodation-booking'); ?></a>
                             <button type="button" class="wizard-btn wizard-btn-primary" id="btnSaveStep1">
-                                <?php esc_html_e('Continue to Pages →', 'tourivo'); ?>
+                                <?php esc_html_e('Continue to Pages →', 'the-readscope-tour-and-accommodation-booking'); ?>
                             </button>
                         </div>
                     </form>
@@ -155,8 +155,8 @@ class SetupWizard
                 <!-- Step 2: Core Default Pages -->
                 <div class="wizard-content-card" id="wizard-card-2" style="display:none;">
                     <div class="card-intro">
-                        <h2><?php esc_html_e('Create Essential Pages', 'tourivo'); ?></h2>
-                        <p><?php esc_html_e('Select the default pages you would like Tourivo to automatically generate on your website.', 'tourivo'); ?></p>
+                        <h2><?php esc_html_e('Create Essential Pages', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
+                        <p><?php esc_html_e('Select the default pages you would like Readscope Booking to automatically generate on your website.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                     </div>
 
                     <form id="wizardFormStep2">
@@ -164,72 +164,72 @@ class SetupWizard
                             <label class="wizard-check-item">
                                 <input type="checkbox" name="pages[]" value="tours" checked>
                                 <div class="check-text">
-                                    <strong><?php esc_html_e('Tours Directory Page', 'tourivo'); ?></strong>
-                                    <span><?php esc_html_e('Creates "/tours" displaying the interactive tour packages grid.', 'tourivo'); ?></span>
+                                    <strong><?php esc_html_e('Tours Directory Page', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
+                                    <span><?php esc_html_e('Creates "/tours" displaying the interactive tour packages grid.', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 </div>
                             </label>
 
                             <label class="wizard-check-item">
                                 <input type="checkbox" name="pages[]" value="hotels" checked>
                                 <div class="check-text">
-                                    <strong><?php esc_html_e('Hotels & Stays Page', 'tourivo'); ?></strong>
-                                    <span><?php esc_html_e('Creates "/hotels" displaying boutique hotels, rooms, and resorts.', 'tourivo'); ?></span>
+                                    <strong><?php esc_html_e('Hotels & Stays Page', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
+                                    <span><?php esc_html_e('Creates "/hotels" displaying boutique hotels, rooms, and resorts.', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 </div>
                             </label>
 
                             <label class="wizard-check-item">
                                 <input type="checkbox" name="pages[]" value="search" checked>
                                 <div class="check-text">
-                                    <strong><?php esc_html_e('Search & Filter Portal', 'tourivo'); ?></strong>
-                                    <span><?php esc_html_e('Creates "/search-trips" with live price sliders, destination & star filters.', 'tourivo'); ?></span>
+                                    <strong><?php esc_html_e('Search & Filter Portal', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
+                                    <span><?php esc_html_e('Creates "/search-trips" with live price sliders, destination & star filters.', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 </div>
                             </label>
 
                             <label class="wizard-check-item">
                                 <input type="checkbox" name="pages[]" value="track" checked>
                                 <div class="check-text">
-                                    <strong><?php esc_html_e('Track My Booking & Voucher Portal', 'tourivo'); ?></strong>
-                                    <span><?php esc_html_e('Creates "/track-booking" for travelers to track status & print vouchers.', 'tourivo'); ?></span>
+                                    <strong><?php esc_html_e('Track My Booking & Voucher Portal', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
+                                    <span><?php esc_html_e('Creates "/track-booking" for travelers to track status & print vouchers.', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 </div>
                             </label>
 
                             <label class="wizard-check-item">
                                 <input type="checkbox" name="pages[]" value="wishlist" checked>
                                 <div class="check-text">
-                                    <strong>❤️ <?php esc_html_e('Traveler Wishlist Page', 'tourivo'); ?></strong>
-                                    <span><?php esc_html_e('Creates "/wishlist" allowing travelers to save favorite trips.', 'tourivo'); ?></span>
+                                    <strong>❤️ <?php esc_html_e('Traveler Wishlist Page', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
+                                    <span><?php esc_html_e('Creates "/wishlist" allowing travelers to save favorite trips.', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 </div>
                             </label>
 
                             <label class="wizard-check-item">
                                 <input type="checkbox" name="pages[]" value="thankyou" checked>
                                 <div class="check-text">
-                                    <strong><?php esc_html_e('Booking Confirmation / Thank You Page', 'tourivo'); ?></strong>
-                                    <span><?php esc_html_e('Creates "/booking-confirmation" displaying booking summary, token-secured calendar .ics and vouchers.', 'tourivo'); ?></span>
+                                    <strong><?php esc_html_e('Booking Confirmation / Thank You Page', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
+                                    <span><?php esc_html_e('Creates "/booking-confirmation" displaying booking summary, token-secured calendar .ics and vouchers.', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 </div>
                             </label>
 
                             <label class="wizard-check-item">
                                 <input type="checkbox" name="pages[]" value="my_bookings" checked>
                                 <div class="check-text">
-                                    <strong><?php esc_html_e('Traveler Dashboard / My Bookings Page', 'tourivo'); ?></strong>
-                                    <span><?php esc_html_e('Creates "/my-bookings" allowing registered travelers to view past and upcoming trips, download vouchers, and manage reservations.', 'tourivo'); ?></span>
+                                    <strong><?php esc_html_e('Traveler Dashboard / My Bookings Page', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
+                                    <span><?php esc_html_e('Creates "/my-bookings" allowing registered travelers to view past and upcoming trips, download vouchers, and manage reservations.', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 </div>
                             </label>
 
                             <label class="wizard-check-item">
                                 <input type="checkbox" name="pages[]" value="travel_homepage">
                                 <div class="check-text">
-                                    <strong><?php esc_html_e('Travel Homepage Layout (optional)', 'tourivo'); ?></strong>
-                                    <span><?php esc_html_e('Adds the search bar, destinations, tours and hotels to your homepage and hides its latest-posts list. Leave unticked if your theme already has its own homepage. You can change this later in Settings.', 'tourivo'); ?></span>
+                                    <strong><?php esc_html_e('Travel Homepage Layout (optional)', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
+                                    <span><?php esc_html_e('Adds the search bar, destinations, tours and hotels to your homepage and hides its latest-posts list. Leave unticked if your theme already has its own homepage. You can change this later in Settings.', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 </div>
                             </label>
                         </div>
 
                         <div class="wizard-footer">
-                            <button type="button" class="wizard-btn wizard-btn-secondary" data-wizard-step="1">← <?php esc_html_e('Back', 'tourivo'); ?></button>
+                            <button type="button" class="wizard-btn wizard-btn-secondary" data-wizard-step="1">← <?php esc_html_e('Back', 'the-readscope-tour-and-accommodation-booking'); ?></button>
                             <button type="button" class="wizard-btn wizard-btn-primary" id="btnCreatePages">
-                                <?php esc_html_e('Generate Pages & Next →', 'tourivo'); ?>
+                                <?php esc_html_e('Generate Pages & Next →', 'the-readscope-tour-and-accommodation-booking'); ?>
                             </button>
                         </div>
                     </form>
@@ -238,8 +238,8 @@ class SetupWizard
                 <!-- Step 3: Demo Content Importer -->
                 <div class="wizard-content-card" id="wizard-card-3" style="display:none;">
                     <div class="card-intro">
-                        <h2><?php esc_html_e('Import Realistic Sample Trips & Hotels', 'tourivo'); ?></h2>
-                        <p><?php esc_html_e('Populate sample data (Bali Beach, Swiss Alps, Kyoto Heritage, Grand Oceanfront Resort) to immediately test booking flows.', 'tourivo'); ?></p>
+                        <h2><?php esc_html_e('Import Realistic Sample Trips & Hotels', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
+                        <p><?php esc_html_e('Populate sample data (Bali Beach, Swiss Alps, Kyoto Heritage, Grand Oceanfront Resort) to immediately test booking flows.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                     </div>
 
                     <div class="demo-import-box">
@@ -249,19 +249,19 @@ class SetupWizard
                             <span class="dashicons dashicons-building" aria-hidden="true"></span>
                             <span class="dashicons dashicons-admin-home" aria-hidden="true"></span>
                         </div>
-                        <h4 style="margin: 0 0 6px; color:#0f172a; font-size: var(--trv-admin-text-lg);"><?php esc_html_e('Ready to install 3 Featured Tours, 2 Boutique Hotels & 4 Room Types.', 'tourivo'); ?></h4>
-                        <p style="margin:0; font-size: var(--trv-admin-text-sm); color:#64748b;"><?php esc_html_e('Includes complete day-by-day itineraries, high-res photos, inclusions, FAQs, and realistic pricing.', 'tourivo'); ?></p>
+                        <h4 style="margin: 0 0 6px; color:#0f172a; font-size: var(--trv-admin-text-lg);"><?php esc_html_e('Ready to install 3 Featured Tours, 2 Boutique Hotels & 4 Room Types.', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
+                        <p style="margin:0; font-size: var(--trv-admin-text-sm); color:#64748b;"><?php esc_html_e('Includes complete day-by-day itineraries, high-res photos, inclusions, FAQs, and realistic pricing.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                     </div>
 
                     <div id="demoImportProgress" style="display:none; text-align:center; padding: 20px;">
                         <span class="spinner is-active" style="float:none; margin:0 auto 10px;"></span>
-                        <p style="margin:0; font-weight:600; color:#0d9488;"><?php esc_html_e('Importing sample tours, hotels, rooms, and destinations...', 'tourivo'); ?></p>
+                        <p style="margin:0; font-weight:600; color:#0d9488;"><?php esc_html_e('Importing sample tours, hotels, rooms, and destinations...', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                     </div>
 
                     <div class="wizard-footer">
-                        <button type="button" class="wizard-btn wizard-btn-secondary" data-wizard-step="4"><?php esc_html_e('Skip Demo Import', 'tourivo'); ?></button>
+                        <button type="button" class="wizard-btn wizard-btn-secondary" data-wizard-step="4"><?php esc_html_e('Skip Demo Import', 'the-readscope-tour-and-accommodation-booking'); ?></button>
                         <button type="button" class="wizard-btn wizard-btn-success" id="btnImportDemo">
-                            <?php esc_html_e('Import Demo Data Now', 'tourivo'); ?>
+                            <?php esc_html_e('Import Demo Data Now', 'the-readscope-tour-and-accommodation-booking'); ?>
                         </button>
                     </div>
                 </div>
@@ -269,37 +269,37 @@ class SetupWizard
                 <!-- Step 4: Ready / Completion Screen -->
                 <div class="wizard-content-card" id="wizard-card-4" style="display:none; text-align:center;">
                     <div class="wizard-done-icon"><span class="dashicons dashicons-yes-alt" aria-hidden="true"></span></div>
-                    <h2 style="font-size: var(--trv-admin-text-3xl); font-weight: 700; color: #0f172a; margin: 0 0 10px;"><?php esc_html_e('Your Booking Engine is Ready!', 'tourivo'); ?></h2>
+                    <h2 style="font-size: var(--trv-admin-text-3xl); font-weight: 700; color: #0f172a; margin: 0 0 10px;"><?php esc_html_e('Your Booking Engine is Ready!', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                     <p style="font-size: var(--trv-admin-text-lg); color: #64748b; max-width: 500px; margin: 0 auto 24px;">
-                        <?php esc_html_e('Tourivo has been successfully configured. You are ready to accept bookings, manage travel itineraries, and publish hotel rooms.', 'tourivo'); ?>
+                        <?php esc_html_e('Readscope Booking has been successfully configured. You are ready to accept bookings, manage travel itineraries, and publish hotel rooms.', 'the-readscope-tour-and-accommodation-booking'); ?>
                     </p>
 
                     <div class="wizard-quick-links-grid" id="wizardQuickLinks">
                         <a href="<?php echo esc_url(home_url('/tours')); ?>" target="_blank" class="quick-link-box">
                             <span class="ql-icon dashicons dashicons-palmtree" aria-hidden="true"></span>
-                            <strong><?php esc_html_e('View Tours Page', 'tourivo'); ?></strong>
-                            <small><?php esc_html_e('Browse travel packages', 'tourivo'); ?></small>
+                            <strong><?php esc_html_e('View Tours Page', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
+                            <small><?php esc_html_e('Browse travel packages', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                         </a>
                         <a href="<?php echo esc_url(home_url('/hotels')); ?>" target="_blank" class="quick-link-box">
                             <span class="ql-icon dashicons dashicons-building" aria-hidden="true"></span>
-                            <strong><?php esc_html_e('View Hotels Page', 'tourivo'); ?></strong>
-                            <small><?php esc_html_e('Browse rooms & stays', 'tourivo'); ?></small>
+                            <strong><?php esc_html_e('View Hotels Page', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
+                            <small><?php esc_html_e('Browse rooms & stays', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                         </a>
                         <a href="<?php echo esc_url(home_url('/track-booking')); ?>" target="_blank" class="quick-link-box">
                             <span class="ql-icon dashicons dashicons-tickets-alt" aria-hidden="true"></span>
-                            <strong><?php esc_html_e('Track Booking Portal', 'tourivo'); ?></strong>
-                            <small><?php esc_html_e('Customer self-service', 'tourivo'); ?></small>
+                            <strong><?php esc_html_e('Track Booking Portal', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
+                            <small><?php esc_html_e('Customer self-service', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                         </a>
                         <a href="<?php echo esc_url(admin_url('post-new.php?post_type=tourivo_tour')); ?>" class="quick-link-box">
                             <span class="ql-icon dashicons dashicons-plus-alt2" aria-hidden="true"></span>
-                            <strong><?php esc_html_e('Create First Tour', 'tourivo'); ?></strong>
-                            <small><?php esc_html_e('Add your custom itinerary', 'tourivo'); ?></small>
+                            <strong><?php esc_html_e('Create First Tour', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
+                            <small><?php esc_html_e('Add your custom itinerary', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                         </a>
                     </div>
 
                     <div style="margin-top: 32px; border-top: 1px solid #e2e8f0; padding-top: 24px;">
                         <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo')); ?>" class="wizard-btn wizard-btn-primary" style="padding: 12px 32px; font-size: var(--trv-admin-text-lg);">
-                            <?php esc_html_e('Go to Tourivo Dashboard', 'tourivo'); ?>
+                            <?php esc_html_e('Go to Readscope Booking Dashboard', 'the-readscope-tour-and-accommodation-booking'); ?>
                         </a>
                     </div>
                 </div>
@@ -317,7 +317,7 @@ class SetupWizard
         check_ajax_referer('tourivo_wizard_nonce', 'nonce');
 
         if (!current_user_can('manage_tourivo_settings')) {
-            wp_send_json_error(['message' => __('Unauthorized access.', 'tourivo')], 403);
+            wp_send_json_error(['message' => __('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
         $agencyName     = isset($_POST['agency_name']) ? sanitize_text_field(wp_unslash((string) $_POST['agency_name'])) : get_bloginfo('name');
@@ -342,7 +342,7 @@ class SetupWizard
         ]);
 
         update_option('tourivo_settings', $merged);
-        wp_send_json_success(['message' => __('Settings saved successfully.', 'tourivo')]);
+        wp_send_json_success(['message' => __('Settings saved successfully.', 'the-readscope-tour-and-accommodation-booking')]);
     }
 
     /**
@@ -353,7 +353,7 @@ class SetupWizard
         check_ajax_referer('tourivo_wizard_nonce', 'nonce');
 
         if (!current_user_can('manage_tourivo_settings')) {
-            wp_send_json_error(['message' => __('Unauthorized access.', 'tourivo')], 403);
+            wp_send_json_error(['message' => __('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
         $rawPages = isset($_POST['pages']) ? sanitize_text_field(wp_unslash((string) $_POST['pages'])) : '[]';
@@ -459,14 +459,14 @@ class SetupWizard
         check_ajax_referer('tourivo_wizard_nonce', 'nonce');
 
         if (!current_user_can('manage_tourivo_settings')) {
-            wp_send_json_error(['message' => __('Unauthorized access.', 'tourivo')], 403);
+            wp_send_json_error(['message' => __('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
         $result = Seeder::run();
 
         if (empty($result['success'])) {
             wp_send_json_error([
-                'message' => $result['message'] ?? __('Failed to import demo data. Please check logs.', 'tourivo'),
+                'message' => $result['message'] ?? __('Failed to import demo data. Please check logs.', 'the-readscope-tour-and-accommodation-booking'),
             ], 500);
         }
 

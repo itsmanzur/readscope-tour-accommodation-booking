@@ -30,7 +30,7 @@ class BookingPanelWidget extends \Elementor\Widget_Base
 
     public function get_title(): string
     {
-        return esc_html__('Booking Panel', 'tourivo');
+        return esc_html__('Booking Panel', 'the-readscope-tour-and-accommodation-booking');
     }
 
     public function get_icon(): string
@@ -45,7 +45,7 @@ class BookingPanelWidget extends \Elementor\Widget_Base
 
     public function get_keywords(): array
     {
-        return ['tourivo', 'booking', 'panel', 'checkout', 'reservation'];
+        return ['readscope', 'booking', 'panel', 'checkout', 'reservation'];
     }
 
     protected function register_controls(): void
@@ -53,14 +53,14 @@ class BookingPanelWidget extends \Elementor\Widget_Base
         $this->start_controls_section(
             'section_content',
             [
-                'label' => esc_html__('Booking Settings', 'tourivo'),
+                'label' => esc_html__('Booking Settings', 'the-readscope-tour-and-accommodation-booking'),
             ]
         );
 
         $this->add_control(
             'item_id',
             [
-                'label'       => esc_html__('Custom Item ID (Leave 0 for Current Page)', 'tourivo'),
+                'label'       => esc_html__('Custom Item ID (Leave 0 for Current Page)', 'the-readscope-tour-and-accommodation-booking'),
                 'type'        => \Elementor\Controls_Manager::NUMBER,
                 'default'     => 0,
             ]
@@ -69,7 +69,7 @@ class BookingPanelWidget extends \Elementor\Widget_Base
         $this->add_control(
             'item_type',
             [
-                'label'   => esc_html__('Item Type', 'tourivo'),
+                'label'   => esc_html__('Item Type', 'the-readscope-tour-and-accommodation-booking'),
                 'type'    => \Elementor\Controls_Manager::SELECT,
                 'default' => 'tour',
                 'options' => [

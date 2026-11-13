@@ -1,6 +1,6 @@
 <?php
 /**
- * Tourivo Test Suite Bootstrap
+ * Readscope Test Suite Bootstrap
  */
 
 declare(strict_types=1);
@@ -17,7 +17,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     require_once $_tests_dir . '/includes/functions.php';
 
     tests_add_filter('muplugins_loaded', static function () {
-        require dirname(__DIR__) . '/tourivo.php';
+        require dirname(__DIR__) . '/the-readscope-tour-and-accommodation-booking.php';
         \Tourivo\Database\Schema::migrate();
     });
 
@@ -37,7 +37,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
         define('TOURIVO_PLUGIN_DIR', dirname(__DIR__) . '/');
     }
     if (!defined('TOURIVO_PLUGIN_URL')) {
-        define('TOURIVO_PLUGIN_URL', 'http://localhost/wp-content/plugins/tourivo/');
+        define('TOURIVO_PLUGIN_URL', 'http://localhost/wp-content/plugins/the-readscope-tour-and-accommodation-booking/');
     }
     if (!defined('HOUR_IN_SECONDS')) {
         define('HOUR_IN_SECONDS', 3600);
@@ -73,7 +73,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     // Mock storage
     $GLOBALS['tourivo_mock_options'] = [
         'admin_email' => 'admin@example.com',
-        'blogname'    => 'Tourivo Test Site',
+        'blogname'    => 'Readscope Test Site',
     ];
     $GLOBALS['tourivo_mock_transients'] = [];
     $GLOBALS['tourivo_mock_posts'] = [];
@@ -116,6 +116,10 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             public array $logs = [];
             public int $insert_id = 0;
             public int $rows_affected = 0;
+            /** @var array<string, string> Mock options rows written by raw SQL (RateLimiter): name => 'count|expires'. */
+            public array $rl_rows = [];
+            public int $rl_var = 1;
+            public bool $rl_fail = false;
 
             public function get_charset_collate(): string {
                 return 'DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
@@ -133,6 +137,44 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
             public function query(string $query): int|bool {
                 $trimmed = trim($query);
+
+                // RateLimiter: emulate the atomic options-table upsert, the user variable and the clean-up deletes
+                if (stripos($trimmed, 'SET @tourivo_rl_c') === 0) {
+                    $this->rl_var = 1;
+                    return 0;
+                }
+                if (stripos($trimmed, 'INSERT INTO') === 0 && strpos($trimmed, '@tourivo_rl_c') !== false) {
+                    if ($this->rl_fail) {
+                        return false;
+                    }
+                    preg_match("/VALUES \('([^']+)', '(\d+)\|(\d+)'/", $trimmed, $m);
+                    preg_match('/<= (\d+), 1,/', $trimmed, $n);
+                    $now = (int) $n[1];
+                    if (isset($this->rl_rows[$m[1]]) && (int) explode('|', $this->rl_rows[$m[1]])[1] > $now) {
+                        [$count, $exp] = array_map('intval', explode('|', $this->rl_rows[$m[1]]));
+                        $this->rl_var = $count + 1;
+                        $this->rl_rows[$m[1]] = ($count + 1) . '|' . $exp;
+                    } else {
+                        $this->rl_var = 1;
+                        $this->rl_rows[$m[1]] = $m[2] . '|' . $m[3];
+                    }
+                    return 1;
+                }
+                if (stripos($trimmed, 'DELETE FROM') === 0 && preg_match('/tourivo\\\\?_rl/', $trimmed)) {
+                    $deleted = 0;
+                    if (preg_match("/option_name = '([^']+)'/", $trimmed, $m)) {
+                        $deleted = isset($this->rl_rows[$m[1]]) ? 1 : 0;
+                        unset($this->rl_rows[$m[1]]);
+                    } elseif (preg_match('/<= (\d+)$/', $trimmed, $n)) {
+                        foreach ($this->rl_rows as $name => $row) {
+                            if ((int) explode('|', $row)[1] <= (int) $n[1]) {
+                                unset($this->rl_rows[$name]);
+                                $deleted++;
+                            }
+                        }
+                    }
+                    return $deleted;
+                }
                 if (in_array(strtoupper($trimmed), ['START TRANSACTION', 'COMMIT', 'ROLLBACK'], true)) {
                     $this->rows_affected = 1;
                     return 1;
@@ -323,7 +365,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
                 // 3. UPDATE wp_tourivo_bookings
                 if (stripos($trimmed, 'UPDATE') !== false && stripos($trimmed, 'tourivo_bookings') !== false) {
-                    // Atomic payment (Tourivo Pro PaymentRecorder): paid_amount = LEAST(total_amount, paid_amount + X), assigned last.
+                    // Atomic payment (Readscope Booking Pro PaymentRecorder): paid_amount = LEAST(total_amount, paid_amount + X), assigned last.
                     if (preg_match('/paid_amount\s*=\s*LEAST\(total_amount,\s*paid_amount\s*\+\s*([0-9.]+)\)\s+WHERE\s+id\s*=\s*(\d+)/is', $trimmed, $m)) {
                         $id = (int) $m[2];
                         if (!isset($this->bookings[$id])) {
@@ -433,6 +475,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
             public function get_var(?string $query = null, int $x = 0, int $y = 0): mixed {
                 if (!$query) return null;
+                if ($query === 'SELECT @tourivo_rl_c') return $this->rl_var;
                 if (stripos($query, 'COUNT(*)') !== false) {
                     if (stripos($query, 'tourivo_inquiries') !== false) {
                         if (preg_match("/customer_email\s*=\s*'([^']+)'/i", $query, $mEmail)) {
@@ -1215,7 +1258,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
         function wp_hash(string $data, string $scheme = 'auth'): string { return hash_hmac('md5', $data, wp_salt($scheme)); }
     }
     if (!function_exists('get_bloginfo')) {
-        function get_bloginfo(string $show = '', string $filter = 'raw'): string { return 'Tourivo Test Site'; }
+        function get_bloginfo(string $show = '', string $filter = 'raw'): string { return 'Readscope Test Site'; }
     }
     if (!function_exists('home_url')) {
         function home_url(string $path = ''): string { return 'http://localhost' . $path; }
@@ -1393,6 +1436,9 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             unset($tourivo_mock_transients[$transient]);
             return true;
         }
+    }
+    if (!function_exists('wp_rand')) {
+        function wp_rand(int $min = 0, int $max = 0): int { return mt_rand($min, $max); }
     }
     if (!function_exists('wp_using_ext_object_cache')) {
         function wp_using_ext_object_cache(?bool $using = null): bool {
@@ -2041,6 +2087,69 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     if (!function_exists('wp_kses_post')) {
         function wp_kses_post(string $data): string {
             return $data;
+        }
+    }
+
+    if (!function_exists('sanitize_title')) {
+        function sanitize_title(string $title): string {
+            return trim((string) preg_replace('/[^a-z0-9_\-]+/', '-', strtolower(trim(strip_tags($title)))), '-');
+        }
+    }
+
+    if (!function_exists('wp_kses')) {
+        /**
+         * Small stand-in for wp_kses(): drops tags and attributes that are not in the allowlist (the tag's
+         * text stays, as in WordPress), drops `javascript:` URLs and filters `style` through the
+         * `safe_style_css` property list. The real function is exercised on a WordPress install.
+         *
+         * @param array<string, array<string, bool>> $allowed
+         */
+        function wp_kses(string $html, array $allowed, array $protocols = []): string {
+            $safeCss = apply_filters('safe_style_css', [
+                'background', 'background-color', 'border', 'border-color', 'border-top', 'border-bottom', 'border-left', 'border-right',
+                'color', 'font', 'font-family', 'font-size', 'font-style', 'font-weight', 'margin', 'margin-top', 'margin-bottom',
+                'margin-left', 'margin-right', 'padding', 'padding-top', 'padding-bottom', 'padding-left', 'padding-right',
+                'text-align', 'width', 'height', 'float', 'clear', 'direction',
+            ]);
+
+            return (string) preg_replace_callback('#<(/?)([a-zA-Z][a-zA-Z0-9]*)((?:[^>"\']|"[^"]*"|\'[^\']*\')*)>#', static function (array $m) use ($allowed, $safeCss): string {
+                $tag = strtolower($m[2]);
+                if (!isset($allowed[$tag])) {
+                    return '';
+                }
+                if ($m[1] === '/') {
+                    return '</' . $tag . '>';
+                }
+
+                $attrs = '';
+                preg_match_all('#([a-zA-Z_:][a-zA-Z0-9_:.\-]*)\s*=\s*("([^"]*)"|\'([^\']*)\')#', $m[3], $found, PREG_SET_ORDER);
+                foreach ($found as $attr) {
+                    $name  = strtolower($attr[1]);
+                    $value = $attr[3] !== '' ? $attr[3] : ($attr[4] ?? '');
+                    if (empty($allowed[$tag][$name])) {
+                        continue;
+                    }
+                    if (in_array($name, ['href', 'src'], true) && preg_match('#^\s*(javascript|data|vbscript):#i', $value)) {
+                        continue;
+                    }
+                    if ($name === 'style') {
+                        $kept = [];
+                        foreach (explode(';', $value) as $declaration) {
+                            $parts = explode(':', $declaration, 2);
+                            if (count($parts) === 2 && in_array(strtolower(trim($parts[0])), $safeCss, true) && !preg_match('#[\\\\(&=}]|/\*#', $parts[1])) {
+                                $kept[] = trim($parts[0]) . ':' . trim($parts[1]);
+                            }
+                        }
+                        if ($kept === []) {
+                            continue;
+                        }
+                        $value = implode(';', $kept);
+                    }
+                    $attrs .= ' ' . $name . '="' . $value . '"';
+                }
+
+                return '<' . $tag . $attrs . (str_ends_with(rtrim($m[3]), '/') ? ' /' : '') . '>';
+            }, $html);
         }
     }
 

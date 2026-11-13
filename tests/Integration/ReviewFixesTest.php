@@ -135,7 +135,7 @@ class ReviewFixesTest extends TestCase
 
         Uninstaller::uninstall();
 
-        $this->assertEmpty($GLOBALS['tourivo_mock_scheduled_events'], 'Uninstall must leave no Tourivo event behind.');
+        $this->assertEmpty($GLOBALS['tourivo_mock_scheduled_events'], 'Uninstall must leave no Readscope Booking event behind.');
     }
 
     // ------------------------------------------------------------------ 2. No PII in jobs
@@ -314,13 +314,13 @@ class ReviewFixesTest extends TestCase
         $value = $this->emailService->replyTo('admin_new_booking', [
             'customer_email' => 'eve@example.com',
             'customer_name'  => "Eve <x>\r\nBcc: evil@example.com",
-        ], 'Tourivo');
+        ], 'Readscope Booking');
         $this->assertStringNotContainsString("\r", $value);
         $this->assertStringNotContainsString("\n", $value);
         $this->assertStringContainsString('<eve@example.com>', $value);
 
-        $fallback = $this->emailService->replyTo('admin_new_booking', ['customer_email' => 'not-an-address'], 'Tourivo');
-        $this->assertEquals('Tourivo <support@tourivo.test>', $fallback);
+        $fallback = $this->emailService->replyTo('admin_new_booking', ['customer_email' => 'not-an-address'], 'Readscope Booking');
+        $this->assertEquals('Readscope Booking <support@tourivo.test>', $fallback);
     }
 
     // ------------------------------------------------------------------ 6. Availability auth + capacity guard

@@ -2,7 +2,7 @@
 /**
  * Customer: Confirm Your Email Template Part
  *
- * @package Tourivo
+ * @package Readscope Booking
  * @var array  $booking
  * @var string $siteName
  * @var string $additionalContent
@@ -21,8 +21,8 @@ $tourivoExtra   = isset($additionalContent) && is_string($additionalContent) ? $
     echo esc_html(
         sprintf(
             /* translators: %s: Customer Name */
-            __('Hello %s,', 'tourivo'),
-            $tourivoBooking['customer_name'] ?? __('Traveler', 'tourivo')
+            __('Hello %s,', 'the-readscope-tour-and-accommodation-booking'),
+            $tourivoBooking['customer_name'] ?? __('Traveler', 'the-readscope-tour-and-accommodation-booking')
         )
     );
     ?>
@@ -32,7 +32,7 @@ $tourivoExtra   = isset($additionalContent) && is_string($additionalContent) ? $
     echo esc_html(
         sprintf(
             /* translators: 1: Item title, 2: Booking code */
-            __('We received a booking request for %1$s (reference #%2$s). Please confirm that this email address is yours to secure the reservation.', 'tourivo'),
+            __('We received a booking request for %1$s (reference #%2$s). Please confirm that this email address is yours to secure the reservation.', 'the-readscope-tour-and-accommodation-booking'),
             $tourivoBooking['item_title'] ?? '',
             $tourivoBooking['booking_code'] ?? ''
         )
@@ -43,14 +43,14 @@ $tourivoExtra   = isset($additionalContent) && is_string($additionalContent) ? $
 <?php if ($tourivoVerify !== '') : ?>
     <p style="text-align: center; margin: 24px 0;">
         <a href="<?php echo esc_url($tourivoVerify); ?>" style="display: inline-block; background: #0d9488; color: #ffffff; padding: 12px 26px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 15px;">
-            <?php esc_html_e('Confirm My Email', 'tourivo'); ?>
+            <?php esc_html_e('Confirm My Email', 'the-readscope-tour-and-accommodation-booking'); ?>
         </a>
     </p>
 <?php endif; ?>
 
 <div class="tourivo-warning-box">
-    <strong>⏳ <?php esc_html_e('Action required', 'tourivo'); ?></strong><br>
-    <?php esc_html_e('Unconfirmed bookings are released automatically after a short time. If you did not make this request, simply ignore this email.', 'tourivo'); ?>
+    <strong>⏳ <?php esc_html_e('Action required', 'the-readscope-tour-and-accommodation-booking'); ?></strong><br>
+    <?php esc_html_e('Unconfirmed bookings are released automatically after a short time. If you did not make this request, simply ignore this email.', 'the-readscope-tour-and-accommodation-booking'); ?>
 </div>
 
 <?php if ($tourivoExtra !== '') : ?>

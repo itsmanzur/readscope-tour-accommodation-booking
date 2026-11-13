@@ -1,5 +1,5 @@
 /**
- * Tourivo fonts: Anek Bangla (SIL OFL 1.1, assets/fonts/OFL.txt), self-hosted.
+ * Readscope Booking fonts: Anek Bangla (SIL OFL 1.1, assets/fonts/OFL.txt), self-hosted.
  *
  * "Tourivo Bangla" covers Bengali characters only, so it can sit in front of any font stack: Latin text keeps
  * the theme's (or the system's) font and the browser downloads this file only on pages that show Bengali.
@@ -8,7 +8,7 @@
  *
  * "Tourivo Anek" is the whole family (Bengali + Latin) for sites that pick Anek Bangla everywhere.
  *
- * @package Tourivo
+ * @package Readscope Booking
  */
 
 @font-face {
@@ -48,14 +48,14 @@
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* Tourivo screens in wp-admin: WordPress's own font, Bengali in Tourivo Bangla. */
+/* Readscope Booking screens in wp-admin: WordPress's own font, Bengali in Tourivo Bangla. */
 body.toplevel_page_tourivo #wpbody-content,
 body[class*="tourivo_page_"] #wpbody-content,
 .tourivo-metabox-wrapper {
     font-family: var(--trv-font-admin);
 }
 
-/* wp-admin type scale for Tourivo screens: WordPress admin text is 13px, so the steps sit around it. */
+/* wp-admin type scale for Readscope Booking screens: WordPress admin text is 13px, so the steps sit around it. */
 body.wp-admin {
     --trv-admin-text-xs: 12px;
     --trv-admin-text-sm: 13px;

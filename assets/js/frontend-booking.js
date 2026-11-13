@@ -1,5 +1,5 @@
 /**
- * Tourivo Frontend Booking Interactive JavaScript (Zero-jQuery Reactive UI)
+ * Readscope Booking Frontend Booking Interactive JavaScript (Zero-jQuery Reactive UI)
  */
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -674,7 +674,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 e.preventDefault();
 
                 if (!window.tourivoData || !window.tourivoData.restUrl) {
-                    alert('Tourivo REST API endpoint is not configured.');
+                    alert('Readscope Booking REST API endpoint is not configured.');
                     return;
                 }
 

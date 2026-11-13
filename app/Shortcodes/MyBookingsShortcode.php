@@ -58,7 +58,7 @@ class MyBookingsShortcode
     public static function render(array|string $atts = []): string
     {
         $attributes = shortcode_atts([
-            'title'       => __('My Bookings & Trips', 'tourivo'),
+            'title'       => __('My Bookings & Trips', 'the-readscope-tour-and-accommodation-booking'),
             'per_page'    => 10,
             'show_stats'  => 'yes',
             'default_tab' => 'all',
@@ -307,7 +307,7 @@ class MyBookingsShortcode
             return [
                 'success' => false,
                 'code'    => 401,
-                'message' => __('Please log in to manage your bookings.', 'tourivo'),
+                'message' => __('Please log in to manage your bookings.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -325,7 +325,7 @@ class MyBookingsShortcode
             return [
                 'success' => false,
                 'code'    => 404,
-                'message' => __('Booking not found.', 'tourivo'),
+                'message' => __('Booking not found.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -339,7 +339,7 @@ class MyBookingsShortcode
             return [
                 'success' => false,
                 'code'    => 403,
-                'message' => __('You do not have permission to manage this booking.', 'tourivo'),
+                'message' => __('You do not have permission to manage this booking.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -362,7 +362,7 @@ class MyBookingsShortcode
             return [
                 'success' => false,
                 'code'    => 401,
-                'message' => __('Please log in to view booking details.', 'tourivo'),
+                'message' => __('Please log in to view booking details.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -380,7 +380,7 @@ class MyBookingsShortcode
             return [
                 'success' => false,
                 'code'    => 404,
-                'message' => __('Booking not found.', 'tourivo'),
+                'message' => __('Booking not found.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -394,7 +394,7 @@ class MyBookingsShortcode
             return [
                 'success' => false,
                 'code'    => 403,
-                'message' => __('You do not have permission to view this booking.', 'tourivo'),
+                'message' => __('You do not have permission to view this booking.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -475,7 +475,7 @@ class MyBookingsShortcode
         $reason    = isset($_POST['reason']) ? sanitize_textarea_field(wp_unslash((string) $_POST['reason'])) : '';
 
         if ($bookingId <= 0) {
-            wp_send_json_error(['message' => __('Invalid booking ID.', 'tourivo')], 400);
+            wp_send_json_error(['message' => __('Invalid booking ID.', 'the-readscope-tour-and-accommodation-booking')], 400);
         }
 
         $res = self::processUserCancellation($bookingId, $reason);
@@ -498,7 +498,7 @@ class MyBookingsShortcode
 
         $bookingId = isset($_POST['booking_id']) ? absint($_POST['booking_id']) : 0;
         if ($bookingId <= 0) {
-            wp_send_json_error(['message' => __('Invalid booking ID.', 'tourivo')], 400);
+            wp_send_json_error(['message' => __('Invalid booking ID.', 'the-readscope-tour-and-accommodation-booking')], 400);
         }
 
         $res = self::getUserBookingDetails($bookingId);
@@ -517,7 +517,7 @@ class MyBookingsShortcode
      */
     public static function handleUnauthorizedAjax(): void
     {
-        wp_send_json_error(['message' => __('Please log in to continue.', 'tourivo')], 401);
+        wp_send_json_error(['message' => __('Please log in to continue.', 'the-readscope-tour-and-accommodation-booking')], 401);
     }
 
     /**

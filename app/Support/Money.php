@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class Money
  *
- * Centralized currency and price formatting helper according to global Tourivo settings.
+ * Centralized currency and price formatting helper according to global Readscope Booking settings.
  *
  * @package Tourivo\Support
  */

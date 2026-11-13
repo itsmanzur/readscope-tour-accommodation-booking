@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class PricingService
  *
- * Central pricing engine for Tourivo. Calculates date-based prices, child/infant rates,
+ * Central pricing engine for Readscope Booking. Calculates date-based prices, child/infant rates,
  * Pro discounts/filters, taxes (inclusive/exclusive), and formatted quote breakdowns.
  *
  * @package Tourivo\Services
@@ -81,7 +81,7 @@ class PricingService
         if ($itemId <= 0 || empty($checkIn)) {
             return [
                 'success' => false,
-                'message' => __('Please provide a valid item ID and check-in date.', 'tourivo'),
+                'message' => __('Please provide a valid item ID and check-in date.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -100,7 +100,7 @@ class PricingService
             if (!$tour->getId()) {
                 return [
                     'success' => false,
-                    'message' => __('Selected tour could not be found.', 'tourivo'),
+                    'message' => __('Selected tour could not be found.', 'the-readscope-tour-and-accommodation-booking'),
                 ];
             }
 
@@ -111,7 +111,7 @@ class PricingService
                 return [
                     'success' => false,
                     /* translators: %d: Minimum guests */
-                    'message' => sprintf(__('This tour requires a minimum of %d guests.', 'tourivo'), $minGuests),
+                    'message' => sprintf(__('This tour requires a minimum of %d guests.', 'the-readscope-tour-and-accommodation-booking'), $minGuests),
                 ];
             }
 
@@ -124,7 +124,7 @@ class PricingService
                 return [
                     'success' => false,
                     /* translators: %d: Maximum guests */
-                    'message' => sprintf(__('This tour allows a maximum of %d guests per booking.', 'tourivo'), $maxGuests),
+                    'message' => sprintf(__('This tour allows a maximum of %d guests per booking.', 'the-readscope-tour-and-accommodation-booking'), $maxGuests),
                 ];
             }
 
@@ -138,7 +138,7 @@ class PricingService
             $adultSubtotal = $adultDailyRate * $adults;
             if ($adults > 0) {
                 $lines[] = [
-                    'title'    => __('Adults', 'tourivo'),
+                    'title'    => __('Adults', 'the-readscope-tour-and-accommodation-booking'),
                     'quantity' => $adults,
                     'rate'     => $adultDailyRate,
                     'total'    => $adultSubtotal,
@@ -159,7 +159,7 @@ class PricingService
             if ($children > 0) {
                 $childLabel = $tour->getChildAgeLabel();
                 $lines[] = [
-                    'title'    => !empty($childLabel) ? sprintf(/* translators: %s: child age range */ __('Children (%s)', 'tourivo'), $childLabel) : __('Children', 'tourivo'),
+                    'title'    => !empty($childLabel) ? sprintf(/* translators: %s: child age range */ __('Children (%s)', 'the-readscope-tour-and-accommodation-booking'), $childLabel) : __('Children', 'the-readscope-tour-and-accommodation-booking'),
                     'quantity' => $children,
                     'rate'     => $childDailyRate,
                     'total'    => $childSubtotal,
@@ -173,7 +173,7 @@ class PricingService
 
             if ($infants > 0) {
                 $lines[] = [
-                    'title'    => __('Infants', 'tourivo'),
+                    'title'    => __('Infants', 'the-readscope-tour-and-accommodation-booking'),
                     'quantity' => $infants,
                     'rate'     => $infantDailyRate,
                     'total'    => $infantSubtotal,
@@ -187,7 +187,7 @@ class PricingService
             if (empty($checkOut)) {
                 return [
                     'success' => false,
-                    'message' => __('Please select a valid check-out date for room reservations.', 'tourivo'),
+                    'message' => __('Please select a valid check-out date for room reservations.', 'the-readscope-tour-and-accommodation-booking'),
                 ];
             }
 
@@ -195,7 +195,7 @@ class PricingService
             if (!$room->getId()) {
                 return [
                     'success' => false,
-                    'message' => __('Selected room could not be found.', 'tourivo'),
+                    'message' => __('Selected room could not be found.', 'the-readscope-tour-and-accommodation-booking'),
                 ];
             }
 
@@ -220,7 +220,7 @@ class PricingService
             $lines[] = [
                 'title'    => sprintf(
                     /* translators: 1: Number of rooms, 2: Number of nights */
-                    __('%1$d Room(s) × %2$d Night(s)', 'tourivo'),
+                    __('%1$d Room(s) × %2$d Night(s)', 'the-readscope-tour-and-accommodation-booking'),
                     $rooms,
                     $nights
                 ),
@@ -286,7 +286,7 @@ class PricingService
             // Whatever the filter changed without itemising still has to add up on screen.
             $unlisted = round($merchandise - $itemised, $decimals);
             if (abs($unlisted) >= 0.01) {
-                $lines[] = ['title' => __('Other adjustments', 'tourivo'), 'quantity' => 1, 'rate' => $unlisted, 'total' => $unlisted, 'adjustment' => true];
+                $lines[] = ['title' => __('Other adjustments', 'the-readscope-tour-and-accommodation-booking'), 'quantity' => 1, 'rate' => $unlisted, 'total' => $unlisted, 'adjustment' => true];
                 if ($unlisted < 0) {
                     $lineDiscount -= $unlisted;
                 }
@@ -298,7 +298,7 @@ class PricingService
 
         // Tax Calculations
         $taxEnabled   = (bool) Config::get('tax_enabled', false);
-        $taxLabel     = (string) Config::get('tax_label', __('Tax', 'tourivo'));
+        $taxLabel     = (string) Config::get('tax_label', __('Tax', 'the-readscope-tour-and-accommodation-booking'));
         $taxRate      = max(0.0, (float) Config::get('tax_rate', 0.0));
         $taxMode      = (string) Config::get('tax_mode', 'exclusive');
         $taxAppliesTo = (string) Config::get('tax_applies_to', 'all');

@@ -75,7 +75,7 @@ class TourGridShortcode
         // phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 
         if (!$query->have_posts()) {
-            return '<p class="tourivo-no-items">' . esc_html__('No tours found matching criteria.', 'tourivo') . '</p>';
+            return '<p class="tourivo-no-items">' . esc_html__('No tours found matching criteria.', 'the-readscope-tour-and-accommodation-booking') . '</p>';
         }
 
         $cols = max(1, min(4, (int) $attributes['columns']));

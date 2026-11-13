@@ -84,10 +84,10 @@ class SeoService
             return;
         }
 
-        echo "\n<!-- Tourivo Schema.org JSON-LD Structured Data -->\n";
+        echo "\n<!-- Readscope Schema.org JSON-LD Structured Data -->\n";
         echo '<script type="application/ld+json">' . "\n";
-        echo wp_json_encode($schema, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_PRETTY_PRINT) . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON-LD; the JSON_HEX_* flags keep it safe inside a script tag.
-        echo "</script>\n<!-- /Tourivo Schema -->\n\n";
+        echo wp_json_encode($schema, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_PRETTY_PRINT) . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON-LD; the JSON_HEX_* flags keep it safe inside a script tag.
+        echo "</script>\n<!-- /Readscope Booking Schema -->\n\n";
     }
 
     /**
@@ -461,7 +461,7 @@ class SeoService
             $price = $hotel->getMinPrice();
         }
 
-        echo "\n<!-- Tourivo OpenGraph & Social Meta Tags -->\n";
+        echo "\n<!-- Readscope Booking OpenGraph & Social Meta Tags -->\n";
         echo '<meta property="og:type" content="article" />' . "\n";
         echo '<meta property="og:title" content="' . esc_attr($title) . '" />' . "\n";
         echo '<meta property="og:description" content="' . esc_attr($desc) . '" />' . "\n";
@@ -481,6 +481,6 @@ class SeoService
         echo '<meta name="twitter:card" content="summary_large_image" />' . "\n";
         echo '<meta name="twitter:title" content="' . esc_attr($title) . '" />' . "\n";
         echo '<meta name="twitter:description" content="' . esc_attr($desc) . '" />' . "\n";
-        echo "<!-- /Tourivo Social Meta -->\n\n";
+        echo "<!-- /Readscope Booking Social Meta -->\n\n";
     }
 }

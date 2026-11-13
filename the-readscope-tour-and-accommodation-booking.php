@@ -1,7 +1,6 @@
 <?php
 /**
- * Plugin Name:       Tourivo
- * Plugin URI:        https://thereadscope.com/tourivo
+ * Plugin Name:       The Readscope Tour and Accommodation Booking
  * Description:       The Next-Gen Travel, Tour & Accommodation Booking Engine for WordPress.
  * Version:           1.0.0
  * Requires at least: 6.0
@@ -10,7 +9,7 @@
  * Author URI:        https://thereadscope.com
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       tourivo
+ * Text Domain:       the-readscope-tour-and-accommodation-booking
  * Domain Path:       /languages
  */
 
@@ -22,7 +21,7 @@ if (!defined('ABSPATH')) {
 
 // 1. Define Global Constants
 define('TOURIVO_VERSION', '1.0.0');
-// Integer that only grows when the public hooks / helpers add-ons rely on change. Tourivo Pro compares it, not the version.
+// Integer that only grows when the public hooks / helpers add-ons rely on change. Readscope Booking Pro compares it, not the version.
 define('TOURIVO_API_LEVEL', 1);
 define('TOURIVO_MIN_PHP_VER', '8.0');
 define('TOURIVO_PLUGIN_FILE', __FILE__);
@@ -34,7 +33,7 @@ if (version_compare(PHP_VERSION, TOURIVO_MIN_PHP_VER, '<')) {
     add_action('admin_notices', static function () {
         $message = sprintf(
             /* translators: 1: Required PHP version, 2: Current PHP version */
-            esc_html__('Tourivo requires PHP version %1$s or greater. You are running version %2$s. Please upgrade your PHP version.', 'tourivo'),
+            esc_html__('The Readscope Tour and Accommodation Booking requires PHP version %1$s or greater. You are running version %2$s. Please upgrade your PHP version.', 'the-readscope-tour-and-accommodation-booking'),
             TOURIVO_MIN_PHP_VER,
             PHP_VERSION
         );
@@ -77,7 +76,7 @@ require_once TOURIVO_PLUGIN_DIR . 'app/Support/functions.php';
 // 6. Global Accessor Helper
 if (!function_exists('tourivo')) {
     /**
-     * Get the main Tourivo plugin orchestrator instance.
+     * Get the main Readscope Booking plugin orchestrator instance.
      *
      * @return \Tourivo\Core\Plugin
      */
@@ -91,7 +90,7 @@ if (!function_exists('tourivo')) {
 add_filter(
     'plugin_locale',
     static function (string $locale, string $domain): string {
-        if ('tourivo' !== $domain) {
+        if ('the-readscope-tour-and-accommodation-booking' !== $domain) {
             return $locale;
         }
 

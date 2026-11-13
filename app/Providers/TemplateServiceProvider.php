@@ -36,12 +36,15 @@ class TemplateServiceProvider extends ServiceProvider
         // Initialize SEO Service (Schema.org JSON-LD and OpenGraph)
         new \Tourivo\Services\SeoService();
 
+        // Public search filters (date, guests, destination) are WordPress query vars read from the parsed request.
+        \Tourivo\Support\PublicSearch::register();
+
         // Template loader hooks
         $this->addFilter('template_include', [$this, 'loadPostTemplates']);
         $this->addFilter('get_the_archive_title', [$this, 'cleanArchiveTitle'], 10, 3);
         $this->addFilter('document_title_parts', [$this, 'cleanArchiveDocumentTitle']);
 
-        // Frontend assets and Tourivo's own listing pages
+        // Frontend assets and Readscope Booking's own listing pages
         $this->addAction('wp_enqueue_scripts', [$this, 'enqueueFrontendAssets']);
         \Tourivo\Support\PortalAssets::boot();
         \Tourivo\Support\Typography::registerThemeFontScript();
@@ -127,10 +130,10 @@ class TemplateServiceProvider extends ServiceProvider
             tourivo_load_plugin_textdomain();
         }
         if (is_post_type_archive('tourivo_tour')) {
-            return _x('Tours', 'public archive title', 'tourivo');
+            return _x('Tours', 'public archive title', 'the-readscope-tour-and-accommodation-booking');
         }
 
-        return _x('Hotels', 'public archive title', 'tourivo');
+        return _x('Hotels', 'public archive title', 'the-readscope-tour-and-accommodation-booking');
     }
 
     /**
@@ -183,9 +186,9 @@ class TemplateServiceProvider extends ServiceProvider
         $track = get_page_by_path('track-booking');
         $trackUrl = $track instanceof \WP_Post ? get_permalink($track) : home_url('/track-booking/');
         $items = [
-            [_x('Tours', 'public archive title', 'tourivo'), is_string($tours) && $tours !== '' ? $tours : home_url('/tours/')],
-            [_x('Hotels', 'public archive title', 'tourivo'), is_string($hotels) && $hotels !== '' ? $hotels : home_url('/hotels/')],
-            [__('Track My Booking', 'tourivo'), is_string($trackUrl) && $trackUrl !== '' ? $trackUrl : home_url('/track-booking/')],
+            [_x('Tours', 'public archive title', 'the-readscope-tour-and-accommodation-booking'), is_string($tours) && $tours !== '' ? $tours : home_url('/tours/')],
+            [_x('Hotels', 'public archive title', 'the-readscope-tour-and-accommodation-booking'), is_string($hotels) && $hotels !== '' ? $hotels : home_url('/hotels/')],
+            [__('Track My Booking', 'the-readscope-tour-and-accommodation-booking'), is_string($trackUrl) && $trackUrl !== '' ? $trackUrl : home_url('/track-booking/')],
         ];
 
         $blocks = [];
@@ -283,7 +286,7 @@ class TemplateServiceProvider extends ServiceProvider
         $search = [
             'blockName'    => 'core/navigation-link',
             'attrs'        => [
-                'label'          => __('Search trips', 'tourivo'),
+                'label'          => __('Search trips', 'the-readscope-tour-and-accommodation-booking'),
                 'url'            => home_url('/'),
                 'kind'           => 'custom',
                 'isTopLevelLink' => true,
@@ -361,7 +364,7 @@ class TemplateServiceProvider extends ServiceProvider
         }
 
         return '<p class="wp-block-site-tagline has-small-font-size">'
-            . esc_html(__('Book tours and hotels', 'tourivo'))
+            . esc_html(__('Book tours and hotels', 'the-readscope-tour-and-accommodation-booking'))
             . '</p>';
     }
 
@@ -459,7 +462,7 @@ class TemplateServiceProvider extends ServiceProvider
 
     /**
      * The default theme's own translation of one of its strings, used only to recognise its placeholder text.
-     * Read from the theme's loaded catalog so these strings are not added to Tourivo's.
+     * Read from the theme's loaded catalog so these strings are not added to Readscope Booking's.
      */
     private function themeText(string $text): string
     {
@@ -654,53 +657,53 @@ class TemplateServiceProvider extends ServiceProvider
             'isBengali'       => function_exists('tourivo_is_bengali') && tourivo_is_bengali(),
             'useBanglaDigits' => (bool) \Tourivo\Config\Config::get('use_bangla_digits', false),
             'i18n'            => [
-                'processing'      => __('Processing...', 'tourivo'),
-                'success'         => __('Booking successful!', 'tourivo'),
-                'savedToWishlist' => __('Saved to wishlist', 'tourivo'),
-                'saveToWishlist'  => __('Save to wishlist', 'tourivo'),
-                'submitting'      => __('Submitting...', 'tourivo'),
-                'night'           => __('night', 'tourivo'),
-                'person'          => __('person', 'tourivo'),
-                'calculating'     => __('Calculating the price...', 'tourivo'),
+                'processing'      => __('Processing...', 'the-readscope-tour-and-accommodation-booking'),
+                'success'         => __('Booking successful!', 'the-readscope-tour-and-accommodation-booking'),
+                'savedToWishlist' => __('Saved to wishlist', 'the-readscope-tour-and-accommodation-booking'),
+                'saveToWishlist'  => __('Save to wishlist', 'the-readscope-tour-and-accommodation-booking'),
+                'submitting'      => __('Submitting...', 'the-readscope-tour-and-accommodation-booking'),
+                'night'           => __('night', 'the-readscope-tour-and-accommodation-booking'),
+                'person'          => __('person', 'the-readscope-tour-and-accommodation-booking'),
+                'calculating'     => __('Calculating the price...', 'the-readscope-tour-and-accommodation-booking'),
             ],
             'calendar'        => [
                 'weekdays'     => [
-                    __('Sun', 'tourivo'),
-                    __('Mon', 'tourivo'),
-                    __('Tue', 'tourivo'),
-                    __('Wed', 'tourivo'),
-                    __('Thu', 'tourivo'),
-                    __('Fri', 'tourivo'),
-                    __('Sat', 'tourivo'),
+                    __('Sun', 'the-readscope-tour-and-accommodation-booking'),
+                    __('Mon', 'the-readscope-tour-and-accommodation-booking'),
+                    __('Tue', 'the-readscope-tour-and-accommodation-booking'),
+                    __('Wed', 'the-readscope-tour-and-accommodation-booking'),
+                    __('Thu', 'the-readscope-tour-and-accommodation-booking'),
+                    __('Fri', 'the-readscope-tour-and-accommodation-booking'),
+                    __('Sat', 'the-readscope-tour-and-accommodation-booking'),
                 ],
                 'months'       => [
-                    __('January', 'tourivo'),
-                    __('February', 'tourivo'),
-                    __('March', 'tourivo'),
-                    __('April', 'tourivo'),
-                    __('May', 'tourivo'),
-                    __('June', 'tourivo'),
-                    __('July', 'tourivo'),
-                    __('August', 'tourivo'),
-                    __('September', 'tourivo'),
-                    __('October', 'tourivo'),
-                    __('November', 'tourivo'),
-                    __('December', 'tourivo'),
+                    __('January', 'the-readscope-tour-and-accommodation-booking'),
+                    __('February', 'the-readscope-tour-and-accommodation-booking'),
+                    __('March', 'the-readscope-tour-and-accommodation-booking'),
+                    __('April', 'the-readscope-tour-and-accommodation-booking'),
+                    __('May', 'the-readscope-tour-and-accommodation-booking'),
+                    __('June', 'the-readscope-tour-and-accommodation-booking'),
+                    __('July', 'the-readscope-tour-and-accommodation-booking'),
+                    __('August', 'the-readscope-tour-and-accommodation-booking'),
+                    __('September', 'the-readscope-tour-and-accommodation-booking'),
+                    __('October', 'the-readscope-tour-and-accommodation-booking'),
+                    __('November', 'the-readscope-tour-and-accommodation-booking'),
+                    __('December', 'the-readscope-tour-and-accommodation-booking'),
                 ],
-                'soldOut'      => __('Sold out', 'tourivo'),
+                'soldOut'      => __('Sold out', 'the-readscope-tour-and-accommodation-booking'),
                 /* translators: %d: seats left */
-                'left'         => __('%d left', 'tourivo'),
-                'anyDay'       => __('Any day', 'tourivo'),
+                'left'         => __('%d left', 'the-readscope-tour-and-accommodation-booking'),
+                'anyDay'       => __('Any day', 'the-readscope-tour-and-accommodation-booking'),
                 /* translators: %d: number of tours */
-                'toursOpen'    => __('%d tours open', 'tourivo'),
+                'toursOpen'    => __('%d tours open', 'the-readscope-tour-and-accommodation-booking'),
                 /* translators: %d: number of hotels */
-                'hotelsOpen'   => __('%d hotels open', 'tourivo'),
-                'datesHint'    => __('Each date shows open tours, then open hotels.', 'tourivo'),
-                'loading'      => __('Loading dates...', 'tourivo'),
-                'pickCheckout' => __('Now choose a check-out date.', 'tourivo'),
-                'closedRange'  => __('Those nights are not fully open. Choose another check-out.', 'tourivo'),
+                'hotelsOpen'   => __('%d hotels open', 'the-readscope-tour-and-accommodation-booking'),
+                'datesHint'    => __('Each date shows open tours, then open hotels.', 'the-readscope-tour-and-accommodation-booking'),
+                'loading'      => __('Loading dates...', 'the-readscope-tour-and-accommodation-booking'),
+                'pickCheckout' => __('Now choose a check-out date.', 'the-readscope-tour-and-accommodation-booking'),
+                'closedRange'  => __('Those nights are not fully open. Choose another check-out.', 'the-readscope-tour-and-accommodation-booking'),
                 /* translators: 1: check-in date, 2: check-out date */
-                'range'        => __('Check-in: %1$s | Check-out: %2$s', 'tourivo'),
+                'range'        => __('Check-in: %1$s | Check-out: %2$s', 'the-readscope-tour-and-accommodation-booking'),
             ],
         ]);
     }
@@ -724,14 +727,13 @@ class TemplateServiceProvider extends ServiceProvider
             return;
         }
 
-        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Public search filters read from the URL (GET, read-only, sanitized); no state changes.
-        $destination = isset($_GET['tourivo_destination']) ? sanitize_title(wp_unslash((string) $_GET['tourivo_destination'])) : '';
-        $date = isset($_GET['tourivo_date']) ? sanitize_text_field(wp_unslash((string) $_GET['tourivo_date'])) : '';
-        $guests = isset($_GET['tourivo_guests']) ? max(1, min(50, absint(wp_unslash((string) $_GET['tourivo_guests'])))) : 1;
-        // phpcs:enable WordPress.Security.NonceVerification.Recommended
-        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
-            $date = '';
-        }
+        // The destination is the taxonomy's query var on this query; date and guests come from the parsed request.
+        $destination = $query->get(\Tourivo\Support\PublicSearch::VAR_DESTINATION);
+        $destination = is_string($destination) && $destination !== ''
+            ? sanitize_title($destination)
+            : \Tourivo\Support\PublicSearch::destination();
+        $date   = \Tourivo\Support\PublicSearch::date();
+        $guests = \Tourivo\Support\PublicSearch::guests();
 
         if ($destination !== '') {
             $tax = $query->get('tax_query');
@@ -934,7 +936,7 @@ class TemplateServiceProvider extends ServiceProvider
         $html = \Tourivo\Shortcodes\SearchBarShortcode::render();
         $tours = $this->homeOpenToursMarkup();
         $hotels = $this->homeHotelsMarkup();
-        $welcome = '<p class="tourivo-home-welcome">' . esc_html(__('Find your next tour or hotel.', 'tourivo')) . '</p>';
+        $welcome = '<p class="tourivo-home-welcome">' . esc_html(__('Find your next tour or hotel.', 'the-readscope-tour-and-accommodation-booking')) . '</p>';
         $markup = '<div class="tourivo-home-search">' . $welcome . $html . $this->homeDestinationMarkup() . '</div>' . $tours . $hotels;
 
         return $markup;
@@ -971,17 +973,14 @@ class TemplateServiceProvider extends ServiceProvider
             }
         }
         $kept = ['post_type' => 'tourivo_tour'];
-        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Public search filters read from the URL (GET, read-only, sanitized); no state changes.
-        if (isset($_GET['tourivo_date'])) {
-            $date = sanitize_text_field(wp_unslash((string) $_GET['tourivo_date']));
-            if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
-                $kept['tourivo_date'] = $date;
-            }
+        // Carry the visitor's day and party size over to the destination links.
+        $date = \Tourivo\Support\PublicSearch::date();
+        if ($date !== '') {
+            $kept['tourivo_date'] = $date;
         }
-        if (isset($_GET['tourivo_guests'])) {
-            $kept['tourivo_guests'] = (string) max(1, min(50, absint(wp_unslash((string) $_GET['tourivo_guests']))));
+        if (\Tourivo\Support\PublicSearch::hasGuests()) {
+            $kept['tourivo_guests'] = (string) \Tourivo\Support\PublicSearch::guests();
         }
-        // phpcs:enable WordPress.Security.NonceVerification.Recommended
         foreach ($terms as $term) {
             if (!$term instanceof \WP_Term || $term->name === '') {
                 continue;
@@ -1000,7 +999,7 @@ class TemplateServiceProvider extends ServiceProvider
             return '';
         }
 
-        return '<nav class="tourivo-home-places" aria-label="' . esc_attr__('Destinations', 'tourivo') . '">' . $links . '</nav>';
+        return '<nav class="tourivo-home-places" aria-label="' . esc_attr__('Destinations', 'the-readscope-tour-and-accommodation-booking') . '">' . $links . '</nav>';
     }
 
     /**
@@ -1042,8 +1041,8 @@ class TemplateServiceProvider extends ServiceProvider
         ob_start();
         echo '<section class="tourivo-home-tours">';
         echo '<div class="tourivo-home-tours-head">';
-        echo '<h2>' . esc_html__('Tours you can book', 'tourivo') . '</h2>';
-        echo '<a href="' . esc_url($archive) . '">' . esc_html__('See all tours', 'tourivo') . '</a>';
+        echo '<h2>' . esc_html__('Tours you can book', 'the-readscope-tour-and-accommodation-booking') . '</h2>';
+        echo '<a href="' . esc_url($archive) . '">' . esc_html__('See all tours', 'the-readscope-tour-and-accommodation-booking') . '</a>';
         echo '</div>';
         echo '<div class="tourivo-grid" style="--trv-grid-cols: 3;">';
         foreach ($ids as $id) {
@@ -1086,8 +1085,8 @@ class TemplateServiceProvider extends ServiceProvider
         ob_start();
         echo '<section class="tourivo-home-hotels">';
         echo '<div class="tourivo-home-tours-head">';
-        echo '<h2>' . esc_html__('Places to stay', 'tourivo') . '</h2>';
-        echo '<a href="' . esc_url($archive) . '">' . esc_html__('See all hotels', 'tourivo') . '</a>';
+        echo '<h2>' . esc_html__('Places to stay', 'the-readscope-tour-and-accommodation-booking') . '</h2>';
+        echo '<a href="' . esc_url($archive) . '">' . esc_html__('See all hotels', 'the-readscope-tour-and-accommodation-booking') . '</a>';
         echo '</div>';
         echo '<div class="tourivo-grid" style="--trv-grid-cols: 3;">';
         foreach ($ids as $id) {
@@ -1201,17 +1200,17 @@ class TemplateServiceProvider extends ServiceProvider
             $heading = $isTour
                 ? sprintf(
                     /* translators: %s: destination name */
-                    __('More tours in %s', 'tourivo'),
+                    __('More tours in %s', 'the-readscope-tour-and-accommodation-booking'),
                     $term->name
                 )
                 : sprintf(
                     /* translators: %s: destination name */
-                    __('Places to stay in %s', 'tourivo'),
+                    __('Places to stay in %s', 'the-readscope-tour-and-accommodation-booking'),
                     $term->name
                 );
             $seeAll = $isTour
-                ? __('See all tours', 'tourivo')
-                : __('See all hotels', 'tourivo');
+                ? __('See all tours', 'the-readscope-tour-and-accommodation-booking')
+                : __('See all hotels', 'the-readscope-tour-and-accommodation-booking');
             $sectionClass = $isTour ? 'tourivo-home-tours' : 'tourivo-home-hotels';
             echo '<section class="' . esc_attr($sectionClass) . '">';
             echo '<div class="tourivo-home-tours-head">';
@@ -1362,14 +1361,9 @@ class TemplateServiceProvider extends ServiceProvider
         }
 
         $destination = $this->searchedDestination();
-        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Public search filters read from the URL (GET, read-only, sanitized); no state changes.
-        $date = isset($_GET['tourivo_date']) ? sanitize_text_field(wp_unslash((string) $_GET['tourivo_date'])) : '';
-        $guests = isset($_GET['tourivo_guests']) ? max(1, min(50, absint(wp_unslash((string) $_GET['tourivo_guests'])))) : 1;
-        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
-            $date = '';
-        }
-        $searched = $destination !== '' || isset($_GET['tourivo_date']) || isset($_GET['tourivo_guests']);
-        // phpcs:enable WordPress.Security.NonceVerification.Recommended
+        $date     = \Tourivo\Support\PublicSearch::date();
+        $guests   = \Tourivo\Support\PublicSearch::guests();
+        $searched = $destination !== '' || \Tourivo\Support\PublicSearch::hasDate() || \Tourivo\Support\PublicSearch::hasGuests();
         if ($date === '' && $destination === '' && !$searched) {
             return '';
         }
@@ -1398,36 +1392,36 @@ class TemplateServiceProvider extends ServiceProvider
         if ($date !== '') {
             $stamp = strtotime($date . ' 12:00:00') ?: 0;
             $months = [
-                __('January', 'tourivo'), __('February', 'tourivo'), __('March', 'tourivo'),
-                __('April', 'tourivo'), __('May', 'tourivo'), __('June', 'tourivo'),
-                __('July', 'tourivo'), __('August', 'tourivo'), __('September', 'tourivo'),
-                __('October', 'tourivo'), __('November', 'tourivo'), __('December', 'tourivo'),
+                __('January', 'the-readscope-tour-and-accommodation-booking'), __('February', 'the-readscope-tour-and-accommodation-booking'), __('March', 'the-readscope-tour-and-accommodation-booking'),
+                __('April', 'the-readscope-tour-and-accommodation-booking'), __('May', 'the-readscope-tour-and-accommodation-booking'), __('June', 'the-readscope-tour-and-accommodation-booking'),
+                __('July', 'the-readscope-tour-and-accommodation-booking'), __('August', 'the-readscope-tour-and-accommodation-booking'), __('September', 'the-readscope-tour-and-accommodation-booking'),
+                __('October', 'the-readscope-tour-and-accommodation-booking'), __('November', 'the-readscope-tour-and-accommodation-booking'), __('December', 'the-readscope-tour-and-accommodation-booking'),
             ];
             $pretty = $stamp > 0
                 ? ((int) wp_date('j', $stamp)) . ' ' . ($months[(int) wp_date('n', $stamp) - 1] ?? '')
                 : $date;
-            $tourBit = sprintf(/* translators: %d: number of tours */ _n('%d tour', '%d tours', $count, 'tourivo'), $count);
-            $hotelBit = sprintf(/* translators: %d: number of hotels */ _n('%d hotel', '%d hotels', $hotelCount, 'tourivo'), $hotelCount);
+            $tourBit = sprintf(/* translators: %d: number of tours */ _n('%d tour', '%d tours', $count, 'the-readscope-tour-and-accommodation-booking'), $count);
+            $hotelBit = sprintf(/* translators: %d: number of hotels */ _n('%d hotel', '%d hotels', $hotelCount, 'the-readscope-tour-and-accommodation-booking'), $hotelCount);
             if ($count > 0 && $hotelCount > 0) {
-                $message = sprintf(/* translators: 1: tour count text, 2: hotel count text, 3: date, 4: number of travelers */ __('%1$s and %2$s are open on %3$s for %4$d travelers.', 'tourivo'), $tourBit, $hotelBit, $pretty, $guests);
+                $message = sprintf(/* translators: 1: tour count text, 2: hotel count text, 3: date, 4: number of travelers */ __('%1$s and %2$s are open on %3$s for %4$d travelers.', 'the-readscope-tour-and-accommodation-booking'), $tourBit, $hotelBit, $pretty, $guests);
             } elseif ($count > 0) {
                 $tourPattern = $guests === 1
-                    ? /* translators: 1: number of tours, 2: date, 3: number of travelers */ _n('%1$d tour is open on %2$s for %3$d traveler.', '%1$d tours are open on %2$s for %3$d traveler.', $count, 'tourivo')
-                    : /* translators: 1: number of tours, 2: date, 3: number of travelers */ _n('%1$d tour is open on %2$s for %3$d travelers.', '%1$d tours are open on %2$s for %3$d travelers.', $count, 'tourivo');
+                    ? /* translators: 1: number of tours, 2: date, 3: number of travelers */ _n('%1$d tour is open on %2$s for %3$d traveler.', '%1$d tours are open on %2$s for %3$d traveler.', $count, 'the-readscope-tour-and-accommodation-booking')
+                    : /* translators: 1: number of tours, 2: date, 3: number of travelers */ _n('%1$d tour is open on %2$s for %3$d travelers.', '%1$d tours are open on %2$s for %3$d travelers.', $count, 'the-readscope-tour-and-accommodation-booking');
                 $message = sprintf($tourPattern, $count, $pretty, $guests);
             } elseif ($hotelCount > 0) {
-                $message = sprintf(/* translators: 1: hotel count text, 2: date, 3: number of travelers */ _n('%1$s is open on %2$s for %3$d travelers.', '%1$s are open on %2$s for %3$d travelers.', $hotelCount, 'tourivo'), $hotelBit, $pretty, $guests);
+                $message = sprintf(/* translators: 1: hotel count text, 2: date, 3: number of travelers */ _n('%1$s is open on %2$s for %3$d travelers.', '%1$s are open on %2$s for %3$d travelers.', $hotelCount, 'the-readscope-tour-and-accommodation-booking'), $hotelBit, $pretty, $guests);
             } else {
-                $message = __('No tours or hotels are open on that day. Try another date.', 'tourivo');
+                $message = __('No tours or hotels are open on that day. Try another date.', 'the-readscope-tour-and-accommodation-booking');
             }
             if ($place !== '') {
-                $message .= ' ' . sprintf(/* translators: %s: destination */ __('Destination: %s', 'tourivo'), $place);
+                $message .= ' ' . sprintf(/* translators: %s: destination */ __('Destination: %s', 'the-readscope-tour-and-accommodation-booking'), $place);
             }
         } elseif ($destination !== '') {
             $label = $place !== '' ? $place : $destination;
             $message = $hotelCount > 0
-                ? sprintf(/* translators: %s: destination */ __('Tours and hotels in %s.', 'tourivo'), $label)
-                : sprintf(/* translators: %s: destination */ __('Tours in %s.', 'tourivo'), $label);
+                ? sprintf(/* translators: %s: destination */ __('Tours and hotels in %s.', 'the-readscope-tour-and-accommodation-booking'), $label)
+                : sprintf(/* translators: %s: destination */ __('Tours in %s.', 'the-readscope-tour-and-accommodation-booking'), $label);
         } else {
             $message = '';
         }
@@ -1516,11 +1510,9 @@ class TemplateServiceProvider extends ServiceProvider
             return false;
         }
 
-        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Public search filters read from the URL (GET, read-only, sanitized); no state changes.
         return $this->searchedDestination() !== ''
-            || isset($_GET['tourivo_date'])
-            || isset($_GET['tourivo_guests']);
-        // phpcs:enable WordPress.Security.NonceVerification.Recommended
+            || \Tourivo\Support\PublicSearch::hasDate()
+            || \Tourivo\Support\PublicSearch::hasGuests();
     }
 
     /**
@@ -1545,8 +1537,8 @@ class TemplateServiceProvider extends ServiceProvider
         echo '<section class="' . esc_attr($sectionClass) . '">';
         if ($withHeading) {
             echo '<div class="tourivo-home-tours-head">';
-            echo '<h2>' . esc_html__('Tours you can book', 'tourivo') . '</h2>';
-            echo '<a href="' . esc_url($archive) . '">' . esc_html__('See all tours', 'tourivo') . '</a>';
+            echo '<h2>' . esc_html__('Tours you can book', 'the-readscope-tour-and-accommodation-booking') . '</h2>';
+            echo '<a href="' . esc_url($archive) . '">' . esc_html__('See all tours', 'the-readscope-tour-and-accommodation-booking') . '</a>';
             echo '</div>';
         }
         echo '<div class="tourivo-grid" style="--trv-grid-cols: 3;">';
@@ -1608,13 +1600,7 @@ class TemplateServiceProvider extends ServiceProvider
             return $fromQuery;
         }
 
-        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Public search filters read from the URL (GET, read-only, sanitized); no state changes.
-        if (isset($_GET['tourivo_destination'])) {
-            return sanitize_text_field(wp_unslash((string) $_GET['tourivo_destination']));
-        }
-        // phpcs:enable WordPress.Security.NonceVerification.Recommended
-
-        return '';
+        return \Tourivo\Support\PublicSearch::destination();
     }
 
     /**
@@ -1637,8 +1623,8 @@ class TemplateServiceProvider extends ServiceProvider
         ob_start();
         echo '<section class="tourivo-home-hotels tourivo-search-hotels">';
         echo '<div class="tourivo-home-tours-head">';
-        echo '<h2>' . esc_html__('Places to stay', 'tourivo') . '</h2>';
-        echo '<a href="' . esc_url($archive) . '">' . esc_html__('See all hotels', 'tourivo') . '</a>';
+        echo '<h2>' . esc_html__('Places to stay', 'the-readscope-tour-and-accommodation-booking') . '</h2>';
+        echo '<a href="' . esc_url($archive) . '">' . esc_html__('See all hotels', 'the-readscope-tour-and-accommodation-booking') . '</a>';
         echo '</div>';
         echo '<div class="tourivo-grid" style="--trv-grid-cols: 3;">';
         foreach ($ids as $id) {

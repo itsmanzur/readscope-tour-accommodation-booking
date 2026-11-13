@@ -1,5 +1,5 @@
 /**
- * Tourivo Admin MetaBox Styles (Polished Tabbed UI Framework)
+ * Readscope Booking Admin MetaBox Styles (Polished Tabbed UI Framework)
  */
 
 .tourivo-metabox-wrapper {
@@ -682,7 +682,7 @@
     padding-right: 32px;
 }
 
-/* Buttons inside Tourivo editor boxes, in the Tourivo colour (editor screens have no admin-kit body class). */
+/* Buttons inside Readscope Booking editor boxes, in the Readscope Booking colour (editor screens have no admin-kit body class). */
 .tourivo-metabox-wrapper .button,
 .tourivo-availability-app .button,
 .tourivo-pro-package-editor .button,

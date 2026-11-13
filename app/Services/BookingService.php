@@ -85,13 +85,13 @@ class BookingService
     public function createBooking(array $data, bool $trusted = false): array
     {
         if (!$this->db) {
-            return ['success' => false, 'message' => __('Database connection not available.', 'tourivo')];
+            return ['success' => false, 'message' => __('Database connection not available.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         // 1. Validate Item existence and Post Type
         $itemId = (int) ($data['item_id'] ?? 0);
         if ($itemId <= 0 || get_post_status($itemId) !== 'publish') {
-            return ['success' => false, 'message' => __('Selected item is invalid or no longer available.', 'tourivo')];
+            return ['success' => false, 'message' => __('Selected item is invalid or no longer available.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         $postType = get_post_type($itemId);
@@ -101,7 +101,7 @@ class BookingService
         } elseif ($postType === 'tourivo_room') {
             $itemType = 'room';
         } else {
-            return ['success' => false, 'message' => __('Invalid booking item type.', 'tourivo')];
+            return ['success' => false, 'message' => __('Invalid booking item type.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         // 2. Extract & Sanitize Input Parameters
@@ -114,7 +114,7 @@ class BookingService
         $childrenCount = max(0, (int) ($data['children'] ?? 0));
         $infantsCount  = max(0, (int) ($data['infants'] ?? 0));
         if (($adultsCount + $childrenCount) < 1) {
-            return ['success' => false, 'message' => __('Please add at least one adult or child.', 'tourivo')];
+            return ['success' => false, 'message' => __('Please add at least one adult or child.', 'the-readscope-tour-and-accommodation-booking')];
         }
         $totalGuests   = $adultsCount + $childrenCount + $infantsCount;
         $roomsCount    = max(1, (int) ($data['rooms'] ?? 1));
@@ -127,27 +127,27 @@ class BookingService
         $notes         = sanitize_textarea_field((string) ($data['customer_notes'] ?? ''));
 
         if (empty($checkIn) || empty($customerName) || empty($customerEmail) || !is_email($customerEmail)) {
-            return ['success' => false, 'message' => __('Please provide all required traveler details (Name, Valid Email, Date).', 'tourivo')];
+            return ['success' => false, 'message' => __('Please provide all required traveler details (Name, Valid Email, Date).', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         if (!self::isValidDate($checkIn) || ($checkOut !== null && !self::isValidDate($checkOut))) {
-            return ['success' => false, 'message' => __('Please provide valid dates in YYYY-MM-DD format.', 'tourivo')];
+            return ['success' => false, 'message' => __('Please provide valid dates in YYYY-MM-DD format.', 'the-readscope-tour-and-accommodation-booking')];
         }
         if ($checkOut !== null && $checkOut < $checkIn) {
-            return ['success' => false, 'message' => __('The check-out date cannot be earlier than the check-in date.', 'tourivo')];
+            return ['success' => false, 'message' => __('The check-out date cannot be earlier than the check-in date.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         // Consent verification for non-admin public bookings
         $requireConsent = (bool) Config::get('require_consent', false);
         if (!$trusted && $requireConsent && empty($data['consent'])) {
-            return ['success' => false, 'message' => __('You must agree to the terms and privacy policy before completing this booking.', 'tourivo')];
+            return ['success' => false, 'message' => __('You must agree to the terms and privacy policy before completing this booking.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         // Per-address throttle: stops one inbox being flooded with booking mail from rotating IPs.
         if (!$trusted) {
             $emailLimit = max(1, (int) apply_filters('tourivo/booking/email_rate_limit', 5));
             if (!RateLimiter::hit('tourivo_rl_email_' . md5(strtolower($customerEmail)), $emailLimit, 3600)) {
-                return ['success' => false, 'message' => __('Too many booking requests were made for this email address. Please try again later.', 'tourivo')];
+                return ['success' => false, 'message' => __('Too many booking requests were made for this email address. Please try again later.', 'the-readscope-tour-and-accommodation-booking')];
             }
         }
 
@@ -198,7 +198,7 @@ class BookingService
         $quote = $this->pricingService->quote($quoteInput);
 
         if (!$quote['success']) {
-            return ['success' => false, 'message' => $quote['message'] ?? __('Failed to calculate price quote.', 'tourivo')];
+            return ['success' => false, 'message' => $quote['message'] ?? __('Failed to calculate price quote.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         // 5. Check Inventory Availability
@@ -262,7 +262,7 @@ class BookingService
         // (missing price meta, add-on bug) and must never turn into a free booking.
         $couponCovered = $totalPrice <= 0.0 && !empty($quote['coupon']['code']);
         if ($totalPrice < 0 || ($totalPrice <= 0.0 && !$couponCovered && !$this->allowsFreeBooking($itemId))) {
-            return ['success' => false, 'message' => __('Invalid total price calculated for this booking.', 'tourivo')];
+            return ['success' => false, 'message' => __('Invalid total price calculated for this booking.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         $couponHeld = false;
@@ -276,7 +276,7 @@ class BookingService
         if (!empty($quote['coupon']['code'])) {
             $couponGate = apply_filters('tourivo/booking/coupon_commit', true, $quote, $data);
             if ($couponGate !== true) {
-                $message = is_string($couponGate) ? $couponGate : __('This coupon could not be applied.', 'tourivo');
+                $message = is_string($couponGate) ? $couponGate : __('This coupon could not be applied.', 'the-readscope-tour-and-accommodation-booking');
                 return ['success' => false, 'message' => $message];
             }
             $couponHeld = true;
@@ -344,7 +344,7 @@ class BookingService
         $committed = $this->inventoryService->commitBooking($itemId, $itemType, $checkIn, $checkOut, $timeSlot, $inventoryQuantity, $holdToken, !$trusted);
         if (!$committed) {
             $releaseCouponHold();
-            return ['success' => false, 'message' => __('Failed to commit inventory. Selected slots are no longer available.', 'tourivo')];
+            return ['success' => false, 'message' => __('Failed to commit inventory. Selected slots are no longer available.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         // If PHP dies before the booking row is committed, give the seats back. Handled failures release themselves.
@@ -367,7 +367,7 @@ class BookingService
                 $releaseCommittedInventory();
                 $releaseCouponHold();
                 /* translators: %s: tour or room name */
-                return ['success' => false, 'message' => sprintf(__('%s is no longer available for the selected dates.', 'tourivo'), $line['title'])];
+                return ['success' => false, 'message' => sprintf(__('%s is no longer available for the selected dates.', 'the-readscope-tour-and-accommodation-booking'), $line['title'])];
             }
             $committedExtras[] = $line;
         }
@@ -415,7 +415,7 @@ class BookingService
                 $this->db->query('ROLLBACK');
                 $releaseCommittedInventory();
                 $releaseCouponHold();
-                return ['success' => false, 'message' => __('Could not save booking record to database.', 'tourivo')];
+                return ['success' => false, 'message' => __('Could not save booking record to database.', 'the-readscope-tour-and-accommodation-booking')];
             }
 
             $bookingId = (int) $this->db->insert_id;
@@ -446,7 +446,7 @@ class BookingService
                 $this->db->delete($bookingsTable, ['id' => $bookingId], ['%d']);
                 $releaseCommittedInventory();
                 $releaseCouponHold();
-                return ['success' => false, 'message' => __('Could not save booking item line to database.', 'tourivo')];
+                return ['success' => false, 'message' => __('Could not save booking item line to database.', 'the-readscope-tour-and-accommodation-booking')];
             }
 
             foreach ($extraLines as $line) {
@@ -474,7 +474,7 @@ class BookingService
                     $this->db->delete($bookingsTable, ['id' => $bookingId], ['%d']);
                     $releaseCommittedInventory();
                     $releaseCouponHold();
-                    return ['success' => false, 'message' => __('Could not save booking item line to database.', 'tourivo')];
+                    return ['success' => false, 'message' => __('Could not save booking item line to database.', 'the-readscope-tour-and-accommodation-booking')];
                 }
             }
 
@@ -499,7 +499,7 @@ class BookingService
             do_action('tourivo/booking/error', $e);
 
             // Internal details stay out of the customer-facing response.
-            return ['success' => false, 'message' => __('An unexpected error occurred while creating your booking. Please try again.', 'tourivo')];
+            return ['success' => false, 'message' => __('An unexpected error occurred while creating your booking. Please try again.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         $inventorySettled = true;
@@ -572,9 +572,9 @@ class BookingService
             'requires_verification' => $requireVerification,
             'message'        => $requireVerification
                 /* translators: %s: Booking reference code */
-                ? sprintf(__('Almost done! Your booking code is #%s. Please open the confirmation link we emailed you to secure your reservation.', 'tourivo'), $bookingCode)
+                ? sprintf(__('Almost done! Your booking code is #%s. Please open the confirmation link we emailed you to secure your reservation.', 'the-readscope-tour-and-accommodation-booking'), $bookingCode)
                 /* translators: %s: Booking reference code */
-                : sprintf(__('Booking created successfully! Your booking code is #%s.', 'tourivo'), $bookingCode),
+                : sprintf(__('Booking created successfully! Your booking code is #%s.', 'the-readscope-tour-and-accommodation-booking'), $bookingCode),
         ];
     }
 
@@ -593,17 +593,17 @@ class BookingService
     public function changeStatus(int $bookingId, string $newStatus, array $context = []): array
     {
         if ($bookingId <= 0) {
-            return ['success' => false, 'message' => __('Invalid booking ID.', 'tourivo')];
+            return ['success' => false, 'message' => __('Invalid booking ID.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         $validStatuses = ['pending', 'confirmed', 'completed', 'cancelled', 'on_hold'];
         if (!in_array($newStatus, $validStatuses, true)) {
             /* translators: 1: Invalid status string, 2: Comma-separated list of valid statuses */
-            return ['success' => false, 'message' => sprintf(__('Invalid status "%1$s". Valid statuses are: %2$s', 'tourivo'), $newStatus, implode(', ', $validStatuses))];
+            return ['success' => false, 'message' => sprintf(__('Invalid status "%1$s". Valid statuses are: %2$s', 'the-readscope-tour-and-accommodation-booking'), $newStatus, implode(', ', $validStatuses))];
         }
 
         if (!$this->db) {
-            return ['success' => false, 'message' => __('Database connection not available.', 'tourivo')];
+            return ['success' => false, 'message' => __('Database connection not available.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         $bookingsTable = $this->db->prefix . 'tourivo_bookings';
@@ -614,14 +614,14 @@ class BookingService
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         if (!$booking) {
-            return ['success' => false, 'message' => __('Booking not found.', 'tourivo')];
+            return ['success' => false, 'message' => __('Booking not found.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         $oldStatus = (string) $booking->booking_status;
 
         // If old and new status are the same, return early (no-op)
         if ($oldStatus === $newStatus) {
-            return ['success' => true, 'message' => __('Booking status unchanged.', 'tourivo')];
+            return ['success' => true, 'message' => __('Booking status unchanged.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         $allowedNext = [
@@ -639,7 +639,7 @@ class BookingService
             return [
                 'success' => false,
                 /* translators: 1: Current status, 2: Requested status */
-                'message' => sprintf(__('A booking cannot move from %1$s to %2$s.', 'tourivo'), $oldStatus, $newStatus),
+                'message' => sprintf(__('A booking cannot move from %1$s to %2$s.', 'the-readscope-tour-and-accommodation-booking'), $oldStatus, $newStatus),
             ];
         }
 
@@ -684,7 +684,7 @@ class BookingService
                         $this->lineInventoryUnits($cItem)
                     );
                 }
-                return ['success' => false, 'message' => __('Cannot reactivate booking. Required inventory spots are no longer available.', 'tourivo')];
+                return ['success' => false, 'message' => __('Cannot reactivate booking. Required inventory spots are no longer available.', 'the-readscope-tour-and-accommodation-booking')];
             }
         }
 
@@ -716,7 +716,7 @@ class BookingService
                 }
             }
 
-            return ['success' => false, 'message' => __('Booking status has already changed or could not be updated.', 'tourivo')];
+            return ['success' => false, 'message' => __('Booking status has already changed or could not be updated.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         // If cancelling from an active state, release inventory once conditional update succeeded
@@ -742,8 +742,8 @@ class BookingService
         }
 
         $sourceNote = match ((string) ($context['source'] ?? '')) {
-            'unverified_expired' => __(' (email address was never confirmed)', 'tourivo'),
-            'pending_expired'    => __(' (pending booking expired)', 'tourivo'),
+            'unverified_expired' => __(' (email address was never confirmed)', 'the-readscope-tour-and-accommodation-booking'),
+            'pending_expired'    => __(' (pending booking expired)', 'the-readscope-tour-and-accommodation-booking'),
             default              => '',
         };
 
@@ -752,7 +752,7 @@ class BookingService
             'status_changed',
             sprintf(
                 /* translators: 1: Old status, 2: New status */
-                __('Booking status changed from %1$s to %2$s', 'tourivo'),
+                __('Booking status changed from %1$s to %2$s', 'the-readscope-tour-and-accommodation-booking'),
                 ucfirst($oldStatus),
                 ucfirst($newStatus)
             ) . $sourceNote
@@ -769,7 +769,7 @@ class BookingService
         return [
             'success' => true,
             /* translators: 1: Old status, 2: New status */
-            'message' => sprintf(__('Booking status changed from %1$s to %2$s successfully.', 'tourivo'), ucfirst($oldStatus), ucfirst($newStatus)),
+            'message' => sprintf(__('Booking status changed from %1$s to %2$s successfully.', 'the-readscope-tour-and-accommodation-booking'), ucfirst($oldStatus), ucfirst($newStatus)),
         ];
     }
 
@@ -800,7 +800,7 @@ class BookingService
 
         wp_cache_delete('booking_' . $bookingId, 'tourivo');
         wp_cache_delete('tourivo_booking_' . $bookingId, 'tourivo');
-        LogService::log($bookingId, 'links_revoked', __('Voucher and calendar links were revoked by staff.', 'tourivo'));
+        LogService::log($bookingId, 'links_revoked', __('Voucher and calendar links were revoked by staff.', 'the-readscope-tour-and-accommodation-booking'));
 
         return true;
     }
@@ -876,7 +876,7 @@ class BookingService
                 return [
                     'success' => false,
                     /* translators: %d: Maximum allowed guests */
-                    'message' => sprintf(__('This tour allows a maximum of %d guests per booking.', 'tourivo'), $maxGuests),
+                    'message' => sprintf(__('This tour allows a maximum of %d guests per booking.', 'the-readscope-tour-and-accommodation-booking'), $maxGuests),
                 ];
             }
 
@@ -884,10 +884,10 @@ class BookingService
         } else {
             // Room
             if (empty($checkOut)) {
-                return ['success' => false, 'message' => __('Please select a valid check-out date for room reservations.', 'tourivo')];
+                return ['success' => false, 'message' => __('Please select a valid check-out date for room reservations.', 'the-readscope-tour-and-accommodation-booking')];
             }
             if ($checkOut <= $checkIn) {
-                return ['success' => false, 'message' => __('Check-out must be at least one night after check-in.', 'tourivo')];
+                return ['success' => false, 'message' => __('Check-out must be at least one night after check-in.', 'the-readscope-tour-and-accommodation-booking')];
             }
 
             $room = new Room($itemId);
@@ -906,21 +906,21 @@ class BookingService
                 return [
                     'success' => false,
                     /* translators: 1: Room count, 2: Maximum adults */
-                    'message' => sprintf(__('Selected %1$d room(s) can accommodate up to %2$d adults.', 'tourivo'), $roomsCount, $maxAdultsAllowed),
+                    'message' => sprintf(__('Selected %1$d room(s) can accommodate up to %2$d adults.', 'the-readscope-tour-and-accommodation-booking'), $roomsCount, $maxAdultsAllowed),
                 ];
             }
             if ($maxChildrenAllowed > 0 && $childrenCount > $maxChildrenAllowed) {
                 return [
                     'success' => false,
                     /* translators: 1: Room count, 2: Maximum children */
-                    'message' => sprintf(__('Selected %1$d room(s) can accommodate up to %2$d children.', 'tourivo'), $roomsCount, $maxChildrenAllowed),
+                    'message' => sprintf(__('Selected %1$d room(s) can accommodate up to %2$d children.', 'the-readscope-tour-and-accommodation-booking'), $roomsCount, $maxChildrenAllowed),
                 ];
             }
             if ($maxGuestsAllowed > 0 && $totalGuests > $maxGuestsAllowed) {
                 return [
                     'success' => false,
                     /* translators: 1: Room count, 2: Maximum total guests */
-                    'message' => sprintf(__('Selected %1$d room(s) can accommodate up to %2$d total guests.', 'tourivo'), $roomsCount, $maxGuestsAllowed),
+                    'message' => sprintf(__('Selected %1$d room(s) can accommodate up to %2$d total guests.', 'the-readscope-tour-and-accommodation-booking'), $roomsCount, $maxGuestsAllowed),
                 ];
             }
 
@@ -980,13 +980,13 @@ class BookingService
         $postType = $itemId > 0 && get_post_status($itemId) === 'publish' ? get_post_type($itemId) : '';
         $itemType = $postType === 'tourivo_tour' ? 'tour' : ($postType === 'tourivo_room' ? 'room' : '');
         if ($itemType === '') {
-            return ['success' => false, 'message' => __('One of the items in this booking is no longer available.', 'tourivo')];
+            return ['success' => false, 'message' => __('One of the items in this booking is no longer available.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         $checkIn  = (string) $spec['check_in'];
         $checkOut = $spec['check_out'];
         if (!self::isValidDate($checkIn) || ($checkOut !== null && !self::isValidDate((string) $checkOut)) || ($checkOut !== null && $checkOut < $checkIn)) {
-            return ['success' => false, 'message' => __('Please provide valid dates in YYYY-MM-DD format.', 'tourivo')];
+            return ['success' => false, 'message' => __('Please provide valid dates in YYYY-MM-DD format.', 'the-readscope-tour-and-accommodation-booking')];
         }
         $timeSlot = InventoryService::normalizeTimeSlot($spec['time_slot'] ?? $defaultSlot);
         $adults   = (int) $spec['adults'];
@@ -994,7 +994,7 @@ class BookingService
         $infants  = (int) $spec['infants'];
         $rooms    = (int) $spec['rooms'];
         if (($adults + $children) < 1) {
-            return ['success' => false, 'message' => __('Please add at least one adult or child.', 'tourivo')];
+            return ['success' => false, 'message' => __('Please add at least one adult or child.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         $resolved = $this->resolveLine($itemId, $itemType, $checkIn, $checkOut, $adults, $children, $infants, $rooms, $data);
@@ -1019,7 +1019,7 @@ class BookingService
         }
         $quote = $this->pricingService->quote($quoteInput);
         if (empty($quote['success'])) {
-            return ['success' => false, 'message' => (string) ($quote['message'] ?? __('Failed to calculate price quote.', 'tourivo'))];
+            return ['success' => false, 'message' => (string) ($quote['message'] ?? __('Failed to calculate price quote.', 'the-readscope-tour-and-accommodation-booking'))];
         }
 
         $avail = $this->inventoryService->checkAvailability($itemId, $itemType, $checkIn, $checkOut, $timeSlot, (int) $resolved['quantity'], $enforceFuture);
@@ -1135,7 +1135,7 @@ class BookingService
      */
     public function verifyEmail(string $bookingCode, string $token, int $expiresAt = 0): array
     {
-        $invalid = ['success' => false, 'message' => __('This confirmation link is invalid.', 'tourivo')];
+        $invalid = ['success' => false, 'message' => __('This confirmation link is invalid.', 'the-readscope-tour-and-accommodation-booking')];
 
         if (!$this->db || $bookingCode === '' || $token === '') {
             return $invalid;
@@ -1154,11 +1154,11 @@ class BookingService
         $bookingId = (int) $booking->id;
 
         if (!empty($booking->email_verified_at)) {
-            return ['success' => true, 'booking_id' => $bookingId, 'message' => __('Your email address is already confirmed.', 'tourivo')];
+            return ['success' => true, 'booking_id' => $bookingId, 'message' => __('Your email address is already confirmed.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         if ((string) $booking->booking_status === 'cancelled') {
-            return ['success' => false, 'message' => __('This booking was cancelled because the email address was not confirmed in time. Please make a new booking.', 'tourivo')];
+            return ['success' => false, 'message' => __('This booking was cancelled because the email address was not confirmed in time. Please make a new booking.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         $nowGmt = gmdate('Y-m-d H:i:s');
@@ -1177,11 +1177,11 @@ class BookingService
 
         // Another request verified it first: still a success for this visitor, but only one run of the follow-up mail.
         if ($updated === 1) {
-            LogService::log($bookingId, 'email_verified', __('Customer confirmed their email address.', 'tourivo'), 0);
+            LogService::log($bookingId, 'email_verified', __('Customer confirmed their email address.', 'the-readscope-tour-and-accommodation-booking'), 0);
             do_action('tourivo/booking/email_verified', $bookingId);
         }
 
-        return ['success' => true, 'booking_id' => $bookingId, 'message' => __('Thank you! Your email address is confirmed and your booking is secured.', 'tourivo')];
+        return ['success' => true, 'booking_id' => $bookingId, 'message' => __('Thank you! Your email address is confirmed and your booking is secured.', 'the-readscope-tour-and-accommodation-booking')];
     }
 
     /**

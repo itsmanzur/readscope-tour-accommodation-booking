@@ -73,7 +73,7 @@ class PricingController extends Controller
         }
 
         if ($itemId <= 0 || empty($checkIn) || get_post_status($itemId) !== 'publish') {
-            return new WP_Error('invalid_params', __('Valid published Item ID and check_in date are required.', 'tourivo'), ['status' => 400]);
+            return new WP_Error('invalid_params', __('Valid published Item ID and check_in date are required.', 'the-readscope-tour-and-accommodation-booking'), ['status' => 400]);
         }
 
         $quoteInput = [
@@ -98,7 +98,7 @@ class PricingController extends Controller
         $result = $this->pricingService->quote($quoteInput);
 
         if (!$result['success']) {
-            return new WP_Error('quote_error', $result['message'] ?? __('Failed to compute pricing quote.', 'tourivo'), ['status' => 400]);
+            return new WP_Error('quote_error', $result['message'] ?? __('Failed to compute pricing quote.', 'the-readscope-tour-and-accommodation-booking'), ['status' => 400]);
         }
 
         return new WP_REST_Response($result, 200);

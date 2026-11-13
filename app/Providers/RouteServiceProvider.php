@@ -77,7 +77,17 @@ class RouteServiceProvider extends ServiceProvider
 
         $this->addFilter('cron_schedules', [$this, 'registerCronSchedules']);
 
-        // Schedule cron if not already scheduled (re-schedule legacy hourly installs to the 5-minute cadence)
+        // Schedule cron on init: the schedule label is translated, and translations must not load before init.
+        $this->addAction('init', [$this, 'scheduleCronEvents'], 20);
+    }
+
+    /**
+     * Schedule the recurring cleanup events if missing (re-schedules legacy hourly installs to the 5-minute cadence).
+     *
+     * @return void
+     */
+    public function scheduleCronEvents(): void
+    {
         if (function_exists('wp_get_schedule') && wp_get_schedule('tourivo_cleanup_expired_holds') === 'hourly') {
             wp_clear_scheduled_hook('tourivo_cleanup_expired_holds');
         }
@@ -99,7 +109,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         $schedules['tourivo_five_minutes'] = [
             'interval' => 300,
-            'display'  => __('Every 5 minutes (Tourivo)', 'tourivo'),
+            'display'  => __('Every 5 minutes (Readscope Booking)', 'the-readscope-tour-and-accommodation-booking'),
         ];
 
         return $schedules;
@@ -165,7 +175,11 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
-     * Cookie and cross-site posts must present the nonce localized on the booking form.
+     * Permission callback for the public booking endpoints.
+     *
+     * These endpoints are public by design (guests book without an account). The wp_rest nonce
+     * localized on the booking form is CSRF protection only; abuse is limited by RateLimiter and
+     * server-side validation in the controller.
      *
      * @param \WP_REST_Request $request
      * @return true|\WP_Error
@@ -177,10 +191,11 @@ class RouteServiceProvider extends ServiceProvider
             $nonce = (string) $request->get_param('_wpnonce');
         }
 
-        if ($nonce === '' || !wp_verify_nonce($nonce, 'wp_rest')) {
+        // wp_verify_nonce() returns false for an empty string.
+        if (!wp_verify_nonce($nonce, 'wp_rest')) {
             return new \WP_Error(
                 'rest_forbidden',
-                __('Invalid or missing security token.', 'tourivo'),
+                __('Invalid or missing security token.', 'the-readscope-tour-and-accommodation-booking'),
                 ['status' => 403]
             );
         }

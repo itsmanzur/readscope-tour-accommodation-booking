@@ -1,6 +1,6 @@
 # Tourivo – Travel, Tour & Hotel Booking Engine for WordPress
 
-[![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)](https://tourivo.com)
+[![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)](https://thereadscope.com)
 [![PHP](https://img.shields.io/badge/PHP-%3E%3D8.0-8892BF.svg)](https://php.net)
 [![WordPress](https://img.shields.io/badge/WordPress-%3E%3D6.0-21759B.svg)](https://wordpress.org)
 [![License](https://img.shields.io/badge/license-GPLv2-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
@@ -33,7 +33,7 @@ Unlike traditional monolithic booking plugins, Tourivo is designed from the grou
 Tourivo follows clean modern PHP best practices:
 
 ```
-tourivo/
+the-readscope-tour-and-accommodation-booking/
 ├── app/
 │   ├── Admin/              # Admin menus, meta boxes, settings page, and booking tables
 │   ├── Cli/                # WP-CLI commands (status, stats, cleanup, demo management)
@@ -57,7 +57,7 @@ tourivo/
 ├── tests/                  # Automated unit and integration test suites
 │   ├── Unit/               # Isolated unit tests (Money, ClientIp, DateValidation)
 │   └── Integration/        # Integration tests (BookingEngine, Transitions, Security, Webhooks)
-├── tourivo.php             # Main plugin bootstrap file
+├── the-readscope-tour-and-accommodation-booking.php             # Main plugin bootstrap file
 ├── readme.txt              # Official WordPress.org plugin directory readme
 └── uninstall.php           # Cleanup routine on deletion
 ```
@@ -74,7 +74,7 @@ tourivo/
 ### Manual Installation
 1. Clone the repository into your WordPress plugins directory:
    ```bash
-   git clone https://github.com/itsmanzur/tourivo.git wp-content/plugins/tourivo
+   git clone https://github.com/itsmanzur/tourivo.git wp-content/plugins/the-readscope-tour-and-accommodation-booking
    ```
 2. Activate the plugin via **WordPress Admin -> Plugins**.
 3. Navigate to **Tourivo -> Dashboard** to import sample data or start adding your tours and hotels.

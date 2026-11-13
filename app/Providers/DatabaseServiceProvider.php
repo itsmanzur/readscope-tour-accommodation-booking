@@ -30,7 +30,7 @@ class DatabaseServiceProvider extends ServiceProvider
         // Check if database upgrade is needed on admin init
         $this->addAction('admin_init', [$this, 'maybeRunMigrations']);
 
-        // Run migrations when Tourivo plugin is updated
+        // Run migrations when Readscope Booking plugin is updated
         $this->addAction('upgrader_process_complete', [$this, 'onUpgraderProcessComplete'], 10, 2);
     }
 

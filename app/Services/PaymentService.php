@@ -40,8 +40,8 @@ class PaymentService
             $methods['bank_transfer'] = [
                 'id'          => 'bank_transfer',
                 'enabled'     => true,
-                'title'       => __('Direct Bank Transfer', 'tourivo'),
-                'description' => __('Make your payment directly into our bank account. Please use your Booking Reference Code as the payment reference.', 'tourivo'),
+                'title'       => __('Direct Bank Transfer', 'the-readscope-tour-and-accommodation-booking'),
+                'description' => __('Make your payment directly into our bank account. Please use your Booking Reference Code as the payment reference.', 'the-readscope-tour-and-accommodation-booking'),
                 'details'     => $this->getBankDetails(),
             ];
         }
@@ -50,8 +50,8 @@ class PaymentService
             $methods['cash_on_arrival'] = [
                 'id'           => 'cash_on_arrival',
                 'enabled'      => true,
-                'title'        => __('Cash on Arrival / Pay at Check-in', 'tourivo'),
-                'description'  => __('Pay in cash or card at our welcome desk or tour guide upon arrival.', 'tourivo'),
+                'title'        => __('Cash on Arrival / Pay at Check-in', 'the-readscope-tour-and-accommodation-booking'),
+                'description'  => __('Pay in cash or card at our welcome desk or tour guide upon arrival.', 'the-readscope-tour-and-accommodation-booking'),
                 'instructions' => (string) Config::get('cash_on_arrival_instructions', ''),
             ];
         }
@@ -61,8 +61,8 @@ class PaymentService
             $methods['offline'] = [
                 'id'           => 'offline',
                 'enabled'      => true,
-                'title'        => __('Offline / Manual Payment', 'tourivo'),
-                'description'  => __('Manual payment arrangement with tour operator.', 'tourivo'),
+                'title'        => __('Offline / Manual Payment', 'the-readscope-tour-and-accommodation-booking'),
+                'description'  => __('Manual payment arrangement with tour operator.', 'the-readscope-tour-and-accommodation-booking'),
                 'instructions' => (string) Config::get('offline_payment_instructions', ''),
             ];
         }
@@ -114,25 +114,25 @@ class PaymentService
         ?>
         <div class="tourivo-bank-details-card">
             <div class="bank-card-header">
-                <h4>🏦 <?php esc_html_e('Bank Account Details', 'tourivo'); ?></h4>
+                <h4>🏦 <?php esc_html_e('Bank Account Details', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
             </div>
             <table class="tourivo-bank-table">
                 <tbody>
                     <?php if (!empty($b['bank_name'])) : ?>
                         <tr>
-                            <th><?php esc_html_e('Bank Name:', 'tourivo'); ?></th>
+                            <th><?php esc_html_e('Bank Name:', 'the-readscope-tour-and-accommodation-booking'); ?></th>
                             <td><strong><?php echo esc_html($b['bank_name']); ?></strong></td>
                         </tr>
                     <?php endif; ?>
                     <?php if (!empty($b['account_name'])) : ?>
                         <tr>
-                            <th><?php esc_html_e('Account Name:', 'tourivo'); ?></th>
+                            <th><?php esc_html_e('Account Name:', 'the-readscope-tour-and-accommodation-booking'); ?></th>
                             <td><?php echo esc_html($b['account_name']); ?></td>
                         </tr>
                     <?php endif; ?>
                     <?php if (!empty($b['account_number'])) : ?>
                         <tr>
-                            <th><?php esc_html_e('Account Number:', 'tourivo'); ?></th>
+                            <th><?php esc_html_e('Account Number:', 'the-readscope-tour-and-accommodation-booking'); ?></th>
                             <td>
                                 <code class="copyable-account"><?php echo esc_html($b['account_number']); ?></code>
                             </td>
@@ -140,19 +140,19 @@ class PaymentService
                     <?php endif; ?>
                     <?php if (!empty($b['iban'])) : ?>
                         <tr>
-                            <th><?php esc_html_e('IBAN:', 'tourivo'); ?></th>
+                            <th><?php esc_html_e('IBAN:', 'the-readscope-tour-and-accommodation-booking'); ?></th>
                             <td><code><?php echo esc_html($b['iban']); ?></code></td>
                         </tr>
                     <?php endif; ?>
                     <?php if (!empty($b['swift_routing'])) : ?>
                         <tr>
-                            <th><?php esc_html_e('SWIFT / BIC / Routing:', 'tourivo'); ?></th>
+                            <th><?php esc_html_e('SWIFT / BIC / Routing:', 'the-readscope-tour-and-accommodation-booking'); ?></th>
                             <td><code><?php echo esc_html($b['swift_routing']); ?></code></td>
                         </tr>
                     <?php endif; ?>
                     <?php if (!empty($b['branch'])) : ?>
                         <tr>
-                            <th><?php esc_html_e('Branch:', 'tourivo'); ?></th>
+                            <th><?php esc_html_e('Branch:', 'the-readscope-tour-and-accommodation-booking'); ?></th>
                             <td><?php echo esc_html($b['branch']); ?></td>
                         </tr>
                     <?php endif; ?>
@@ -193,7 +193,7 @@ class PaymentService
         if (empty($cleanCode) || empty($cleanTxn)) {
             return [
                 'success' => false,
-                'message' => __('Please provide a valid booking code and transaction reference.', 'tourivo'),
+                'message' => __('Please provide a valid booking code and transaction reference.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -209,7 +209,7 @@ class PaymentService
         if (!$booking) {
             return [
                 'success' => false,
-                'message' => __('No reservation was found matching this reference code.', 'tourivo'),
+                'message' => __('No reservation was found matching this reference code.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -250,13 +250,13 @@ class PaymentService
         if (!$isAuthorized) {
             return [
                 'success' => false,
-                'message' => __('Unauthorized access. Could not verify booking authorization.', 'tourivo'),
+                'message' => __('Unauthorized access. Could not verify booking authorization.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
         $now     = current_time('mysql');
         $oldNote = (string) ($booking->admin_notes ?? '');
-        $noteMsg = sprintf('[%s] %s: %s', $now, __('Customer submitted payment reference', 'tourivo'), $cleanTxn);
+        $noteMsg = sprintf('[%s] %s: %s', $now, __('Customer submitted payment reference', 'the-readscope-tour-and-accommodation-booking'), $cleanTxn);
         if (!empty($notes)) {
             $noteMsg .= ' (' . sanitize_text_field($notes) . ')';
         }
@@ -277,21 +277,21 @@ class PaymentService
         if ($updated === false) {
             return [
                 'success' => false,
-                'message' => __('Could not save the payment reference. Please try again.', 'tourivo'),
+                'message' => __('Could not save the payment reference. Please try again.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
         LogService::log(
             (int) $booking->id,
             'payment_reference_submitted',
-            sprintf(/* translators: 1: transaction reference, 2: booking code */ __('Customer submitted transaction reference %1$s for booking #%2$s', 'tourivo'), $cleanTxn, $cleanCode)
+            sprintf(/* translators: 1: transaction reference, 2: booking code */ __('Customer submitted transaction reference %1$s for booking #%2$s', 'the-readscope-tour-and-accommodation-booking'), $cleanTxn, $cleanCode)
         );
 
         do_action('tourivo/payment_reference_submitted', (int) $booking->id, $cleanTxn);
 
         return [
             'success' => true,
-            'message' => __('Payment reference submitted successfully. Our accounts team will review and confirm your booking.', 'tourivo'),
+            'message' => __('Payment reference submitted successfully. Our accounts team will review and confirm your booking.', 'the-readscope-tour-and-accommodation-booking'),
         ];
     }
 
@@ -307,14 +307,14 @@ class PaymentService
         if (!current_user_can('manage_tourivo_bookings')) {
             return [
                 'success' => false,
-                'message' => __('Unauthorized access. You do not have permission to record payments.', 'tourivo'),
+                'message' => __('Unauthorized access. You do not have permission to record payments.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
         if ($bookingId <= 0) {
             return [
                 'success' => false,
-                'message' => __('Invalid booking ID.', 'tourivo'),
+                'message' => __('Invalid booking ID.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -328,7 +328,7 @@ class PaymentService
         if (!$booking) {
             return [
                 'success' => false,
-                'message' => __('Booking record not found.', 'tourivo'),
+                'message' => __('Booking record not found.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -360,7 +360,7 @@ class PaymentService
         $noteText = sprintf(
             '[%s] %s: %s (%s) via %s. %s',
             $now,
-            __('Payment Recorded', 'tourivo'),
+            __('Payment Recorded', 'the-readscope-tour-and-accommodation-booking'),
             Money::format($incoming),
             ucfirst($paymentStatus),
             ucwords(str_replace('_', ' ', $paymentMethod)),
@@ -388,7 +388,7 @@ class PaymentService
         if ($updated === false) {
             return [
                 'success' => false,
-                'message' => __('Could not save the payment record. Please try again.', 'tourivo'),
+                'message' => __('Could not save the payment record. Please try again.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -397,7 +397,7 @@ class PaymentService
             'payment_recorded',
             sprintf(
                 /* translators: 1: Amount formatted, 2: Payment status, 3: Method */
-                __('Admin recorded payment of %1$s (%2$s) via %3$s.', 'tourivo'),
+                __('Admin recorded payment of %1$s (%2$s) via %3$s.', 'the-readscope-tour-and-accommodation-booking'),
                 Money::format($incoming),
                 ucfirst($paymentStatus),
                 ucwords(str_replace('_', ' ', $paymentMethod))
@@ -420,7 +420,7 @@ class PaymentService
 
         return [
             'success' => true,
-            'message' => __('Payment record updated successfully.', 'tourivo'),
+            'message' => __('Payment record updated successfully.', 'the-readscope-tour-and-accommodation-booking'),
             'booking' => [
                 'id'             => $bookingId,
                 'paid_amount'    => $paidAmount,

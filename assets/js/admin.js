@@ -1,5 +1,5 @@
 /**
- * Tourivo Admin Dashboard, Documentation & AJAX Management JavaScript
+ * Readscope Booking Admin Dashboard, Documentation & AJAX Management JavaScript
  */
 
 document.addEventListener('DOMContentLoaded', function () {

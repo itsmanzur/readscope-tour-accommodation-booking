@@ -97,7 +97,9 @@ class RestSecurityTest extends TestCase
 
         $ip = ClientIp::get();
         $rateLimitKey = 'tourivo_rl_booking_' . md5($ip);
-        set_transient($rateLimitKey, 5, 600); // Pre-fill 5 attempts
+        for ($i = 0; $i < 5; $i++) {
+            \Tourivo\Support\RateLimiter::hit($rateLimitKey, 5, 600); // Pre-fill 5 attempts
+        }
 
         $request = new WP_REST_Request('POST', '/tourivo/v1/bookings/direct');
         $request->set_body_params([

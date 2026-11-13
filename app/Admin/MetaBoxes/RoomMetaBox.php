@@ -33,7 +33,7 @@ class RoomMetaBox extends MetaBox
 
     public function getTitle(): string
     {
-        return __('Room Configuration & Pricing', 'tourivo');
+        return __('Room Configuration & Pricing', 'the-readscope-tour-and-accommodation-booking');
     }
 
     public function __construct()
@@ -84,7 +84,7 @@ class RoomMetaBox extends MetaBox
     public function save(int $postId, WP_Post $post): void
     {
         // Nonce is verified by parent handleSave(), but documented here for PHPCS
-        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing -- MetaBox::handleSave() verifies the nonce and edit_post capability before save() runs.
         if (empty($_POST)) {
             return;
         }
@@ -102,7 +102,7 @@ class RoomMetaBox extends MetaBox
             '_tourivo_bed_type'        => 'sanitize_text_field',
         ];
 
-        // phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        // phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce and capability verified in MetaBox::handleSave(); each field is sanitized by its type below.
         foreach ($fields as $field => $sanitizer) {
             if (isset($_POST[$field])) {
                 $val = wp_unslash($_POST[$field]);

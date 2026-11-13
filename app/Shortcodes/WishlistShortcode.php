@@ -45,16 +45,16 @@ class WishlistShortcode
         ?>
         <div class="tourivo-wishlist-wrap" data-columns="<?php echo esc_attr((string) $cols); ?>">
             <div class="tourivo-wishlist-header">
-                <h2>❤️ <?php esc_html_e('My Saved Trips & Stays', 'tourivo'); ?></h2>
+                <h2>❤️ <?php esc_html_e('My Saved Trips & Stays', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                 <p class="tourivo-wishlist-count-label">
-                    <span id="tourivo-wishlist-total-count">0</span> <?php esc_html_e('items saved', 'tourivo'); ?>
+                    <span id="tourivo-wishlist-total-count">0</span> <?php esc_html_e('items saved', 'the-readscope-tour-and-accommodation-booking'); ?>
                 </p>
             </div>
 
             <!-- Loading Spinner -->
             <div id="tourivo-wishlist-loading" class="tourivo-loading-state" style="text-align: center; padding: 40px 0;">
                 <span class="dashicons dashicons-update spin" style="font-size: 28px; width: 28px; height: 28px; color: #0284c7;"></span>
-                <p style="margin-top: 10px; color: #64748b;"><?php esc_html_e('Loading your favorites...', 'tourivo'); ?></p>
+                <p style="margin-top: 10px; color: #64748b;"><?php esc_html_e('Loading your favorites...', 'the-readscope-tour-and-accommodation-booking'); ?></p>
             </div>
 
             <!-- Wishlist Grid -->
@@ -63,12 +63,12 @@ class WishlistShortcode
             <!-- Empty State -->
             <div id="tourivo-wishlist-empty" class="tourivo-empty-state" style="display: none; text-align: center; padding: 60px 20px;">
                 <div style="font-size: var(--trv-text-display); margin-bottom: 16px;">🏖️</div>
-                <h3><?php esc_html_e('Your Wishlist is Empty', 'tourivo'); ?></h3>
+                <h3><?php esc_html_e('Your Wishlist is Empty', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
                 <p style="color: #64748b; max-width: 480px; margin: 0 auto 20px auto;">
-                    <?php esc_html_e('Explore our exciting tour packages and luxury hotels, and click the heart icon to save your favorite itineraries here!', 'tourivo'); ?>
+                    <?php esc_html_e('Explore our exciting tour packages and luxury hotels, and click the heart icon to save your favorite itineraries here!', 'the-readscope-tour-and-accommodation-booking'); ?>
                 </p>
                 <a href="<?php echo esc_url(get_post_type_archive_link(TourPostType::POST_TYPE) ?: home_url('/')); ?>" class="tourivo-btn tourivo-btn-primary">
-                    🔍 <?php esc_html_e('Explore Tours & Stays', 'tourivo'); ?>
+                    🔍 <?php esc_html_e('Explore Tours & Stays', 'the-readscope-tour-and-accommodation-booking'); ?>
                 </a>
             </div>
         </div>

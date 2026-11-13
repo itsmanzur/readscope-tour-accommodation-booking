@@ -6,7 +6,7 @@ parameters:
     level: 5
     paths:
         - app
-        - tourivo.php
+        - the-readscope-tour-and-accommodation-booking.php
         - uninstall.php
     # WP-CLI is only present when running under wp-cli; analyse against its stubs.
     scanDirectories:

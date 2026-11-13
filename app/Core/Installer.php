@@ -85,7 +85,7 @@ class Installer
         // 4. Add custom user capabilities to administrator
         self::addCapabilities();
 
-        // 5. Fire activation action hook for add-ons (like Tourivo Pro)
+        // 5. Fire activation action hook for add-ons (like Readscope Booking Pro)
         do_action('tourivo/activated');
 
         // Flag rewrite rules to be flushed safely on next init hook
@@ -93,7 +93,7 @@ class Installer
     }
 
     /**
-     * Add custom Tourivo capabilities to Administrator role.
+     * Add custom Readscope Booking capabilities to Administrator role.
      *
      * @return void
      */

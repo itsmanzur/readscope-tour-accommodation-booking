@@ -45,7 +45,7 @@ class MyBookingsPortalTest extends TestCase
         $GLOBALS['tourivo_mock_sent_emails'] = [];
         $GLOBALS['tourivo_mock_scheduled_events'] = [];
         $GLOBALS['tourivo_mock_options']['admin_email'] = 'admin@example.com';
-        $GLOBALS['tourivo_mock_options']['blogname'] = 'Tourivo Test Site';
+        $GLOBALS['tourivo_mock_options']['blogname'] = 'Readscope Test Site';
 
         $invRepo = new InventoryRepository();
         $this->inventoryService = new InventoryService($invRepo);

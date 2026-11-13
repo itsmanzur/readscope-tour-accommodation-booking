@@ -1,8 +1,8 @@
 <?php
 /**
- * Tourivo Base Email Template Layout
+ * Readscope Booking Base Email Template Layout
  *
- * @package Tourivo
+ * @package Readscope Booking
  * @var string $emailHeading
  * @var string $emailBodyContent
  * @var string $siteName
@@ -158,18 +158,24 @@ if (function_exists('tourivo_current_locale')) {
     <div class="tourivo-email-wrapper">
         <div class="tourivo-email-header">
             <?php if ($tourivoIsTest) : ?>
-                <div><span class="tourivo-test-badge"><?php esc_html_e('TEST NOTIFICATION', 'tourivo'); ?></span></div>
+                <div><span class="tourivo-test-badge"><?php esc_html_e('TEST NOTIFICATION', 'the-readscope-tour-and-accommodation-booking'); ?></span></div>
             <?php endif; ?>
             <h1><?php echo esc_html($tourivoHeading); ?></h1>
             <p><?php echo esc_html($tourivoSiteName); ?></p>
         </div>
 
         <div class="tourivo-email-content">
-            <?php echo $emailBodyContent; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Email body built from escaped template parts in EmailService; kses would strip the inline styles mail clients need. ?>
+            <?php
+            // Escape late: the body is filtered here, at output, with an allowlist made for HTML email.
+            // The extra inline CSS properties are allowed only for this one wp_kses() call.
+            add_filter('safe_style_css', [\Tourivo\Support\Html::class, 'emailSafeCss']);
+            echo wp_kses((string) $emailBodyContent, \Tourivo\Support\Html::emailAllowedHtml());
+            remove_filter('safe_style_css', [\Tourivo\Support\Html::class, 'emailSafeCss']);
+            ?>
         </div>
 
         <div class="tourivo-email-footer">
-            <p style="margin: 0 0 6px 0;">&copy; <?php echo esc_html(gmdate('Y')); ?> <strong><?php echo esc_html($tourivoSiteName); ?></strong>. <?php esc_html_e('All rights reserved.', 'tourivo'); ?></p>
+            <p style="margin: 0 0 6px 0;">&copy; <?php echo esc_html(gmdate('Y')); ?> <strong><?php echo esc_html($tourivoSiteName); ?></strong>. <?php esc_html_e('All rights reserved.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
             <p style="margin: 0;"><a href="<?php echo esc_url(home_url('/')); ?>"><?php echo esc_url(home_url('/')); ?></a></p>
         </div>
     </div>

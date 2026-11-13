@@ -2,7 +2,7 @@
 /**
  * Tour Card Template
  *
- * @package Tourivo
+ * @package Readscope Booking
  * @var \Tourivo\Models\Tour $tour
  */
 
@@ -25,7 +25,7 @@ if (!isset($tour) || !($tour instanceof \Tourivo\Models\Tour)) {
         </a>
 
         <!-- Wishlist Button -->
-        <button type="button" class="tourivo-wishlist-toggle" data-id="<?php echo esc_attr((string)$tour->getId()); ?>" data-type="tour" title="<?php esc_attr_e('Save to Wishlist', 'tourivo'); ?>" aria-label="<?php esc_attr_e('Save to Wishlist', 'tourivo'); ?>">
+        <button type="button" class="tourivo-wishlist-toggle" data-id="<?php echo esc_attr((string)$tour->getId()); ?>" data-type="tour" title="<?php esc_attr_e('Save to Wishlist', 'the-readscope-tour-and-accommodation-booking'); ?>" aria-label="<?php esc_attr_e('Save to Wishlist', 'the-readscope-tour-and-accommodation-booking'); ?>">
             <span class="dashicons dashicons-heart"></span>
         </button>
 
@@ -50,7 +50,7 @@ if (!isset($tour) || !($tour instanceof \Tourivo\Models\Tour)) {
             echo esc_html(
                 sprintf(
                     /* translators: %d: Maximum guests allowed */
-                    __('Max: %d', 'tourivo'),
+                    __('Max: %d', 'the-readscope-tour-and-accommodation-booking'),
                     $tour->getMaxGuests()
                 )
             );
@@ -60,7 +60,7 @@ if (!isset($tour) || !($tour instanceof \Tourivo\Models\Tour)) {
                 echo esc_attr(
                     sprintf(
                         /* translators: %s: Rating score out of 5 */
-                        __('%s out of 5 stars', 'tourivo'),
+                        __('%s out of 5 stars', 'the-readscope-tour-and-accommodation-booking'),
                         $tour->getAverageRating()
                     )
                 );
@@ -76,13 +76,13 @@ if (!isset($tour) || !($tour instanceof \Tourivo\Models\Tour)) {
 
         <div class="tourivo-card-footer">
             <div class="tourivo-price-box">
-                <span class="price-from"><?php esc_html_e('From', 'tourivo'); ?></span>
+                <span class="price-from"><?php esc_html_e('From', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                 <span class="price-val"><?php echo esc_html($tour->getFormattedPrice()); ?></span>
                 <?php if ($tour->isOnSale()) : ?>
                     <del class="price-original"><?php echo esc_html($tour->getFormattedRegularPrice()); ?></del>
                 <?php endif; ?>
             </div>
-            <a href="<?php echo esc_url($tour->getPermalink()); ?>" class="tourivo-btn tourivo-btn-sm"><?php esc_html_e('Explore', 'tourivo'); ?> &rarr;</a>
+            <a href="<?php echo esc_url($tour->getPermalink()); ?>" class="tourivo-btn tourivo-btn-sm"><?php esc_html_e('Explore', 'the-readscope-tour-and-accommodation-booking'); ?> &rarr;</a>
         </div>
     </div>
 </div>

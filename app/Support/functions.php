@@ -1,6 +1,6 @@
 <?php
 /**
- * Tourivo Public Global Helper Functions & Developer API
+ * Readscope Booking Public Global Helper Functions & Developer API
  *
  * Provides a standardized template engine, price formatting, and model accessor helpers
  * for theme developers, child themes, and third-party integrations.
@@ -97,7 +97,7 @@ if (!function_exists('tourivo_locate_template')) {
      * Search order:
      * 1. yourtheme/tourivo/$template_name
      * 2. yourtheme/$template_name
-     * 3. plugins/tourivo/templates/$template_name
+     * 3. plugins/the-readscope-tour-and-accommodation-booking/templates/$template_name
      *
      * @param string $templateName Template to locate.
      * @param string $templatePath Subdirectory in theme (default 'tourivo/').
@@ -407,8 +407,8 @@ if (!function_exists('tourivo_render_wishlist_button')) {
             $classes,
             $itemId,
             $itemType,
-            esc_attr__('Save to wishlist', 'tourivo'),
-            esc_attr__('Save to wishlist', 'tourivo')
+            esc_attr__('Save to wishlist', 'the-readscope-tour-and-accommodation-booking'),
+            esc_attr__('Save to wishlist', 'the-readscope-tour-and-accommodation-booking')
         );
     }
 }
@@ -447,10 +447,10 @@ if (!function_exists('tourivo_format_date')) {
         }
 
         $months = [
-            __('January', 'tourivo'), __('February', 'tourivo'), __('March', 'tourivo'),
-            __('April', 'tourivo'), __('May', 'tourivo'), __('June', 'tourivo'),
-            __('July', 'tourivo'), __('August', 'tourivo'), __('September', 'tourivo'),
-            __('October', 'tourivo'), __('November', 'tourivo'), __('December', 'tourivo'),
+            __('January', 'the-readscope-tour-and-accommodation-booking'), __('February', 'the-readscope-tour-and-accommodation-booking'), __('March', 'the-readscope-tour-and-accommodation-booking'),
+            __('April', 'the-readscope-tour-and-accommodation-booking'), __('May', 'the-readscope-tour-and-accommodation-booking'), __('June', 'the-readscope-tour-and-accommodation-booking'),
+            __('July', 'the-readscope-tour-and-accommodation-booking'), __('August', 'the-readscope-tour-and-accommodation-booking'), __('September', 'the-readscope-tour-and-accommodation-booking'),
+            __('October', 'the-readscope-tour-and-accommodation-booking'), __('November', 'the-readscope-tour-and-accommodation-booking'), __('December', 'the-readscope-tour-and-accommodation-booking'),
         ];
         $label = (int) wp_date('j', $stamp) . ' ' . ($months[(int) wp_date('n', $stamp) - 1] ?? '') . ' ' . wp_date('Y', $stamp);
         $banglaDigits = (function_exists('tourivo_is_bengali') && tourivo_is_bengali())
@@ -499,9 +499,9 @@ if (!function_exists('tourivo_is_bengali')) {
 
 if (!function_exists('tourivo_load_plugin_textdomain')) {
     /**
-     * Centralized loader for Tourivo textdomain with language switcher & WP.org priority.
+     * Centralized loader for plugin textdomain with language switcher & WP.org priority.
      *
-     * Prioritizes WordPress.org translation files (/wp-content/languages/plugins/tourivo-{locale}.mo)
+     * Prioritizes WordPress.org translation files (/wp-content/languages/plugins/the-readscope-tour-and-accommodation-booking-{locale}.mo)
      * so community updates take precedence, falling back to bundled .mo files in the plugin directory.
      *
      * @param string|null $customLocale Optional specific locale to load.
@@ -515,26 +515,26 @@ if (!function_exists('tourivo_load_plugin_textdomain')) {
 
         $locale = $customLocale ?: tourivo_current_locale();
 
-        unload_textdomain('tourivo');
+        unload_textdomain('the-readscope-tour-and-accommodation-booking');
 
         if ('en_US' === $locale || 'en' === $locale) {
             return;
         }
 
-        $wporgFile   = defined('WP_LANG_DIR') ? WP_LANG_DIR . '/plugins/tourivo-' . $locale . '.mo' : '';
-        $bundledFile = defined('TOURIVO_PLUGIN_DIR') ? TOURIVO_PLUGIN_DIR . 'languages/tourivo-' . $locale . '.mo' : '';
+        $wporgFile   = defined('WP_LANG_DIR') ? WP_LANG_DIR . '/plugins/the-readscope-tour-and-accommodation-booking-' . $locale . '.mo' : '';
+        $bundledFile = defined('TOURIVO_PLUGIN_DIR') ? TOURIVO_PLUGIN_DIR . 'languages/the-readscope-tour-and-accommodation-booking-' . $locale . '.mo' : '';
         $bundledPhp  = $bundledFile !== '' ? (string) preg_replace('/\.mo$/', '.l10n.php', $bundledFile) : '';
 
         // 1. Prioritize WP.org translation updates if available
         if (!empty($wporgFile) && file_exists($wporgFile)) {
-            load_textdomain('tourivo', $wporgFile, $locale);
+            load_textdomain('the-readscope-tour-and-accommodation-booking', $wporgFile, $locale);
         } elseif ($bundledFile !== '' && (file_exists($bundledFile) || ($bundledPhp !== '' && file_exists($bundledPhp)))) {
             // 2. Bundled catalog. WordPress prefers the .l10n.php file beside this .mo path.
-            load_textdomain('tourivo', $bundledFile, $locale);
+            load_textdomain('the-readscope-tour-and-accommodation-booking', $bundledFile, $locale);
         } else {
             // 3. Fallback standard loader
             // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound
-            load_plugin_textdomain('tourivo', false, dirname(plugin_basename(TOURIVO_PLUGIN_FILE)) . '/languages');
+            load_plugin_textdomain('the-readscope-tour-and-accommodation-booking', false, dirname(plugin_basename(TOURIVO_PLUGIN_FILE)) . '/languages');
         }
     }
 }

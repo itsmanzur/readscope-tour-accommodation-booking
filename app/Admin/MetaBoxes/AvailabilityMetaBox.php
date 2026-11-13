@@ -30,7 +30,7 @@ class AvailabilityMetaBox extends MetaBox
 
     public function getTitle(): string
     {
-        return __('Availability & Pricing Calendar', 'tourivo');
+        return __('Availability & Pricing Calendar', 'the-readscope-tour-and-accommodation-booking');
     }
 
     public function render(WP_Post $post): void

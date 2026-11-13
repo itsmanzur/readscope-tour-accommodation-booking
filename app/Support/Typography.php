@@ -13,10 +13,10 @@ if (!defined('ABSPATH')) {
 /**
  * Class Typography
  *
- * Which fonts Tourivo uses and how they are loaded.
+ * Which fonts Readscope Booking uses and how they are loaded.
  *
  * Text, forms, prices and buttons use Anek Bangla by default: its variable file carries every weight
- * Tourivo needs, so the booking panel looks the same on every theme (a theme's body font is often a reading
+ * Readscope Booking needs, so the booking panel looks the same on every theme (a theme's body font is often a reading
  * serif with one weight loaded, which turns small UI text muddy and fakes bold). Headings follow the theme's
  * heading font so pages still belong to the site; Bengali in them falls back to Anek Bangla.
  *
@@ -85,7 +85,7 @@ class Typography
     }
 
     /**
-     * Hand the theme's text and heading families to Tourivo (--trv-font-theme, --trv-font-theme-heading).
+     * Hand the theme's text and heading families to Readscope Booking (--trv-font-theme, --trv-font-theme-heading).
      * CSS cannot put a fallback behind an inherited family, so the names are read once in the browser.
      */
     public static function registerThemeFontScript(): void
@@ -99,7 +99,7 @@ class Typography
 
     public static function printThemeFontScript(): void
     {
-        // Printed on every front-end page (a few hundred bytes): shortcodes and blocks load Tourivo's CSS only
+        // Printed on every front-end page (a few hundred bytes): shortcodes and blocks load Readscope Booking's CSS only
         // when the content is rendered, which is after the body opens, and waiting for that would flash fonts.
         static $printed = false;
         if ($printed || is_admin()) {

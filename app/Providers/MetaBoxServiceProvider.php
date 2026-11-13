@@ -106,39 +106,39 @@ class MetaBoxServiceProvider extends ServiceProvider
             'isBengali'        => function_exists('tourivo_is_bengali') && tourivo_is_bengali(),
             'useBengaliDigits' => (bool) Config::get('use_bangla_digits', false),
             'monthNames'       => [
-                __('January', 'tourivo'),
-                __('February', 'tourivo'),
-                __('March', 'tourivo'),
-                __('April', 'tourivo'),
-                __('May', 'tourivo'),
-                __('June', 'tourivo'),
-                __('July', 'tourivo'),
-                __('August', 'tourivo'),
-                __('September', 'tourivo'),
-                __('October', 'tourivo'),
-                __('November', 'tourivo'),
-                __('December', 'tourivo'),
+                __('January', 'the-readscope-tour-and-accommodation-booking'),
+                __('February', 'the-readscope-tour-and-accommodation-booking'),
+                __('March', 'the-readscope-tour-and-accommodation-booking'),
+                __('April', 'the-readscope-tour-and-accommodation-booking'),
+                __('May', 'the-readscope-tour-and-accommodation-booking'),
+                __('June', 'the-readscope-tour-and-accommodation-booking'),
+                __('July', 'the-readscope-tour-and-accommodation-booking'),
+                __('August', 'the-readscope-tour-and-accommodation-booking'),
+                __('September', 'the-readscope-tour-and-accommodation-booking'),
+                __('October', 'the-readscope-tour-and-accommodation-booking'),
+                __('November', 'the-readscope-tour-and-accommodation-booking'),
+                __('December', 'the-readscope-tour-and-accommodation-booking'),
             ],
             'dayNamesShort'    => [
-                __('Mon', 'tourivo'),
-                __('Tue', 'tourivo'),
-                __('Wed', 'tourivo'),
-                __('Thu', 'tourivo'),
-                __('Fri', 'tourivo'),
-                __('Sat', 'tourivo'),
-                __('Sun', 'tourivo'),
+                __('Mon', 'the-readscope-tour-and-accommodation-booking'),
+                __('Tue', 'the-readscope-tour-and-accommodation-booking'),
+                __('Wed', 'the-readscope-tour-and-accommodation-booking'),
+                __('Thu', 'the-readscope-tour-and-accommodation-booking'),
+                __('Fri', 'the-readscope-tour-and-accommodation-booking'),
+                __('Sat', 'the-readscope-tour-and-accommodation-booking'),
+                __('Sun', 'the-readscope-tour-and-accommodation-booking'),
             ],
             'i18n'             => [
-                'loading'         => __('Loading availability calendar...', 'tourivo'),
-                'applying'        => __('Applying changes...', 'tourivo'),
-                'noDatesSelected' => __('Please select at least one date from the calendar.', 'tourivo'),
-                'noChanges'       => __('Please specify at least one change to apply (Status, Capacity, or Price).', 'tourivo'),
+                'loading'         => __('Loading availability calendar...', 'the-readscope-tour-and-accommodation-booking'),
+                'applying'        => __('Applying changes...', 'the-readscope-tour-and-accommodation-booking'),
+                'noDatesSelected' => __('Please select at least one date from the calendar.', 'the-readscope-tour-and-accommodation-booking'),
+                'noChanges'       => __('Please specify at least one change to apply (Status, Capacity, or Price).', 'the-readscope-tour-and-accommodation-booking'),
                 /* translators: %d: number of selected dates */
-                'selectedCount'   => __('%d date(s) selected', 'tourivo'),
-                'statusAvailable' => __('Available', 'tourivo'),
-                'statusBlocked'   => __('Blocked', 'tourivo'),
-                'statusSoldOut'   => __('Sold Out', 'tourivo'),
-                'confirmForce'    => __('Selected dates contain active bookings. Are you sure you want to force block future bookings on these dates?', 'tourivo'),
+                'selectedCount'   => __('%d date(s) selected', 'the-readscope-tour-and-accommodation-booking'),
+                'statusAvailable' => __('Available', 'the-readscope-tour-and-accommodation-booking'),
+                'statusBlocked'   => __('Blocked', 'the-readscope-tour-and-accommodation-booking'),
+                'statusSoldOut'   => __('Sold Out', 'the-readscope-tour-and-accommodation-booking'),
+                'confirmForce'    => __('Selected dates contain active bookings. Are you sure you want to force block future bookings on these dates?', 'the-readscope-tour-and-accommodation-booking'),
             ],
         ]);
     }
@@ -155,9 +155,9 @@ class MetaBoxServiceProvider extends ServiceProvider
         foreach ($columns as $key => $title) {
             $newColumns[$key] = $title;
             if ($key === 'title') {
-                $newColumns['tour_type'] = __('Type', 'tourivo');
-                $newColumns['price']     = __('Price', 'tourivo');
-                $newColumns['duration']  = __('Duration', 'tourivo');
+                $newColumns['tour_type'] = __('Type', 'the-readscope-tour-and-accommodation-booking');
+                $newColumns['price']     = __('Price', 'the-readscope-tour-and-accommodation-booking');
+                $newColumns['duration']  = __('Duration', 'the-readscope-tour-and-accommodation-booking');
             }
         }
         return $newColumns;
@@ -202,9 +202,9 @@ class MetaBoxServiceProvider extends ServiceProvider
         foreach ($columns as $key => $title) {
             $newColumns[$key] = $title;
             if ($key === 'title') {
-                $newColumns['star_rating'] = __('Rating', 'tourivo');
-                $newColumns['city']        = __('City', 'tourivo');
-                $newColumns['room_count']  = __('Rooms', 'tourivo');
+                $newColumns['star_rating'] = __('Rating', 'the-readscope-tour-and-accommodation-booking');
+                $newColumns['city']        = __('City', 'the-readscope-tour-and-accommodation-booking');
+                $newColumns['room_count']  = __('Rooms', 'the-readscope-tour-and-accommodation-booking');
             }
         }
         return $newColumns;
@@ -246,9 +246,9 @@ class MetaBoxServiceProvider extends ServiceProvider
         foreach ($columns as $key => $title) {
             $newColumns[$key] = $title;
             if ($key === 'title') {
-                $newColumns['parent_hotel'] = esc_html__('Parent Hotel', 'tourivo');
-                $newColumns['nightly_rate'] = esc_html__('Price / Night', 'tourivo');
-                $newColumns['capacity']     = esc_html__('Capacity', 'tourivo');
+                $newColumns['parent_hotel'] = esc_html__('Parent Hotel', 'the-readscope-tour-and-accommodation-booking');
+                $newColumns['nightly_rate'] = esc_html__('Price / Night', 'the-readscope-tour-and-accommodation-booking');
+                $newColumns['capacity']     = esc_html__('Capacity', 'the-readscope-tour-and-accommodation-booking');
             }
         }
         return $newColumns;
@@ -271,7 +271,7 @@ class MetaBoxServiceProvider extends ServiceProvider
                 if ($hotel) {
                     echo '<a href="' . esc_url(get_edit_post_link($hotel->getId())) . '"><strong>' . esc_html($hotel->getTitle()) . '</strong></a>';
                 } else {
-                    echo '<span style="color:#ef4444;">' . esc_html__('Unassigned', 'tourivo') . '</span>';
+                    echo '<span style="color:#ef4444;">' . esc_html__('Unassigned', 'the-readscope-tour-and-accommodation-booking') . '</span>';
                 }
                 break;
             case 'nightly_rate':
@@ -281,7 +281,7 @@ class MetaBoxServiceProvider extends ServiceProvider
                 echo esc_html(
                     sprintf(
                         /* translators: 1: Adults count, 2: Children count */
-                        __('%1$d Adults, %2$d Children', 'tourivo'),
+                        __('%1$d Adults, %2$d Children', 'the-readscope-tour-and-accommodation-booking'),
                         $room->getMaxAdults(),
                         $room->getMaxChildren()
                     )

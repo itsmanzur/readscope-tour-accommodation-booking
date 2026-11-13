@@ -1,6 +1,6 @@
 <?php
 /**
- * Tourivo Real MySQL Availability & Bulk Upsert Manual Verification Script
+ * Readscope Real MySQL Availability & Bulk Upsert Manual Verification Script
  *
  * Usage:
  *   php tests/manual/test_availability_real_mysql.php
@@ -16,7 +16,7 @@
 declare(strict_types=1);
 
 echo "=====================================================\n";
-echo "   Tourivo Real MySQL Availability Verification\n";
+echo "   Readscope Real MySQL Availability Verification\n";
 echo "=====================================================\n\n";
 
 $dbHost = getenv('DB_HOST') ?: '127.0.0.1';

@@ -25,7 +25,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class Plugin
  *
- * Central orchestrator and bootstrap class for Tourivo.
+ * Central orchestrator and bootstrap class for Readscope Booking.
  *
  * @package Tourivo\Core
  */

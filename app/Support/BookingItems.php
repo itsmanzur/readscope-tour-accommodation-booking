@@ -51,7 +51,7 @@ final class BookingItems
 
         if (count($titles) > 3) {
             /* translators: 1: first item, 2: second item, 3: number of further items */
-            $title = sprintf(__('%1$s + %2$s + %3$d more', 'tourivo'), $titles[0], $titles[1], count($titles) - 2);
+            $title = sprintf(__('%1$s + %2$s + %3$d more', 'the-readscope-tour-and-accommodation-booking'), $titles[0], $titles[1], count($titles) - 2);
         } else {
             $title = implode(' + ', $titles);
         }

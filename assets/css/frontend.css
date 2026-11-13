@@ -1,5 +1,5 @@
 /**
- * Tourivo Frontend Stylesheet
+ * Readscope Booking Frontend Stylesheet
  */
 
 :root {
@@ -42,7 +42,7 @@
     }
 }
 
-/* Every Tourivo element uses the Tourivo font stack (theme font + Anek Bangla for Bengali by default).
+/* Every Readscope Booking element uses the Readscope Booking font stack (theme font + Anek Bangla for Bengali by default).
    :where() keeps this at zero specificity, so any font-family set below still wins. */
 :where([class^="tourivo-"]:not(html, body), [class*=" tourivo-"]:not(html, body)) {
     font-family: var(--trv-font, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif);

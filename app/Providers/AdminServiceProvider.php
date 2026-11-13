@@ -109,7 +109,7 @@ class AdminServiceProvider extends ServiceProvider
     }
 
     /**
-     * Switch WordPress locale on Tourivo admin pages if plugin_language is customized.
+     * Switch WordPress locale on Readscope Booking admin pages if plugin_language is customized.
      *
      * @return void
      */
@@ -153,7 +153,7 @@ class AdminServiceProvider extends ServiceProvider
     }
 
     /**
-     * Register top-level Tourivo admin menu and submenus.
+     * Register top-level Readscope Booking admin menu and submenus.
      *
      * @return void
      */
@@ -161,8 +161,8 @@ class AdminServiceProvider extends ServiceProvider
     {
         $this->loadAdminLocale();
         add_menu_page(
-            __('Tourivo', 'tourivo'),
-            __('Tourivo', 'tourivo'),
+            __('The Readscope Tour and Accommodation Booking', 'the-readscope-tour-and-accommodation-booking'),
+            esc_html__('Readscope', 'the-readscope-tour-and-accommodation-booking'),
             'manage_tourivo',
             'tourivo',
             [$this, 'renderDashboardPage'],
@@ -172,8 +172,8 @@ class AdminServiceProvider extends ServiceProvider
 
         add_submenu_page(
             'tourivo',
-            __('Dashboard', 'tourivo'),
-            __('Dashboard', 'tourivo'),
+            __('Dashboard', 'the-readscope-tour-and-accommodation-booking'),
+            __('Dashboard', 'the-readscope-tour-and-accommodation-booking'),
             'manage_tourivo',
             'tourivo',
             [$this, 'renderDashboardPage']
@@ -181,8 +181,8 @@ class AdminServiceProvider extends ServiceProvider
 
         add_submenu_page(
             'tourivo',
-            __('Bookings', 'tourivo'),
-            __('Bookings', 'tourivo'),
+            __('Bookings', 'the-readscope-tour-and-accommodation-booking'),
+            __('Bookings', 'the-readscope-tour-and-accommodation-booking'),
             'manage_tourivo_bookings',
             'tourivo-bookings',
             [$this, 'renderBookingsPage']
@@ -190,8 +190,8 @@ class AdminServiceProvider extends ServiceProvider
 
         add_submenu_page(
             'tourivo',
-            __('Inquiries', 'tourivo'),
-            __('Inquiries', 'tourivo'),
+            __('Inquiries', 'the-readscope-tour-and-accommodation-booking'),
+            __('Inquiries', 'the-readscope-tour-and-accommodation-booking'),
             'manage_tourivo_bookings',
             'tourivo-inquiries',
             [$this, 'renderInquiriesPage']
@@ -199,8 +199,8 @@ class AdminServiceProvider extends ServiceProvider
 
         add_submenu_page(
             'tourivo',
-            __('Reports & Analytics', 'tourivo'),
-            __('Reports', 'tourivo'),
+            __('Reports & Analytics', 'the-readscope-tour-and-accommodation-booking'),
+            __('Reports', 'the-readscope-tour-and-accommodation-booking'),
             'manage_tourivo_bookings',
             'tourivo-reports',
             [ReportsPage::class, 'render']
@@ -208,8 +208,8 @@ class AdminServiceProvider extends ServiceProvider
 
         add_submenu_page(
             'tourivo',
-            __('Docs & Features', 'tourivo'),
-            __('Docs & Features', 'tourivo'),
+            __('Docs & Features', 'the-readscope-tour-and-accommodation-booking'),
+            __('Docs & Features', 'the-readscope-tour-and-accommodation-booking'),
             'manage_tourivo',
             'tourivo-docs',
             [$this, 'renderDocumentationPage']
@@ -217,8 +217,8 @@ class AdminServiceProvider extends ServiceProvider
 
         add_submenu_page(
             'tourivo',
-            __('Setup Wizard', 'tourivo'),
-            __('Setup Wizard', 'tourivo'),
+            __('Setup Wizard', 'the-readscope-tour-and-accommodation-booking'),
+            __('Setup Wizard', 'the-readscope-tour-and-accommodation-booking'),
             'manage_tourivo_settings',
             'tourivo-setup-wizard',
             [SetupWizard::class, 'render']
@@ -226,8 +226,8 @@ class AdminServiceProvider extends ServiceProvider
 
         add_submenu_page(
             'tourivo',
-            __('Settings', 'tourivo'),
-            __('Settings', 'tourivo'),
+            __('Settings', 'the-readscope-tour-and-accommodation-booking'),
+            __('Settings', 'the-readscope-tour-and-accommodation-booking'),
             'manage_tourivo_settings',
             'tourivo-settings',
             [$this, 'renderSettingsPage']
@@ -280,7 +280,7 @@ class AdminServiceProvider extends ServiceProvider
     }
 
     /**
-     * Mark every Tourivo (and Tourivo Pro) admin page, so the shared admin styles can scope to it.
+     * Mark every Readscope Booking (and Readscope Booking Pro) admin page, so the shared admin styles can scope to it.
      *
      * Screen ids follow the translated menu title, so the page slug is the reliable signal.
      */
@@ -350,19 +350,19 @@ class AdminServiceProvider extends ServiceProvider
                     </div>
                     <div>
                         <h3 style="margin: 0 0 4px 0; font-size: var(--trv-admin-text-lg); font-weight: 700; color: #0f172a;">
-                            <?php esc_html_e('Welcome to Tourivo! Want to explore with ready-made demo content?', 'tourivo'); ?>
+                            <?php esc_html_e('Welcome to Readscope Booking! Want to explore with ready-made demo content?', 'the-readscope-tour-and-accommodation-booking'); ?>
                         </h3>
                         <p style="margin: 0; color: #475569; font-size: var(--trv-admin-text-base);">
-                            <?php esc_html_e('Get started in seconds! Import 3 complete tours (Bali, Swiss Alps, Dubai) and 2 boutique hotels with 4 rooms to test booking forms, filters, and calendars immediately.', 'tourivo'); ?>
+                            <?php esc_html_e('Get started in seconds! Import 3 complete tours (Bali, Swiss Alps, Dubai) and 2 boutique hotels with 4 rooms to test booking forms, filters, and calendars immediately.', 'the-readscope-tour-and-accommodation-booking'); ?>
                         </p>
                     </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <button type="button" class="button button-primary tourivo-import-sample-btn" data-nonce="<?php echo esc_attr($nonce); ?>" style="background: #0284c7; border-color: #0284c7; padding: 6px 16px; height: auto; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(2,132,199,0.25);">
-                        <span class="dashicons dashicons-cloud-upload"></span> <?php esc_html_e('⚡ Import Starter Demo Content', 'tourivo'); ?>
+                        <span class="dashicons dashicons-cloud-upload"></span> <?php esc_html_e('⚡ Import Starter Demo Content', 'the-readscope-tour-and-accommodation-booking'); ?>
                     </button>
                     <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-docs')); ?>" class="button button-secondary" style="height: auto; padding: 6px 14px;">
-                        <?php esc_html_e('Docs & Features Hub', 'tourivo'); ?>
+                        <?php esc_html_e('Docs & Features Hub', 'the-readscope-tour-and-accommodation-booking'); ?>
                     </a>
                 </div>
             </div>
@@ -407,12 +407,12 @@ class AdminServiceProvider extends ServiceProvider
         <div class="notice notice-info tourivo-proxy-notice">
             <p>
                 <span class="tourivo-proxy-notice__text">
-                    <?php esc_html_e('Your site sits behind another server. Without a quick fix, real customers can get blocked after only a few bookings.', 'tourivo'); ?>
+                    <?php esc_html_e('Your site sits behind another server. Without a quick fix, real customers can get blocked after only a few bookings.', 'the-readscope-tour-and-accommodation-booking'); ?>
                 </span>
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                     <input type="hidden" name="action" value="tourivo_fix_proxy">
                     <?php wp_nonce_field('tourivo_fix_proxy'); ?>
-                    <button type="submit" class="button button-primary button-small"><?php esc_html_e('Fix this for me', 'tourivo'); ?></button>
+                    <button type="submit" class="button button-primary button-small"><?php esc_html_e('Fix this for me', 'the-readscope-tour-and-accommodation-booking'); ?></button>
                 </form>
             </p>
         </div>
@@ -443,7 +443,7 @@ class AdminServiceProvider extends ServiceProvider
     public function handleFixProxy(): void
     {
         if (!current_user_can('manage_tourivo_settings')) {
-            wp_die(esc_html__('Unauthorized access.', 'tourivo'));
+            wp_die(esc_html__('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking'));
         }
         check_admin_referer('tourivo_fix_proxy');
 
@@ -465,15 +465,15 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function handleVerifyEmail(): void
     {
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Capability URL from the verification email, authenticated by its HMAC token (BookingService::verifyEmail); a nonce cannot work in an emailed link.
         $code  = isset($_GET['code']) ? strtoupper(sanitize_text_field(wp_unslash((string) $_GET['code']))) : '';
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Capability URL from the verification email, authenticated by its HMAC token (BookingService::verifyEmail); a nonce cannot work in an emailed link.
         $token = isset($_GET['token']) ? sanitize_text_field(wp_unslash((string) $_GET['token'])) : '';
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Capability URL from the verification email, authenticated by its HMAC token (BookingService::verifyEmail); a nonce cannot work in an emailed link.
         $expiresAt = isset($_GET['exp']) ? (int) $_GET['exp'] : 0;
 
         if (!\Tourivo\Support\RateLimiter::hit('tourivo_verify_' . md5(\Tourivo\Support\ClientIp::get()), 20, 600)) {
-            wp_die(esc_html__('Too many attempts. Please try again later.', 'tourivo'), '', ['response' => 429]);
+            wp_die(esc_html__('Too many attempts. Please try again later.', 'the-readscope-tour-and-accommodation-booking'), '', ['response' => 429]);
         }
 
         $bookingService = Container::getInstance()->get(BookingService::class);
@@ -482,7 +482,7 @@ class AdminServiceProvider extends ServiceProvider
         if (empty($result['success'])) {
             wp_die(
                 esc_html($result['message']),
-                esc_html__('Email confirmation', 'tourivo'),
+                esc_html__('Email confirmation', 'the-readscope-tour-and-accommodation-booking'),
                 ['response' => 400, 'back_link' => true]
             );
         }
@@ -506,7 +506,7 @@ class AdminServiceProvider extends ServiceProvider
         check_ajax_referer('tourivo_admin_nonce', 'nonce');
 
         if (!current_user_can('manage_tourivo')) {
-            wp_send_json_error(['message' => __('Unauthorized permission.', 'tourivo')], 403);
+            wp_send_json_error(['message' => __('Unauthorized permission.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
         update_user_meta(get_current_user_id(), 'tourivo_dismiss_welcome_notice', 1);
@@ -522,20 +522,20 @@ class AdminServiceProvider extends ServiceProvider
         check_ajax_referer('tourivo_admin_nonce', 'nonce');
 
         if (!current_user_can('manage_tourivo')) {
-            wp_send_json_error(['message' => __('Unauthorized permission.', 'tourivo')], 403);
+            wp_send_json_error(['message' => __('Unauthorized permission.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
         $res = Seeder::run();
 
         if (empty($res['success'])) {
             wp_send_json_error([
-                'message' => $res['message'] ?? __('Failed to import sample demo data. Please check server logs.', 'tourivo'),
+                'message' => $res['message'] ?? __('Failed to import sample demo data. Please check server logs.', 'the-readscope-tour-and-accommodation-booking'),
             ], 500);
         }
 
         if (!empty($res['skipped'])) {
             wp_send_json_success([
-                'message' => $res['message'] ?? __('Demo content is already imported.', 'tourivo'),
+                'message' => $res['message'] ?? __('Demo content is already imported.', 'the-readscope-tour-and-accommodation-booking'),
                 'skipped' => true,
             ]);
         }
@@ -546,7 +546,7 @@ class AdminServiceProvider extends ServiceProvider
         wp_send_json_success([
             'message' => sprintf(
                 /* translators: 1: Tours count, 2: Hotels count, 3: Rooms count */
-                __('Sample data successfully imported! Created %1$d Tours, %2$d Hotels, and %3$d Rooms.', 'tourivo'),
+                __('Sample data successfully imported! Created %1$d Tours, %2$d Hotels, and %3$d Rooms.', 'the-readscope-tour-and-accommodation-booking'),
                 $res['tours_created'],
                 $res['hotels_created'],
                 $res['rooms_created']
@@ -565,14 +565,14 @@ class AdminServiceProvider extends ServiceProvider
         check_ajax_referer('tourivo_admin_nonce', 'nonce');
 
         if (!current_user_can('manage_tourivo_bookings')) {
-            wp_send_json_error(['message' => __('Unauthorized permission.', 'tourivo')], 403);
+            wp_send_json_error(['message' => __('Unauthorized permission.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
         $bookingId = isset($_POST['booking_id']) ? absint($_POST['booking_id']) : 0;
         $status    = isset($_POST['status']) ? sanitize_text_field(wp_unslash($_POST['status'])) : '';
 
         if ($bookingId <= 0 || !in_array($status, ['pending', 'confirmed', 'completed', 'cancelled', 'on_hold'], true)) {
-            wp_send_json_error(['message' => __('Invalid booking ID or status.', 'tourivo')], 400);
+            wp_send_json_error(['message' => __('Invalid booking ID or status.', 'the-readscope-tour-and-accommodation-booking')], 400);
         }
 
         $bookingService = Container::getInstance()->get(\Tourivo\Services\BookingService::class);
@@ -593,7 +593,7 @@ class AdminServiceProvider extends ServiceProvider
         check_ajax_referer('tourivo_admin_nonce', 'nonce');
 
         if (!current_user_can('manage_tourivo_bookings')) {
-            wp_send_json_error(['message' => __('Unauthorized permission.', 'tourivo')], 403);
+            wp_send_json_error(['message' => __('Unauthorized permission.', 'the-readscope-tour-and-accommodation-booking')], 403);
             return;
         }
 
@@ -601,11 +601,11 @@ class AdminServiceProvider extends ServiceProvider
         $bookingService = Container::getInstance()->get(BookingService::class);
 
         if ($bookingId <= 0 || !$bookingService->rotateAccessKey($bookingId)) {
-            wp_send_json_error(['message' => __('Could not revoke the links for this booking.', 'tourivo')], 400);
+            wp_send_json_error(['message' => __('Could not revoke the links for this booking.', 'the-readscope-tour-and-accommodation-booking')], 400);
             return;
         }
 
-        wp_send_json_success(['message' => __('Previously shared voucher links no longer work. New links are generated automatically.', 'tourivo')]);
+        wp_send_json_success(['message' => __('Previously shared voucher links no longer work. New links are generated automatically.', 'the-readscope-tour-and-accommodation-booking')]);
     }
 
     /**
@@ -616,7 +616,7 @@ class AdminServiceProvider extends ServiceProvider
         check_ajax_referer('tourivo_admin_nonce', 'nonce');
 
         if (!current_user_can('manage_tourivo_bookings')) {
-            wp_send_json_error(['message' => __('Unauthorized permission.', 'tourivo')], 403);
+            wp_send_json_error(['message' => __('Unauthorized permission.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
         $itemId        = isset($_POST['item_id']) ? absint($_POST['item_id']) : 0;
@@ -635,7 +635,7 @@ class AdminServiceProvider extends ServiceProvider
         $sendCustomerEmail = isset($_POST['send_customer_email']) && ($_POST['send_customer_email'] === '1' || $_POST['send_customer_email'] === 'true' || $_POST['send_customer_email'] === true);
 
         if ($itemId <= 0 || empty($checkIn) || empty($customerName) || empty($customerEmail)) {
-            wp_send_json_error(['message' => __('Please fill in all required fields.', 'tourivo')], 400);
+            wp_send_json_error(['message' => __('Please fill in all required fields.', 'the-readscope-tour-and-accommodation-booking')], 400);
         }
 
         $customerId = 0;
@@ -668,11 +668,11 @@ class AdminServiceProvider extends ServiceProvider
         if (!empty($result['success'])) {
             wp_send_json_success([
                 /* translators: %s: Booking Reference Code */
-                'message'      => sprintf(__('Manual booking created successfully! Reference Code: #%s', 'tourivo'), $result['booking_code']),
+                'message'      => sprintf(__('Manual booking created successfully! Reference Code: #%s', 'the-readscope-tour-and-accommodation-booking'), $result['booking_code']),
                 'booking_code' => $result['booking_code'],
             ]);
         } else {
-            wp_send_json_error(['message' => $result['message'] ?? __('Failed to create manual booking.', 'tourivo')], 400);
+            wp_send_json_error(['message' => $result['message'] ?? __('Failed to create manual booking.', 'the-readscope-tour-and-accommodation-booking')], 400);
         }
     }
 
@@ -716,7 +716,7 @@ class AdminServiceProvider extends ServiceProvider
         check_ajax_referer('tourivo_inquiry_nonce', 'nonce');
 
         if (!current_user_can('manage_tourivo_bookings')) {
-            wp_send_json_error(['message' => __('Unauthorized permission.', 'tourivo')], 403);
+            wp_send_json_error(['message' => __('Unauthorized permission.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
         $inquiryId = isset($_POST['id']) ? absint($_POST['id']) : 0;
@@ -724,9 +724,9 @@ class AdminServiceProvider extends ServiceProvider
 
         $inquiryService = Container::getInstance()->get(InquiryService::class);
         if ($inquiryService->updateStatus($inquiryId, $status)) {
-            wp_send_json_success(['message' => __('Inquiry status updated.', 'tourivo')]);
+            wp_send_json_success(['message' => __('Inquiry status updated.', 'the-readscope-tour-and-accommodation-booking')]);
         } else {
-            wp_send_json_error(['message' => __('Failed to update inquiry status.', 'tourivo')]);
+            wp_send_json_error(['message' => __('Failed to update inquiry status.', 'the-readscope-tour-and-accommodation-booking')]);
         }
     }
 
@@ -738,16 +738,16 @@ class AdminServiceProvider extends ServiceProvider
         check_ajax_referer('tourivo_inquiry_nonce', 'nonce');
 
         if (!current_user_can('manage_tourivo_bookings')) {
-            wp_send_json_error(['message' => __('Unauthorized permission.', 'tourivo')], 403);
+            wp_send_json_error(['message' => __('Unauthorized permission.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
         $inquiryId = isset($_POST['id']) ? absint($_POST['id']) : 0;
 
         $inquiryService = Container::getInstance()->get(InquiryService::class);
         if ($inquiryService->deleteInquiry($inquiryId)) {
-            wp_send_json_success(['message' => __('Inquiry deleted.', 'tourivo')]);
+            wp_send_json_success(['message' => __('Inquiry deleted.', 'the-readscope-tour-and-accommodation-booking')]);
         } else {
-            wp_send_json_error(['message' => __('Failed to delete inquiry.', 'tourivo')]);
+            wp_send_json_error(['message' => __('Failed to delete inquiry.', 'the-readscope-tour-and-accommodation-booking')]);
         }
     }
 
@@ -759,14 +759,18 @@ class AdminServiceProvider extends ServiceProvider
         check_ajax_referer('tourivo_test_email_nonce', 'nonce');
 
         if (!current_user_can('manage_tourivo_settings')) {
-            wp_send_json_error(['message' => __('Unauthorized access.', 'tourivo')], 403);
+            wp_send_json_error(['message' => __('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
         $email = isset($_POST['email']) ? sanitize_email(wp_unslash($_POST['email'])) : '';
         $emailType = isset($_POST['email_type']) ? sanitize_key(wp_unslash($_POST['email_type'])) : 'customer_booking_confirmed';
+        // The type selects a template file: accept only the real email types, anything else gets the default.
+        if (!in_array($emailType, EmailService::EMAIL_TYPES, true)) {
+            $emailType = 'customer_booking_confirmed';
+        }
 
         if (empty($email) || !is_email($email)) {
-            wp_send_json_error(['message' => __('Please enter a valid email address.', 'tourivo')], 400);
+            wp_send_json_error(['message' => __('Please enter a valid email address.', 'the-readscope-tour-and-accommodation-booking')], 400);
         }
 
         $emailService = new EmailService();
@@ -775,10 +779,10 @@ class AdminServiceProvider extends ServiceProvider
         if ($sent) {
             wp_send_json_success([
                 /* translators: %s: Email address */
-                'message' => sprintf(__('Test email successfully dispatched to %s!', 'tourivo'), $email),
+                'message' => sprintf(__('Test email successfully dispatched to %s!', 'the-readscope-tour-and-accommodation-booking'), $email),
             ]);
         } else {
-            wp_send_json_error(['message' => __('Mail sending failed. Please verify your WordPress SMTP settings.', 'tourivo')], 500);
+            wp_send_json_error(['message' => __('Mail sending failed. Please verify your WordPress SMTP settings.', 'the-readscope-tour-and-accommodation-booking')], 500);
         }
     }
 
@@ -790,7 +794,7 @@ class AdminServiceProvider extends ServiceProvider
         check_ajax_referer('tourivo_test_webhook_nonce', 'nonce');
 
         if (!current_user_can('manage_tourivo_settings')) {
-            wp_send_json_error(['message' => __('Unauthorized access.', 'tourivo')], 403);
+            wp_send_json_error(['message' => __('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
         $url    = isset($_POST['url']) ? esc_url_raw(wp_unslash($_POST['url'])) : '';
@@ -814,12 +818,12 @@ class AdminServiceProvider extends ServiceProvider
         check_ajax_referer('tourivo_timeline_nonce', 'nonce');
 
         if (!current_user_can('manage_tourivo_bookings')) {
-            wp_send_json_error(['message' => __('Unauthorized access.', 'tourivo')], 403);
+            wp_send_json_error(['message' => __('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
         $bookingId = isset($_POST['booking_id']) ? absint($_POST['booking_id']) : 0;
         if ($bookingId <= 0) {
-            wp_send_json_error(['message' => __('Invalid booking ID.', 'tourivo')], 400);
+            wp_send_json_error(['message' => __('Invalid booking ID.', 'the-readscope-tour-and-accommodation-booking')], 400);
         }
 
         $logs = LogService::getTimeline($bookingId);
@@ -829,12 +833,12 @@ class AdminServiceProvider extends ServiceProvider
             <ul class="timeline-list" style="list-style: none; margin: 0; padding: 0;">
                 <?php foreach ($logs as $log) : 
                     $user = $log['user_id'] ? get_userdata((int)$log['user_id']) : null;
-                    $userName = $user ? $user->display_name : __('System / Guest', 'tourivo');
+                    $userName = $user ? $user->display_name : __('System / Guest', 'the-readscope-tour-and-accommodation-booking');
                     $isNote = $log['action'] === 'internal_note';
                 ?>
                     <li class="timeline-item" style="padding: 8px 10px; margin-bottom: 8px; border-left: 3px solid <?php echo $isNote ? '#8b5cf6' : '#0284c7'; ?>; background: #f8fafc; border-radius: 0 6px 6px 0; font-size: var(--trv-admin-text-sm);">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
-                            <strong><?php echo $isNote ? '📝 ' . esc_html__('Internal Staff Note', 'tourivo') : '📌 ' . esc_html(ucwords(str_replace('_', ' ', $log['action']))); ?></strong>
+                            <strong><?php echo $isNote ? '📝 ' . esc_html__('Internal Staff Note', 'the-readscope-tour-and-accommodation-booking') : '📌 ' . esc_html(ucwords(str_replace('_', ' ', $log['action']))); ?></strong>
                             <small style="color: #64748b;"><?php echo esc_html(gmdate('M d, Y g:i A', strtotime($log['created_at']))); ?></small>
                         </div>
                         <div style="color: #334155; line-height: 1.4;"><?php echo nl2br(esc_html($log['details'])); ?></div>
@@ -842,7 +846,7 @@ class AdminServiceProvider extends ServiceProvider
                         echo esc_html(
                             sprintf(
                                 /* translators: %s: Staff or user display name */
-                                __('Logged by: %s', 'tourivo'),
+                                __('Logged by: %s', 'the-readscope-tour-and-accommodation-booking'),
                                 $userName
                             )
                         );
@@ -851,7 +855,7 @@ class AdminServiceProvider extends ServiceProvider
                 <?php endforeach; ?>
             </ul>
         <?php else : ?>
-            <div style="text-align: center; color: #64748b; padding: 12px;"><?php esc_html_e('No activity logs recorded yet for this booking.', 'tourivo'); ?></div>
+            <div style="text-align: center; color: #64748b; padding: 12px;"><?php esc_html_e('No activity logs recorded yet for this booking.', 'the-readscope-tour-and-accommodation-booking'); ?></div>
         <?php endif;
 
         $html = ob_get_clean() ?: '';
@@ -866,39 +870,48 @@ class AdminServiceProvider extends ServiceProvider
         check_ajax_referer('tourivo_timeline_nonce', 'nonce');
 
         if (!current_user_can('manage_tourivo_bookings')) {
-            wp_send_json_error(['message' => __('Unauthorized access.', 'tourivo')], 403);
+            wp_send_json_error(['message' => __('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
         $bookingId = isset($_POST['booking_id']) ? absint($_POST['booking_id']) : 0;
         $note      = isset($_POST['note']) ? sanitize_textarea_field(wp_unslash($_POST['note'])) : '';
 
         if ($bookingId <= 0 || empty($note)) {
-            wp_send_json_error(['message' => __('Note content cannot be empty.', 'tourivo')], 400);
+            wp_send_json_error(['message' => __('Note content cannot be empty.', 'the-readscope-tour-and-accommodation-booking')], 400);
         }
 
         $logId = LogService::log($bookingId, 'internal_note', $note, get_current_user_id());
 
         if ($logId > 0) {
-            wp_send_json_success(['message' => __('Internal note added successfully.', 'tourivo')]);
+            wp_send_json_success(['message' => __('Internal note added successfully.', 'the-readscope-tour-and-accommodation-booking')]);
         } else {
-            wp_send_json_error(['message' => __('Failed to record note.', 'tourivo')]);
+            wp_send_json_error(['message' => __('Failed to record note.', 'the-readscope-tour-and-accommodation-booking')]);
         }
     }
 
     /**
      * Handle public and admin printable booking voucher rendering.
      *
+     * Two ways in, checked in order:
+     * 1. Customers (emailed or shared links, usually logged out): a capability URL authenticated by the
+     *    HMAC token. A nonce cannot work here, it expires and is tied to a user session.
+     * 2. Staff with manage_tourivo_bookings: the link built in BookingsTable carries a nonce
+     *    (_tourivo_nonce, action tourivo_voucher_{code}). A capability alone is not enough.
+     * A missing or wrong token never falls through to the staff path unless the nonce is valid.
+     *
      * @return void
      */
     public function handlePrintVoucher(): void
     {
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- capability URL authenticated by HMAC token; staff path verifies nonce below.
         $code  = isset($_GET['code']) ? strtoupper(sanitize_text_field(wp_unslash((string) $_GET['code']))) : '';
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- capability URL authenticated by HMAC token; staff path verifies nonce below.
         $token = isset($_GET['token']) ? sanitize_text_field(wp_unslash((string) $_GET['token'])) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- value is passed to wp_verify_nonce() below.
+        $nonce = isset($_GET['_tourivo_nonce']) ? sanitize_text_field(wp_unslash((string) $_GET['_tourivo_nonce'])) : '';
 
         if (empty($code)) {
-            wp_die(esc_html__('Invalid or missing booking reference code.', 'tourivo'), 400);
+            wp_die(esc_html__('Invalid or missing booking reference code.', 'the-readscope-tour-and-accommodation-booking'), 400);
         }
 
         global $wpdb;
@@ -912,16 +925,22 @@ class AdminServiceProvider extends ServiceProvider
         ));
 
         if (!$tourivoBooking) {
-            wp_die(esc_html__('Booking not found.', 'tourivo'), 404);
+            wp_die(esc_html__('Booking not found.', 'the-readscope-tour-and-accommodation-booking'), 404);
         }
 
-        // Security verification: Either valid HMAC token OR logged-in administrator with capability
+        // Authorization: valid HMAC token, or staff capability plus a valid nonce. Explicit sequential checks.
         $expectedToken = BookingLookupShortcode::generateVoucherToken((int) $tourivoBooking->id, (string) $tourivoBooking->customer_email, $tourivoBooking->access_key ?? null);
-        $hasValidToken = hash_equals($expectedToken, $token);
-        $isAdmin       = current_user_can('manage_tourivo_bookings');
+        $authorized    = false;
+        if ($token !== '' && hash_equals($expectedToken, $token)) {
+            $authorized = true;
+        } elseif (current_user_can('manage_tourivo_bookings')) {
+            if ($nonce !== '' && wp_verify_nonce($nonce, 'tourivo_voucher_' . $code)) {
+                $authorized = true;
+            }
+        }
 
-        if (!$hasValidToken && !$isAdmin) {
-            wp_die(esc_html__('Access denied. Invalid voucher security token.', 'tourivo'), 403);
+        if (!$authorized) {
+            wp_die(esc_html__('Access denied. Invalid voucher security token.', 'the-readscope-tour-and-accommodation-booking'), 403);
         }
 
         $tourivoItems = (array) $wpdb->get_results($wpdb->prepare(
@@ -940,17 +959,23 @@ class AdminServiceProvider extends ServiceProvider
     /**
      * Handle iCalendar (.ics) download for bookings.
      *
+     * Customers use emailed or shared capability URLs authenticated by the HMAC token (thank-you or voucher
+     * token); a nonce cannot work there, it expires and is tied to a user session. Staff with
+     * manage_tourivo_bookings must send a valid nonce (_tourivo_nonce, action tourivo_ics_{code}).
+     *
      * @return void
      */
     public function handleDownloadIcs(): void
     {
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- capability URL authenticated by HMAC token; staff path verifies nonce below.
         $code  = isset($_GET['code']) ? strtoupper(sanitize_text_field(wp_unslash((string) $_GET['code']))) : '';
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- capability URL authenticated by HMAC token; staff path verifies nonce below.
         $token = isset($_GET['token']) ? sanitize_text_field(wp_unslash((string) $_GET['token'])) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- value is passed to wp_verify_nonce() below.
+        $nonce = isset($_GET['_tourivo_nonce']) ? sanitize_text_field(wp_unslash((string) $_GET['_tourivo_nonce'])) : '';
 
         if (empty($code)) {
-            wp_die(esc_html__('Invalid or missing booking reference code.', 'tourivo'), 400);
+            wp_die(esc_html__('Invalid or missing booking reference code.', 'the-readscope-tour-and-accommodation-booking'), 400);
         }
 
         global $wpdb;
@@ -964,22 +989,29 @@ class AdminServiceProvider extends ServiceProvider
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         if (!$tourivoBooking) {
-            wp_die(esc_html__('Booking not found.', 'tourivo'), 404);
+            wp_die(esc_html__('Booking not found.', 'the-readscope-tour-and-accommodation-booking'), 404);
         }
 
         $bookingId            = (int) $tourivoBooking->id;
-        $isValidThankYou      = ThankYouShortcode::verifyThankYouToken($bookingId, $token);
         $expectedVoucherToken = BookingLookupShortcode::generateVoucherToken($bookingId, (string) $tourivoBooking->customer_email, $tourivoBooking->access_key ?? null);
-        $isValidVoucher       = hash_equals($expectedVoucherToken, $token);
-        $isAdmin              = current_user_can('manage_tourivo_bookings');
+        $authorized           = false;
+        if ($token !== '' && ThankYouShortcode::verifyThankYouToken($bookingId, $token)) {
+            $authorized = true;
+        } elseif ($token !== '' && hash_equals($expectedVoucherToken, $token)) {
+            $authorized = true;
+        } elseif (current_user_can('manage_tourivo_bookings')) {
+            if ($nonce !== '' && wp_verify_nonce($nonce, 'tourivo_ics_' . $code)) {
+                $authorized = true;
+            }
+        }
 
-        if (!$isValidThankYou && !$isValidVoucher && !$isAdmin) {
-            wp_die(esc_html__('Access denied. Invalid calendar security token.', 'tourivo'), 403);
+        if (!$authorized) {
+            wp_die(esc_html__('Access denied. Invalid calendar security token.', 'the-readscope-tour-and-accommodation-booking'), 403);
         }
 
         $ics = ThankYouShortcode::generateIcsContent($bookingId);
         if (empty($ics)) {
-            wp_die(esc_html__('Could not generate calendar file.', 'tourivo'), 500);
+            wp_die(esc_html__('Could not generate calendar file.', 'the-readscope-tour-and-accommodation-booking'), 500);
         }
 
         $filename = 'booking-' . sanitize_file_name((string) $tourivoBooking->booking_code) . '.ics';
@@ -1014,7 +1046,7 @@ class AdminServiceProvider extends ServiceProvider
         ];
 
         if (!isset($postTypes[$itemType]) || get_post_type($itemId) !== $postTypes[$itemType] || !current_user_can('edit_post', $itemId)) {
-            wp_send_json_error(['message' => __('Unauthorized permission.', 'tourivo')], 403);
+            wp_send_json_error(['message' => __('Unauthorized permission.', 'the-readscope-tour-and-accommodation-booking')], 403);
             return false;
         }
 
@@ -1037,7 +1069,7 @@ class AdminServiceProvider extends ServiceProvider
         $timeSlot = isset($_POST['time_slot']) ? sanitize_text_field(wp_unslash($_POST['time_slot'])) : 'all_day';
 
         if ($itemId <= 0) {
-            wp_send_json_error(['message' => __('Invalid item ID.', 'tourivo')], 400);
+            wp_send_json_error(['message' => __('Invalid item ID.', 'the-readscope-tour-and-accommodation-booking')], 400);
         }
 
         if (!$this->authorizeInventoryItem($itemId, $itemType)) {
@@ -1076,7 +1108,7 @@ class AdminServiceProvider extends ServiceProvider
         $force     = !empty($_POST['force']) && ($_POST['force'] === '1' || $_POST['force'] === 'true' || $_POST['force'] === true);
 
         if ($itemId <= 0 || empty($startDate)) {
-            wp_send_json_error(['message' => __('Please provide a valid item ID and date.', 'tourivo')], 400);
+            wp_send_json_error(['message' => __('Please provide a valid item ID and date.', 'the-readscope-tour-and-accommodation-booking')], 400);
         }
 
         if (!$this->authorizeInventoryItem($itemId, $itemType)) {
@@ -1109,7 +1141,7 @@ class AdminServiceProvider extends ServiceProvider
         if (!empty($result['success'])) {
             wp_send_json_success($result);
         } else {
-            wp_send_json_error(['message' => $result['message'] ?? __('Failed to update availability.', 'tourivo')], 400);
+            wp_send_json_error(['message' => $result['message'] ?? __('Failed to update availability.', 'the-readscope-tour-and-accommodation-booking')], 400);
         }
     }
 
@@ -1123,7 +1155,7 @@ class AdminServiceProvider extends ServiceProvider
         check_ajax_referer('tourivo_admin_nonce', 'nonce');
 
         if (!current_user_can('manage_tourivo_settings')) {
-            wp_send_json_error(['message' => __('Unauthorized permission.', 'tourivo')], 403);
+            wp_send_json_error(['message' => __('Unauthorized permission.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
         $counts = \Tourivo\Services\PrivacyService::getRetentionDryRunCounts();
@@ -1168,12 +1200,12 @@ class AdminServiceProvider extends ServiceProvider
         check_ajax_referer('tourivo_admin_nonce', 'nonce');
 
         if (!current_user_can('manage_tourivo_bookings')) {
-            wp_send_json_error(['message' => __('Unauthorized permission to record payments.', 'tourivo')], 403);
+            wp_send_json_error(['message' => __('Unauthorized permission to record payments.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
         $bookingId = absint($_POST['booking_id'] ?? 0);
         if ($bookingId <= 0) {
-            wp_send_json_error(['message' => __('Invalid booking ID.', 'tourivo')], 400);
+            wp_send_json_error(['message' => __('Invalid booking ID.', 'the-readscope-tour-and-accommodation-booking')], 400);
         }
 
         /** @var PaymentService $paymentService */
@@ -1206,7 +1238,7 @@ class AdminServiceProvider extends ServiceProvider
             || check_ajax_referer('tourivo_admin_nonce', 'nonce', false);
 
         if (!$verified) {
-            wp_send_json_error(['message' => __('Security verification failed. Please refresh the page.', 'tourivo')], 403);
+            wp_send_json_error(['message' => __('Security verification failed. Please refresh the page.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
         $bookingCode   = sanitize_text_field(wp_unslash($_POST['booking_code'] ?? ''));

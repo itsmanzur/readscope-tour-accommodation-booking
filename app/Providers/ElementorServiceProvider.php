@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class ElementorServiceProvider
  *
- * Hooks Tourivo into Elementor categories and widgets initialization.
+ * Hooks Readscope Booking into Elementor categories and widgets initialization.
  *
  * @package Tourivo\Providers
  */

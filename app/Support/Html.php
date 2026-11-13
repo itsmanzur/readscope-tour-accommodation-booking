@@ -9,7 +9,7 @@ if (!defined('ABSPATH')) {
 }
 
 /**
- * Prints markup that Tourivo builds from its own templates (search bar, listing cards).
+ * Prints markup that Readscope Booking builds from its own templates (search bar, listing cards).
  *
  * The markup is run through wp_kses() with a list that includes the form controls these templates use,
  * which wp_kses_post() would strip. Cards set `--trv-*` CSS custom properties in `style`; those are
@@ -108,5 +108,100 @@ final class Html
         $tags['legend']    = $global;
 
         return $tags;
+    }
+
+    /**
+     * wp_kses() allowlist for the body of an HTML email.
+     *
+     * Mail clients need inline `style` attributes and old-school table attributes, which wp_kses_post()
+     * would partly strip. Scripts, event handlers, forms and embeds are not in the list.
+     *
+     * @return array<string, array<string, bool>>
+     */
+    public static function emailAllowedHtml(): array
+    {
+        $global = [
+            'style'  => true,
+            'class'  => true,
+            'id'     => true,
+            'title'  => true,
+            'role'   => true,
+            'dir'    => true,
+            'lang'   => true,
+            'align'  => true,
+            'width'  => true,
+            'height' => true,
+        ];
+        $cell = [
+            'valign'  => true,
+            'bgcolor' => true,
+            'colspan' => true,
+            'rowspan' => true,
+            'scope'   => true,
+            'nowrap'  => true,
+        ];
+
+        $tags = [];
+        foreach (['p', 'div', 'span', 'strong', 'b', 'em', 'i', 'u', 'br', 'hr', 'h1', 'h2', 'h3', 'h4', 'ul', 'ol', 'li', 'blockquote', 'small', 'center', 'thead', 'tbody', 'tfoot'] as $tag) {
+            $tags[$tag] = $global;
+        }
+
+        $tags['a']     = $global + ['href' => true, 'target' => true, 'rel' => true];
+        $tags['img']   = $global + ['src' => true, 'alt' => true, 'border' => true];
+        $tags['table'] = $global + ['cellpadding' => true, 'cellspacing' => true, 'border' => true, 'bgcolor' => true, 'valign' => true];
+        $tags['tr']    = $global + ['valign' => true, 'bgcolor' => true];
+        $tags['th']    = $global + $cell;
+        $tags['td']    = $global + $cell;
+
+        return $tags;
+    }
+
+    /**
+     * Inline CSS properties email templates use that WordPress' default `safe_style_css` list leaves out.
+     *
+     * Hooked on `safe_style_css` only while an email body is filtered, then removed again.
+     *
+     * @param mixed $properties Allowed CSS property names.
+     * @return array<int, string>
+     */
+    public static function emailSafeCss($properties): array
+    {
+        $properties = is_array($properties) ? $properties : [];
+
+        return array_values(array_unique(array_merge($properties, [
+            'display',
+            'border-radius',
+            'line-height',
+            'text-decoration',
+            'text-transform',
+            'letter-spacing',
+            'max-width',
+            'min-width',
+            'border-collapse',
+            'border-spacing',
+            'vertical-align',
+            'word-break',
+            'word-wrap',
+            'overflow-wrap',
+            'white-space',
+            'box-shadow',
+            'opacity',
+            'table-layout',
+        ])));
+    }
+
+    /**
+     * Filter an email body for output: wp_kses() with the email allowlist and the email CSS properties.
+     *
+     * @param string $html Email body built from the plugin's email templates.
+     * @return string
+     */
+    public static function emailBody(string $html): string
+    {
+        add_filter('safe_style_css', [self::class, 'emailSafeCss']);
+        $clean = wp_kses($html, self::emailAllowedHtml());
+        remove_filter('safe_style_css', [self::class, 'emailSafeCss']);
+
+        return $clean;
     }
 }

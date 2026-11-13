@@ -60,7 +60,7 @@ class Config
             'default_booking_status'=> 'pending',
             'enable_reviews'        => true,
             'auto_approve_reviews'  => false,
-            'email_from_name'       => get_bloginfo('name') ?: 'Tourivo',
+            'email_from_name'       => get_bloginfo('name') ?: 'Readscope Booking',
             'email_from_address'    => $siteEmail,
             'email_notification_address' => $siteEmail,
             'primary_color'         => '#0d9488',

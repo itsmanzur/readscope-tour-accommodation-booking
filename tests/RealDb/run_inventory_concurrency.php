@@ -42,7 +42,7 @@ $create = getenv('DB_CREATE') === '1';
 $flags  = getenv('TRV_PHP_FLAGS') ? explode('|', (string) getenv('TRV_PHP_FLAGS')) : [];
 
 echo "=====================================================\n";
-echo "  Tourivo real-MySQL inventory concurrency test\n";
+echo "  Readscope Booking real-MySQL inventory concurrency test\n";
 echo "=====================================================\n";
 
 mysqli_report(MYSQLI_REPORT_OFF);

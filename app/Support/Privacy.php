@@ -81,17 +81,17 @@ class Privacy
      */
     public static function getRenderedConsentLabel(): string
     {
-        $label      = (string) Config::get('consent_label', __('I agree to the {privacy} and {terms}', 'tourivo'));
+        $label      = (string) Config::get('consent_label', __('I agree to the {privacy} and {terms}', 'the-readscope-tour-and-accommodation-booking'));
         $privacyUrl = self::getPrivacyPolicyUrl();
         $termsUrl   = self::getTermsUrl();
 
         $privacyLink = !empty($privacyUrl)
-            ? '<a href="' . esc_url($privacyUrl) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Privacy Policy', 'tourivo') . '</a>'
-            : esc_html__('Privacy Policy', 'tourivo');
+            ? '<a href="' . esc_url($privacyUrl) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Privacy Policy', 'the-readscope-tour-and-accommodation-booking') . '</a>'
+            : esc_html__('Privacy Policy', 'the-readscope-tour-and-accommodation-booking');
 
         $termsLink = !empty($termsUrl)
-            ? '<a href="' . esc_url($termsUrl) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Terms and Conditions', 'tourivo') . '</a>'
-            : esc_html__('Terms and Conditions', 'tourivo');
+            ? '<a href="' . esc_url($termsUrl) . '" target="_blank" rel="noopener noreferrer">' . esc_html__('Terms and Conditions', 'the-readscope-tour-and-accommodation-booking') . '</a>'
+            : esc_html__('Terms and Conditions', 'the-readscope-tour-and-accommodation-booking');
 
         $rendered = str_replace(
             ['{privacy}', '{terms}'],
@@ -128,7 +128,7 @@ class Privacy
     public static function registerExporter(array $exporters): array
     {
         $exporters['tourivo'] = [
-            'exporter_friendly_name' => __('Tourivo Bookings & Inquiries', 'tourivo'),
+            'exporter_friendly_name' => __('Readscope Bookings & Inquiries', 'the-readscope-tour-and-accommodation-booking'),
             'callback'               => [self::class, 'exportPersonalData'],
         ];
 
@@ -144,7 +144,7 @@ class Privacy
     public static function registerEraser(array $erasers): array
     {
         $erasers['tourivo'] = [
-            'eraser_friendly_name' => __('Tourivo Personal Data Eraser', 'tourivo'),
+            'eraser_friendly_name' => __('Readscope Personal Data Eraser', 'the-readscope-tour-and-accommodation-booking'),
             'callback'             => [self::class, 'erasePersonalData'],
         ];
 
@@ -152,7 +152,7 @@ class Privacy
     }
 
     /**
-     * Add Tourivo privacy policy suggestions to the WordPress privacy guide.
+     * Add Readscope Booking privacy policy suggestions to the WordPress privacy guide.
      *
      * @return void
      */
@@ -160,7 +160,7 @@ class Privacy
     {
         if (function_exists('wp_add_privacy_policy_content')) {
             wp_add_privacy_policy_content(
-                __('Tourivo', 'tourivo'),
+                __('Readscope Booking', 'the-readscope-tour-and-accommodation-booking'),
                 wp_kses_post(self::getPrivacyPolicyContent())
             );
         }
@@ -176,29 +176,29 @@ class Privacy
         $webhookUrl = trim((string) Config::get('webhook_url', ''));
 
         $output = '<div class="wp-suggested-text">';
-        $output .= '<h3>' . esc_html__('Personal Data Collected by Tourivo', 'tourivo') . '</h3>';
-        $output .= '<p>' . esc_html__('When travelers book a tour or submit a trip inquiry through Tourivo, we collect the following personal information: customer name, email address, phone number, billing address, and special customer requests. If IP address collection is enabled, IP addresses are logged alongside bookings for fraud detection and security auditing.', 'tourivo') . '</p>';
+        $output .= '<h3>' . esc_html__('Personal Data Collected by Readscope Booking', 'the-readscope-tour-and-accommodation-booking') . '</h3>';
+        $output .= '<p>' . esc_html__('When travelers book a tour or submit a trip inquiry through Readscope Booking, we collect the following personal information: customer name, email address, phone number, billing address, and special customer requests. If IP address collection is enabled, IP addresses are logged alongside bookings for fraud detection and security auditing.', 'the-readscope-tour-and-accommodation-booking') . '</p>';
 
-        $output .= '<h3>' . esc_html__('Purpose of Data Processing', 'tourivo') . '</h3>';
-        $output .= '<p>' . esc_html__('Personal data is collected strictly to process travel reservations, coordinate room and tour availability, verify customer identity for booking lookups, generate booking vouchers and invoices, and deliver booking confirmation and reminder emails.', 'tourivo') . '</p>';
+        $output .= '<h3>' . esc_html__('Purpose of Data Processing', 'the-readscope-tour-and-accommodation-booking') . '</h3>';
+        $output .= '<p>' . esc_html__('Personal data is collected strictly to process travel reservations, coordinate room and tour availability, verify customer identity for booking lookups, generate booking vouchers and invoices, and deliver booking confirmation and reminder emails.', 'the-readscope-tour-and-accommodation-booking') . '</p>';
 
-        $output .= '<h3>' . esc_html__('Data Retention & Anonymization', 'tourivo') . '</h3>';
-        $output .= '<p>' . esc_html__('Booking financial records (order totals, taxes, and line items) are retained for statutory accounting. When an erasure request is executed or retention schedules expire, personal identifiers (name, email, phone, billing address, notes, payment references, and IP address) are permanently erased, and voucher links are revoked.', 'tourivo') . '</p>';
+        $output .= '<h3>' . esc_html__('Data Retention & Anonymization', 'the-readscope-tour-and-accommodation-booking') . '</h3>';
+        $output .= '<p>' . esc_html__('Booking financial records (order totals, taxes, and line items) are retained for statutory accounting. When an erasure request is executed or retention schedules expire, personal identifiers (name, email, phone, billing address, notes, payment references, and IP address) are permanently erased, and voucher links are revoked.', 'the-readscope-tour-and-accommodation-booking') . '</p>';
 
-        $output .= '<h3>' . esc_html__('Cookies & Local Browser Storage', 'tourivo') . '</h3>';
-        $output .= '<p>' . esc_html__('Tourivo utilizes browser local storage (localStorage) exclusively for client-side user experience enhancements, including favorite wishlist tours and selected currency preferences. No sensitive personal information is stored in client cookies.', 'tourivo') . '</p>';
+        $output .= '<h3>' . esc_html__('Cookies & Local Browser Storage', 'the-readscope-tour-and-accommodation-booking') . '</h3>';
+        $output .= '<p>' . esc_html__('Readscope Booking utilizes browser local storage (localStorage) exclusively for client-side user experience enhancements, including favorite wishlist tours and selected currency preferences. No sensitive personal information is stored in client cookies.', 'the-readscope-tour-and-accommodation-booking') . '</p>';
 
-        $output .= '<h3>' . esc_html__('Security & Rate Limiting', 'tourivo') . '</h3>';
-        $output .= '<p>' . esc_html__('To protect our booking endpoints against spam, automated abuse, and brute-force attempts, Tourivo stores transient cryptographic hash representations of client IP addresses. These security transients expire automatically within short windows (10 minutes).', 'tourivo') . '</p>';
+        $output .= '<h3>' . esc_html__('Security & Rate Limiting', 'the-readscope-tour-and-accommodation-booking') . '</h3>';
+        $output .= '<p>' . esc_html__('To protect our booking endpoints against spam, automated abuse, and brute-force attempts, Readscope Booking stores transient cryptographic hash representations of client IP addresses. These security transients expire automatically within short windows (10 minutes).', 'the-readscope-tour-and-accommodation-booking') . '</p>';
 
         if (!empty($webhookUrl)) {
             $parsedHost = wp_parse_url($webhookUrl, PHP_URL_HOST);
             $targetHost = $parsedHost ? esc_html($parsedHost) : esc_html($webhookUrl);
 
-            $output .= '<h3>' . esc_html__('External Webhook Automations', 'tourivo') . '</h3>';
+            $output .= '<h3>' . esc_html__('External Webhook Automations', 'the-readscope-tour-and-accommodation-booking') . '</h3>';
             $output .= '<p>' . sprintf(
                 /* translators: 1: webhook endpoint domain */
-                esc_html__('This site is configured to transmit booking and inquiry event payloads to an external automated endpoint (%1$s) via secure HTTPS webhooks for third-party CRM and calendar synchronization.', 'tourivo'),
+                esc_html__('This site is configured to transmit booking and inquiry event payloads to an external automated endpoint (%1$s) via secure HTTPS webhooks for third-party CRM and calendar synchronization.', 'the-readscope-tour-and-accommodation-booking'),
                 esc_url($webhookUrl)
             ) . '</p>';
         }
@@ -263,10 +263,10 @@ class Privacy
                         $dates .= ' – ' . substr((string) $line->check_out, 0, 10);
                     }
                     $bookedItems[] = [
-                        'name'  => __('Booked Item', 'tourivo'),
+                        'name'  => __('Booked Item', 'the-readscope-tour-and-accommodation-booking'),
                         'value' => sprintf(
                             /* translators: 1: Item title, 2: Dates, 3: Adults, 4: Children, 5: Infants */
-                            __('%1$s (%2$s) — adults: %3$d, children: %4$d, infants: %5$d', 'tourivo'),
+                            __('%1$s (%2$s) — adults: %3$d, children: %4$d, infants: %5$d', 'the-readscope-tour-and-accommodation-booking'),
                             (string) ($line->item_title ?? ''),
                             $dates,
                             (int) ($line->adults_count ?? 0),
@@ -278,21 +278,21 @@ class Privacy
 
                 $data[] = [
                     'group_id'    => 'tourivo-bookings',
-                    'group_label' => __('Tourivo Bookings', 'tourivo'),
+                    'group_label' => __('Readscope Bookings', 'the-readscope-tour-and-accommodation-booking'),
                     'item_id'     => 'tourivo-booking-' . $booking->id,
                     'data'        => array_merge([
-                        ['name' => __('Booking Code', 'tourivo'), 'value' => (string) ($booking->booking_code ?? '')],
-                        ['name' => __('Customer Name', 'tourivo'), 'value' => (string) ($booking->customer_name ?? '')],
-                        ['name' => __('Email Address', 'tourivo'), 'value' => (string) ($booking->customer_email ?? '')],
-                        ['name' => __('Phone Number', 'tourivo'), 'value' => (string) ($booking->customer_phone ?? '')],
-                        ['name' => __('Billing Address', 'tourivo'), 'value' => (string) ($booking->billing_address ?? '')],
-                        ['name' => __('Total Amount', 'tourivo'), 'value' => (string) ($booking->total_amount ?? '0.00') . ' ' . (string) ($booking->currency ?? 'USD')],
-                        ['name' => __('Booking Status', 'tourivo'), 'value' => (string) ($booking->booking_status ?? '')],
-                        ['name' => __('Payment Status', 'tourivo'), 'value' => (string) ($booking->payment_status ?? '')],
-                        ['name' => __('Customer Notes', 'tourivo'), 'value' => (string) ($booking->customer_notes ?? '')],
-                        ['name' => __('IP Address', 'tourivo'), 'value' => (string) ($booking->ip_address ?? '')],
-                        ['name' => __('Consent Given At', 'tourivo'), 'value' => (string) ($booking->consent_at ?? '')],
-                        ['name' => __('Created Date', 'tourivo'), 'value' => (string) ($booking->created_at ?? '')],
+                        ['name' => __('Booking Code', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($booking->booking_code ?? '')],
+                        ['name' => __('Customer Name', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($booking->customer_name ?? '')],
+                        ['name' => __('Email Address', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($booking->customer_email ?? '')],
+                        ['name' => __('Phone Number', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($booking->customer_phone ?? '')],
+                        ['name' => __('Billing Address', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($booking->billing_address ?? '')],
+                        ['name' => __('Total Amount', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($booking->total_amount ?? '0.00') . ' ' . (string) ($booking->currency ?? 'USD')],
+                        ['name' => __('Booking Status', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($booking->booking_status ?? '')],
+                        ['name' => __('Payment Status', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($booking->payment_status ?? '')],
+                        ['name' => __('Customer Notes', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($booking->customer_notes ?? '')],
+                        ['name' => __('IP Address', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($booking->ip_address ?? '')],
+                        ['name' => __('Consent Given At', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($booking->consent_at ?? '')],
+                        ['name' => __('Created Date', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($booking->created_at ?? '')],
                     ], $bookedItems),
                 ];
             }
@@ -313,16 +313,16 @@ class Privacy
             foreach ($inquiries as $inquiry) {
                 $data[] = [
                     'group_id'    => 'tourivo-inquiries',
-                    'group_label' => __('Tourivo Inquiries', 'tourivo'),
+                    'group_label' => __('Readscope Inquiries', 'the-readscope-tour-and-accommodation-booking'),
                     'item_id'     => 'tourivo-inquiry-' . $inquiry->id,
                     'data'        => [
-                        ['name' => __('Inquirer Name', 'tourivo'), 'value' => (string) ($inquiry->customer_name ?? '')],
-                        ['name' => __('Email Address', 'tourivo'), 'value' => (string) ($inquiry->customer_email ?? '')],
-                        ['name' => __('Phone Number', 'tourivo'), 'value' => (string) ($inquiry->customer_phone ?? '')],
-                        ['name' => __('Message', 'tourivo'), 'value' => (string) ($inquiry->message ?? '')],
-                        ['name' => __('IP Address', 'tourivo'), 'value' => (string) ($inquiry->ip_address ?? '')],
-                        ['name' => __('Consent Given At', 'tourivo'), 'value' => (string) ($inquiry->consent_at ?? '')],
-                        ['name' => __('Submitted At', 'tourivo'), 'value' => (string) ($inquiry->created_at ?? '')],
+                        ['name' => __('Inquirer Name', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($inquiry->customer_name ?? '')],
+                        ['name' => __('Email Address', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($inquiry->customer_email ?? '')],
+                        ['name' => __('Phone Number', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($inquiry->customer_phone ?? '')],
+                        ['name' => __('Message', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($inquiry->message ?? '')],
+                        ['name' => __('IP Address', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($inquiry->ip_address ?? '')],
+                        ['name' => __('Consent Given At', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($inquiry->consent_at ?? '')],
+                        ['name' => __('Submitted At', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($inquiry->created_at ?? '')],
                     ],
                 ];
             }
@@ -424,7 +424,7 @@ class Privacy
 
         $messages = [];
         if ($anonymizedCount > 0) {
-            $messages[] = __('Financial booking records have been anonymized and retained for legal and tax accounting obligations.', 'tourivo');
+            $messages[] = __('Financial booking records have been anonymized and retained for legal and tax accounting obligations.', 'the-readscope-tour-and-accommodation-booking');
         }
 
         return [

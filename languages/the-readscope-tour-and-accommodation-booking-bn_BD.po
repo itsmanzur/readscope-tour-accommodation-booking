@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Tourivo 1.0.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/tourivo\n"
+"Project-Id-Version: The Readscope Tour and Accommodation Booking 1.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/the-readscope-tour-and-accommodation-booking\n"
 "Last-Translator: itsmanzur\n"
 "Language-Team: Bengali\n"
 "MIME-Version: 1.0\n"
@@ -11,6 +11,7 @@ msgstr ""
 "PO-Revision-Date: 2026-10-05 03:27+0000\n"
 "Language: bn_BD\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Domain: the-readscope-tour-and-accommodation-booking\n"
 
 #. translators: %d: Quantity of travelers
 #: app/Admin/BookingsTable.php:215
@@ -277,7 +278,6 @@ msgid "Admin Manual Booking Creator"
 msgstr "অ্যাডমিন ম্যানুয়াল বুকিং ক্রিয়েটর"
 
 #: templates/emails/admin-new-booking.php:86
-#: templates/emails/booking-confirmation.php:97
 #: templates/emails/customer-booking-confirmed.php:77
 #: templates/emails/customer-booking-received.php:76
 #: templates/emails/customer-trip-reminder.php:83
@@ -365,7 +365,6 @@ msgid "All Tours Grid (3 Columns)"
 msgstr "সকল ট্যুর গ্রিড (৩ কলাম)"
 
 #: templates/emails/base-layout.php:172
-#: templates/emails/booking-confirmation.php:143
 msgid "All rights reserved."
 msgstr "সর্বস্বত্ব সংরক্ষিত।"
 
@@ -523,16 +522,10 @@ msgstr "বুকিং কোড"
 #: app/Admin/DocumentationPage.php:517
 #: templates/emails/admin-booking-cancelled.php:49
 #: templates/emails/admin-new-booking.php:48
-#: templates/emails/booking-confirmation.php:73
 msgid "Booking Code:"
 msgstr "বুকিং কোড:"
 
-#: templates/emails/booking-confirmation.php:24
-msgid "Booking Confirmation"
-msgstr "বুকিং নিশ্চিতকরণ"
-
 #: app/Services/EmailService.php:675
-#: templates/emails/booking-confirmation.php:51
 #: templates/emails/customer-booking-confirmed.php:47
 msgid "Booking Confirmed!"
 msgstr "বুকিং নিশ্চিত হয়েছে!"
@@ -691,7 +684,6 @@ msgid "Check-in Date *"
 msgstr "চেক-ইন তারিখ *"
 
 #: templates/emails/admin-new-booking.php:73
-#: templates/emails/booking-confirmation.php:84
 #: templates/emails/customer-booking-confirmed.php:64
 #: templates/emails/customer-booking-received.php:63
 #: templates/emails/customer-trip-reminder.php:70
@@ -716,7 +708,6 @@ msgid "Check-out Date (For Rooms)"
 msgstr "চেক-আউট তারিখ (রুমের জন্য)"
 
 #: templates/emails/admin-new-booking.php:79
-#: templates/emails/booking-confirmation.php:90
 #: templates/emails/customer-booking-confirmed.php:70
 #: templates/emails/customer-booking-received.php:69
 #: templates/emails/customer-trip-reminder.php:76
@@ -724,7 +715,6 @@ msgid "Check-out Date:"
 msgstr "চেক-আউট তারিখ:"
 
 #: templates/emails/admin-new-booking.php:88
-#: templates/emails/booking-confirmation.php:99
 #: templates/emails/customer-booking-confirmed.php:79
 #: templates/emails/customer-booking-received.php:78
 #: templates/emails/customer-trip-reminder.php:85
@@ -740,8 +730,8 @@ msgid "Children"
 msgstr "শিশু"
 
 #: app/Admin/SettingsPage.php:622
-msgid "Choose whether Tourivo displays in English or Bengali across the admin panel, booking forms, vouchers, and notifications."
-msgstr "অ্যাডমিন প্যানেল, বুকিং ফর্ম, ভাউচার এবং বিজ্ঞপ্তিতে ট্যুরিতো ইংরেজি নাকি বাংলায় প্রদর্শিত হবে তা বেছে নিন।"
+msgid "Choose whether Readscope Booking displays in English or Bengali across the admin panel, booking forms, vouchers, and notifications."
+msgstr "অ্যাডমিন প্যানেল, বুকিং ফর্ম, ভাউচার এবং বিজ্ঞপ্তিতে রিডস্কোপ বুকিং ইংরেজি নাকি বাংলায় প্রদর্শিত হবে তা বেছে নিন।"
 
 #: app/Providers/MetaBoxServiceProvider.php:206
 msgid "City"
@@ -845,10 +835,6 @@ msgstr "সংযোগ ত্রুটি। অনুগ্রহ করে �
 #: views/admin/metaboxes/hotel-metabox.php:87
 msgid "Contact Phone / WhatsApp"
 msgstr "যোগাযোগ ফোন / হোয়াটসঅ্যাপ"
-
-#: templates/emails/booking-confirmation.php:108
-msgid "Contact Phone:"
-msgstr "যোগাযোগের ফোন:"
 
 #: app/Admin/SetupWizard.php:127
 #: app/Admin/SetupWizard.php:627
@@ -1330,8 +1316,8 @@ msgid "Explore our exciting tour packages and luxury hotels, and click the heart
 msgstr "আমাদের আকর্ষণীয় ট্যুর ও বিলাসবহুল হোটেলগুলো দেখুন এবং পছন্দের তালিকায় যুক্ত করতে হার্ট আইকনে ক্লিক করুন!"
 
 #: app/Admin/DocumentationPage.php:140
-msgid "Explore the complete roster of features engineered into Tourivo to power modern travel agencies, tour operators, and boutique hoteliers."
-msgstr "আধুনিক ট্রাভেল এজেন্সি, ট্যুর অপারেটর এবং বুটিক হোটেল পরিচালনার জন্য ট্যুরিতোতে তৈরি চমৎকার ফিচারগুলো দেখুন।"
+msgid "Explore the complete roster of features engineered into Readscope Booking to power modern travel agencies, tour operators, and boutique hoteliers."
+msgstr "আধুনিক ট্রাভেল এজেন্সি, ট্যুর অপারেটর এবং বুটিক হোটেল পরিচালনার জন্য রিডস্কোপ বুকিংয়ে তৈরি চমৎকার ফিচারগুলো দেখুন।"
 
 #: app/Admin/DocumentationPage.php:618
 msgid "Export and auto-import iCal feeds to sync hotel room availability with Airbnb, Booking.com, VRBO, and Google Calendar."
@@ -1515,16 +1501,12 @@ msgid "Go to Rooms -> Add New Room:"
 msgstr "রুম -> নতুন রুম যোগ করুন-এ যান:"
 
 #: app/Admin/DocumentationPage.php:101
-msgid "Go to Tourivo -> Settings. Select your currency code (e.g. USD $, EUR €, BDT ৳), symbol position, and sender email."
-msgstr "ট্যুরিতো -> সেটিংস-এ যান। আপনার মুদ্রার কোড (যেমন USD $, EUR €, BDT ৳), প্রতীকের অবস্থান এবং প্রেরক ইমেল নির্বাচন করুন।"
+msgid "Go to Readscope Booking -> Settings. Select your currency code (e.g. USD $, EUR €, BDT ৳), symbol position, and sender email."
+msgstr "রিডস্কোপ বুকিং -> সেটিংস-এ যান। আপনার মুদ্রার কোড (যেমন USD $, EUR €, BDT ৳), প্রতীকের অবস্থান এবং প্রেরক ইমেল নির্বাচন করুন।"
 
 #: app/Admin/SetupWizard.php:280
-msgid "Go to Tourivo Dashboard"
-msgstr "ট্যুরিতো ড্যাশবোর্ডে যান"
-
-#: templates/emails/booking-confirmation.php:133
-msgid "Grand Total Amount"
-msgstr "সর্বমোট মূল্য"
+msgid "Go to Readscope Booking Dashboard"
+msgstr "রিডস্কোপ বুকিং ড্যাশবোর্ডে যান"
 
 #: app/Elementor/Widgets/TourGridWidget.php:56
 msgid "Grid Settings"
@@ -1555,7 +1537,6 @@ msgid "Have special requests or group questions? Send your inquiry directly to o
 msgstr "কোনো বিশেষ অনুরোধ বা গ্রুপ প্রশ্ন থাকলে সরাসরি আমাদের ভ্রমণ বিশেষজ্ঞদের পাঠান।"
 
 #. translators: %s: Customer Name
-#: templates/emails/booking-confirmation.php:61
 #: templates/emails/customer-booking-cancelled.php:32
 #: templates/emails/customer-booking-confirmed.php:36
 #: templates/emails/customer-booking-received.php:35
@@ -1647,10 +1628,6 @@ msgstr "ভ্রমণকারীরা কীভাবে আপনার হ
 #: app/Admin/DocumentationPage.php:281
 msgid "How to Create & Configure Tour Packages"
 msgstr "কীভাবে ট্যুর প্যাকেজ তৈরি ও কনফিগার করবেন"
-
-#: templates/emails/booking-confirmation.php:138
-msgid "If you have questions about your itinerary or need to make adjustments, please reply directly to this email."
-msgstr "আপনার ভ্রমণসূচি নিয়ে কোনো প্রশ্ন থাকলে বা পরিবর্তন করতে চাইলে এই ইমেইলে সরাসরি উত্তর দিন।"
 
 #: app/Admin/DocumentationPage.php:483
 msgid "If you use Elementor, simply open the Elementor editor and search for \"Tourivo\" in the widget panel. You will find:"
@@ -1990,8 +1967,8 @@ msgid "Map Longitude (GPS)"
 msgstr "ম্যাপ দ্রাঘিমাংশ (Longitude)"
 
 #: app/Admin/SettingsPage.php:735
-msgid "Match Tourivo booking widgets, cards, and buttons with your active WordPress theme styling."
-msgstr "ট্যুরিতোর বুকিং উইজেট, কার্ড ও বাটনগুলোকে আপনার ওয়ার্ডপ্রেস থিমের রঙের সাথে মানানসই করুন।"
+msgid "Match Readscope Booking booking widgets, cards, and buttons with your active WordPress theme styling."
+msgstr "রিডস্কোপ বুকিংয়ের বুকিং উইজেট, কার্ড ও বাটনগুলোকে আপনার ওয়ার্ডপ্রেস থিমের রঙের সাথে মানানসই করুন।"
 
 #: views/admin/metaboxes/room-metabox.php:67
 msgid "Max Adults"
@@ -2067,8 +2044,8 @@ msgid "Name:"
 msgstr "নাম:"
 
 #: app/Admin/DocumentationPage.php:283
-msgid "Navigate to Tours -> Add New Tour in your WordPress admin menu. Tourivo uses a structured tabbed interface:"
-msgstr "আপনার ওয়ার্ডপ্রেস অ্যাডমিন মেনু থেকে ট্যুর -> নতুন ট্যুর যোগ করুন-এ যান। ট্যুরিতো একটি গোছানো ট্যাব ইন্টারফেস ব্যবহার করে:"
+msgid "Navigate to Tours -> Add New Tour in your WordPress admin menu. Readscope Booking uses a structured tabbed interface:"
+msgstr "আপনার ওয়ার্ডপ্রেস অ্যাডমিন মেনু থেকে ট্যুর -> নতুন ট্যুর যোগ করুন-এ যান। রিডস্কোপ বুকিং একটি গোছানো ট্যাব ইন্টারফেস ব্যবহার করে:"
 
 #: app/Admin/SettingsPage.php:1223
 msgid "Need to regenerate core pages, re-configure currency, or re-import sample demo tours and boutique hotels?"
@@ -2201,12 +2178,12 @@ msgid "Open Settings"
 msgstr "সেটিংস খুলুন"
 
 #: app/Admin/DocumentationPage.php:515
-msgid "Open Tourivo -> Bookings:"
-msgstr "ট্যুরিতো -> বুকিংস-এ যান:"
+msgid "Open Readscope Booking -> Bookings:"
+msgstr "রিডস্কোপ বুকিং -> বুকিংস-এ যান:"
 
 #: app/Admin/DocumentationPage.php:526
-msgid "Open Tourivo -> Inquiries:"
-msgstr "ট্যুরিতো -> ইনকোয়ারিজ-এ যান:"
+msgid "Open Readscope Booking -> Inquiries:"
+msgstr "রিডস্কোপ বুকিং -> ইনকোয়ারিজ-এ যান:"
 
 #: app/Admin/SettingsPage.php:807
 msgid "OpenGraph & Twitter Cards"
@@ -2270,8 +2247,8 @@ msgid "Passenger Caps:"
 msgstr "যাত্রী ধারণক্ষমতা:"
 
 #: app/Admin/DocumentationPage.php:129
-msgid "Paste shortcodes like [tourivo_tours] or [tourivo_filter_search] on any page or drag Tourivo widgets into Elementor."
-msgstr "যেকোনো পেজে [tourivo_tours] বা [tourivo_filter_search]-এর মতো শর্টকোড বসান অথবা এলিমেন্টরে ট্যুরিতো উইজেট ড্র্যাগ করুন।"
+msgid "Paste shortcodes like [tourivo_tours] or [tourivo_filter_search] on any page or drag Readscope Booking widgets into Elementor."
+msgstr "যেকোনো পেজে [tourivo_tours] বা [tourivo_filter_search]-এর মতো শর্টকোড বসান অথবা এলিমেন্টরে রিডস্কোপ বুকিং উইজেট ড্র্যাগ করুন।"
 
 #: app/Admin/BookingsTable.php:170
 #: app/Admin/BookingsTable.php:250
@@ -2524,8 +2501,8 @@ msgid "Quick Setup & Configuration Wizard"
 msgstr "দ্রুত সেটআপ ও কনফিগারেশন উইজার্ড"
 
 #: app/Admin/AdminDashboard.php:159
-msgid "Quickly test Tourivo by importing ready-made tours (Bali, Swiss Alps, Dubai) and boutique hotels with rooms."
-msgstr "তৈরি ট্যুর (কক্সবাজার, সাজেক ভ্যালি, শ্রীমঙ্গল) এবং বুটিক হোটেল ও রুম ইমপোর্ট করে ট্যুরিতো দ্রুত পরখ করুন।"
+msgid "Quickly test Readscope Booking by importing ready-made tours (Bali, Swiss Alps, Dubai) and boutique hotels with rooms."
+msgstr "তৈরি ট্যুর (কক্সবাজার, সাজেক ভ্যালি, শ্রীমঙ্গল) এবং বুটিক হোটেল ও রুম ইমপোর্ট করে রিডস্কোপ বুকিং দ্রুত পরখ করুন।"
 
 #: app/Providers/MetaBoxServiceProvider.php:205
 msgid "Rating"
@@ -2631,8 +2608,8 @@ msgid "Rooms"
 msgstr "রুম / কক্ষসমূহ"
 
 #: app/Cli/TourivoCli.php:184
-msgid "Running Tourivo database migrations..."
-msgstr "ট্যুরিতো ডাটাবেজ মাইগ্রেশন চালানো হচ্ছে..."
+msgid "Running Readscope Booking database migrations..."
+msgstr "রিডস্কোপ বুকিং ডাটাবেজ মাইগ্রেশন চালানো হচ্ছে..."
 
 #: views/admin/metaboxes/tour-metabox.php:63
 msgid "Sale / Offer Price ($)"
@@ -2780,8 +2757,8 @@ msgid "Select the Parent Hotel from the dropdown."
 msgstr "ড্রপডাউন থেকে মূল হোটেলটি নির্বাচন করুন।"
 
 #: app/Admin/SetupWizard.php:137
-msgid "Select the default pages you would like Tourivo to automatically generate on your website."
-msgstr "ট্যুরিতো আপনার সাইটে যে ডিফল্ট পেজগুলো স্বয়ংক্রিয়ভাবে তৈরি করবে তা বেছে নিন।"
+msgid "Select the default pages you would like Readscope Booking to automatically generate on your website."
+msgstr "রিডস্কোপ বুকিং আপনার সাইটে যে ডিফল্ট পেজগুলো স্বয়ংক্রিয়ভাবে তৈরি করবে তা বেছে নিন।"
 
 #: views/admin/metaboxes/room-metabox.php:45
 msgid "Select which hotel or resort property this room unit belongs to."
@@ -2955,10 +2932,6 @@ msgstr "স্মুথ কার্ভড (১২ পিক্সেল)"
 msgid "Sort By"
 msgstr "সাজান"
 
-#: templates/emails/booking-confirmation.php:114
-msgid "Special Notes:"
-msgstr "বিশেষ মন্তব্য:"
-
 #: templates/booking-panel.php:203
 msgid "Special requests or notes..."
 msgstr "বিশেষ অনুরোধ বা মন্তব্য..."
@@ -3061,7 +3034,6 @@ msgid "System Information"
 msgstr "সিস্টেমের তথ্য"
 
 #: templates/emails/base-layout.php:161
-#: templates/emails/booking-confirmation.php:49
 msgid "TEST NOTIFICATION"
 msgstr "টেস্ট নোটিফিকেশন"
 
@@ -3082,10 +3054,6 @@ msgstr "টেস্ট ওয়েবহুক প্রেরক"
 #, php-format
 msgid "Test email successfully dispatched to %s!"
 msgstr "%s ঠিকানায় টেস্ট ইমেইল সফলভাবে পাঠানো হয়েছে!"
-
-#: templates/emails/booking-confirmation.php:68
-msgid "Thank you for booking with us! We have successfully received your reservation details below:"
-msgstr "আমাদের সাথে বুকিং করার জন্য ধন্যবাদ! আপনার বুকিং বিবরণ সফলভাবে গৃহীত হয়েছে:"
 
 #: templates/booking-voucher.php:396
 msgid "Thank you for traveling with us!"
@@ -3117,12 +3085,12 @@ msgid "These house rules will be displayed clearly to travelers before booking."
 msgstr "এই নিয়মাবলী বুকিংয়ের আগে ভ্রমণকারীদের স্পষ্টভাবে দেখানো হবে।"
 
 #: app/Admin/DocumentationPage.php:72
-msgid "Think of Tourivo as your private booking engine (similar to Booking.com, Airbnb, or Viator) operating directly inside your own WordPress website."
-msgstr "ট্যুরিতোকে আপনার নিজস্ব প্রাইভেট বুকিং ইঞ্জিন (যেমন Booking.com, Airbnb, বা Viator) হিসেবে বিবেচনা করুন যা সরাসরি আপনার ওয়ার্ডপ্রেস ওয়েবসাইটের ভেতর কাজ করে।"
+msgid "Think of Readscope Booking as your private booking engine (similar to Booking.com, Airbnb, or Viator) operating directly inside your own WordPress website."
+msgstr "রিডস্কোপ বুকিংকে আপনার নিজস্ব প্রাইভেট বুকিং ইঞ্জিন (যেমন Booking.com, Airbnb, বা Viator) হিসেবে বিবেচনা করুন যা সরাসরি আপনার ওয়ার্ডপ্রেস ওয়েবসাইটের ভেতর কাজ করে।"
 
 #: app/Services/WebhookService.php:414
-msgid "This is a test webhook payload from Tourivo."
-msgstr "এটি ট্যুরিতো থেকে একটি টেস্ট ওয়েবহুক পে-লোড।"
+msgid "This is a test webhook payload from Readscope Booking."
+msgstr "এটি রিডস্কোপ বুকিং থেকে একটি টেস্ট ওয়েবহুক পে-লোড।"
 
 #. translators: %d: Maximum allowed guests
 #. translators: %d: Maximum guests
@@ -3254,114 +3222,120 @@ msgid "Tour Type:"
 msgstr "ট্যুরের ধরন:"
 
 #. Plugin Name of the plugin
-#: tourivo.php
-#: app/Providers/AdminServiceProvider.php:163
+#: app/Providers/AdminServiceProvider.php:165
+msgid "Readscope"
+msgstr "রিডস্কোপ"
+
+#: the-readscope-tour-and-accommodation-booking.php
 #: app/Providers/AdminServiceProvider.php:164
-#: app/Support/Privacy.php:161
-msgid "Tourivo"
-msgstr "ট্যুরিতো"
+msgid "The Readscope Tour and Accommodation Booking"
+msgstr "দ্য রিডস্কোপ ট্যুর অ্যান্ড অ্যাকোমোডেশন বুকিং"
+
+#: app/Support/Privacy.php:163
+msgid "Readscope Booking"
+msgstr "রিডস্কোপ বুকিং"
 
 #: app/Blocks/BlockManager.php:118
-msgid "Tourivo Booking Panel"
-msgstr "ট্যুরিতো বুকিং প্যানেল"
+msgid "Readscope Booking Panel"
+msgstr "রিডস্কোপ বুকিং বুকিং প্যানেল"
 
 #: app/Admin/DocumentationPage.php:499
-msgid "Tourivo Booking Panel:"
-msgstr "ট্যুরিতো বুকিং প্যানেল:"
+msgid "Readscope Booking Panel:"
+msgstr "রিডস্কোপ বুকিং বুকিং প্যানেল:"
 
 #: app/Admin/SettingsPage.php:1235
-msgid "Tourivo Core Version"
-msgstr "ট্যুরিতো কোর ভার্সন"
+msgid "Readscope Booking Core Version"
+msgstr "রিডস্কোপ বুকিং কোর ভার্সন"
 
 #: app/Admin/AdminDashboard.php:56
-msgid "Tourivo Dashboard"
-msgstr "ট্যুরিতো ড্যাশবোর্ড"
+msgid "Readscope Booking Dashboard"
+msgstr "রিডস্কোপ বুকিং ড্যাশবোর্ড"
 
 #: app/Admin/DocumentationPage.php:34
-msgid "Tourivo Docs & Features Hub"
-msgstr "ট্যুরিতো ডকুমেন্টেশন ও ফিচার হাব"
+msgid "Readscope Booking Docs & Features Hub"
+msgstr "রিডস্কোপ বুকিং ডকুমেন্টেশন ও ফিচার হাব"
 
 #: app/Elementor/ElementorManager.php:46
-msgid "Tourivo Elements"
-msgstr "ট্যুরিতো এলিমেন্টস"
+msgid "Readscope Booking Elements"
+msgstr "রিডস্কোপ বুকিং এলিমেন্টস"
 
 #: app/Blocks/BlockManager.php:104
-msgid "Tourivo Filter & Search Grid"
-msgstr "ট্যুরিতো ফিল্টার ও সার্চ গ্রিড"
+msgid "Readscope Filter & Search Grid"
+msgstr "রিডস্কোপ বুকিং ফিল্টার ও সার্চ গ্রিড"
 
 #: app/Blocks/BlockManager.php:79
-msgid "Tourivo Hotel Grid"
-msgstr "ট্যুরিতো হোটেল গ্রিড"
+msgid "Readscope Hotel Grid"
+msgstr "রিডস্কোপ বুকিং হোটেল গ্রিড"
 
 #: app/Admin/DocumentationPage.php:497
-msgid "Tourivo Hotel Grid:"
-msgstr "ট্যুরিতো হোটেল গ্রিড:"
+msgid "Readscope Hotel Grid:"
+msgstr "রিডস্কোপ বুকিং হোটেল গ্রিড:"
 
 #: app/Admin/DocumentationPage.php:244
-msgid "Tourivo Pro Enterprise Upgrades"
-msgstr "ট্যুরিতো প্রো এন্টারপ্রাইজ আপগ্রেডসমূহ"
+msgid "Readscope Booking Pro Enterprise Upgrades"
+msgstr "রিডস্কোপ বুকিং প্রো এন্টারপ্রাইজ আপগ্রেডসমূহ"
 
 #: app/Admin/DocumentationPage.php:586
-msgid "Tourivo Pro upgrades your booking engine into a fully automated travel marketplace with WooCommerce payments, calendar sync, and ticket check-in."
-msgstr "ট্যুরিতো প্রো আপনার বুকিং ইঞ্জিনকে উকমার্স পেমেন্ট, ক্যালেন্ডার সিঙ্ক এবং টিকিট চেক-ইন সহ একটি সম্পূর্ণ স্বয়ংক্রিয় ট্রাভেল মার্কেটপ্লেসে রূপান্তর করে।"
+msgid "Readscope Booking Pro upgrades your booking engine into a fully automated travel marketplace with WooCommerce payments, calendar sync, and ticket check-in."
+msgstr "রিডস্কোপ বুকিং প্রো আপনার বুকিং ইঞ্জিনকে উকমার্স পেমেন্ট, ক্যালেন্ডার সিঙ্ক এবং টিকিট চেক-ইন সহ একটি সম্পূর্ণ স্বয়ংক্রিয় ট্রাভেল মার্কেটপ্লেসে রূপান্তর করে।"
 
 #: app/Blocks/BlockManager.php:94
-msgid "Tourivo Search Bar"
-msgstr "ট্যুরিতো সার্চ বার"
+msgid "Readscope Search Bar"
+msgstr "রিডস্কোপ বুকিং সার্চ বার"
 
 #: app/Admin/DocumentationPage.php:498
-msgid "Tourivo Search Bar:"
-msgstr "ট্যুরিতো সার্চ বার:"
+msgid "Readscope Search Bar:"
+msgstr "রিডস্কোপ বুকিং সার্চ বার:"
 
 #: app/Admin/SettingsPage.php:346
-msgid "Tourivo Settings"
-msgstr "ট্যুরিতো সেটিংস"
+msgid "Readscope Booking Settings"
+msgstr "রিডস্কোপ বুকিং সেটিংস"
 
 #: app/Blocks/BlockManager.php:63
-msgid "Tourivo Tour Grid"
-msgstr "ট্যুরিতো ট্যুর গ্রিড"
+msgid "Readscope Tour Grid"
+msgstr "রিডস্কোপ বুকিং ট্যুর গ্রিড"
 
 #: app/Admin/DocumentationPage.php:496
-msgid "Tourivo Tour Grid:"
-msgstr "ট্যুরিতো ট্যুর গ্রিড:"
+msgid "Readscope Tour Grid:"
+msgstr "রিডস্কোপ বুকিং ট্যুর গ্রিড:"
 
 #: app/Blocks/BlockManager.php:132
-msgid "Tourivo Track My Booking"
-msgstr "ট্যুরিতো আমার বুকিং ট্র্যাক করুন"
+msgid "Readscope Track My Booking"
+msgstr "রিডস্কোপ বুকিং আমার বুকিং ট্র্যাক করুন"
 
 #: app/Blocks/BlockManager.php:40
-msgid "Tourivo Travel Engine"
-msgstr "ট্যুরিতো ট্রাভেল ইঞ্জিন"
+msgid "Readscope Travel Engine"
+msgstr "রিডস্কোপ বুকিং ট্রাভেল ইঞ্জিন"
 
 #: app/Blocks/BlockManager.php:142
-msgid "Tourivo Traveler Wishlist"
-msgstr "ট্যুরিতো ভ্রমণকারী উইশলিস্ট"
+msgid "Readscope Traveler Wishlist"
+msgstr "রিডস্কোপ বুকিং ভ্রমণকারী উইশলিস্ট"
 
 #: app/Cli/TourivoCli.php:186
-msgid "Tourivo database schema migrated successfully."
-msgstr "ট্যুরিতো ডাটাবেজ স্কিমা সফলভাবে মাইগ্রেট করা হয়েছে।"
+msgid "Readscope Booking database schema migrated successfully."
+msgstr "রিডস্কোপ বুকিং ডাটাবেজ স্কিমা সফলভাবে মাইগ্রেট করা হয়েছে।"
 
 #: app/Admin/DocumentationPage.php:509
-msgid "Tourivo gives your front desk and agency administrators full control over customer reservations and pre-sale inquiries."
-msgstr "ট্যুরিতো আপনার ফ্রন্ট ডেস্ক এবং এজেন্সি অ্যাডমিনিস্ট্রেটরদের কাস্টমার বুকিং এবং প্রাক-বিক্রয় অনুসন্ধানের উপর পূর্ণ নিয়ন্ত্রণ প্রদান করে।"
+msgid "Readscope Booking gives your front desk and agency administrators full control over customer reservations and pre-sale inquiries."
+msgstr "রিডস্কোপ বুকিং আপনার ফ্রন্ট ডেস্ক এবং এজেন্সি অ্যাডমিনিস্ট্রেটরদের কাস্টমার বুকিং এবং প্রাক-বিক্রয় অনুসন্ধানের উপর পূর্ণ নিয়ন্ত্রণ প্রদান করে।"
 
 #: app/Admin/DocumentationPage.php:333
-msgid "Tourivo handles accommodation in an industry-standard 2-level hierarchy: 1. Hotel Property (the building / resort) and 2. Room Types (the bookable units)."
-msgstr "ট্যুরিতো আন্তর্জাতিক মানসম্মত ২-স্তরের কাঠামোতে হোটেল পরিচালনা করে: ১. হোটেল প্রপার্টি (মূল রিসোর্ট বা ভবন) এবং ২. রুমের ধরন (বুকিংযোগ্য রুমসমূহ)।"
+msgid "Readscope Booking handles accommodation in an industry-standard 2-level hierarchy: 1. Hotel Property (the building / resort) and 2. Room Types (the bookable units)."
+msgstr "রিডস্কোপ বুকিং আন্তর্জাতিক মানসম্মত ২-স্তরের কাঠামোতে হোটেল পরিচালনা করে: ১. হোটেল প্রপার্টি (মূল রিসোর্ট বা ভবন) এবং ২. রুমের ধরন (বুকিংযোগ্য রুমসমূহ)।"
 
 #: app/Admin/SetupWizard.php:252
-msgid "Tourivo has been successfully configured. You are ready to accept bookings, manage travel itineraries, and publish hotel rooms."
-msgstr "ট্যুরিতো সফলভাবে কনফিগার করা হয়েছে। আপনি এখন বুকিং গ্রহণ, ভ্রমণসূচি পরিচালনা ও রুম প্রকাশ করতে প্রস্তুত।"
+msgid "Readscope Booking has been successfully configured. You are ready to accept bookings, manage travel itineraries, and publish hotel rooms."
+msgstr "রিডস্কোপ বুকিং সফলভাবে কনফিগার করা হয়েছে। আপনি এখন বুকিং গ্রহণ, ভ্রমণসূচি পরিচালনা ও রুম প্রকাশ করতে প্রস্তুত।"
 
 #: app/Admin/DocumentationPage.php:36
-msgid "Tourivo is your all-in-one travel booking engine and tour management powerhouse for WordPress. Explore our complete feature catalog, step-by-step guides, and copyable shortcodes to launch your booking website effortlessly—no coding required!"
-msgstr "ট্যুরিতো হল ওয়ার্ডপ্রেসের জন্য একটি অল-ইন-ওয়ান ট্রাভেল বুকিং ইঞ্জিন ও ট্যুর ম্যানেজমেন্ট পাওয়ারহাউস। কোনো কোডিং ছাড়াই সহজে আপনার বুকিং ওয়েবসাইট চালু করতে আমাদের সম্পূর্ণ ফিচার ক্যাটালগ, নির্দেশিকা ও শর্টকোডগুলো দেখুন!"
+msgid "Readscope Booking is your all-in-one travel booking engine and tour management powerhouse for WordPress. Explore our complete feature catalog, step-by-step guides, and copyable shortcodes to launch your booking website effortlessly—no coding required!"
+msgstr "রিডস্কোপ বুকিং হল ওয়ার্ডপ্রেসের জন্য একটি অল-ইন-ওয়ান ট্রাভেল বুকিং ইঞ্জিন ও ট্যুর ম্যানেজমেন্ট পাওয়ারহাউস। কোনো কোডিং ছাড়াই সহজে আপনার বুকিং ওয়েবসাইট চালু করতে আমাদের সম্পূর্ণ ফিচার ক্যাটালগ, নির্দেশিকা ও শর্টকোডগুলো দেখুন!"
 
 #. translators: 1: Required PHP version, 2: Current PHP version
 #: tourivo.php:35
 #, php-format
-msgid "Tourivo requires PHP version %1$s or greater. You are running version %2$s. Please upgrade your PHP version."
-msgstr "ট্যুরিতো চালানোর জন্য পিএইচপি ভার্সন %1$s বা তদূর্ধ্ব প্রয়োজন। আপনি ভার্সন %2$s চালাচ্ছেন। অনুগ্রহ করে পিএইচপি আপডেট করুন।"
+msgid "Readscope Booking requires PHP version %1$s or greater. You are running version %2$s. Please upgrade your PHP version."
+msgstr "রিডস্কোপ বুকিং চালানোর জন্য পিএইচপি ভার্সন %1$s বা তদূর্ধ্ব প্রয়োজন। আপনি ভার্সন %2$s চালাচ্ছেন। অনুগ্রহ করে পিএইচপি আপডেট করুন।"
 
 #: app/Providers/TemplateServiceProvider.php:129
 #: app/Providers/TemplateServiceProvider.php:185
@@ -3415,10 +3389,6 @@ msgstr "আমার বুকিং ট্র্যাক করুন"
 #: templates/booking-lookup.php:15
 msgid "Track Your Booking"
 msgstr "আপনার বুকিং ট্র্যাক করুন"
-
-#: templates/emails/booking-confirmation.php:52
-msgid "Travel & Tours Reservation"
-msgstr "ভ্রমণ ও ট্যুর বুকিং"
 
 #: templates/booking-voucher.php:328
 msgid "Travel / Check-in Dates"
@@ -3490,7 +3460,6 @@ msgstr "অতিথি কমান"
 msgid "More travelers"
 msgstr "অতিথি বাড়ান"
 
-#: templates/emails/booking-confirmation.php:95
 #: templates/emails/customer-booking-confirmed.php:75
 #: templates/emails/customer-booking-received.php:74
 #: templates/emails/customer-trip-reminder.php:81
@@ -3521,7 +3490,6 @@ msgstr "ট্যুর / হোটেলের বিবরণ"
 msgid "Trip / Stay Title"
 msgstr "ট্যুর / হোটেলের নাম"
 
-#: templates/emails/booking-confirmation.php:78
 #: templates/emails/customer-booking-cancelled.php:54
 #: templates/emails/customer-booking-confirmed.php:58
 #: templates/emails/customer-booking-received.php:57
@@ -3608,8 +3576,8 @@ msgid "Unknown db command \"%s\". Use: wp tourivo db migrate"
 msgstr "অজানা ডাটাবেজ কমান্ড \"%s\"। ব্যবহার করুন: wp tourivo db migrate"
 
 #: app/Admin/DocumentationPage.php:584
-msgid "Unlock the Full Potential with Tourivo Pro"
-msgstr "ট্যুরিতো প্রো দিয়ে সম্পূর্ণ সক্ষমতা উন্মোচন করুন"
+msgid "Unlock the Full Potential with Readscope Booking Pro"
+msgstr "রিডস্কোপ বুকিং প্রো দিয়ে সম্পূর্ণ সক্ষমতা উন্মোচন করুন"
 
 #. translators: %d: Maximum guests
 #: templates/single-hotel.php:118
@@ -3745,24 +3713,24 @@ msgid "Welcome back! Overview of your travel packages, hotel rooms, and live boo
 msgstr "স্বাগতম! আপনার ট্যুর প্যাকেজ, হোটেল রুম এবং সাম্প্রতিক বুকিং কার্যক্রমের সামগ্রিক বিবরণ।"
 
 #: app/Providers/AdminServiceProvider.php:333
-msgid "Welcome to Tourivo! Want to explore with ready-made demo content?"
-msgstr "ট্যুরিতোতে স্বাগতম! তৈরি ডেমো কন্টেন্ট নিয়ে পরীক্ষা করতে চান?"
+msgid "Welcome to Readscope Booking! Want to explore with ready-made demo content?"
+msgstr "রিডস্কোপ বুকিংয়ে স্বাগতম! তৈরি ডেমো কন্টেন্ট নিয়ে পরীক্ষা করতে চান?"
 
 #: templates/reviews-section.php:154
 msgid "What did you love about this trip? How was the guide, accommodation, and itinerary?"
 msgstr "এই ট্যুরের কোন বিষয়টি আপনার সবচেয়ে ভালো লেগেছে? গাইড, হোটেল ও ভ্রমণসূচি কেমন ছিল?"
 
 #: app/Admin/DocumentationPage.php:70
-msgid "What is Tourivo and How Does it Work?"
-msgstr "ট্যুরিতো কী এবং এটি কীভাবে কাজ করে?"
+msgid "What is Readscope Booking and How Does it Work?"
+msgstr "রিডস্কোপ বুকিং কী এবং এটি কীভাবে কাজ করে?"
 
 #: templates/single-tour.php:117
 msgid "What's Included & Excluded"
 msgstr "কী কী অন্তর্ভুক্ত ও অন্তর্ভুক্ত নয়"
 
 #: app/Admin/DocumentationPage.php:364
-msgid "When travelers open any Hotel page, Tourivo displays all linked room types with their nightly prices, specs, bed styles, and an interactive \"Reserve Room\" dropdown for each room."
-msgstr "ভ্রমণকারীরা যেকোনো হোটেল পেজ খুললে ট্যুরিতো তাদের সমস্ত লিঙ্কযুক্ত রুমের ধরন, প্রতি রাতের মূল্য, সাইজ, বেডের ধরন এবং প্রতিটি রুমের জন্য বুকিং অপশন প্রদর্শন করে।"
+msgid "When travelers open any Hotel page, Readscope Booking displays all linked room types with their nightly prices, specs, bed styles, and an interactive \"Reserve Room\" dropdown for each room."
+msgstr "ভ্রমণকারীরা যেকোনো হোটেল পেজ খুললে রিডস্কোপ বুকিং তাদের সমস্ত লিঙ্কযুক্ত রুমের ধরন, প্রতি রাতের মূল্য, সাইজ, বেডের ধরন এবং প্রতিটি রুমের জন্য বুকিং অপশন প্রদর্শন করে।"
 
 #: templates/search-bar.php:79
 #: templates/search-bar.php:85
@@ -3790,8 +3758,8 @@ msgid "Write a Review"
 msgstr "একটি রিভিউ লিখুন"
 
 #: app/Admin/DocumentationPage.php:372
-msgid "You can embed Tourivo elements on your Homepage, Destination pages, or any Custom page using Gutenberg, Elementor, or simple Shortcodes."
-msgstr "আপনি গুটেনবার্গ, এলিমেন্টর বা সহজ শর্টকোড ব্যবহার করে হোমপেজ, গন্তব্য পেজ বা যেকোনো কাস্টম পেজে ট্যুরিতো উপাদানগুলো যুক্ত করতে পারেন।"
+msgid "You can embed Readscope Booking elements on your Homepage, Destination pages, or any Custom page using Gutenberg, Elementor, or simple Shortcodes."
+msgstr "আপনি গুটেনবার্গ, এলিমেন্টর বা সহজ শর্টকোড ব্যবহার করে হোমপেজ, গন্তব্য পেজ বা যেকোনো কাস্টম পেজে রিডস্কোপ বুকিং উপাদানগুলো যুক্ত করতে পারেন।"
 
 #: app/Admin/SetupWizard.php:33
 msgid "You do not have permission to access the setup wizard."
@@ -3913,8 +3881,8 @@ msgid "✓ Verified Traveler Trust Badge"
 msgstr "✓ ভেরিফাইড ট্রাভেলার ট্রাস্ট ব্যাজ"
 
 #: app/Admin/DocumentationPage.php:138
-msgid "Complete Tourivo Feature Catalog"
-msgstr "ট্যুরিতোর সম্পূর্ণ ফিচার ক্যাটালগ"
+msgid "Complete Readscope Booking Feature Catalog"
+msgstr "রিডস্কোপ বুকিংয়ের সম্পূর্ণ ফিচার ক্যাটালগ"
 
 #: app/Admin/DocumentationPage.php:95
 msgid "4-Step Quick Launch Checklist"
@@ -4261,8 +4229,8 @@ msgid "e.g. Standard Chartered / City Bank"
 msgstr "যেমন: স্ট্যান্ডার্ড চার্টার্ড / সিটি ব্যাংক"
 
 #: app/Admin/SettingsPage.php:674
-msgid "e.g. Tourivo Holidays Ltd."
-msgstr "যেমন: ট্যুরিভো হলিডেজ লিমিটেড"
+msgid "e.g. Readscope Holidays Ltd."
+msgstr "যেমন: রিডস্কোপ হলিডেজ লিমিটেড"
 
 #: app/Admin/SettingsPage.php:680
 msgid "e.g. 01-2345678-01"
@@ -4329,8 +4297,8 @@ msgid "days before tour departure or hotel check-in date."
 msgstr "দিন আগে, ট্যুর যাত্রা বা হোটেল চেক-ইনের।"
 
 #: app/Admin/SettingsPage.php:866
-msgid "Set to 0 to disable automated daily trip reminder emails. Tourivo runs a daily background cron check to dispatch reminders."
-msgstr "০ দিলে স্বয়ংক্রিয় রিমাইন্ডার ইমেইল বন্ধ থাকবে। ট্যুরিভো প্রতিদিন ব্যাকগ্রাউন্ডে চেক করে রিমাইন্ডার পাঠায়।"
+msgid "Set to 0 to disable automated daily trip reminder emails. Readscope Booking runs a daily background cron check to dispatch reminders."
+msgstr "০ দিলে স্বয়ংক্রিয় রিমাইন্ডার ইমেইল বন্ধ থাকবে। রিডস্কোপ বুকিং প্রতিদিন ব্যাকগ্রাউন্ডে চেক করে রিমাইন্ডার পাঠায়।"
 
 #: app/Admin/SettingsPage.php:870
 msgid "Customer Booking Lookup Page"
@@ -4465,8 +4433,8 @@ msgid "Require checkbox agreement before checkout and inquiry submission."
 msgstr "চেকআউট ও অনুসন্ধান জমা দেওয়ার আগে চেকবক্সে সম্মতি লাগবে।"
 
 #: app/Admin/SettingsPage.php:1079
-msgid "When enabled, bookings and inquiries cannot proceed without agreeing to terms. Tourivo records the exact timestamp and policy version SHA-256 hash."
-msgstr "চালু থাকলে শর্তে সম্মতি ছাড়া বুকিং বা অনুসন্ধান এগোবে না। ট্যুরিভো সময় ও নীতির SHA-256 হ্যাশ সংরক্ষণ করে।"
+msgid "When enabled, bookings and inquiries cannot proceed without agreeing to terms. Readscope Booking records the exact timestamp and policy version SHA-256 hash."
+msgstr "চালু থাকলে শর্তে সম্মতি ছাড়া বুকিং বা অনুসন্ধান এগোবে না। রিডস্কোপ বুকিং সময় ও নীতির SHA-256 হ্যাশ সংরক্ষণ করে।"
 
 #: app/Admin/SettingsPage.php:1083
 msgid "Privacy Policy Page"
@@ -4477,8 +4445,8 @@ msgid "— Use WordPress Core Privacy Policy Page —"
 msgstr "— ওয়ার্ডপ্রেসের নিজস্ব গোপনীয়তা নীতির পেজ ব্যবহার করুন —"
 
 #: app/Admin/SettingsPage.php:1094
-msgid "By default, Tourivo links to the WordPress site privacy policy defined under Settings → Privacy."
-msgstr "ডিফল্টভাবে ট্যুরিভো সেটিংস → গোপনীয়তায় নির্ধারিত ওয়ার্ডপ্রেস গোপনীয়তা নীতির লিংক দেয়।"
+msgid "By default, Readscope Booking links to the WordPress site privacy policy defined under Settings → Privacy."
+msgstr "ডিফল্টভাবে রিডস্কোপ বুকিং সেটিংস → গোপনীয়তায় নির্ধারিত ওয়ার্ডপ্রেস গোপনীয়তা নীতির লিংক দেয়।"
 
 #: app/Admin/SettingsPage.php:1098
 msgid "Terms & Conditions Page"
@@ -4557,8 +4525,8 @@ msgid "WordPress Core Privacy Tools Integration"
 msgstr "ওয়ার্ডপ্রেস গোপনীয়তা টুলের সাথে সংযোগ"
 
 #: app/Admin/SettingsPage.php:1171
-msgid "Tourivo is fully integrated with standard WordPress privacy compliance features:"
-msgstr "ট্যুরিভো ওয়ার্ডপ্রেসের আদর্শ গোপনীয়তা ফিচারের সাথে যুক্ত:"
+msgid "Readscope Booking is fully integrated with standard WordPress privacy compliance features:"
+msgstr "রিডস্কোপ বুকিং ওয়ার্ডপ্রেসের আদর্শ গোপনীয়তা ফিচারের সাথে যুক্ত:"
 
 #: app/Admin/SettingsPage.php:1173
 msgid "Export Personal Data:"
@@ -4886,7 +4854,6 @@ msgid "Booking Reference:"
 msgstr "বুকিং রেফারেন্স:"
 
 #: templates/booking-voucher.php:368
-#: templates/emails/booking-confirmation.php:120
 #: templates/emails/customer-booking-confirmed.php:88
 #: templates/emails/customer-booking-received.php:87
 #: templates/thank-you.php:142
@@ -4902,7 +4869,6 @@ msgid "Great news! Your booking has been officially confirmed. We are excited to
 msgstr "সুখবর! আপনার বুকিং নিশ্চিত হয়েছে। আমরা আপনার আসন্ন ভ্রমণের অপেক্ষায় আছি।"
 
 #: templates/emails/admin-new-booking.php:91
-#: templates/emails/booking-confirmation.php:102
 #: templates/emails/customer-booking-confirmed.php:82
 #: templates/emails/customer-booking-received.php:81
 #: templates/emails/customer-trip-reminder.php:88
@@ -4935,7 +4901,6 @@ msgid "Print Your Travel Voucher"
 msgstr "ট্রাভেল ভাউচার প্রিন্ট করুন"
 
 #: templates/booking-voucher.php:374
-#: templates/emails/booking-confirmation.php:126
 #: templates/emails/customer-booking-confirmed.php:94
 #: templates/emails/customer-booking-received.php:93
 #: templates/thank-you.php:148
@@ -5456,8 +5421,8 @@ msgid "7. Availability & Pricing Manager"
 msgstr "৭. অ্যাভেইলেবিলিটি ও মূল্য ব্যবস্থাপক"
 
 #: app/Admin/DocumentationPage.php:61
-msgid "8. Tourivo Pro Features"
-msgstr "৮. Tourivo Pro ফিচারসমূহ"
+msgid "8. Readscope Booking Pro Features"
+msgstr "৮. Readscope Booking Pro ফিচারসমূহ"
 
 #: app/Admin/DocumentationPage.php:452
 msgid "Customer Account / My Bookings Portal"
@@ -5756,8 +5721,8 @@ msgid "Failed to import demo data. Please check logs."
 msgstr "ডেমো ডেটা ইমপোর্ট করা যায়নি। অনুগ্রহ করে লগ দেখুন।"
 
 #: app/Blocks/BlockManager.php:155
-msgid "Tourivo My Bookings Portal"
-msgstr "Tourivo আমার বুকিং পোর্টাল"
+msgid "Readscope My Bookings Portal"
+msgstr "Readscope Booking আমার বুকিং পোর্টাল"
 
 #: app/Blocks/BlockManager.php:158
 msgid "Display traveler dashboard with upcoming trips, completed itineraries, and self-management actions."
@@ -6036,8 +6001,8 @@ msgid "Selected dates contain active bookings. Are you sure you want to force bl
 msgstr "নির্বাচিত তারিখগুলোতে সক্রিয় বুকিং আছে। আপনি কি নিশ্চিত যে এই তারিখগুলোতে ভবিষ্যতের বুকিং জোর করে বন্ধ করতে চান?"
 
 #: app/Providers/RouteServiceProvider.php:102
-msgid "Every 5 minutes (Tourivo)"
-msgstr "প্রতি ৫ মিনিটে (Tourivo)"
+msgid "Every 5 minutes (Readscope Booking)"
+msgstr "প্রতি ৫ মিনিটে (Readscope Booking)"
 
 #: app/Providers/RouteServiceProvider.php:183
 msgid "Invalid or missing security token."
@@ -6184,8 +6149,8 @@ msgid "Booking Date"
 msgstr "বুকিংয়ের তারিখ"
 
 #: app/Services/ExportService.php:453
-msgid "Tourivo Bookings Financial Summary Report"
-msgstr "Tourivo বুকিং আর্থিক সারসংক্ষেপ রিপোর্ট"
+msgid "Readscope Bookings Financial Summary Report"
+msgstr "Readscope Booking বুকিং আর্থিক সারসংক্ষেপ রিপোর্ট"
 
 #: app/Services/ExportService.php:454
 msgid "Generated On"
@@ -6642,20 +6607,20 @@ msgid "Terms and Conditions"
 msgstr "শর্তাবলি"
 
 #: app/Support/Privacy.php:129
-msgid "Tourivo Bookings & Inquiries"
-msgstr "Tourivo বুকিং ও অনুসন্ধান"
+msgid "Readscope Bookings & Inquiries"
+msgstr "Readscope Booking বুকিং ও অনুসন্ধান"
 
 #: app/Support/Privacy.php:145
-msgid "Tourivo Personal Data Eraser"
-msgstr "Tourivo ব্যক্তিগত ডেটা মোছার টুল"
+msgid "Readscope Personal Data Eraser"
+msgstr "Readscope Booking ব্যক্তিগত ডেটা মোছার টুল"
 
 #: app/Support/Privacy.php:177
-msgid "Personal Data Collected by Tourivo"
-msgstr "Tourivo যে ব্যক্তিগত ডেটা সংগ্রহ করে"
+msgid "Personal Data Collected by Readscope Booking"
+msgstr "Readscope Booking যে ব্যক্তিগত ডেটা সংগ্রহ করে"
 
 #: app/Support/Privacy.php:178
-msgid "When travelers book a tour or submit a trip inquiry through Tourivo, we collect the following personal information: customer name, email address, phone number, billing address, and special customer requests. If IP address collection is enabled, IP addresses are logged alongside bookings for fraud detection and security auditing."
-msgstr "ভ্রমণকারীরা Tourivo-র মাধ্যমে ট্যুর বুক করলে বা ট্রিপের অনুসন্ধান পাঠালে আমরা নিচের ব্যক্তিগত তথ্য সংগ্রহ করি: গ্রাহকের নাম, ইমেইল ঠিকানা, ফোন নম্বর, বিলিং ঠিকানা এবং গ্রাহকের বিশেষ অনুরোধ। IP ঠিকানা সংগ্রহ চালু থাকলে প্রতারণা শনাক্ত ও নিরাপত্তা অডিটের জন্য বুকিংয়ের সাথে IP ঠিকানা রাখা হয়।"
+msgid "When travelers book a tour or submit a trip inquiry through Readscope Booking, we collect the following personal information: customer name, email address, phone number, billing address, and special customer requests. If IP address collection is enabled, IP addresses are logged alongside bookings for fraud detection and security auditing."
+msgstr "ভ্রমণকারীরা Readscope Booking-র মাধ্যমে ট্যুর বুক করলে বা ট্রিপের অনুসন্ধান পাঠালে আমরা নিচের ব্যক্তিগত তথ্য সংগ্রহ করি: গ্রাহকের নাম, ইমেইল ঠিকানা, ফোন নম্বর, বিলিং ঠিকানা এবং গ্রাহকের বিশেষ অনুরোধ। IP ঠিকানা সংগ্রহ চালু থাকলে প্রতারণা শনাক্ত ও নিরাপত্তা অডিটের জন্য বুকিংয়ের সাথে IP ঠিকানা রাখা হয়।"
 
 #: app/Support/Privacy.php:180
 msgid "Purpose of Data Processing"
@@ -6678,16 +6643,16 @@ msgid "Cookies & Local Browser Storage"
 msgstr "কুকি ও ব্রাউজারের লোকাল স্টোরেজ"
 
 #: app/Support/Privacy.php:187
-msgid "Tourivo utilizes browser local storage (localStorage) exclusively for client-side user experience enhancements, including favorite wishlist tours and selected currency preferences. No sensitive personal information is stored in client cookies."
-msgstr "Tourivo ব্রাউজারের লোকাল স্টোরেজ (localStorage) শুধু ব্যবহারকারীর অভিজ্ঞতা উন্নত করতে ব্যবহার করে, যেমন উইশলিস্টের প্রিয় ট্যুর ও বেছে নেওয়া কারেন্সি। কোনো সংবেদনশীল ব্যক্তিগত তথ্য কুকিতে রাখা হয় না।"
+msgid "Readscope Booking utilizes browser local storage (localStorage) exclusively for client-side user experience enhancements, including favorite wishlist tours and selected currency preferences. No sensitive personal information is stored in client cookies."
+msgstr "Readscope Booking ব্রাউজারের লোকাল স্টোরেজ (localStorage) শুধু ব্যবহারকারীর অভিজ্ঞতা উন্নত করতে ব্যবহার করে, যেমন উইশলিস্টের প্রিয় ট্যুর ও বেছে নেওয়া কারেন্সি। কোনো সংবেদনশীল ব্যক্তিগত তথ্য কুকিতে রাখা হয় না।"
 
 #: app/Support/Privacy.php:189
 msgid "Security & Rate Limiting"
 msgstr "নিরাপত্তা ও রেট লিমিটিং"
 
 #: app/Support/Privacy.php:190
-msgid "To protect our booking endpoints against spam, automated abuse, and brute-force attempts, Tourivo stores transient cryptographic hash representations of client IP addresses. These security transients expire automatically within short windows (10 minutes)."
-msgstr "স্প্যাম, স্বয়ংক্রিয় অপব্যবহার ও ব্রুট-ফোর্স চেষ্টা থেকে বুকিং এন্ডপয়েন্ট রক্ষা করতে Tourivo ক্লায়েন্টের IP ঠিকানার সাময়িক ক্রিপ্টোগ্রাফিক হ্যাশ সংরক্ষণ করে। এই নিরাপত্তা ডেটা অল্প সময়ের মধ্যে (১০ মিনিট) নিজে থেকে মুছে যায়।"
+msgid "To protect our booking endpoints against spam, automated abuse, and brute-force attempts, Readscope Booking stores transient cryptographic hash representations of client IP addresses. These security transients expire automatically within short windows (10 minutes)."
+msgstr "স্প্যাম, স্বয়ংক্রিয় অপব্যবহার ও ব্রুট-ফোর্স চেষ্টা থেকে বুকিং এন্ডপয়েন্ট রক্ষা করতে Readscope Booking ক্লায়েন্টের IP ঠিকানার সাময়িক ক্রিপ্টোগ্রাফিক হ্যাশ সংরক্ষণ করে। এই নিরাপত্তা ডেটা অল্প সময়ের মধ্যে (১০ মিনিট) নিজে থেকে মুছে যায়।"
 
 #: app/Support/Privacy.php:196
 msgid "External Webhook Automations"
@@ -6700,8 +6665,8 @@ msgid "This site is configured to transmit booking and inquiry event payloads to
 msgstr "থার্ড-পার্টি CRM ও ক্যালেন্ডার সিঙ্কের জন্য এই সাইট নিরাপদ HTTPS ওয়েবহুকের মাধ্যমে বুকিং ও অনুসন্ধানের ইভেন্ট ডেটা একটি বাহ্যিক স্বয়ংক্রিয় এন্ডপয়েন্টে (%1$s) পাঠানোর জন্য কনফিগার করা আছে।"
 
 #: app/Support/Privacy.php:258
-msgid "Tourivo Bookings"
-msgstr "Tourivo বুকিং"
+msgid "Readscope Bookings"
+msgstr "Readscope Booking বুকিং"
 
 #: app/Support/Privacy.php:263
 #: app/Support/Privacy.php:297
@@ -6732,8 +6697,8 @@ msgid "Created Date"
 msgstr "তৈরির তারিখ"
 
 #: app/Support/Privacy.php:293
-msgid "Tourivo Inquiries"
-msgstr "Tourivo অনুসন্ধান"
+msgid "Readscope Inquiries"
+msgstr "Readscope Booking অনুসন্ধান"
 
 #: app/Support/Privacy.php:296
 msgid "Inquirer Name"
@@ -7301,8 +7266,8 @@ msgid "Your theme's fonts, Bengali in Anek Bangla"
 msgstr "থিমের ফন্ট, বাংলা Anek Bangla-তে"
 
 #: app/Admin/SettingsPage.php:787
-msgid "Anek Bangla keeps forms, prices and buttons crisp on any theme and covers Bengali and English. Headings follow your theme so Tourivo pages still look like your site. Choose your theme's fonts only if its text font is a clear sans-serif with several weights."
-msgstr "Anek Bangla যেকোনো থিমে ফর্ম, দাম আর বাটন পরিষ্কার রাখে এবং বাংলা ও ইংরেজি দুটোই দেখায়। হেডিং আপনার থিমের ফন্টে থাকে, তাই Tourivo-র পেজও আপনার সাইটের মতোই দেখায়। থিমের লেখার ফন্ট স্পষ্ট sans-serif হলে এবং একাধিক weight থাকলে তবেই থিমের ফন্ট বেছে নিন।"
+msgid "Anek Bangla keeps forms, prices and buttons crisp on any theme and covers Bengali and English. Headings follow your theme so Readscope Booking pages still look like your site. Choose your theme's fonts only if its text font is a clear sans-serif with several weights."
+msgstr "Anek Bangla যেকোনো থিমে ফর্ম, দাম আর বাটন পরিষ্কার রাখে এবং বাংলা ও ইংরেজি দুটোই দেখায়। হেডিং আপনার থিমের ফন্টে থাকে, তাই Readscope Booking-র পেজও আপনার সাইটের মতোই দেখায়। থিমের লেখার ফন্ট স্পষ্ট sans-serif হলে এবং একাধিক weight থাকলে তবেই থিমের ফন্ট বেছে নিন।"
 
 #. translators: %s: tour or room name
 #: app/Services/BookingService.php:370

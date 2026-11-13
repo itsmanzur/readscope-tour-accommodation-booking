@@ -556,7 +556,7 @@ class Seeder
                 'hotels_created' => 0,
                 'rooms_created'  => 0,
                 'skipped'        => true,
-                'message'        => __('Demo content is already imported. Skipping duplicate generation.', 'tourivo'),
+                'message'        => __('Demo content is already imported. Skipping duplicate generation.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -587,7 +587,7 @@ class Seeder
                     'hotels_created' => 0,
                     'rooms_created'  => 0,
                     'success'        => false,
-                    'message'        => __('Failed to insert demo item. Aborted and rolled back.', 'tourivo'),
+                    'message'        => __('Failed to insert demo item. Aborted and rolled back.', 'the-readscope-tour-and-accommodation-booking'),
                 ];
             }
 
@@ -650,7 +650,7 @@ class Seeder
             'rooms_created'  => $roomsCount,
             'message'        => sprintf(
                 /* translators: 1: Tours count, 2: Hotels count, 3: Rooms count */
-                __('Sample data successfully imported! Created %1$d Tours, %2$d Hotels, and %3$d Rooms.', 'tourivo'),
+                __('Sample data successfully imported! Created %1$d Tours, %2$d Hotels, and %3$d Rooms.', 'the-readscope-tour-and-accommodation-booking'),
                 $toursCount,
                 $hotelsCount,
                 $roomsCount

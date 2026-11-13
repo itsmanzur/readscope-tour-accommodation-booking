@@ -4,7 +4,7 @@
  *
  * This template can be overridden by copying it to yourtheme/tourivo/single-tour.php.
  *
- * @package Tourivo
+ * @package Readscope Booking
  */
 
 if (!defined('ABSPATH')) {
@@ -22,7 +22,7 @@ $tourivoTour   = new \Tourivo\Models\Tour($tourivoTourId);
         <?php tourivo_place_search(); ?>
         <!-- Top Breadcrumbs / Back link -->
         <div class="tourivo-top-meta">
-            <a href="<?php echo esc_url(get_post_type_archive_link('tourivo_tour')); ?>" class="back-link">&larr; <?php echo esc_html(_x('Tours', 'public archive title', 'tourivo')); ?></a>
+            <a href="<?php echo esc_url(get_post_type_archive_link('tourivo_tour')); ?>" class="back-link">&larr; <?php echo esc_html(_x('Tours', 'public archive title', 'the-readscope-tour-and-accommodation-booking')); ?></a>
             <?php if ($tourivoTour->getBadge()) : ?>
                 <span class="tourivo-ribbon-inline"><?php echo esc_html($tourivoTour->getBadge()); ?></span>
             <?php endif; ?>
@@ -46,7 +46,7 @@ $tourivoTour   = new \Tourivo\Models\Tour($tourivoTourId);
                 echo esc_html(
                     sprintf(
                         /* translators: 1: Minimum guests, 2: Maximum guests */
-                        __('Min: %1$d | Max: %2$d Pax', 'tourivo'),
+                        __('Min: %1$d | Max: %2$d Pax', 'the-readscope-tour-and-accommodation-booking'),
                         $tourivoTour->getMinGuests(),
                         $tourivoTour->getMaxGuests()
                     )
@@ -55,11 +55,11 @@ $tourivoTour   = new \Tourivo\Models\Tour($tourivoTourId);
                 <span class="meta-tag"><span class="dashicons dashicons-tag"></span> <?php echo esc_html(ucwords(str_replace('_', ' ', $tourivoTour->getTourType()))); ?></span>
                 <?php if ($tourivoTour->getReviewCount() > 0) : ?>
                     <a href="#tourivo-reviews" class="meta-tag meta-rating-link">
-                        <span class="rating-star">★</span> <?php echo esc_html(number_format($tourivoTour->getAverageRating(), 1)); ?> (<?php echo esc_html((string)$tourivoTour->getReviewCount()); ?> <?php esc_html_e('reviews', 'tourivo'); ?>)
+                        <span class="rating-star">★</span> <?php echo esc_html(number_format($tourivoTour->getAverageRating(), 1)); ?> (<?php echo esc_html((string)$tourivoTour->getReviewCount()); ?> <?php esc_html_e('reviews', 'the-readscope-tour-and-accommodation-booking'); ?>)
                     </a>
                 <?php endif; ?>
                 <button type="button" class="tourivo-wishlist-toggle-single" data-id="<?php echo esc_attr((string)$tourivoTourId); ?>" data-type="tour">
-                    <span class="dashicons dashicons-heart"></span> <span class="wishlist-btn-label"><?php esc_html_e('Save', 'tourivo'); ?></span>
+                    <span class="dashicons dashicons-heart"></span> <span class="wishlist-btn-label"><?php esc_html_e('Save', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                 </button>
             </div>
         </header>
@@ -77,7 +77,7 @@ $tourivoTour   = new \Tourivo\Models\Tour($tourivoTourId);
 
                 <!-- Tour Overview -->
                 <div class="tourivo-block-section">
-                    <h2 class="section-heading"><?php esc_html_e('Tour Overview & Description', 'tourivo'); ?></h2>
+                    <h2 class="section-heading"><?php esc_html_e('Tour Overview & Description', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                     <div class="entry-content">
                         <?php the_content(); ?>
                     </div>
@@ -89,7 +89,7 @@ $tourivoTour   = new \Tourivo\Models\Tour($tourivoTourId);
                 if (!empty($tourivoItinerary)) : 
                 ?>
                     <div class="tourivo-block-section">
-                        <h2 class="section-heading"><?php esc_html_e('Day by Day Itinerary', 'tourivo'); ?></h2>
+                        <h2 class="section-heading"><?php esc_html_e('Day by Day Itinerary', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <div class="tourivo-itinerary-timeline">
                             <?php foreach ($tourivoItinerary as $tourivoStep) : ?>
                                 <div class="timeline-step">
@@ -97,7 +97,7 @@ $tourivoTour   = new \Tourivo\Models\Tour($tourivoTourId);
                                     <div class="step-content">
                                         <h3 class="step-title"><?php echo esc_html($tourivoStep['title'] ?? ''); ?></h3>
                                         <?php if (!empty($tourivoStep['meals'])) : ?>
-                                            <span class="step-meals"><span class="dashicons dashicons-food"></span> <strong><?php esc_html_e('Meals:', 'tourivo'); ?></strong> <?php echo esc_html($tourivoStep['meals']); ?></span>
+                                            <span class="step-meals"><span class="dashicons dashicons-food"></span> <strong><?php esc_html_e('Meals:', 'the-readscope-tour-and-accommodation-booking'); ?></strong> <?php echo esc_html($tourivoStep['meals']); ?></span>
                                         <?php endif; ?>
                                         <p class="step-desc"><?php echo nl2br(esc_html($tourivoStep['desc'] ?? '')); ?></p>
                                     </div>
@@ -114,11 +114,11 @@ $tourivoTour   = new \Tourivo\Models\Tour($tourivoTourId);
                 if (!empty($tourivoInclusions) || !empty($tourivoExclusions)) : 
                 ?>
                     <div class="tourivo-block-section">
-                        <h2 class="section-heading"><?php esc_html_e("What's Included & Excluded", 'tourivo'); ?></h2>
+                        <h2 class="section-heading"><?php esc_html_e("What's Included & Excluded", 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <div class="tourivo-inc-exc-grid">
                             <?php if (!empty($tourivoInclusions)) : ?>
                                 <div class="inc-box">
-                                    <h3><span class="dashicons dashicons-yes-alt" style="color:#10b981;"></span> <?php esc_html_e('Included', 'tourivo'); ?></h3>
+                                    <h3><span class="dashicons dashicons-yes-alt" style="color:#10b981;"></span> <?php esc_html_e('Included', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
                                     <ul>
                                         <?php foreach ($tourivoInclusions as $tourivoInc) : ?>
                                             <li><span class="dashicons dashicons-yes"></span> <?php echo esc_html($tourivoInc); ?></li>
@@ -129,7 +129,7 @@ $tourivoTour   = new \Tourivo\Models\Tour($tourivoTourId);
 
                             <?php if (!empty($tourivoExclusions)) : ?>
                                 <div class="exc-box">
-                                    <h3><span class="dashicons dashicons-dismiss" style="color:#ef4444;"></span> <?php esc_html_e('Excluded', 'tourivo'); ?></h3>
+                                    <h3><span class="dashicons dashicons-dismiss" style="color:#ef4444;"></span> <?php esc_html_e('Excluded', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
                                     <ul>
                                         <?php foreach ($tourivoExclusions as $tourivoExc) : ?>
                                             <li><span class="dashicons dashicons-no-alt"></span> <?php echo esc_html($tourivoExc); ?></li>
@@ -144,17 +144,17 @@ $tourivoTour   = new \Tourivo\Models\Tour($tourivoTourId);
                 <!-- Meeting & Pickup Locations -->
                 <?php if ($tourivoTour->getPickupLocation() || $tourivoTour->getDropoffLocation()) : ?>
                     <div class="tourivo-block-section">
-                        <h2 class="section-heading"><?php esc_html_e('Meeting & Logistics', 'tourivo'); ?></h2>
+                        <h2 class="section-heading"><?php esc_html_e('Meeting & Logistics', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <div class="logistics-box">
                             <?php if ($tourivoTour->getPickupLocation()) : ?>
                                 <div class="logistics-item">
-                                    <strong><span class="dashicons dashicons-location-alt"></span> <?php esc_html_e('Pickup / Meeting Point:', 'tourivo'); ?></strong>
+                                    <strong><span class="dashicons dashicons-location-alt"></span> <?php esc_html_e('Pickup / Meeting Point:', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                                     <p><?php echo esc_html($tourivoTour->getPickupLocation()); ?></p>
                                 </div>
                             <?php endif; ?>
                             <?php if ($tourivoTour->getDropoffLocation()) : ?>
                                 <div class="logistics-item">
-                                    <strong><span class="dashicons dashicons-flag"></span> <?php esc_html_e('Drop-off Point:', 'tourivo'); ?></strong>
+                                    <strong><span class="dashicons dashicons-flag"></span> <?php esc_html_e('Drop-off Point:', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                                     <p><?php echo esc_html($tourivoTour->getDropoffLocation()); ?></p>
                                 </div>
                             <?php endif; ?>
@@ -168,7 +168,7 @@ $tourivoTour   = new \Tourivo\Models\Tour($tourivoTourId);
                 if (!empty($tourivoFaqs)) : 
                 ?>
                     <div class="tourivo-block-section">
-                        <h2 class="section-heading"><?php esc_html_e('Frequently Asked Questions', 'tourivo'); ?></h2>
+                        <h2 class="section-heading"><?php esc_html_e('Frequently Asked Questions', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <div class="tourivo-faqs-accordion">
                             <?php foreach ($tourivoFaqs as $tourivoFaq) : ?>
                                 <details class="faq-item">

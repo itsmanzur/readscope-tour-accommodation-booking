@@ -1,4 +1,4 @@
-# Tourivo ↔ Tourivo Pro compatibility checklist
+# Readscope Booking ↔ Readscope Booking Pro compatibility checklist
 
 Run this before releasing either plugin, and after renaming, adding or removing any `tourivo/...` hook.
 Both checkouts are expected side by side (`plugins/tourivo` and `plugins/tourivo-pro`).

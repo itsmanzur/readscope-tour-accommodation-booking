@@ -152,7 +152,7 @@ class Container
                 return $this->resolveClass($id);
             }
             // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
-            throw new Exception(esc_html(sprintf('Target [%s] is not bound in Tourivo container and cannot be resolved.', $id)));
+            throw new Exception(esc_html(sprintf('Target [%s] is not bound in Readscope Booking container and cannot be resolved.', $id)));
         }
 
         $binding = $this->bindings[$id];

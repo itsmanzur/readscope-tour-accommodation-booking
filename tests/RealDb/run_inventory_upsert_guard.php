@@ -39,7 +39,7 @@ $create = getenv('DB_CREATE') === '1';
 $flags  = getenv('TRV_PHP_FLAGS') ? explode('|', (string) getenv('TRV_PHP_FLAGS')) : [];
 
 echo "=====================================================\n";
-echo "  Tourivo real-DB inventory upsert guard test\n";
+echo "  Readscope Booking real-DB inventory upsert guard test\n";
 echo "=====================================================\n";
 
 mysqli_report(MYSQLI_REPORT_OFF);

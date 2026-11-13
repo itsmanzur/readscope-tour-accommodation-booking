@@ -41,7 +41,7 @@ class InquiryService
 
         // 1. Honeypot defense
         if (!empty($data['tourivo_inq_hp'])) {
-            return ['success' => false, 'message' => __('Invalid submission.', 'tourivo')];
+            return ['success' => false, 'message' => __('Invalid submission.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         // 2. IP Rate Limiting (5 inquiries per 10 minutes)
@@ -49,7 +49,7 @@ class InquiryService
         if (!\Tourivo\Support\RateLimiter::hit('tourivo_rl_inq_' . md5($ip), 5, 600)) {
             return [
                 'success' => false,
-                'message' => __('Too many inquiries submitted. Please wait a few minutes before trying again.', 'tourivo'),
+                'message' => __('Too many inquiries submitted. Please wait a few minutes before trying again.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -68,7 +68,7 @@ class InquiryService
         if ($requireConsent && empty($data['consent'])) {
             return [
                 'success' => false,
-                'message' => __('You must agree to the terms and privacy policy before submitting an inquiry.', 'tourivo'),
+                'message' => __('You must agree to the terms and privacy policy before submitting an inquiry.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -87,14 +87,14 @@ class InquiryService
         if (empty($name) || empty($email) || empty($message)) {
             return [
                 'success' => false,
-                'message' => __('Please fill in all required fields (Name, Email, Message).', 'tourivo'),
+                'message' => __('Please fill in all required fields (Name, Email, Message).', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
         if (!is_email($email)) {
             return [
                 'success' => false,
-                'message' => __('Please provide a valid email address.', 'tourivo'),
+                'message' => __('Please provide a valid email address.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
@@ -130,14 +130,14 @@ class InquiryService
         if (!$inserted) {
             return [
                 'success' => false,
-                'message' => __('Failed to save your inquiry. Please try again later.', 'tourivo'),
+                'message' => __('Failed to save your inquiry. Please try again later.', 'the-readscope-tour-and-accommodation-booking'),
             ];
         }
 
         $inquiryId = (int) $wpdb->insert_id;
 
         $itemPost = get_post($itemId);
-        $itemTitle = $itemPost ? $itemPost->post_title : __('General Travel Inquiry', 'tourivo');
+        $itemTitle = $itemPost ? $itemPost->post_title : __('General Travel Inquiry', 'the-readscope-tour-and-accommodation-booking');
 
         do_action('tourivo/inquiry/created', $inquiryId, [
             'inquiry_id'  => $inquiryId,
@@ -155,7 +155,7 @@ class InquiryService
         return [
             'success'    => true,
             'inquiry_id' => $inquiryId,
-            'message'    => __('Thank you! Your inquiry has been sent to our travel specialists. We will get back to you shortly.', 'tourivo'),
+            'message'    => __('Thank you! Your inquiry has been sent to our travel specialists. We will get back to you shortly.', 'the-readscope-tour-and-accommodation-booking'),
         ];
     }
 

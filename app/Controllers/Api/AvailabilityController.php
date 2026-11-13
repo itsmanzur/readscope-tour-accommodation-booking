@@ -71,7 +71,7 @@ class AvailabilityController extends Controller
         $rooms     = max(1, min(25, (int) ($request->get_param('rooms') ?: 1)));
 
         if ($itemId <= 0 || empty($startDate) || get_post_status($itemId) !== 'publish') {
-            return new WP_Error('invalid_params', __('Valid published Item ID and start_date are required.', 'tourivo'), ['status' => 400]);
+            return new WP_Error('invalid_params', __('Valid published Item ID and start_date are required.', 'the-readscope-tour-and-accommodation-booking'), ['status' => 400]);
         }
 
         $requestedCount = ($itemType === 'hotel_room' || $itemType === 'room') ? $rooms : $guests;
@@ -104,7 +104,7 @@ class AvailabilityController extends Controller
         $timeSlot = InventoryService::normalizeTimeSlot((string) $request->get_param('time_slot'));
 
         if ($itemId <= 0 || get_post_status($itemId) !== 'publish') {
-            return new WP_Error('invalid_params', __('Invalid parameters for calendar query.', 'tourivo'), ['status' => 400]);
+            return new WP_Error('invalid_params', __('Invalid parameters for calendar query.', 'the-readscope-tour-and-accommodation-booking'), ['status' => 400]);
         }
 
         $calendar = $this->inventoryService->getCalendarAvailability($itemId, $itemType, $year, $month, $timeSlot);
@@ -150,7 +150,7 @@ class AvailabilityController extends Controller
         if (!RateLimiter::hit('tourivo_rl_hold_' . md5($ip), 10, 600)) {
             return new WP_Error(
                 'too_many_holds',
-                __('Too many hold requests initiated. Please complete your existing reservation.', 'tourivo'),
+                __('Too many hold requests initiated. Please complete your existing reservation.', 'the-readscope-tour-and-accommodation-booking'),
                 ['status' => 429]
             );
         }
@@ -167,7 +167,7 @@ class AvailabilityController extends Controller
         if (count($active) >= self::MAX_ACTIVE_HOLDS_PER_CLIENT) {
             return new WP_Error(
                 'too_many_holds',
-                __('Too many hold requests initiated. Please complete your existing reservation.', 'tourivo'),
+                __('Too many hold requests initiated. Please complete your existing reservation.', 'the-readscope-tour-and-accommodation-booking'),
                 ['status' => 429]
             );
         }
@@ -180,7 +180,7 @@ class AvailabilityController extends Controller
         $count     = max(1, min(50, (int) ($request->get_param('count') ?: 1)));
 
         if ($itemId <= 0 || empty($startDate) || get_post_status($itemId) !== 'publish') {
-            return new WP_Error('invalid_params', __('Valid published Item ID and start_date are required.', 'tourivo'), ['status' => 400]);
+            return new WP_Error('invalid_params', __('Valid published Item ID and start_date are required.', 'the-readscope-tour-and-accommodation-booking'), ['status' => 400]);
         }
 
         $holdToken = $this->inventoryService->holdInventory(
@@ -198,7 +198,7 @@ class AvailabilityController extends Controller
         if (!$holdToken) {
             return new WP_Error(
                 'hold_failed',
-                __('Could not reserve selected dates or quantity. Selected spots may already be booked.', 'tourivo'),
+                __('Could not reserve selected dates or quantity. Selected spots may already be booked.', 'the-readscope-tour-and-accommodation-booking'),
                 ['status' => 409]
             );
         }

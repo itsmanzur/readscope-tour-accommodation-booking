@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class Model
  *
- * Base object model for Tourivo entities (Tours, Hotels, Rooms, Bookings).
+ * Base object model for Readscope Booking entities (Tours, Hotels, Rooms, Bookings).
  *
  * @package Tourivo\Common\Abstracts
  */

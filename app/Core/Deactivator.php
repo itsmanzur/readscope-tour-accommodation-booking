@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 class Deactivator
 {
     /**
-     * Every WP-Cron / Action Scheduler hook Tourivo schedules (including legacy ones).
+     * Every WP-Cron / Action Scheduler hook Readscope Booking schedules (including legacy ones).
      *
      * @var string[]
      */
@@ -50,7 +50,7 @@ class Deactivator
     }
 
     /**
-     * Remove every scheduled Tourivo event, whatever its arguments.
+     * Remove every scheduled Readscope Booking event, whatever its arguments.
      *
      * wp_clear_scheduled_hook() only matches events scheduled with the same (empty)
      * args, so queued email/webhook deliveries would survive it. wp_unschedule_hook()

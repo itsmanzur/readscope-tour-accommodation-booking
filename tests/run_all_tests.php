@@ -1,6 +1,6 @@
 <?php
 /**
- * Tourivo Master Test Suite Runner
+ * Readscope Booking Master Test Suite Runner
  *
  * Runs all unit, integration, and security verification tests.
  * Usage: php tests/run_all_tests.php
@@ -14,6 +14,10 @@ require_once __DIR__ . '/TestCase.php';
 // Load Unit tests
 require_once __DIR__ . '/Unit/MoneyTest.php';
 require_once __DIR__ . '/Unit/ClientIpTest.php';
+require_once __DIR__ . '/Unit/RateLimiterTest.php';
+require_once __DIR__ . '/Unit/PortalAssetsTest.php';
+require_once __DIR__ . '/Unit/EmailHtmlTest.php';
+require_once __DIR__ . '/Unit/PublicSearchTest.php';
 require_once __DIR__ . '/Unit/DateValidationTest.php';
 
 // Load Integration tests
@@ -46,12 +50,16 @@ require_once __DIR__ . '/Integration/ReviewFixesTest.php';
 require_once __DIR__ . '/Integration/HookCompatTest.php';
 
 echo "=====================================================\n";
-echo "           Tourivo Automated Test Suite\n";
+echo "           Readscope Booking Automated Test Suite\n";
 echo "=====================================================\n\n";
 
 $testClasses = [
     \Tourivo\Tests\Unit\MoneyTest::class,
     \Tourivo\Tests\Unit\ClientIpTest::class,
+    \Tourivo\Tests\Unit\RateLimiterTest::class,
+    \Tourivo\Tests\Unit\PortalAssetsTest::class,
+    \Tourivo\Tests\Unit\EmailHtmlTest::class,
+    \Tourivo\Tests\Unit\PublicSearchTest::class,
     \Tourivo\Tests\Unit\DateValidationTest::class,
     \Tourivo\Tests\Integration\ContainerWiringTest::class,
     \Tourivo\Tests\Integration\InventoryHoldTest::class,

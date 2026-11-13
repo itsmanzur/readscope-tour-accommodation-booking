@@ -373,7 +373,9 @@ class PrivacyGdprTest extends TestCase
         // Verify Rate-limiting still functions with hashed IP key (without storing raw IP in DB)
         $ip = ClientIp::get();
         $rateLimitKey = 'tourivo_rl_booking_' . md5($ip);
-        set_transient($rateLimitKey, 5, 600); // simulate 5 attempts
+        for ($i = 0; $i < 5; $i++) {
+            \Tourivo\Support\RateLimiter::hit($rateLimitKey, 5, 600); // simulate 5 attempts
+        }
 
         $req = new \WP_REST_Request('POST', '/tourivo/v1/bookings/direct');
         $req->set_json_params([

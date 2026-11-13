@@ -1,6 +1,6 @@
 <?php
 /**
- * Tourivo Admin Availability Manager Test Suite
+ * Readscope Booking Admin Availability Manager Test Suite
  */
 
 declare(strict_types=1);

@@ -1,8 +1,8 @@
 <?php
 /**
- * Tourivo Customer Account / My Bookings Template
+ * Readscope Booking Customer Account / My Bookings Template
  *
- * @package Tourivo
+ * @package Readscope Booking
  * @var bool             $isGuest
  * @var string           $title
  * @var WP_User|null     $currentUser
@@ -41,25 +41,25 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
             </div>
             <h2 class="tourivo-prompt-title"><?php echo esc_html($title); ?></h2>
             <p class="tourivo-prompt-desc">
-                <?php esc_html_e('Please log in to your account to view your travel itineraries, download vouchers, or manage your bookings.', 'tourivo'); ?>
+                <?php esc_html_e('Please log in to your account to view your travel itineraries, download vouchers, or manage your bookings.', 'the-readscope-tour-and-accommodation-booking'); ?>
             </p>
 
             <div class="tourivo-prompt-actions">
                 <a href="<?php echo esc_url($loginUrl); ?>" class="tourivo-btn-account tourivo-btn-primary">
-                    <?php esc_html_e('Log in to Your Account', 'tourivo'); ?>
+                    <?php esc_html_e('Log in to Your Account', 'the-readscope-tour-and-accommodation-booking'); ?>
                 </a>
                 <?php if (!empty($canRegister) && !empty($registerUrl)) : ?>
                     <a href="<?php echo esc_url($registerUrl); ?>" class="tourivo-btn-account tourivo-btn-outline">
-                        <?php esc_html_e('Register an Account', 'tourivo'); ?>
+                        <?php esc_html_e('Register an Account', 'the-readscope-tour-and-accommodation-booking'); ?>
                     </a>
                 <?php endif; ?>
             </div>
 
             <?php if (!empty($lookupUrl)) : ?>
                 <div class="tourivo-prompt-guest-lookup">
-                    <span><?php esc_html_e('Booked as a guest without an account?', 'tourivo'); ?></span>
+                    <span><?php esc_html_e('Booked as a guest without an account?', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                     <a href="<?php echo esc_url($lookupUrl); ?>" class="tourivo-guest-link">
-                        <?php esc_html_e('Track Your Booking with Reference Code →', 'tourivo'); ?>
+                        <?php esc_html_e('Track Your Booking with Reference Code →', 'the-readscope-tour-and-accommodation-booking'); ?>
                     </a>
                 </div>
             <?php endif; ?>
@@ -74,23 +74,23 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
             'nonce'   => $nonce,
             'ajaxUrl' => admin_url('admin-ajax.php'),
             'i18n'    => [
-                'processing' => __('Processing...', 'tourivo'),
-                'confirmCancellation' => __('Confirm Cancellation', 'tourivo'),
-                'cancellationSubmittedSuccessfully' => __('Cancellation submitted successfully.', 'tourivo'),
-                'failedToProcessCancellation' => __('Failed to process cancellation.', 'tourivo'),
-                'aNetworkErrorOccurred' => __('A network error occurred. Please try again.', 'tourivo'),
-                'loadingBookingDetails' => __('Loading booking details...', 'tourivo'),
-                'bookingReference' => __('Booking Reference', 'tourivo'),
-                'placedOn' => __('Placed on:', 'tourivo'),
-                'reservedItems' => __('Reserved Items', 'tourivo'),
-                'paymentFinancialSummary' => __('Payment & Financial Summary', 'tourivo'),
-                'paymentMethod' => __('Payment Method:', 'tourivo'),
-                'paymentStatus' => __('Payment Status:', 'tourivo'),
-                'tax' => __('Tax:', 'tourivo'),
-                'total' => __('Total:', 'tourivo'),
-                'yourNotes' => __('Your Notes:', 'tourivo'),
-                'failedToLoadBooking' => __('Failed to load booking details.', 'tourivo'),
-                'networkErrorShort' => __('A network error occurred.', 'tourivo'),
+                'processing' => __('Processing...', 'the-readscope-tour-and-accommodation-booking'),
+                'confirmCancellation' => __('Confirm Cancellation', 'the-readscope-tour-and-accommodation-booking'),
+                'cancellationSubmittedSuccessfully' => __('Cancellation submitted successfully.', 'the-readscope-tour-and-accommodation-booking'),
+                'failedToProcessCancellation' => __('Failed to process cancellation.', 'the-readscope-tour-and-accommodation-booking'),
+                'aNetworkErrorOccurred' => __('A network error occurred. Please try again.', 'the-readscope-tour-and-accommodation-booking'),
+                'loadingBookingDetails' => __('Loading booking details...', 'the-readscope-tour-and-accommodation-booking'),
+                'bookingReference' => __('Booking Reference', 'the-readscope-tour-and-accommodation-booking'),
+                'placedOn' => __('Placed on:', 'the-readscope-tour-and-accommodation-booking'),
+                'reservedItems' => __('Reserved Items', 'the-readscope-tour-and-accommodation-booking'),
+                'paymentFinancialSummary' => __('Payment & Financial Summary', 'the-readscope-tour-and-accommodation-booking'),
+                'paymentMethod' => __('Payment Method:', 'the-readscope-tour-and-accommodation-booking'),
+                'paymentStatus' => __('Payment Status:', 'the-readscope-tour-and-accommodation-booking'),
+                'tax' => __('Tax:', 'the-readscope-tour-and-accommodation-booking'),
+                'total' => __('Total:', 'the-readscope-tour-and-accommodation-booking'),
+                'yourNotes' => __('Your Notes:', 'the-readscope-tour-and-accommodation-booking'),
+                'failedToLoadBooking' => __('Failed to load booking details.', 'the-readscope-tour-and-accommodation-booking'),
+                'networkErrorShort' => __('A network error occurred.', 'the-readscope-tour-and-accommodation-booking'),
             ],
         ]
     );
@@ -104,7 +104,7 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
                     <?php
                     printf(
                         /* translators: %s: Traveler display name */
-                        esc_html__('Welcome back, %s 👋', 'tourivo'),
+                        esc_html__('Welcome back, %s 👋', 'the-readscope-tour-and-accommodation-booking'),
                         esc_html($currentUser ? ($currentUser->display_name ?: $currentUser->user_login) : '')
                     );
                     ?>
@@ -114,7 +114,7 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
             <?php if (!empty($lookupUrl)) : ?>
                 <div>
                     <a href="<?php echo esc_url($lookupUrl); ?>" class="tourivo-link-lookup">
-                        🔍 <?php esc_html_e('Quick Booking Lookup', 'tourivo'); ?>
+                        🔍 <?php esc_html_e('Quick Booking Lookup', 'the-readscope-tour-and-accommodation-booking'); ?>
                     </a>
                 </div>
             <?php endif; ?>
@@ -127,7 +127,7 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
                     <div class="tourivo-stat-icon">🌴</div>
                     <div class="tourivo-stat-data">
                         <span class="tourivo-stat-value"><?php echo esc_html((string) $stats['total']); ?></span>
-                        <span class="tourivo-stat-label"><?php esc_html_e('Total Trips', 'tourivo'); ?></span>
+                        <span class="tourivo-stat-label"><?php esc_html_e('Total Trips', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                     </div>
                 </div>
 
@@ -135,7 +135,7 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
                     <div class="tourivo-stat-icon" style="color:#0d9488;">📅</div>
                     <div class="tourivo-stat-data">
                         <span class="tourivo-stat-value"><?php echo esc_html((string) $stats['upcoming']); ?></span>
-                        <span class="tourivo-stat-label"><?php esc_html_e('Upcoming Trips', 'tourivo'); ?></span>
+                        <span class="tourivo-stat-label"><?php esc_html_e('Upcoming Trips', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                     </div>
                 </div>
 
@@ -143,7 +143,7 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
                     <div class="tourivo-stat-icon" style="color:#10b981;">✅</div>
                     <div class="tourivo-stat-data">
                         <span class="tourivo-stat-value"><?php echo esc_html((string) $stats['completed']); ?></span>
-                        <span class="tourivo-stat-label"><?php esc_html_e('Completed Trips', 'tourivo'); ?></span>
+                        <span class="tourivo-stat-label"><?php esc_html_e('Completed Trips', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                     </div>
                 </div>
 
@@ -151,7 +151,7 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
                     <div class="tourivo-stat-icon" style="color:#6366f1;">💳</div>
                     <div class="tourivo-stat-data">
                         <span class="tourivo-stat-value"><?php echo esc_html($stats['total_spent']); ?></span>
-                        <span class="tourivo-stat-label"><?php esc_html_e('Total Spent', 'tourivo'); ?></span>
+                        <span class="tourivo-stat-label"><?php esc_html_e('Total Spent', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                     </div>
                 </div>
             </div>
@@ -160,19 +160,19 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
         <!-- Filter Tabs -->
         <div class="tourivo-bookings-tabs" role="tablist">
             <button type="button" class="tourivo-tab-btn active" data-tab="all" role="tab" aria-selected="true">
-                <?php esc_html_e('All Bookings', 'tourivo'); ?>
+                <?php esc_html_e('All Bookings', 'the-readscope-tour-and-accommodation-booking'); ?>
                 <span class="tourivo-tab-count"><?php echo esc_html((string) ($stats['total'] ?? count($bookings))); ?></span>
             </button>
             <button type="button" class="tourivo-tab-btn" data-tab="upcoming" role="tab" aria-selected="false">
-                <?php esc_html_e('Upcoming', 'tourivo'); ?>
+                <?php esc_html_e('Upcoming', 'the-readscope-tour-and-accommodation-booking'); ?>
                 <span class="tourivo-tab-count"><?php echo esc_html((string) ($stats['upcoming'] ?? 0)); ?></span>
             </button>
             <button type="button" class="tourivo-tab-btn" data-tab="completed" role="tab" aria-selected="false">
-                <?php esc_html_e('Completed', 'tourivo'); ?>
+                <?php esc_html_e('Completed', 'the-readscope-tour-and-accommodation-booking'); ?>
                 <span class="tourivo-tab-count"><?php echo esc_html((string) ($stats['completed'] ?? 0)); ?></span>
             </button>
             <button type="button" class="tourivo-tab-btn" data-tab="cancelled" role="tab" aria-selected="false">
-                <?php esc_html_e('Cancelled', 'tourivo'); ?>
+                <?php esc_html_e('Cancelled', 'the-readscope-tour-and-accommodation-booking'); ?>
                 <span class="tourivo-tab-count"><?php echo esc_html((string) ($stats['cancelled'] ?? 0)); ?></span>
             </button>
         </div>
@@ -182,8 +182,8 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
             <?php if (empty($bookings)) : ?>
                 <div class="tourivo-no-bookings">
                     <div style="font-size: var(--trv-text-display); margin-bottom: 12px;">🗺️</div>
-                    <h3><?php esc_html_e('No bookings found yet', 'tourivo'); ?></h3>
-                    <p><?php esc_html_e("When you reserve a tour package or hotel stay, it will appear here in your dashboard.", 'tourivo'); ?></p>
+                    <h3><?php esc_html_e('No bookings found yet', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
+                    <p><?php esc_html_e("When you reserve a tour package or hotel stay, it will appear here in your dashboard.", 'the-readscope-tour-and-accommodation-booking'); ?></p>
                 </div>
             <?php else : ?>
                 <?php foreach ($bookings as $b) : ?>
@@ -205,8 +205,8 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
                     $payColor = ($b['payment_status'] === 'paid') ? '#15803d' : '#475569';
                     $item = $b['first_item'];
                     $itemTypeLabel = ($item && ($item->item_type === 'room' || $item->item_type === 'hotel_room'))
-                        ? __('Hotel Stay', 'tourivo')
-                        : __('Tour Package', 'tourivo');
+                        ? __('Hotel Stay', 'the-readscope-tour-and-accommodation-booking')
+                        : __('Tour Package', 'the-readscope-tour-and-accommodation-booking');
 
                     $checkInDate = $item && !empty($item->check_in) ? gmdate('M d, Y', strtotime((string) $item->check_in)) : '—';
                     $checkOutDate = $item && !empty($item->check_out) ? gmdate('M d, Y', strtotime((string) $item->check_out)) : '';
@@ -215,7 +215,7 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
                     <div class="tourivo-booking-card" data-category="<?php echo esc_attr((string) $b['category']); ?>">
                         <div class="tourivo-card-header">
                             <div class="tourivo-card-reference">
-                                <span class="tourivo-ref-label"><?php esc_html_e('Booking Code', 'tourivo'); ?></span>
+                                <span class="tourivo-ref-label"><?php esc_html_e('Booking Code', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 <strong class="tourivo-ref-code">#<?php echo esc_html((string) $b['booking_code']); ?></strong>
                             </div>
 
@@ -232,26 +232,26 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
                         <div class="tourivo-card-body">
                             <div class="tourivo-item-summary">
                                 <div class="tourivo-item-type-badge"><?php echo esc_html($itemTypeLabel); ?></div>
-                                <h3 class="tourivo-item-title"><?php echo esc_html($item ? (string) $item->item_title : __('Tour / Room', 'tourivo')); ?></h3>
+                                <h3 class="tourivo-item-title"><?php echo esc_html($item ? (string) $item->item_title : __('Tour / Room', 'the-readscope-tour-and-accommodation-booking')); ?></h3>
                             </div>
 
                             <div class="tourivo-meta-grid">
                                 <div>
-                                    <span class="tourivo-meta-label">📅 <?php esc_html_e('Date / Duration', 'tourivo'); ?></span>
+                                    <span class="tourivo-meta-label">📅 <?php esc_html_e('Date / Duration', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                     <span class="tourivo-meta-val"><?php echo esc_html($dateRange); ?></span>
                                 </div>
                                 <?php if ($item && !empty($item->time_slot)) : ?>
                                     <div>
-                                        <span class="tourivo-meta-label">⏰ <?php esc_html_e('Time Slot', 'tourivo'); ?></span>
+                                        <span class="tourivo-meta-label">⏰ <?php esc_html_e('Time Slot', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                         <span class="tourivo-meta-val"><?php echo esc_html((string) $item->time_slot); ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <div>
-                                    <span class="tourivo-meta-label">👥 <?php esc_html_e('Guests / Qty', 'tourivo'); ?></span>
+                                    <span class="tourivo-meta-label">👥 <?php esc_html_e('Guests / Qty', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                     <span class="tourivo-meta-val"><?php echo esc_html($item ? (string) $item->quantity : '1'); ?></span>
                                 </div>
                                 <div>
-                                    <span class="tourivo-meta-label">💰 <?php esc_html_e('Total Amount', 'tourivo'); ?></span>
+                                    <span class="tourivo-meta-label">💰 <?php esc_html_e('Total Amount', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                     <strong class="tourivo-meta-val" style="color: #0f172a; font-size: var(--trv-text-base);"><?php echo esc_html((string) $b['total_amount']); ?></strong>
                                 </div>
                             </div>
@@ -259,25 +259,25 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
 
                         <div class="tourivo-card-actions">
                             <button type="button" class="tourivo-btn-sm tourivo-btn-outline btnViewDetails" data-booking-id="<?php echo esc_attr((string) $b['id']); ?>">
-                                📄 <?php esc_html_e('View Details', 'tourivo'); ?>
+                                📄 <?php esc_html_e('View Details', 'the-readscope-tour-and-accommodation-booking'); ?>
                             </button>
 
                             <a href="<?php echo esc_url((string) $b['voucher_url']); ?>" target="_blank" rel="noopener noreferrer" class="tourivo-btn-sm tourivo-btn-outline">
-                                🎫 <?php esc_html_e('Download Voucher', 'tourivo'); ?>
+                                🎫 <?php esc_html_e('Download Voucher', 'the-readscope-tour-and-accommodation-booking'); ?>
                             </a>
 
                             <a href="<?php echo esc_url((string) $b['calendar_url']); ?>" class="tourivo-btn-sm tourivo-btn-outline">
-                                📅 <?php esc_html_e('Add to Calendar', 'tourivo'); ?>
+                                📅 <?php esc_html_e('Add to Calendar', 'the-readscope-tour-and-accommodation-booking'); ?>
                             </a>
                             <?php do_action('tourivo/my_booking_actions', $b); ?>
 
                             <?php if (!empty($b['can_cancel'])) : ?>
                                 <button type="button" class="tourivo-btn-sm tourivo-btn-danger btnOpenCancelModal" data-booking-id="<?php echo esc_attr((string) $b['id']); ?>" data-code="<?php echo esc_attr((string) $b['booking_code']); ?>">
-                                    ✕ <?php esc_html_e('Cancel Booking', 'tourivo'); ?>
+                                    ✕ <?php esc_html_e('Cancel Booking', 'the-readscope-tour-and-accommodation-booking'); ?>
                                 </button>
                             <?php elseif (!empty($b['cancel_requested'])) : ?>
                                 <span class="tourivo-cancel-pending-pill">
-                                    ⏳ <?php esc_html_e('Cancellation Requested', 'tourivo'); ?>
+                                    ⏳ <?php esc_html_e('Cancellation Requested', 'the-readscope-tour-and-accommodation-booking'); ?>
                                 </span>
                             <?php endif; ?>
                         </div>
@@ -291,15 +291,15 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
     <div class="tourivo-modal-backdrop" id="tourivoDetailsModal" style="display:none;" aria-hidden="true">
         <div class="tourivo-modal-box">
             <div class="tourivo-modal-header">
-                <h3 class="tourivo-modal-title"><?php esc_html_e('Reservation Details', 'tourivo'); ?></h3>
-                <button type="button" class="tourivo-modal-close" data-tourivo-action="close-details" aria-label="<?php esc_attr_e('Close', 'tourivo'); ?>">×</button>
+                <h3 class="tourivo-modal-title"><?php esc_html_e('Reservation Details', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
+                <button type="button" class="tourivo-modal-close" data-tourivo-action="close-details" aria-label="<?php esc_attr_e('Close', 'the-readscope-tour-and-accommodation-booking'); ?>">×</button>
             </div>
             <div class="tourivo-modal-body" id="tourivoDetailsBody">
-                <div class="tourivo-modal-loader"><?php esc_html_e('Loading details...', 'tourivo'); ?></div>
+                <div class="tourivo-modal-loader"><?php esc_html_e('Loading details...', 'the-readscope-tour-and-accommodation-booking'); ?></div>
             </div>
             <div class="tourivo-modal-footer">
                 <button type="button" class="tourivo-btn-account tourivo-btn-outline" data-tourivo-action="close-details">
-                    <?php esc_html_e('Close', 'tourivo'); ?>
+                    <?php esc_html_e('Close', 'the-readscope-tour-and-accommodation-booking'); ?>
                 </button>
             </div>
         </div>
@@ -309,27 +309,27 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
     <div class="tourivo-modal-backdrop" id="tourivoCancelModal" style="display:none;" aria-hidden="true">
         <div class="tourivo-modal-box">
             <div class="tourivo-modal-header">
-                <h3 class="tourivo-modal-title"><?php esc_html_e('Confirm Cancellation', 'tourivo'); ?></h3>
-                <button type="button" class="tourivo-modal-close" data-tourivo-action="close-cancel" aria-label="<?php esc_attr_e('Close', 'tourivo'); ?>">×</button>
+                <h3 class="tourivo-modal-title"><?php esc_html_e('Confirm Cancellation', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
+                <button type="button" class="tourivo-modal-close" data-tourivo-action="close-cancel" aria-label="<?php esc_attr_e('Close', 'the-readscope-tour-and-accommodation-booking'); ?>">×</button>
             </div>
             <div class="tourivo-modal-body">
                 <p style="margin-top:0; color:#475569;">
-                    <?php esc_html_e('Are you sure you wish to cancel this reservation? Depending on our cancellation policy and booking status, this will either immediately release your reservation or submit a review request to our operations team.', 'tourivo'); ?>
+                    <?php esc_html_e('Are you sure you wish to cancel this reservation? Depending on our cancellation policy and booking status, this will either immediately release your reservation or submit a review request to our operations team.', 'the-readscope-tour-and-accommodation-booking'); ?>
                 </p>
                 <div style="margin-bottom: 16px;">
                     <label for="trvCancelReason" style="display:block; font-weight:600; margin-bottom:6px; color:#0f172a;">
-                        <?php esc_html_e('Reason for Cancellation (optional):', 'tourivo'); ?>
+                        <?php esc_html_e('Reason for Cancellation (optional):', 'the-readscope-tour-and-accommodation-booking'); ?>
                     </label>
-                    <textarea id="trvCancelReason" rows="3" class="tourivo-input-textarea" placeholder="<?php esc_attr_e('e.g., Changed travel dates, medical reason...', 'tourivo'); ?>"></textarea>
+                    <textarea id="trvCancelReason" rows="3" class="tourivo-input-textarea" placeholder="<?php esc_attr_e('e.g., Changed travel dates, medical reason...', 'the-readscope-tour-and-accommodation-booking'); ?>"></textarea>
                 </div>
                 <div id="trvCancelFeedback" style="display:none; padding:10px; border-radius:6px; font-size: var(--trv-text-sm); margin-bottom:12px;"></div>
             </div>
             <div class="tourivo-modal-footer">
                 <button type="button" class="tourivo-btn-account tourivo-btn-outline" data-tourivo-action="close-cancel">
-                    <?php esc_html_e('Nevermind, Keep Booking', 'tourivo'); ?>
+                    <?php esc_html_e('Nevermind, Keep Booking', 'the-readscope-tour-and-accommodation-booking'); ?>
                 </button>
                 <button type="button" class="tourivo-btn-account tourivo-btn-danger" id="btnConfirmCancel">
-                    <?php esc_html_e('Confirm Cancellation', 'tourivo'); ?>
+                    <?php esc_html_e('Confirm Cancellation', 'the-readscope-tour-and-accommodation-booking'); ?>
                 </button>
             </div>
         </div>

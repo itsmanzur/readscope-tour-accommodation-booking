@@ -30,7 +30,7 @@ class HotelGridWidget extends \Elementor\Widget_Base
 
     public function get_title(): string
     {
-        return esc_html__('Hotel Grid', 'tourivo');
+        return esc_html__('Hotel Grid', 'the-readscope-tour-and-accommodation-booking');
     }
 
     public function get_icon(): string
@@ -45,7 +45,7 @@ class HotelGridWidget extends \Elementor\Widget_Base
 
     public function get_keywords(): array
     {
-        return ['tourivo', 'hotel', 'resort', 'stay', 'grid'];
+        return ['readscope', 'hotel', 'resort', 'stay', 'grid'];
     }
 
     protected function register_controls(): void
@@ -53,14 +53,14 @@ class HotelGridWidget extends \Elementor\Widget_Base
         $this->start_controls_section(
             'section_content',
             [
-                'label' => esc_html__('Hotel Grid Settings', 'tourivo'),
+                'label' => esc_html__('Hotel Grid Settings', 'the-readscope-tour-and-accommodation-booking'),
             ]
         );
 
         $this->add_control(
             'count',
             [
-                'label'   => esc_html__('Hotels Count', 'tourivo'),
+                'label'   => esc_html__('Hotels Count', 'the-readscope-tour-and-accommodation-booking'),
                 'type'    => \Elementor\Controls_Manager::NUMBER,
                 'min'     => 1,
                 'max'     => 50,
@@ -71,7 +71,7 @@ class HotelGridWidget extends \Elementor\Widget_Base
         $this->add_control(
             'columns',
             [
-                'label'   => esc_html__('Columns', 'tourivo'),
+                'label'   => esc_html__('Columns', 'the-readscope-tour-and-accommodation-booking'),
                 'type'    => \Elementor\Controls_Manager::SELECT,
                 'default' => '3',
                 'options' => [
@@ -86,7 +86,7 @@ class HotelGridWidget extends \Elementor\Widget_Base
         $this->add_control(
             'destination',
             [
-                'label'       => esc_html__('Filter by Destination Slug', 'tourivo'),
+                'label'       => esc_html__('Filter by Destination Slug', 'the-readscope-tour-and-accommodation-booking'),
                 'type'        => \Elementor\Controls_Manager::TEXT,
                 'placeholder' => 'e.g. maldives',
             ]

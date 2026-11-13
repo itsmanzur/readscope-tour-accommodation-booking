@@ -1,8 +1,8 @@
 <?php
 /**
- * Tourivo Uninstall Handler
+ * Readscope Booking Uninstall Handler
  *
- * @package Tourivo
+ * @package Readscope Booking
  */
 
 declare(strict_types=1);

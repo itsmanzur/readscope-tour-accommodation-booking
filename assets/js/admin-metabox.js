@@ -1,5 +1,5 @@
 /**
- * Tourivo Admin MetaBox JavaScript (Tabs, Repeaters for Itinerary, Inclusions, FAQs)
+ * Readscope Booking Admin MetaBox JavaScript (Tabs, Repeaters for Itinerary, Inclusions, FAQs)
  */
 
 document.addEventListener('DOMContentLoaded', function () {

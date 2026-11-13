@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 /**
  * Class EmailService
  *
- * Fully asynchronous, hook-driven email notification engine for Tourivo.
+ * Fully asynchronous, hook-driven email notification engine for Readscope Booking.
  * Supports multipart responsive HTML + Plain-text (AltBody), trip reminders cron,
  * template overrides, deduplication, retry queues, and header injection defense.
  *
@@ -38,11 +38,13 @@ class EmailService
         add_action('tourivo_process_email_delivery', [$this, 'dispatch'], 10, 4);
         add_action('tourivo_daily_reminders', [$this, 'processDailyReminders']);
 
-        // Schedule daily reminders cron if enabled and not already scheduled
-        $reminderDays = (int) Config::get('reminder_days_before', 2);
-        if ($reminderDays > 0 && function_exists('wp_next_scheduled') && !wp_next_scheduled('tourivo_daily_reminders')) {
-            wp_schedule_event(time(), 'daily', 'tourivo_daily_reminders');
-        }
+        // Schedule daily reminders cron if enabled and not already scheduled (on init: schedule labels are translated)
+        add_action('init', static function (): void {
+            $reminderDays = (int) Config::get('reminder_days_before', 2);
+            if ($reminderDays > 0 && function_exists('wp_next_scheduled') && !wp_next_scheduled('tourivo_daily_reminders')) {
+                wp_schedule_event(time(), 'daily', 'tourivo_daily_reminders');
+            }
+        }, 20);
     }
 
     /**
@@ -210,6 +212,22 @@ class EmailService
     public const QUEUE_HOOK = 'tourivo_process_email_delivery';
 
     /**
+     * Every email type the plugin sends. Each one maps to a template in templates/emails/.
+     *
+     * @var array<int, string>
+     */
+    public const EMAIL_TYPES = [
+        'customer_booking_received',
+        'customer_booking_confirmed',
+        'customer_booking_cancelled',
+        'customer_trip_reminder',
+        'customer_verify_email',
+        'admin_new_booking',
+        'admin_booking_cancelled',
+        'admin_new_inquiry',
+    ];
+
+    /**
      * Enqueue asynchronous email delivery via Action Scheduler or WP-Cron.
      *
      * Only [type, recipient hash, booking/inquiry ID, attempt] go into the job: Action Scheduler and
@@ -318,7 +336,7 @@ class EmailService
                     'email_sent',
                     sprintf(
                         /* translators: 1: Email type, 2: Attempt number */
-                        __('Email [%1$s] sent successfully (attempt %2$d).', 'tourivo'),
+                        __('Email [%1$s] sent successfully (attempt %2$d).', 'the-readscope-tour-and-accommodation-booking'),
                         $emailType,
                         $attempt
                     )
@@ -329,10 +347,10 @@ class EmailService
                     'email_failed',
                     sprintf(
                         /* translators: 1: Email type, 2: Attempt number, 3: Error details */
-                        __('Email [%1$s] failed to send (attempt %2$d). Reason: %3$s', 'tourivo'),
+                        __('Email [%1$s] failed to send (attempt %2$d). Reason: %3$s', 'the-readscope-tour-and-accommodation-booking'),
                         $emailType,
                         $attempt,
-                        $lastError ?: __('Unknown mail error', 'tourivo')
+                        $lastError ?: __('Unknown mail error', 'the-readscope-tour-and-accommodation-booking')
                     )
                 );
             }
@@ -639,6 +657,11 @@ class EmailService
             return false;
         }
 
+        // Only the email types the plugin really sends: the type picks the template file that is rendered.
+        if (!in_array($emailType, self::EMAIL_TYPES, true)) {
+            return false;
+        }
+
         $mockData = [
             'booking_code'   => 'TRV-TEST-8888',
             'customer_name'  => 'John Traveler',
@@ -670,7 +693,7 @@ class EmailService
 
         if ($sent && defined('WP_DEBUG') && WP_DEBUG) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Debug-only note, no personal data.
-            error_log('Tourivo: test email sent.');
+            error_log('Readscope Booking: test email sent.');
         }
 
         return $sent;
@@ -828,22 +851,22 @@ class EmailService
     private function stockCopyTranslations(): array
     {
         return [
-            'email_customer_booking_received_subject'  => __('Your Booking Request Received #{booking_code} - {site_name}', 'tourivo'),
-            'email_customer_booking_received_heading'  => __('Booking Request Received', 'tourivo'),
-            'email_customer_booking_confirmed_subject' => __('Your Booking Confirmation #{booking_code} - {site_name}', 'tourivo'),
-            'email_customer_booking_confirmed_heading' => __('Booking Confirmed!', 'tourivo'),
-            'email_customer_verify_email_subject'      => __('Please confirm your booking #{booking_code} - {site_name}', 'tourivo'),
-            'email_customer_verify_email_heading'      => __('Confirm Your Email Address', 'tourivo'),
-            'email_customer_booking_cancelled_subject' => __('Your Booking #{booking_code} has been Cancelled - {site_name}', 'tourivo'),
-            'email_customer_booking_cancelled_heading' => __('Booking Cancelled', 'tourivo'),
-            'email_customer_trip_reminder_subject'     => __('Upcoming Trip Reminder: #{booking_code} - {site_name}', 'tourivo'),
-            'email_customer_trip_reminder_heading'     => __('Your Trip is Coming Up Soon!', 'tourivo'),
-            'email_admin_new_booking_subject'          => __('[New Booking] #{booking_code} by {customer_name}', 'tourivo'),
-            'email_admin_new_booking_heading'          => __('New Booking Received', 'tourivo'),
-            'email_admin_booking_cancelled_subject'    => __('[Booking Cancelled] #{booking_code} - {customer_name}', 'tourivo'),
-            'email_admin_booking_cancelled_heading'    => __('Booking Cancelled Notification', 'tourivo'),
-            'email_admin_new_inquiry_subject'          => __('[New Inquiry] {item_title} from {customer_name}', 'tourivo'),
-            'email_admin_new_inquiry_heading'          => __('New Traveler Trip Inquiry', 'tourivo'),
+            'email_customer_booking_received_subject'  => __('Your Booking Request Received #{booking_code} - {site_name}', 'the-readscope-tour-and-accommodation-booking'),
+            'email_customer_booking_received_heading'  => __('Booking Request Received', 'the-readscope-tour-and-accommodation-booking'),
+            'email_customer_booking_confirmed_subject' => __('Your Booking Confirmation #{booking_code} - {site_name}', 'the-readscope-tour-and-accommodation-booking'),
+            'email_customer_booking_confirmed_heading' => __('Booking Confirmed!', 'the-readscope-tour-and-accommodation-booking'),
+            'email_customer_verify_email_subject'      => __('Please confirm your booking #{booking_code} - {site_name}', 'the-readscope-tour-and-accommodation-booking'),
+            'email_customer_verify_email_heading'      => __('Confirm Your Email Address', 'the-readscope-tour-and-accommodation-booking'),
+            'email_customer_booking_cancelled_subject' => __('Your Booking #{booking_code} has been Cancelled - {site_name}', 'the-readscope-tour-and-accommodation-booking'),
+            'email_customer_booking_cancelled_heading' => __('Booking Cancelled', 'the-readscope-tour-and-accommodation-booking'),
+            'email_customer_trip_reminder_subject'     => __('Upcoming Trip Reminder: #{booking_code} - {site_name}', 'the-readscope-tour-and-accommodation-booking'),
+            'email_customer_trip_reminder_heading'     => __('Your Trip is Coming Up Soon!', 'the-readscope-tour-and-accommodation-booking'),
+            'email_admin_new_booking_subject'          => __('[New Booking] #{booking_code} by {customer_name}', 'the-readscope-tour-and-accommodation-booking'),
+            'email_admin_new_booking_heading'          => __('New Booking Received', 'the-readscope-tour-and-accommodation-booking'),
+            'email_admin_booking_cancelled_subject'    => __('[Booking Cancelled] #{booking_code} - {customer_name}', 'the-readscope-tour-and-accommodation-booking'),
+            'email_admin_booking_cancelled_heading'    => __('Booking Cancelled Notification', 'the-readscope-tour-and-accommodation-booking'),
+            'email_admin_new_inquiry_subject'          => __('[New Inquiry] {item_title} from {customer_name}', 'the-readscope-tour-and-accommodation-booking'),
+            'email_admin_new_inquiry_heading'          => __('New Traveler Trip Inquiry', 'the-readscope-tour-and-accommodation-booking'),
         ];
     }
 
@@ -978,7 +1001,7 @@ class EmailService
             'inquiry_id'  => (int) $inquiry->id,
             'item_id'     => $itemId,
             'item_type'   => (string) ($inquiry->item_type ?? 'tour'),
-            'item_title'  => $itemPost ? (string) $itemPost->post_title : __('General Travel Inquiry', 'tourivo'),
+            'item_title'  => $itemPost ? (string) $itemPost->post_title : __('General Travel Inquiry', 'the-readscope-tour-and-accommodation-booking'),
             'name'        => (string) ($inquiry->customer_name ?? ''),
             'email'       => (string) ($inquiry->customer_email ?? ''),
             'phone'       => (string) ($inquiry->customer_phone ?? ''),

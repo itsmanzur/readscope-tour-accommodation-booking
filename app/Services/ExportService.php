@@ -323,25 +323,25 @@ class ExportService
     {
         // Header
         fputcsv($stream, [
-            __('Booking Code', 'tourivo'),
-            __('Customer Name', 'tourivo'),
-            __('Customer Email', 'tourivo'),
-            __('Customer Phone', 'tourivo'),
-            __('Trip / Stay Title', 'tourivo'),
-            __('Type', 'tourivo'),
-            __('Check-in Date', 'tourivo'),
-            __('Check-out Date', 'tourivo'),
-            __('Travelers', 'tourivo'),
-            __('Subtotal', 'tourivo'),
-            __('Tax Amount', 'tourivo'),
-            __('Discount Amount', 'tourivo'),
-            __('Total Amount', 'tourivo'),
-            __('Currency', 'tourivo'),
-            __('Payment Method', 'tourivo'),
-            __('Payment Status', 'tourivo'),
-            __('Booking Status', 'tourivo'),
-            __('Customer Notes', 'tourivo'),
-            __('Booking Created At', 'tourivo'),
+            __('Booking Code', 'the-readscope-tour-and-accommodation-booking'),
+            __('Customer Name', 'the-readscope-tour-and-accommodation-booking'),
+            __('Customer Email', 'the-readscope-tour-and-accommodation-booking'),
+            __('Customer Phone', 'the-readscope-tour-and-accommodation-booking'),
+            __('Trip / Stay Title', 'the-readscope-tour-and-accommodation-booking'),
+            __('Type', 'the-readscope-tour-and-accommodation-booking'),
+            __('Check-in Date', 'the-readscope-tour-and-accommodation-booking'),
+            __('Check-out Date', 'the-readscope-tour-and-accommodation-booking'),
+            __('Travelers', 'the-readscope-tour-and-accommodation-booking'),
+            __('Subtotal', 'the-readscope-tour-and-accommodation-booking'),
+            __('Tax Amount', 'the-readscope-tour-and-accommodation-booking'),
+            __('Discount Amount', 'the-readscope-tour-and-accommodation-booking'),
+            __('Total Amount', 'the-readscope-tour-and-accommodation-booking'),
+            __('Currency', 'the-readscope-tour-and-accommodation-booking'),
+            __('Payment Method', 'the-readscope-tour-and-accommodation-booking'),
+            __('Payment Status', 'the-readscope-tour-and-accommodation-booking'),
+            __('Booking Status', 'the-readscope-tour-and-accommodation-booking'),
+            __('Customer Notes', 'the-readscope-tour-and-accommodation-booking'),
+            __('Booking Created At', 'the-readscope-tour-and-accommodation-booking'),
         ]);
 
         foreach ($bookings as $row) {
@@ -384,23 +384,23 @@ class ExportService
     protected function writeItemizedCsv($stream, array $bookings): void
     {
         fputcsv($stream, [
-            __('Booking Code', 'tourivo'),
-            __('Customer Name', 'tourivo'),
-            __('Customer Email', 'tourivo'),
-            __('Item ID', 'tourivo'),
-            __('Item Title', 'tourivo'),
-            __('Item Type', 'tourivo'),
-            __('Check-in Date', 'tourivo'),
-            __('Check-out Date', 'tourivo'),
-            __('Adults', 'tourivo'),
-            __('Children', 'tourivo'),
-            __('Infants', 'tourivo'),
-            __('Total Guests', 'tourivo'),
-            __('Unit Price', 'tourivo'),
-            __('Line Total', 'tourivo'),
-            __('Booking Status', 'tourivo'),
-            __('Payment Status', 'tourivo'),
-            __('Booking Date', 'tourivo'),
+            __('Booking Code', 'the-readscope-tour-and-accommodation-booking'),
+            __('Customer Name', 'the-readscope-tour-and-accommodation-booking'),
+            __('Customer Email', 'the-readscope-tour-and-accommodation-booking'),
+            __('Item ID', 'the-readscope-tour-and-accommodation-booking'),
+            __('Item Title', 'the-readscope-tour-and-accommodation-booking'),
+            __('Item Type', 'the-readscope-tour-and-accommodation-booking'),
+            __('Check-in Date', 'the-readscope-tour-and-accommodation-booking'),
+            __('Check-out Date', 'the-readscope-tour-and-accommodation-booking'),
+            __('Adults', 'the-readscope-tour-and-accommodation-booking'),
+            __('Children', 'the-readscope-tour-and-accommodation-booking'),
+            __('Infants', 'the-readscope-tour-and-accommodation-booking'),
+            __('Total Guests', 'the-readscope-tour-and-accommodation-booking'),
+            __('Unit Price', 'the-readscope-tour-and-accommodation-booking'),
+            __('Line Total', 'the-readscope-tour-and-accommodation-booking'),
+            __('Booking Status', 'the-readscope-tour-and-accommodation-booking'),
+            __('Payment Status', 'the-readscope-tour-and-accommodation-booking'),
+            __('Booking Date', 'the-readscope-tour-and-accommodation-booking'),
         ]);
 
         foreach ($bookings as $b) {
@@ -450,25 +450,25 @@ class ExportService
     {
         $summary = $this->getExportSummary($filters);
 
-        fputcsv($stream, [__('Tourivo Bookings Financial Summary Report', 'tourivo')]);
-        fputcsv($stream, [__('Generated On', 'tourivo'), gmdate('Y-m-d H:i:s') . ' UTC']);
+        fputcsv($stream, [__('Readscope Bookings Financial Summary Report', 'the-readscope-tour-and-accommodation-booking')]);
+        fputcsv($stream, [__('Generated On', 'the-readscope-tour-and-accommodation-booking'), gmdate('Y-m-d H:i:s') . ' UTC']);
         fputcsv($stream, [
-            __('Date Filter', 'tourivo'),
+            __('Date Filter', 'the-readscope-tour-and-accommodation-booking'),
             (!empty($filters['start_date']) || !empty($filters['end_date']))
                 ? (($filters['start_date'] ?? 'All') . ' to ' . ($filters['end_date'] ?? 'All'))
-                : __('All Time', 'tourivo')
+                : __('All Time', 'the-readscope-tour-and-accommodation-booking')
         ]);
-        fputcsv($stream, [__('Status Filter', 'tourivo'), ucfirst((string) ($filters['status'] ?? 'all'))]);
+        fputcsv($stream, [__('Status Filter', 'the-readscope-tour-and-accommodation-booking'), ucfirst((string) ($filters['status'] ?? 'all'))]);
         fputcsv($stream, []); // Empty spacing line
 
-        fputcsv($stream, [__('Metric', 'tourivo'), __('Value', 'tourivo')]);
-        fputcsv($stream, [__('Total Bookings Recorded', 'tourivo'), (string) $summary['total_bookings']]);
-        fputcsv($stream, [__('Confirmed / Active Bookings', 'tourivo'), (string) $summary['confirmed_bookings']]);
-        fputcsv($stream, [__('Total Travelers / Guests', 'tourivo'), (string) $summary['total_travelers']]);
-        fputcsv($stream, [__('Gross Total Booking Value', 'tourivo'), number_format($summary['total_revenue'], 2, '.', '')]);
-        fputcsv($stream, [__('Total Revenue (Excluding Cancelled)', 'tourivo'), number_format($summary['confirmed_revenue'], 2, '.', '')]);
-        fputcsv($stream, [__('Total Tax Collected', 'tourivo'), number_format($summary['total_tax'], 2, '.', '')]);
-        fputcsv($stream, [__('Total Discounts Granted', 'tourivo'), number_format($summary['total_discount'], 2, '.', '')]);
+        fputcsv($stream, [__('Metric', 'the-readscope-tour-and-accommodation-booking'), __('Value', 'the-readscope-tour-and-accommodation-booking')]);
+        fputcsv($stream, [__('Total Bookings Recorded', 'the-readscope-tour-and-accommodation-booking'), (string) $summary['total_bookings']]);
+        fputcsv($stream, [__('Confirmed / Active Bookings', 'the-readscope-tour-and-accommodation-booking'), (string) $summary['confirmed_bookings']]);
+        fputcsv($stream, [__('Total Travelers / Guests', 'the-readscope-tour-and-accommodation-booking'), (string) $summary['total_travelers']]);
+        fputcsv($stream, [__('Gross Total Booking Value', 'the-readscope-tour-and-accommodation-booking'), number_format($summary['total_revenue'], 2, '.', '')]);
+        fputcsv($stream, [__('Total Revenue (Excluding Cancelled)', 'the-readscope-tour-and-accommodation-booking'), number_format($summary['confirmed_revenue'], 2, '.', '')]);
+        fputcsv($stream, [__('Total Tax Collected', 'the-readscope-tour-and-accommodation-booking'), number_format($summary['total_tax'], 2, '.', '')]);
+        fputcsv($stream, [__('Total Discounts Granted', 'the-readscope-tour-and-accommodation-booking'), number_format($summary['total_discount'], 2, '.', '')]);
     }
 
     /**
@@ -479,12 +479,12 @@ class ExportService
     public static function handleExportRequest(): void
     {
         if (!current_user_can('manage_tourivo_bookings')) {
-            wp_die(esc_html__('Unauthorized access.', 'tourivo'), 403);
+            wp_die(esc_html__('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking'), 403);
         }
 
         check_admin_referer('tourivo_export_csv_action');
 
-        // phpcs:disable WordPress.Security.NonceVerification.Recommended
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- current_user_can() and the nonce are verified at the top of this method, before any input is read.
         $filters = [
             'status'         => isset($_GET['status']) ? sanitize_text_field(wp_unslash($_GET['status'])) : 'all',
             'payment_status' => isset($_GET['payment_status']) ? sanitize_text_field(wp_unslash($_GET['payment_status'])) : 'all',
@@ -527,12 +527,12 @@ class ExportService
     public function handlePreviewAjax(): void
     {
         if (!current_user_can('manage_tourivo_bookings')) {
-            wp_send_json_error(['message' => __('Unauthorized access.', 'tourivo')], 403);
+            wp_send_json_error(['message' => __('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
         check_ajax_referer('tourivo_admin_nonce', 'nonce');
 
-        // phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended
+        // phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended -- current_user_can() and the nonce are verified at the top of this method, before any input is read.
         // Only the filter fields are read, each one sanitized by RequestInput::pick().
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Every key is sanitized by RequestInput::pick().
         $req = \Tourivo\Support\RequestInput::pick(

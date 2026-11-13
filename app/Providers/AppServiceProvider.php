@@ -46,9 +46,14 @@ class AppServiceProvider extends ServiceProvider
 
         // Register daily retention cron hook
         add_action('tourivo_daily_privacy_retention', [\Tourivo\Services\PrivacyService::class, 'runDailyRetention']);
-        if (!wp_next_scheduled('tourivo_daily_privacy_retention')) {
-            wp_schedule_event(time(), 'daily', 'tourivo_daily_privacy_retention');
-        }
+        // The same daily event also drops expired rate-limit counters.
+        add_action('tourivo_daily_privacy_retention', [\Tourivo\Support\RateLimiter::class, 'purgeExpired']);
+        // Scheduling reads the translated cron schedule labels, so it waits for init.
+        add_action('init', static function (): void {
+            if (!wp_next_scheduled('tourivo_daily_privacy_retention')) {
+                wp_schedule_event(time(), 'daily', 'tourivo_daily_privacy_retention');
+            }
+        }, 20);
 
         // Register WP-CLI command if CLI environment
         if (defined('WP_CLI') && WP_CLI && class_exists('\WP_CLI')) {

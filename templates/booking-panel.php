@@ -2,7 +2,7 @@
 /**
  * Interactive Booking Panel Template
  *
- * @package Tourivo
+ * @package Readscope Booking
  * @var int $itemId
  * @var string $itemType
  * @var float $basePrice
@@ -35,7 +35,7 @@ if ($tourivoItemType === 'tour') {
     $tourivoBasePrice     = $tourivoTour->getActivePrice();
     $tourivoMinGuests     = $tourivoTour->getMinGuests();
     $tourivoMaxGuests     = $tourivoTour->getMaxGuests() > 0 ? $tourivoTour->getMaxGuests() : 20;
-    $tourivoChildAgeLabel = $tourivoTour->getChildAgeLabel() ?: __('Age 2-11', 'tourivo');
+    $tourivoChildAgeLabel = $tourivoTour->getChildAgeLabel() ?: __('Age 2-11', 'the-readscope-tour-and-accommodation-booking');
     $tourivoInfantsFree   = $tourivoTour->isInfantsFree();
     $tourivoMaxRooms      = 1;
 } else {
@@ -43,7 +43,7 @@ if ($tourivoItemType === 'tour') {
     $tourivoBasePrice     = $tourivoRoom->getNightlyPrice();
     $tourivoMinGuests     = 1;
     $tourivoMaxGuests     = $tourivoRoom->getMaxGuests() > 0 ? $tourivoRoom->getMaxGuests() : 4;
-    $tourivoChildAgeLabel = __('Age 2-11', 'tourivo');
+    $tourivoChildAgeLabel = __('Age 2-11', 'the-readscope-tour-and-accommodation-booking');
     $tourivoInfantsFree   = true;
     $tourivoMaxRooms      = $tourivoRoom->getQuantity() > 0 ? $tourivoRoom->getQuantity() : 10;
 }
@@ -52,12 +52,12 @@ if ($tourivoItemType === 'tour') {
 <div class="tourivo-booking-panel" id="tourivo-booking-panel-<?php echo esc_attr((string) $tourivoItemId); ?>" data-item-id="<?php echo esc_attr((string) $tourivoItemId); ?>" data-item-type="<?php echo esc_attr($tourivoItemType); ?>" data-unit-price="<?php echo esc_attr((string) $tourivoBasePrice); ?>" data-currency="<?php echo esc_attr($tourivoCurrencySymbol); ?>" data-min-guests="<?php echo esc_attr((string) $tourivoMinGuests); ?>">
     <div class="panel-header">
         <div class="panel-price-box">
-            <span class="price-label"><?php esc_html_e('Price:', 'tourivo'); ?></span>
+            <span class="price-label"><?php esc_html_e('Price:', 'the-readscope-tour-and-accommodation-booking'); ?></span>
             <span class="price-amount" id="tourivo-live-price"><?php echo esc_html(Money::format($tourivoBasePrice)); ?></span>
-            <span class="price-suffix"><?php echo ($tourivoItemType === 'tour') ? esc_html__('/ person', 'tourivo') : esc_html__('/ night', 'tourivo'); ?></span>
+            <span class="price-suffix"><?php echo ($tourivoItemType === 'tour') ? esc_html__('/ person', 'the-readscope-tour-and-accommodation-booking') : esc_html__('/ night', 'the-readscope-tour-and-accommodation-booking'); ?></span>
         </div>
         <div class="availability-status" id="tourivo-avail-status">
-            <span class="status-badge status-check"><?php esc_html_e('Instant Confirmation', 'tourivo'); ?></span>
+            <span class="status-badge status-check"><?php esc_html_e('Instant Confirmation', 'the-readscope-tour-and-accommodation-booking'); ?></span>
         </div>
     </div>
 
@@ -69,13 +69,13 @@ if ($tourivoItemType === 'tour') {
 
         <!-- Date Selection -->
         <div class="form-section">
-            <label class="section-label"><?php echo ($tourivoItemType === 'tour') ? esc_html__('Select Tour Date *', 'tourivo') : esc_html__('Check-in & check-out *', 'tourivo'); ?></label>
+            <label class="section-label"><?php echo ($tourivoItemType === 'tour') ? esc_html__('Select Tour Date *', 'the-readscope-tour-and-accommodation-booking') : esc_html__('Check-in & check-out *', 'the-readscope-tour-and-accommodation-booking'); ?></label>
             <p class="tourivo-cal-summary" aria-live="polite"></p>
             <div class="tourivo-cal" data-today="<?php echo esc_attr(wp_date('Y-m-d')); ?>">
                 <div class="tourivo-cal-nav">
-                    <button type="button" class="tourivo-cal-prev" aria-label="<?php esc_attr_e('Previous month', 'tourivo'); ?>">&#8249;</button>
+                    <button type="button" class="tourivo-cal-prev" aria-label="<?php esc_attr_e('Previous month', 'the-readscope-tour-and-accommodation-booking'); ?>">&#8249;</button>
                     <span class="tourivo-cal-title"></span>
-                    <button type="button" class="tourivo-cal-next" aria-label="<?php esc_attr_e('Next month', 'tourivo'); ?>">&#8250;</button>
+                    <button type="button" class="tourivo-cal-next" aria-label="<?php esc_attr_e('Next month', 'the-readscope-tour-and-accommodation-booking'); ?>">&#8250;</button>
                 </div>
                 <div class="tourivo-cal-weekdays"></div>
                 <div class="tourivo-cal-grid"></div>
@@ -92,16 +92,16 @@ if ($tourivoItemType === 'tour') {
         <?php if ($tourivoItemType === 'room') : ?>
             <!-- Room Units Counter -->
             <div class="form-section">
-                <label class="section-label"><?php esc_html_e('Number of Rooms *', 'tourivo'); ?></label>
+                <label class="section-label"><?php esc_html_e('Number of Rooms *', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                 <div class="guest-counter-row">
                     <div class="guest-counter-item" style="width: 100%;">
                         <div class="guest-type">
-                            <strong><?php esc_html_e('Rooms', 'tourivo'); ?></strong>
+                            <strong><?php esc_html_e('Rooms', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                             <small><?php
                             echo esc_html(
                                 sprintf(
                                     /* translators: %d: Maximum rooms available */
-                                    __('Up to %d available', 'tourivo'),
+                                    __('Up to %d available', 'the-readscope-tour-and-accommodation-booking'),
                                     $tourivoMaxRooms
                                 )
                             );
@@ -119,12 +119,12 @@ if ($tourivoItemType === 'tour') {
 
         <!-- Guest Counters -->
         <div class="form-section">
-            <label class="section-label"><?php esc_html_e('Guests / Travelers', 'tourivo'); ?></label>
+            <label class="section-label"><?php esc_html_e('Guests / Travelers', 'the-readscope-tour-and-accommodation-booking'); ?></label>
             <div class="guest-counter-row">
                 <div class="guest-counter-item">
                     <div class="guest-type">
-                        <strong><?php esc_html_e('Adults', 'tourivo'); ?></strong>
-                        <small><?php esc_html_e('Age 12+', 'tourivo'); ?></small>
+                        <strong><?php esc_html_e('Adults', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
+                        <small><?php esc_html_e('Age 12+', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                     </div>
                     <div class="counter-controls">
                         <button type="button" class="counter-btn minus-btn" data-target="adults-count">-</button>
@@ -135,7 +135,7 @@ if ($tourivoItemType === 'tour') {
 
                 <div class="guest-counter-item">
                     <div class="guest-type">
-                        <strong><?php esc_html_e('Children', 'tourivo'); ?></strong>
+                        <strong><?php esc_html_e('Children', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                         <small><?php echo esc_html($tourivoChildAgeLabel); ?></small>
                     </div>
                     <div class="counter-controls">
@@ -147,8 +147,8 @@ if ($tourivoItemType === 'tour') {
 
                 <div class="guest-counter-item">
                     <div class="guest-type">
-                        <strong><?php esc_html_e('Infants', 'tourivo'); ?></strong>
-                        <small><?php echo $tourivoInfantsFree ? esc_html__('Under 2 (Free)', 'tourivo') : esc_html__('Under 2', 'tourivo'); ?></small>
+                        <strong><?php esc_html_e('Infants', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
+                        <small><?php echo $tourivoInfantsFree ? esc_html__('Under 2 (Free)', 'the-readscope-tour-and-accommodation-booking') : esc_html__('Under 2', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                     </div>
                     <div class="counter-controls">
                         <button type="button" class="counter-btn minus-btn" data-target="infants-count">-</button>
@@ -165,24 +165,24 @@ if ($tourivoItemType === 'tour') {
         <div class="price-breakdown-box" id="tourivo-price-breakdown" aria-live="polite">
             <div class="breakdown-items" id="tourivo-breakdown-items">
                 <div class="breakdown-row">
-                    <span class="breakdown-desc" id="breakdown-calc-label"><?php echo esc_html(Money::format($tourivoBasePrice)); ?> &times; 1 <?php echo ($tourivoItemType === 'room') ? esc_html__('Night', 'tourivo') : esc_html__('Guest', 'tourivo'); ?></span>
+                    <span class="breakdown-desc" id="breakdown-calc-label"><?php echo esc_html(Money::format($tourivoBasePrice)); ?> &times; 1 <?php echo ($tourivoItemType === 'room') ? esc_html__('Night', 'the-readscope-tour-and-accommodation-booking') : esc_html__('Guest', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                     <span class="breakdown-val" id="breakdown-total-val"><?php echo esc_html(Money::format($tourivoBasePrice)); ?></span>
                 </div>
             </div>
             <div class="breakdown-row" id="breakdown-subtotal-row" style="display:none;">
-                <span class="breakdown-desc"><?php esc_html_e('Subtotal', 'tourivo'); ?></span>
+                <span class="breakdown-desc"><?php esc_html_e('Subtotal', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                 <span class="breakdown-val" id="breakdown-subtotal-val"><?php echo esc_html(Money::format($tourivoBasePrice)); ?></span>
             </div>
             <div class="breakdown-row" id="breakdown-discount-row" style="display:none; color:#15803d;">
-                <span class="breakdown-desc" id="breakdown-discount-label"><?php esc_html_e('Discount', 'tourivo'); ?></span>
+                <span class="breakdown-desc" id="breakdown-discount-label"><?php esc_html_e('Discount', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                 <span class="breakdown-val" id="breakdown-discount-val">-<?php echo esc_html(Money::format(0)); ?></span>
             </div>
             <div class="breakdown-row" id="breakdown-tax-row" style="display:none;">
-                <span class="breakdown-desc" id="breakdown-tax-label"><?php esc_html_e('Tax', 'tourivo'); ?></span>
+                <span class="breakdown-desc" id="breakdown-tax-label"><?php esc_html_e('Tax', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                 <span class="breakdown-val" id="breakdown-tax-val"><?php echo esc_html(Money::format(0)); ?></span>
             </div>
             <div class="breakdown-row total-row">
-                <span><strong><?php esc_html_e('Total Amount', 'tourivo'); ?></strong></span>
+                <span><strong><?php esc_html_e('Total Amount', 'the-readscope-tour-and-accommodation-booking'); ?></strong></span>
                 <span class="total-amount-val" id="live-grand-total"><strong><?php echo esc_html(Money::format($tourivoBasePrice)); ?></strong></span>
             </div>
         </div>
@@ -191,18 +191,18 @@ if ($tourivoItemType === 'tour') {
 
         <!-- Checkout Customer Details Accordion -->
         <div class="checkout-fields-box tourivo-checkout-step" id="tourivo-customer-details" hidden>
-            <h4 class="checkout-fields-title"><?php esc_html_e('Lead Traveler Information', 'tourivo'); ?></h4>
+            <h4 class="checkout-fields-title"><?php esc_html_e('Lead Traveler Information', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
             <div class="field-row">
-                <input type="text" name="customer_name" placeholder="<?php esc_attr_e('Full Name *', 'tourivo'); ?>" required>
+                <input type="text" name="customer_name" placeholder="<?php esc_attr_e('Full Name *', 'the-readscope-tour-and-accommodation-booking'); ?>" required>
             </div>
             <div class="field-row">
-                <input type="email" name="customer_email" placeholder="<?php esc_attr_e('Email Address *', 'tourivo'); ?>" required>
+                <input type="email" name="customer_email" placeholder="<?php esc_attr_e('Email Address *', 'the-readscope-tour-and-accommodation-booking'); ?>" required>
             </div>
             <div class="field-row">
-                <input type="tel" name="customer_phone" placeholder="<?php esc_attr_e('Phone / WhatsApp *', 'tourivo'); ?>" required>
+                <input type="tel" name="customer_phone" placeholder="<?php esc_attr_e('Phone / WhatsApp *', 'the-readscope-tour-and-accommodation-booking'); ?>" required>
             </div>
             <div class="field-row">
-                <textarea name="customer_notes" rows="2" placeholder="<?php esc_attr_e('Special requests or notes...', 'tourivo'); ?>"></textarea>
+                <textarea name="customer_notes" rows="2" placeholder="<?php esc_attr_e('Special requests or notes...', 'the-readscope-tour-and-accommodation-booking'); ?>"></textarea>
             </div>
             <?php do_action('tourivo_booking_panel_checkout_fields', $tourivoItemId, $tourivoItemType); ?>
             <?php if (\Tourivo\Config\Config::get('require_consent', false)) : ?>
@@ -237,7 +237,7 @@ if ($tourivoItemType === 'tour') {
             ?>
             <?php if (!empty($tourivoPaymentOptions)) : ?>
                 <fieldset class="field-row tourivo-payment-options">
-                    <legend class="tourivo-payment-title"><?php esc_html_e('Payment Method', 'tourivo'); ?></legend>
+                    <legend class="tourivo-payment-title"><?php esc_html_e('Payment Method', 'the-readscope-tour-and-accommodation-booking'); ?></legend>
                     <?php foreach (array_values($tourivoPaymentOptions) as $tourivoIndex => $tourivoOption) : ?>
                         <label class="tourivo-payment-option">
                             <input type="radio" name="payment_method" value="<?php echo esc_attr((string) ($tourivoOption['value'] ?? '')); ?>" <?php checked($tourivoIndex, 0); ?>
@@ -261,13 +261,13 @@ if ($tourivoItemType === 'tour') {
 
         <!-- Action Submit -->
         <button type="submit" class="tourivo-btn tourivo-btn-primary tourivo-btn-block tourivo-checkout-step" id="tourivo-submit-btn" hidden>
-            <span class="dashicons dashicons-lock"></span> <?php esc_html_e('Book Now (Pay Offline)', 'tourivo'); ?>
+            <span class="dashicons dashicons-lock"></span> <?php esc_html_e('Book Now (Pay Offline)', 'the-readscope-tour-and-accommodation-booking'); ?>
         </button>
 
         <!-- Trip Inquiry CTA -->
         <div class="tourivo-inquiry-cta">
             <button type="button" class="tourivo-btn-inquiry" id="tourivo-open-inquiry-modal">
-                💬 <?php esc_html_e('Have questions? Ask a Travel Specialist', 'tourivo'); ?>
+                💬 <?php esc_html_e('Have questions? Ask a Travel Specialist', 'the-readscope-tour-and-accommodation-booking'); ?>
             </button>
         </div>
 
@@ -279,7 +279,7 @@ if ($tourivoItemType === 'tour') {
         <div class="tourivo-modal-overlay"></div>
         <div class="tourivo-modal-content">
             <div class="modal-header">
-                <h3>💬 <?php esc_html_e('Ask an Expert / Custom Trip Inquiry', 'tourivo'); ?></h3>
+                <h3>💬 <?php esc_html_e('Ask an Expert / Custom Trip Inquiry', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
                 <button type="button" class="close-inquiry-modal">&times;</button>
             </div>
             <form id="tourivo-inquiry-form">
@@ -291,28 +291,28 @@ if ($tourivoItemType === 'tour') {
                 <input type="hidden" name="item_id" value="<?php echo esc_attr((string) $tourivoItemId); ?>">
                 <input type="hidden" name="item_type" value="<?php echo esc_attr($tourivoItemType); ?>">
                 <div class="modal-body">
-                    <p class="modal-subtitle"><?php esc_html_e('Have special requests or group questions? Send your inquiry directly to our travel specialists.', 'tourivo'); ?></p>
+                    <p class="modal-subtitle"><?php esc_html_e('Have special requests or group questions? Send your inquiry directly to our travel specialists.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                     <div class="inquiry-field-row">
-                        <input type="text" name="customer_name" placeholder="<?php esc_attr_e('Your Full Name *', 'tourivo'); ?>" required>
+                        <input type="text" name="customer_name" placeholder="<?php esc_attr_e('Your Full Name *', 'the-readscope-tour-and-accommodation-booking'); ?>" required>
                     </div>
                     <div class="inquiry-field-row">
-                        <input type="email" name="customer_email" placeholder="<?php esc_attr_e('Your Email Address *', 'tourivo'); ?>" required>
+                        <input type="email" name="customer_email" placeholder="<?php esc_attr_e('Your Email Address *', 'the-readscope-tour-and-accommodation-booking'); ?>" required>
                     </div>
                     <div class="inquiry-field-row">
-                        <input type="tel" name="customer_phone" placeholder="<?php esc_attr_e('Phone / WhatsApp Number', 'tourivo'); ?>">
+                        <input type="tel" name="customer_phone" placeholder="<?php esc_attr_e('Phone / WhatsApp Number', 'the-readscope-tour-and-accommodation-booking'); ?>">
                     </div>
                     <div class="inquiry-field-row-grid">
                         <div>
-                            <label><small><?php esc_html_e('Expected Travel Date', 'tourivo'); ?></small></label>
+                            <label><small><?php esc_html_e('Expected Travel Date', 'the-readscope-tour-and-accommodation-booking'); ?></small></label>
                             <input type="date" name="travel_date" min="<?php echo esc_attr(wp_date('Y-m-d')); ?>">
                         </div>
                         <div>
-                            <label><small><?php esc_html_e('Travelers Count', 'tourivo'); ?></small></label>
+                            <label><small><?php esc_html_e('Travelers Count', 'the-readscope-tour-and-accommodation-booking'); ?></small></label>
                             <input type="number" name="guests" min="1" max="50" value="1">
                         </div>
                     </div>
                     <div class="inquiry-field-row">
-                        <textarea name="message" rows="3" placeholder="<?php esc_attr_e('Tell us about your questions or custom trip preferences...', 'tourivo'); ?>" required></textarea>
+                        <textarea name="message" rows="3" placeholder="<?php esc_attr_e('Tell us about your questions or custom trip preferences...', 'the-readscope-tour-and-accommodation-booking'); ?>" required></textarea>
                     </div>
                     <?php if (\Tourivo\Config\Config::get('require_consent', false)) : ?>
                         <div class="inquiry-field-row tourivo-consent-row">
@@ -326,7 +326,7 @@ if ($tourivoItemType === 'tour') {
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="tourivo-btn tourivo-btn-primary tourivo-btn-block" id="tourivo-inquiry-submit-btn">
-                        ✈️ <?php esc_html_e('Send Inquiry to Specialists', 'tourivo'); ?>
+                        ✈️ <?php esc_html_e('Send Inquiry to Specialists', 'the-readscope-tour-and-accommodation-booking'); ?>
                     </button>
                 </div>
             </form>

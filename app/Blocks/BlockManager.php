@@ -20,14 +20,14 @@ if (!defined('ABSPATH')) {
 /**
  * Class BlockManager
  *
- * Registers server-rendered Gutenberg Core Blocks and Tourivo custom block category.
+ * Registers server-rendered Gutenberg Core Blocks and Readscope Booking custom block category.
  *
  * @package Tourivo\Blocks
  */
 class BlockManager
 {
     /**
-     * Register Tourivo custom block category.
+     * Register Readscope Booking custom block category.
      *
      * @param array<int, array<string, mixed>> $categories
      * @return array<int, array<string, mixed>>
@@ -37,14 +37,14 @@ class BlockManager
         return array_merge([
             [
                 'slug'  => 'tourivo',
-                'title' => __('Tourivo Travel Engine', 'tourivo'),
+                'title' => __('Readscope Travel Engine', 'the-readscope-tour-and-accommodation-booking'),
                 'icon'  => 'palmtree',
             ],
         ], $categories);
     }
 
     /**
-     * Register all Tourivo Gutenberg dynamic blocks.
+     * Register all Readscope Booking Gutenberg dynamic blocks.
      *
      * @return void
      */
@@ -60,10 +60,10 @@ class BlockManager
         // 1. Tour Grid Block
         register_block_type('tourivo/tour-grid', [
             'api_version'     => 2,
-            'title'           => __('Tourivo Tour Grid', 'tourivo'),
+            'title'           => __('Readscope Tour Grid', 'the-readscope-tour-and-accommodation-booking'),
             'category'        => 'tourivo',
             'icon'            => 'palmtree',
-            'description'     => __('Display tours in a modern responsive grid layout.', 'tourivo'),
+            'description'     => __('Display tours in a modern responsive grid layout.', 'the-readscope-tour-and-accommodation-booking'),
             'render_callback' => [TourGridShortcode::class, 'render'],
             'attributes'      => [
                 'count'       => ['type' => 'number', 'default' => 6],
@@ -76,10 +76,10 @@ class BlockManager
         // 2. Hotel Grid Block
         register_block_type('tourivo/hotel-grid', [
             'api_version'     => 2,
-            'title'           => __('Tourivo Hotel Grid', 'tourivo'),
+            'title'           => __('Readscope Hotel Grid', 'the-readscope-tour-and-accommodation-booking'),
             'category'        => 'tourivo',
             'icon'            => 'building',
-            'description'     => __('Display hotels and resorts in a responsive grid.', 'tourivo'),
+            'description'     => __('Display hotels and resorts in a responsive grid.', 'the-readscope-tour-and-accommodation-booking'),
             'render_callback' => [HotelGridShortcode::class, 'render'],
             'attributes'      => [
                 'count'       => ['type' => 'number', 'default' => 6],
@@ -91,20 +91,20 @@ class BlockManager
         // 3. Search Bar Block
         register_block_type('tourivo/search-bar', [
             'api_version'     => 2,
-            'title'           => __('Tourivo Search Bar', 'tourivo'),
+            'title'           => __('Readscope Search Bar', 'the-readscope-tour-and-accommodation-booking'),
             'category'        => 'tourivo',
             'icon'            => 'search',
-            'description'     => __('Destination, date and traveler search filter bar.', 'tourivo'),
+            'description'     => __('Destination, date and traveler search filter bar.', 'the-readscope-tour-and-accommodation-booking'),
             'render_callback' => [SearchBarShortcode::class, 'render'],
         ]);
 
         // 4. Live Filter Search Grid Block
         register_block_type('tourivo/filter-search', [
             'api_version'     => 2,
-            'title'           => __('Tourivo Filter & Search Grid', 'tourivo'),
+            'title'           => __('Readscope Filter & Search Grid', 'the-readscope-tour-and-accommodation-booking'),
             'category'        => 'tourivo',
             'icon'            => 'filter',
-            'description'     => __('Live AJAX filtering by destination, price slider, and duration.', 'tourivo'),
+            'description'     => __('Live AJAX filtering by destination, price slider, and duration.', 'the-readscope-tour-and-accommodation-booking'),
             'render_callback' => [FilterSearchShortcode::class, 'render'],
             'attributes'      => [
                 'type'    => ['type' => 'string', 'default' => 'tour'],
@@ -115,10 +115,10 @@ class BlockManager
         // 5. Booking Panel Block
         register_block_type('tourivo/booking-panel', [
             'api_version'     => 2,
-            'title'           => __('Tourivo Booking Panel', 'tourivo'),
+            'title'           => __('Readscope Booking Panel', 'the-readscope-tour-and-accommodation-booking'),
             'category'        => 'tourivo',
             'icon'            => 'calendar-alt',
-            'description'     => __('Interactive booking panel with instant pricing and checkout.', 'tourivo'),
+            'description'     => __('Interactive booking panel with instant pricing and checkout.', 'the-readscope-tour-and-accommodation-booking'),
             'render_callback' => [BookingPanelShortcode::class, 'render'],
             'attributes'      => [
                 'item_id'   => ['type' => 'number', 'default' => 0],
@@ -129,20 +129,20 @@ class BlockManager
         // 6. Track Booking Portal Block
         register_block_type('tourivo/booking-lookup', [
             'api_version'     => 2,
-            'title'           => __('Tourivo Track My Booking', 'tourivo'),
+            'title'           => __('Readscope Track My Booking', 'the-readscope-tour-and-accommodation-booking'),
             'category'        => 'tourivo',
             'icon'            => 'tickets-alt',
-            'description'     => __('Self-service portal for travelers to check reservation status and download vouchers.', 'tourivo'),
+            'description'     => __('Self-service portal for travelers to check reservation status and download vouchers.', 'the-readscope-tour-and-accommodation-booking'),
             'render_callback' => [BookingLookupShortcode::class, 'render'],
         ]);
 
         // 7. Traveler Wishlist Block
         register_block_type('tourivo/wishlist', [
             'api_version'     => 2,
-            'title'           => __('Tourivo Traveler Wishlist', 'tourivo'),
+            'title'           => __('Readscope Traveler Wishlist', 'the-readscope-tour-and-accommodation-booking'),
             'category'        => 'tourivo',
             'icon'            => 'heart',
-            'description'     => __('Display saved favorite tours and hotels for the traveler.', 'tourivo'),
+            'description'     => __('Display saved favorite tours and hotels for the traveler.', 'the-readscope-tour-and-accommodation-booking'),
             'render_callback' => [WishlistShortcode::class, 'render'],
             'attributes'      => [
                 'columns' => ['type' => 'number', 'default' => 3],
@@ -152,10 +152,10 @@ class BlockManager
         // 8. Customer Account / My Bookings Block
         register_block_type('tourivo/my-bookings', [
             'api_version'     => 2,
-            'title'           => __('Tourivo My Bookings Portal', 'tourivo'),
+            'title'           => __('Readscope My Bookings Portal', 'the-readscope-tour-and-accommodation-booking'),
             'category'        => 'tourivo',
             'icon'            => 'admin-users',
-            'description'     => __('Display traveler dashboard with upcoming trips, completed itineraries, and self-management actions.', 'tourivo'),
+            'description'     => __('Display traveler dashboard with upcoming trips, completed itineraries, and self-management actions.', 'the-readscope-tour-and-accommodation-booking'),
             'render_callback' => [\Tourivo\Shortcodes\MyBookingsShortcode::class, 'render'],
             'attributes'      => [
                 'per_page'   => ['type' => 'number', 'default' => 10],

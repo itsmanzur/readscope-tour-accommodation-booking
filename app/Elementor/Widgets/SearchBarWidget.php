@@ -17,7 +17,7 @@ if (!class_exists('\Elementor\Widget_Base')) {
 /**
  * Class SearchBarWidget
  *
- * Elementor Widget for embedding the Tourivo search filter bar.
+ * Elementor Widget for embedding the Readscope Booking search filter bar.
  *
  * @package Tourivo\Elementor\Widgets
  */
@@ -30,7 +30,7 @@ class SearchBarWidget extends \Elementor\Widget_Base
 
     public function get_title(): string
     {
-        return esc_html__('Search Bar', 'tourivo');
+        return esc_html__('Search Bar', 'the-readscope-tour-and-accommodation-booking');
     }
 
     public function get_icon(): string
@@ -45,7 +45,7 @@ class SearchBarWidget extends \Elementor\Widget_Base
 
     public function get_keywords(): array
     {
-        return ['tourivo', 'search', 'bar', 'filter', 'destination'];
+        return ['readscope', 'search', 'bar', 'filter', 'destination'];
     }
 
     protected function register_controls(): void
@@ -53,7 +53,7 @@ class SearchBarWidget extends \Elementor\Widget_Base
         $this->start_controls_section(
             'section_content',
             [
-                'label' => esc_html__('Search Bar Settings', 'tourivo'),
+                'label' => esc_html__('Search Bar Settings', 'the-readscope-tour-and-accommodation-booking'),
             ]
         );
 
@@ -61,7 +61,7 @@ class SearchBarWidget extends \Elementor\Widget_Base
             'info_notice',
             [
                 'type' => \Elementor\Controls_Manager::RAW_HTML,
-                'raw'  => esc_html__('This widget renders the responsive Destination, Date, and Travelers search bar.', 'tourivo'),
+                'raw'  => esc_html__('This widget renders the responsive Destination, Date, and Travelers search bar.', 'the-readscope-tour-and-accommodation-booking'),
             ]
         );
 
