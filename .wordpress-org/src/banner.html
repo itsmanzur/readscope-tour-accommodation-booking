@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Banner source (1544x500)</title>
+<style>
+  @font-face {
+    font-family: "Anek Bangla";
+    src: url("../../assets/fonts/AnekBangla-latin.woff2") format("woff2");
+    font-weight: 100 800;
+    font-display: block;
+  }
+  html, body { margin: 0; padding: 0; background: #0d9488; overflow: hidden; }
+  svg { display: block; width: 100vw; height: auto; }
+  .name    { font: 700 61px/1 "Anek Bangla", "Segoe UI", Arial, sans-serif; fill: #ffffff; letter-spacing: -0.4px; }
+  .eyebrow { font: 600 21px/1 "Anek Bangla", "Segoe UI", Arial, sans-serif; fill: #ccfbf1; letter-spacing: 5px; }
+  .tagline { font: 400 29px/1 "Anek Bangla", "Segoe UI", Arial, sans-serif; fill: #e6fffb; letter-spacing: 0.2px; }
+</style>
+</head>
+<body>
+<!-- Safe area for text and key shapes: x 172-1372, y 75-425 (central 1200x350). -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1544 500" role="img" aria-label="The Readscope Tour and Accommodation Booking">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="0.35">
+      <stop offset="0" stop-color="#0d9488"/>
+      <stop offset="0.55" stop-color="#0284c7"/>
+      <stop offset="1" stop-color="#0369a1"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.20"/>
+      <stop offset="0.7" stop-color="#ffffff" stop-opacity="0.06"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <clipPath id="frame"><rect width="1544" height="500"/></clipPath>
+  </defs>
+
+  <rect width="1544" height="500" fill="url(#bg)"/>
+
+  <g clip-path="url(#frame)">
+    <!-- Contour lines: a quiet map of water and coast, behind everything -->
+    <g fill="none" stroke="#ffffff" stroke-opacity="0.07" stroke-width="1.5">
+      <path d="M-20 392 C 180 352, 360 432, 560 392 S 940 352, 1140 392 S 1420 432, 1564 392"/>
+      <path d="M-20 420 C 180 380, 360 460, 560 420 S 940 380, 1140 420 S 1420 460, 1564 420"/>
+      <path d="M-20 448 C 180 408, 360 488, 560 448 S 940 408, 1140 448 S 1420 488, 1564 448"/>
+      <path d="M-20 476 C 180 436, 360 516, 560 476 S 940 436, 1140 476 S 1420 516, 1564 476"/>
+    </g>
+    <g fill="none" stroke="#ffffff" stroke-opacity="0.06" stroke-width="1.5">
+      <circle cx="1128" cy="250" r="230"/>
+      <circle cx="1128" cy="250" r="290"/>
+      <circle cx="1128" cy="250" r="350"/>
+      <circle cx="1128" cy="250" r="410"/>
+    </g>
+
+    <!-- Sun -->
+    <circle cx="1128" cy="250" r="172" fill="url(#glow)"/>
+    <circle cx="1128" cy="250" r="172" fill="none" stroke="#ffffff" stroke-opacity="0.16" stroke-width="1.5"/>
+  </g>
+
+  <!-- Text block, left-center -->
+  <g>
+    <rect x="190" y="136" width="52" height="5" rx="2.5" fill="#99f6e4"/>
+    <text class="name" x="188" y="214">The Readscope Tour and</text>
+    <text class="name" x="188" y="286">Accommodation Booking</text>
+    <text class="tagline" x="190" y="350">Tours and hotel booking for WordPress</text>
+  </g>
+
+  <!-- Illustration: palm tree, map pin, calendar (white and light teal line style) -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Sea under the palm -->
+    <path d="M 916 404 q 22 -12 44 0 t 44 0 t 44 0 t 44 0 t 44 0" stroke="#99f6e4" stroke-width="5" stroke-opacity="0.9"/>
+    <path d="M 950 422 q 18 -10 36 0 t 36 0 t 36 0" stroke="#99f6e4" stroke-width="4" stroke-opacity="0.55"/>
+
+    <!-- Palm trunk -->
+    <path d="M 1000 400 C 996 340, 1002 270, 1026 208" stroke="#ffffff" stroke-width="9"/>
+    <path d="M 993 372 h 13 M 994 338 h 13 M 998 304 h 13 M 1005 270 h 13 M 1014 238 h 12" stroke="#ffffff" stroke-width="3" stroke-opacity="0.75"/>
+    <!-- Palm fronds -->
+    <g stroke="#ffffff" stroke-width="8">
+      <path d="M 1026 208 Q 980 160, 918 188"/>
+      <path d="M 1026 208 Q 968 204, 938 258"/>
+      <path d="M 1026 208 Q 1016 150, 962 128"/>
+      <path d="M 1026 208 Q 1050 146, 1104 136"/>
+      <path d="M 1026 208 Q 1082 172, 1128 204"/>
+      <path d="M 1026 208 Q 1080 214, 1100 262"/>
+    </g>
+    <circle cx="1026" cy="208" r="7" fill="#99f6e4" stroke="none"/>
+
+    <!-- Route from the palm to the pin -->
+    <path d="M 1062 392 C 1110 384, 1168 372, 1196 318" stroke="#99f6e4" stroke-width="4" stroke-dasharray="2 13"/>
+
+    <!-- Map pin -->
+    <path d="M 1200 300 C 1168 256, 1150 228, 1150 198 A 50 50 0 1 1 1250 198 C 1250 228, 1232 256, 1200 300 Z" fill="#ffffff" fill-opacity="0.14" stroke="#ffffff" stroke-width="8"/>
+    <circle cx="1200" cy="197" r="17" fill="#99f6e4" stroke="none"/>
+
+    <!-- Calendar -->
+    <rect x="1256" y="304" width="104" height="96" rx="14" fill="#ffffff" fill-opacity="0.14" stroke="#ffffff" stroke-width="8"/>
+    <path d="M 1256 336 h 104" stroke="#ffffff" stroke-width="6"/>
+    <path d="M 1284 292 v 22 M 1332 292 v 22" stroke="#ffffff" stroke-width="8"/>
+    <g fill="#ffffff" stroke="none" fill-opacity="0.85">
+      <circle cx="1281" cy="357" r="5"/><circle cx="1308" cy="357" r="5"/><circle cx="1335" cy="357" r="5"/>
+      <circle cx="1281" cy="380" r="5"/><circle cx="1335" cy="380" r="5"/>
+    </g>
+    <circle cx="1308" cy="380" r="9" fill="#99f6e4" stroke="none"/>
+  </g>
+</svg>
+</body>
+</html>

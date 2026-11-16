@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Demo cover illustration (own artwork, used only on the screenshot site)</title>
+<style>html,body{margin:0;overflow:hidden;background:#0f172a}svg{display:block;width:1200px;height:800px}</style>
+</head>
+<body>
+<svg id="c" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"></svg>
+<script>
+// Flat scenic covers drawn from a few layers. ?v=beach|alps|desert|hills|coast|resort|lodge|villa|cloud
+const v = new URLSearchParams(location.search).get('v') || 'beach';
+const P = {
+  beach:  { sky:['#fde68a','#fb923c','#f472b6'], sun:[860,300,90,'#fff7ed'], scene:'beach',  a:'#0ea5e9', b:'#0369a1', c:'#fef3c7' },
+  coast:  { sky:['#bae6fd','#7dd3fc','#38bdf8'], sun:[300,220,70,'#ffffff'], scene:'beach',  a:'#0891b2', b:'#155e75', c:'#fde68a' },
+  alps:   { sky:['#e0f2fe','#bae6fd','#93c5fd'], sun:[900,200,60,'#ffffff'], scene:'alps',   a:'#64748b', b:'#334155', c:'#f8fafc' },
+  desert: { sky:['#fef3c7','#fdba74','#f97316'], sun:[600,330,110,'#fffbeb'], scene:'desert', a:'#f59e0b', b:'#b45309', c:'#fde68a' },
+  hills:  { sky:['#ecfeff','#a7f3d0','#6ee7b7'], sun:[320,230,70,'#ffffff'], scene:'hills',  a:'#34d399', b:'#047857', c:'#ffffff' },
+  cloud:  { sky:['#e0e7ff','#c7d2fe','#a5b4fc'], sun:[880,220,64,'#ffffff'], scene:'hills',  a:'#818cf8', b:'#3730a3', c:'#ffffff' },
+  resort: { sky:['#cffafe','#67e8f9','#22d3ee'], sun:[940,210,70,'#ffffff'], scene:'resort', a:'#0e7490', b:'#164e63', c:'#f0fdfa' },
+  villa:  { sky:['#fce7f3','#fbcfe8','#f9a8d4'], sun:[280,240,80,'#fff1f2'], scene:'resort', a:'#0d9488', b:'#115e59', c:'#fff7ed' },
+  lodge:  { sky:['#f1f5f9','#cbd5e1','#94a3b8'], sun:[300,200,56,'#ffffff'], scene:'lodge',  a:'#475569', b:'#1e293b', c:'#f8fafc' },
+}[v];
+const s = [];
+s.push(`<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${P.sky[0]}"/><stop offset=".55" stop-color="${P.sky[1]}"/><stop offset="1" stop-color="${P.sky[2]}"/></linearGradient></defs>`);
+s.push(`<rect width="1200" height="800" fill="url(#sky)"/>`);
+const [sx, sy, sr, sc] = P.sun;
+s.push(`<circle cx="${sx}" cy="${sy}" r="${sr * 1.9}" fill="${sc}" opacity=".18"/><circle cx="${sx}" cy="${sy}" r="${sr * 1.4}" fill="${sc}" opacity=".28"/><circle cx="${sx}" cy="${sy}" r="${sr}" fill="${sc}"/>`);
+const cloud = (x, y, k, o) => `<g opacity="${o}" fill="#fff"><ellipse cx="${x}" cy="${y}" rx="${90 * k}" ry="${26 * k}"/><ellipse cx="${x - 40 * k}" cy="${y - 18 * k}" rx="${46 * k}" ry="${26 * k}"/><ellipse cx="${x + 30 * k}" cy="${y - 24 * k}" rx="${56 * k}" ry="${32 * k}"/></g>`;
+const palm = (x, y, k, col) => `<g fill="none" stroke="${col}" stroke-linecap="round" stroke-width="${14 * k}"><path d="M${x} ${y} C ${x - 6 * k} ${y - 110 * k}, ${x + 4 * k} ${y - 200 * k}, ${x + 40 * k} ${y - 290 * k}"/><g stroke-width="${13 * k}"><path d="M${x + 40 * k} ${y - 290 * k} q ${-70 * k} ${-60 * k} ${-150 * k} ${-20 * k}"/><path d="M${x + 40 * k} ${y - 290 * k} q ${-80 * k} ${-4 * k} ${-120 * k} ${70 * k}"/><path d="M${x + 40 * k} ${y - 290 * k} q ${-16 * k} ${-80 * k} ${-90 * k} ${-110 * k}"/><path d="M${x + 40 * k} ${y - 290 * k} q ${30 * k} ${-84 * k} ${106 * k} ${-98 * k}"/><path d="M${x + 40 * k} ${y - 290 * k} q ${80 * k} ${-46 * k} ${142 * k} ${0}"/><path d="M${x + 40 * k} ${y - 290 * k} q ${74 * k} ${10 * k} ${100 * k} ${78 * k}"/></g></g>`;
+if (P.scene === 'beach') {
+  s.push(cloud(260, 170, 1.1, .7), cloud(1010, 130, .8, .55));
+  s.push(`<path d="M0 470 H1200 V800 H0Z" fill="${P.a}"/><path d="M0 470 q150 -22 300 0 t300 0 t300 0 t300 0 V520 H0Z" fill="${P.a}" opacity=".7"/>`);
+  s.push(`<path d="M0 560 q200 -30 400 0 t400 0 t400 0 V800 H0Z" fill="${P.b}" opacity=".55"/>`);
+  s.push(`<g stroke="#fff" stroke-width="5" stroke-linecap="round" opacity=".5" fill="none"><path d="M120 520 q30 -12 60 0 t60 0"/><path d="M520 600 q30 -12 60 0 t60 0"/><path d="M860 540 q30 -12 60 0 t60 0"/></g>`);
+  s.push(`<path d="M0 800 V690 C 220 640, 520 660, 760 720 C 900 754, 1050 780, 1200 790 V800Z" fill="${P.c}"/>`);
+  s.push(palm(210, 720, 1.05, '#134e4a'), palm(420, 742, .72, '#115e59'));
+} else if (P.scene === 'alps') {
+  s.push(cloud(240, 190, 1, .8), cloud(720, 150, .7, .6));
+  s.push(`<path d="M0 620 L190 330 L330 500 L520 210 L760 560 L900 380 L1200 640 V800 H0Z" fill="${P.a}"/>`);
+  s.push(`<path d="M520 210 L600 326 L560 316 L530 350 L500 312 L462 330 Z" fill="${P.c}"/><path d="M190 330 L246 398 L210 392 L186 420 L160 394 L136 412 Z" fill="${P.c}"/><path d="M900 380 L960 432 L924 430 L900 456 L874 428 L842 446 Z" fill="${P.c}"/>`);
+  s.push(`<path d="M0 660 L260 520 L520 660 L800 500 L1200 690 V800 H0Z" fill="${P.b}"/>`);
+  s.push(`<path d="M0 800 V730 C 300 690, 700 700, 1200 740 V800Z" fill="#0f766e"/>`);
+  for (let i = 0; i < 9; i++) { const x = 90 + i * 128, h = 70 + (i % 3) * 22; s.push(`<path d="M${x} ${752 - h} l${26} ${h} h${-52}Z" fill="#134e4a"/>`); }
+} else if (P.scene === 'desert') {
+  s.push(`<path d="M0 560 C 200 470, 420 470, 640 560 S 1040 640, 1200 540 V800 H0Z" fill="${P.a}"/>`);
+  s.push(`<path d="M0 640 C 260 560, 520 600, 760 660 S 1080 700, 1200 650 V800 H0Z" fill="${P.b}" opacity=".85"/>`);
+  s.push(`<path d="M0 720 C 300 680, 620 700, 1200 740 V800 H0Z" fill="#78350f"/>`);
+  s.push(`<g fill="#451a03"><path d="M300 640 q10 -34 34 -34 q8 -22 26 -8 l6 26 h24 l10 30 h-18 v24 h-10 v-22 h-42 v22 h-10 v-22 h-12Z"/><path d="M470 664 q9 -30 30 -30 q7 -19 23 -7 l5 23 h21 l9 26 h-16 v21 h-9 v-19 h-37 v19 h-9 v-19 h-11Z"/></g>`);
+  s.push(palm(930, 716, .8, '#451a03'));
+} else if (P.scene === 'hills') {
+  s.push(`<path d="M0 520 C 180 400, 360 400, 560 510 S 940 420, 1200 500 V800 H0Z" fill="${P.a}" opacity=".55"/>`);
+  s.push(cloud(300, 500, 1.6, .9), cloud(820, 470, 1.9, .9), cloud(560, 540, 1.3, .75));
+  s.push(`<path d="M0 610 C 220 500, 420 520, 640 610 S 1020 540, 1200 600 V800 H0Z" fill="${P.a}"/>`);
+  s.push(cloud(180, 640, 1.2, .7), cloud(980, 650, 1.4, .7));
+  s.push(`<path d="M0 700 C 260 620, 560 660, 800 710 S 1100 720, 1200 690 V800 H0Z" fill="${P.b}"/>`);
+  s.push(`<g fill="#022c22"><path d="M250 700 l36 -52 l36 52Z"/><rect x="262" y="700" width="48" height="34"/><path d="M790 716 l30 -44 l30 44Z"/><rect x="800" y="716" width="40" height="30"/></g>`);
+} else if (P.scene === 'resort') {
+  s.push(cloud(220, 160, 1, .75), cloud(700, 120, .7, .6));
+  s.push(`<path d="M0 520 H1200 V800 H0Z" fill="${P.a}"/><path d="M0 520 q150 -20 300 0 t300 0 t300 0 t300 0 V560 H0Z" fill="${P.a}" opacity=".7"/>`);
+  s.push(`<g fill="${P.c}"><rect x="430" y="330" width="420" height="250" rx="10"/><rect x="390" y="420" width="120" height="160" rx="8"/><rect x="800" y="390" width="130" height="190" rx="8"/></g>`);
+  let w = ''; for (let r = 0; r < 4; r++) for (let c2 = 0; c2 < 7; c2++) w += `<rect x="${456 + c2 * 54}" y="${356 + r * 52}" width="30" height="30" rx="4"/>`; s.push(`<g fill="${P.b}" opacity=".55">${w}</g>`);
+  s.push(`<rect x="340" y="580" width="640" height="26" rx="6" fill="${P.b}"/>`);
+  s.push(`<path d="M0 800 V660 C 260 620, 600 630, 1200 690 V800Z" fill="#fef3c7"/>`);
+  s.push(`<ellipse cx="640" cy="716" rx="210" ry="34" fill="#38bdf8"/><ellipse cx="640" cy="712" rx="180" ry="22" fill="#7dd3fc"/>`);
+  s.push(palm(170, 740, .95, '#134e4a'), palm(1010, 750, .8, '#115e59'));
+} else if (P.scene === 'lodge') {
+  s.push(cloud(700, 160, 1, .8));
+  s.push(`<path d="M0 600 L220 300 L380 470 L600 190 L860 540 L1000 400 L1200 600 V800 H0Z" fill="${P.a}"/>`);
+  s.push(`<path d="M600 190 L676 300 L640 292 L610 324 L582 290 L546 306 Z" fill="${P.c}"/><path d="M220 300 L274 362 L240 358 L216 384 L190 360 L166 378 Z" fill="${P.c}"/>`);
+  s.push(`<path d="M0 800 V640 C 300 600, 800 610, 1200 660 V800Z" fill="${P.c}"/>`);
+  s.push(`<g><path d="M430 560 L620 430 L810 560Z" fill="#7c2d12"/><rect x="460" y="560" width="320" height="130" fill="#9a3412"/><rect x="590" y="610" width="60" height="80" fill="#431407"/><g fill="#fde68a"><rect x="490" y="590" width="60" height="46" rx="4"/><rect x="690" y="590" width="60" height="46" rx="4"/></g><rect x="700" y="450" width="34" height="70" fill="#431407"/></g>`);
+  for (let i = 0; i < 6; i++) { const x = [90, 200, 330, 900, 1010, 1120][i], h = 110 + (i % 2) * 34; s.push(`<path d="M${x} ${700 - h} l${34} ${h} h${-68}Z" fill="#14532d"/>`); }
+}
+document.getElementById('c').innerHTML = s.join('');
+</script>
+</body>
+</html>

@@ -411,7 +411,8 @@ class TemplateServiceProvider extends ServiceProvider
         $updated = $content;
         foreach ($this->themeCreditNames() as $themeName) {
             $pattern = '/<p\b[^>]*>\s*' . preg_quote($themeName, '/') . '\s*<\/p>/u';
-            $next = preg_replace($pattern, $credit, $updated, 1, $count);
+            // Callback so a "$" or "\" in the site name is never read as a backreference.
+            $next = preg_replace_callback($pattern, static fn (): string => $credit, $updated, 1, $count);
             if (is_string($next) && $count > 0) {
                 $updated = $next;
                 break;
@@ -876,9 +877,17 @@ class TemplateServiceProvider extends ServiceProvider
             return $content;
         }
 
-        $updated = preg_replace('/(<main\b[^>]*>)/', '$1' . $markup, $content, 1, $count);
+        // A callback, not a replacement string: the markup holds prices such as "$6,500.00", and in a
+        // replacement string "$6" would be read as a backreference and eaten.
+        $updated = preg_replace_callback(
+            '/<main\b[^>]*>/',
+            static fn (array $match): string => $match[0] . $markup,
+            $content,
+            1,
+            $count
+        );
 
-        return $count === 1 ? $updated : $markup . $content;
+        return ($count === 1 && is_string($updated)) ? $updated : $markup . $content;
     }
 
     /**
