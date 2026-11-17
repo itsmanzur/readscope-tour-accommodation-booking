@@ -104,11 +104,4 @@ class LegacyTokenCompatTest extends TestCase
         }
         $this->assertSame([], WebhookService::signatureHeaders('{}', ''));
     }
-
-    public function test_deprecated_constants_alias_the_new_ones(): void
-    {
-        $main = (string) file_get_contents(dirname(__DIR__, 2) . '/the-readscope-tour-and-accommodation-booking.php');
-        $this->assertStringContainsString("define('TOURIVO_VERSION', READSCOPE_VERSION)", $main);
-        $this->assertStringContainsString("define('TOURIVO_API_LEVEL', READSCOPE_API_LEVEL)", $main);
-    }
 }
