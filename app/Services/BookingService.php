@@ -1086,10 +1086,16 @@ class BookingService
                 return false;
             }
 
-            return hash_equals(self::generateVerificationToken($bookingId, $email, $expiresAt), $token);
+            // Links emailed by 1.0.x used the old prefix; accept for upgrade compatibility. Never generated any more.
+            return hash_equals(self::generateVerificationToken($bookingId, $email, $expiresAt), $token)
+                || hash_equals(self::generateVerificationToken($bookingId, $email, $expiresAt, 'tourivo'), $token);
         }
 
-        if (!hash_equals(self::generateVerificationToken($bookingId, $email), $token)) {
+        // Same upgrade compatibility for the oldest links, which carry no expiry.
+        if (
+            !hash_equals(self::generateVerificationToken($bookingId, $email), $token)
+            && !hash_equals(self::generateVerificationToken($bookingId, $email, null, 'tourivo'), $token)
+        ) {
             return false;
         }
 
@@ -1103,9 +1109,9 @@ class BookingService
      *
      * Pass $expiresAt to bind the link to a deadline. Omit it only for links issued before expiry existed.
      */
-    public static function generateVerificationToken(int $bookingId, string $email, ?int $expiresAt = null): string
+    public static function generateVerificationToken(int $bookingId, string $email, ?int $expiresAt = null, string $prefix = 'readscope'): string
     {
-        $payload = 'readscope_verify_' . $bookingId . '_' . strtolower($email);
+        $payload = $prefix . '_verify_' . $bookingId . '_' . strtolower($email);
         if ($expiresAt !== null && $expiresAt > 0) {
             $payload .= '_' . $expiresAt;
         }

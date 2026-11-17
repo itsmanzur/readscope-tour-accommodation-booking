@@ -20,7 +20,10 @@ if (!defined('ABSPATH')) {
 class LegacyMigrator
 {
     public const DONE_OPTION = 'readscope_legacy_migrated';
-    public const LOCK_TRANSIENT = 'readscope_legacy_migrating';
+    public const LOCK_OPTION = 'readscope_legacy_migrating';
+
+    /** @var string[] Database errors seen while running. */
+    private static array $errors = [];
 
     /** Custom tables (suffix after the prefix). */
     private const TABLES = ['bookings', 'booking_items', 'inquiries', 'inventories', 'logs'];
@@ -55,16 +58,17 @@ class LegacyMigrator
             return;
         }
 
-        if (get_transient(self::LOCK_TRANSIENT)) {
+        if (!self::acquireLock()) {
             return;
         }
-        set_transient(self::LOCK_TRANSIENT, 1, 300);
 
         try {
-            self::run();
-            add_option(self::DONE_OPTION, defined('READSCOPE_VERSION') ? READSCOPE_VERSION : '1.1.0', '', true);
+            // Marked done only when every step worked; otherwise it retries on the next load.
+            if (self::run()) {
+                add_option(self::DONE_OPTION, defined('READSCOPE_VERSION') ? READSCOPE_VERSION : '1.1.0', '', true);
+            }
         } finally {
-            delete_transient(self::LOCK_TRANSIENT);
+            delete_option(self::LOCK_OPTION);
         }
     }
 
@@ -82,13 +86,21 @@ class LegacyMigrator
         return (bool) $wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $wpdb->prefix . 'tourivo_bookings'));
     }
 
-    public static function run(): void
+    /**
+     * Run every step. Each step only renames, so a step that failed can safely run again later.
+     *
+     * @return bool True when no database error was seen.
+     */
+    public static function run(): bool
     {
+        self::$errors = [];
+
         self::renameTables();
         self::renameOptions();
         self::renamePostTypesAndTaxonomies();
         self::renameMetaKeys();
         self::rewriteContent();
+        self::renameMenuItems();
         self::renameCapabilities();
         self::renameCronEvents();
         self::renameActionSchedulerHooks();
@@ -96,6 +108,80 @@ class LegacyMigrator
 
         update_option('readscope_flush_rewrite', 1);
         wp_cache_flush();
+
+        if (self::$errors) {
+            if (defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
+                error_log('Readscope 1.0.x data migration will retry: ' . implode(' | ', array_unique(self::$errors))); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Only when WP_DEBUG_LOG is on; tells the owner why the migration is retrying.
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Atomic lock: add_option() fails when the row exists (option_name is unique), so only one request wins.
+     * A lock older than five minutes belongs to a request that died and is taken over once.
+     */
+    private static function acquireLock(): bool
+    {
+        if (add_option(self::LOCK_OPTION, time(), '', false)) {
+            return true;
+        }
+
+        if ((int) get_option(self::LOCK_OPTION) < time() - 300) {
+            delete_option(self::LOCK_OPTION);
+
+            return (bool) add_option(self::LOCK_OPTION, time(), '', false);
+        }
+
+        return false;
+    }
+
+    private static function sql(string $query): void
+    {
+        global $wpdb;
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- One-time rename of this plugin's own data; callers pass prepared SQL or fixed table names.
+        if ($wpdb->query($query) === false) {
+            self::$errors[] = (string) $wpdb->last_error;
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $data
+     * @param array<string, mixed> $where
+     */
+    private static function update(string $table, array $data, array $where): void
+    {
+        global $wpdb;
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-time rename of this plugin's own rows; the object cache is flushed afterwards.
+        if ($wpdb->update($table, $data, $where) === false) {
+            self::$errors[] = (string) $wpdb->last_error;
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $where
+     */
+    private static function delete(string $table, array $where): void
+    {
+        global $wpdb;
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-time rename of this plugin's own rows; the object cache is flushed afterwards.
+        if ($wpdb->delete($table, $where) === false) {
+            self::$errors[] = (string) $wpdb->last_error;
+        }
+    }
+
+    /** Navigation menu entries that point at a renamed post type or taxonomy. */
+    private static function renameMenuItems(): void
+    {
+        global $wpdb;
+
+        self::sql($wpdb->prepare("UPDATE {$wpdb->postmeta} SET meta_value = CONCAT('readscope_', SUBSTRING(meta_value, 9)) WHERE meta_key = '_menu_item_object' AND meta_value LIKE %s", $wpdb->esc_like('tourivo_') . '%'));
     }
 
     private static function tableExists(string $table): bool
@@ -126,11 +212,11 @@ class LegacyMigrator
                     continue; // Both hold data: never overwrite anything.
                 }
                 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-                $wpdb->query("DROP TABLE `{$new}`");
+                self::sql("DROP TABLE `{$new}`");
             }
 
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-            $wpdb->query("RENAME TABLE `{$old}` TO `{$new}`");
+            self::sql("RENAME TABLE `{$old}` TO `{$new}`");
         }
     }
 
@@ -150,9 +236,9 @@ class LegacyMigrator
 
             // A fresh activation may already have written a default; the old value is the user's data.
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-            $wpdb->delete($wpdb->options, ['option_name' => $new]);
+            self::delete($wpdb->options, ['option_name' => $new]);
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-            $wpdb->update($wpdb->options, ['option_name' => $new], ['option_name' => $old]);
+            self::update($wpdb->options, ['option_name' => $new], ['option_name' => $old]);
         }
 
         wp_cache_delete('alloptions', 'options');
@@ -165,12 +251,12 @@ class LegacyMigrator
 
         foreach (self::POST_TYPES as $type) {
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-            $wpdb->update($wpdb->posts, ['post_type' => 'readscope_' . $type], ['post_type' => 'tourivo_' . $type]);
+            self::update($wpdb->posts, ['post_type' => 'readscope_' . $type], ['post_type' => 'tourivo_' . $type]);
         }
 
         foreach (self::TAXONOMIES as $taxonomy) {
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-            $wpdb->update($wpdb->term_taxonomy, ['taxonomy' => 'readscope_' . $taxonomy], ['taxonomy' => 'tourivo_' . $taxonomy]);
+            self::update($wpdb->term_taxonomy, ['taxonomy' => 'readscope_' . $taxonomy], ['taxonomy' => 'tourivo_' . $taxonomy]);
         }
     }
 
@@ -188,9 +274,9 @@ class LegacyMigrator
         foreach ($tables as [$table, $column]) {
             // "_tourivo_x" -> "_readscope_x" (9 characters are replaced) and "tourivo_x" -> "readscope_x" (8).
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-            $wpdb->query($wpdb->prepare("UPDATE {$table} SET {$column} = CONCAT('_readscope_', SUBSTRING({$column}, 10)) WHERE {$column} LIKE %s", $wpdb->esc_like('_tourivo_') . '%'));
+            self::sql($wpdb->prepare("UPDATE {$table} SET {$column} = CONCAT('_readscope_', SUBSTRING({$column}, 10)) WHERE {$column} LIKE %s", $wpdb->esc_like('_tourivo_') . '%'));
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-            $wpdb->query($wpdb->prepare("UPDATE {$table} SET {$column} = CONCAT('readscope_', SUBSTRING({$column}, 9)) WHERE {$column} LIKE %s", $wpdb->esc_like('tourivo_') . '%'));
+            self::sql($wpdb->prepare("UPDATE {$table} SET {$column} = CONCAT('readscope_', SUBSTRING({$column}, 9)) WHERE {$column} LIKE %s", $wpdb->esc_like('tourivo_') . '%'));
         }
     }
 
@@ -209,7 +295,7 @@ class LegacyMigrator
 
         foreach ($pairs as [$from, $to]) {
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-            $wpdb->query($wpdb->prepare("UPDATE {$wpdb->posts} SET post_content = REPLACE(post_content, %s, %s) WHERE post_content LIKE %s", $from, $to, '%' . $wpdb->esc_like($from) . '%'));
+            self::sql($wpdb->prepare("UPDATE {$wpdb->posts} SET post_content = REPLACE(post_content, %s, %s) WHERE post_content LIKE %s", $from, $to, '%' . $wpdb->esc_like($from) . '%'));
         }
 
         // Elementor stores page layouts as JSON text.
@@ -219,7 +305,7 @@ class LegacyMigrator
         ];
         foreach ($json as [$from, $to]) {
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-            $wpdb->query($wpdb->prepare("UPDATE {$wpdb->postmeta} SET meta_value = REPLACE(meta_value, %s, %s) WHERE meta_key = '_elementor_data' AND meta_value LIKE %s", $from, $to, '%' . $wpdb->esc_like($from) . '%'));
+            self::sql($wpdb->prepare("UPDATE {$wpdb->postmeta} SET meta_value = REPLACE(meta_value, %s, %s) WHERE meta_key = '_elementor_data' AND meta_value LIKE %s", $from, $to, '%' . $wpdb->esc_like($from) . '%'));
         }
     }
 
@@ -286,13 +372,13 @@ class LegacyMigrator
         $actions = $wpdb->prefix . 'actionscheduler_actions';
         if (self::tableExists($actions)) {
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-            $wpdb->query($wpdb->prepare("UPDATE {$actions} SET hook = CONCAT('readscope_', SUBSTRING(hook, 9)) WHERE hook LIKE %s", $wpdb->esc_like('tourivo_') . '%'));
+            self::sql($wpdb->prepare("UPDATE {$actions} SET hook = CONCAT('readscope_', SUBSTRING(hook, 9)) WHERE hook LIKE %s", $wpdb->esc_like('tourivo_') . '%'));
         }
 
         $groups = $wpdb->prefix . 'actionscheduler_groups';
         if (self::tableExists($groups)) {
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-            $wpdb->query($wpdb->prepare("UPDATE {$groups} SET slug = CONCAT('readscope', SUBSTRING(slug, 8)) WHERE slug LIKE %s", $wpdb->esc_like('tourivo') . '%'));
+            self::sql($wpdb->prepare("UPDATE {$groups} SET slug = CONCAT('readscope', SUBSTRING(slug, 8)) WHERE slug LIKE %s", $wpdb->esc_like('tourivo') . '%'));
         }
     }
 
@@ -302,6 +388,9 @@ class LegacyMigrator
         global $wpdb;
 
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s", $wpdb->esc_like('_transient_tourivo_') . '%', $wpdb->esc_like('_transient_timeout_tourivo_') . '%'));
+        self::sql($wpdb->prepare("DELETE FROM {$wpdb->options} WHERE option_name LIKE %s OR option_name LIKE %s", $wpdb->esc_like('_transient_tourivo_') . '%', $wpdb->esc_like('_transient_timeout_tourivo_') . '%'));
+
+        // 1.0.x rate-limit buckets ("tourivo_rl_<md5>") are orphaned now: the new buckets use another prefix.
+        self::sql($wpdb->prepare("DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like('tourivo_rl_') . '%'));
     }
 }

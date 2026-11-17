@@ -479,12 +479,34 @@ class BookingLookupShortcode
      */
     public static function generateVoucherToken(int $bookingId, string $email, ?string $accessKey = null): string
     {
+        return self::voucherToken('readscope', $bookingId, $email, $accessKey);
+    }
+
+    /**
+     * Check a voucher / ICS token. Accepts tokens made by this version and by 1.0.x.
+     */
+    public static function verifyVoucherToken(int $bookingId, string $email, ?string $accessKey, string $token): bool
+    {
+        if ($token === '') {
+            return false;
+        }
+
+        if (hash_equals(self::voucherToken('readscope', $bookingId, $email, $accessKey), $token)) {
+            return true;
+        }
+
+        // Links emailed by 1.0.x used the old prefix; accept for upgrade compatibility. Never generated any more.
+        return hash_equals(self::voucherToken('tourivo', $bookingId, $email, $accessKey), $token);
+    }
+
+    private static function voucherToken(string $prefix, int $bookingId, string $email, ?string $accessKey): string
+    {
         $salt = wp_salt('nonce');
 
         if ($accessKey !== null && $accessKey !== '') {
-            return hash_hmac('sha256', "readscope_voucher_{$bookingId}_key_{$accessKey}", $salt);
+            return hash_hmac('sha256', "{$prefix}_voucher_{$bookingId}_key_{$accessKey}", $salt);
         }
 
-        return hash_hmac('sha256', "readscope_voucher_{$bookingId}_{$email}", $salt);
+        return hash_hmac('sha256', "{$prefix}_voucher_{$bookingId}_{$email}", $salt);
     }
 }

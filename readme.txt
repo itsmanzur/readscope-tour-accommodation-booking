@@ -133,6 +133,8 @@ Readscope Booking is engineered from the ground up for strict privacy regulation
 * Automatic one-time migration of all existing data: bookings, listings, settings, capabilities and scheduled jobs are kept.
 * Old `[tourivo_*]` shortcodes keep working; theme overrides in `yourtheme/tourivo/` are still found.
 * Developers: hooks, filters and the REST namespace now start with `readscope` (`readscope/*`, `readscope/v1`).
+* Links already emailed by 1.0.x (voucher, calendar file, thank-you, email confirmation) keep working.
+* Webhooks send the new `X-Readscope-*` headers and, for now, the old `X-Tourivo-*` headers with the same values; the old ones will be removed in a future major version.
 
 = 1.0.0 =
 * Initial public release.

@@ -84,7 +84,14 @@ class ThankYouShortcode
         $salt         = wp_salt('nonce');
         $expectedHash = hash_hmac('sha256', "readscope_thankyou_{$bookingId}_{$issuedAt}", $salt);
 
-        return hash_equals($expectedHash, $hash);
+        if (hash_equals($expectedHash, $hash)) {
+            return true;
+        }
+
+        // Links emailed by 1.0.x used the old prefix; accept for upgrade compatibility. Never generated any more.
+        $legacyHash = hash_hmac('sha256', "tourivo_thankyou_{$bookingId}_{$issuedAt}", $salt);
+
+        return hash_equals($legacyHash, $hash);
     }
 
     /**

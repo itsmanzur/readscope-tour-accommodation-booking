@@ -228,8 +228,7 @@ class PaymentService
 
         // 2. Voucher token verification
         if (!$isAuthorized && !empty($token)) {
-            $expectedVoucher = BookingLookupShortcode::generateVoucherToken((int) $booking->id, (string) $booking->customer_email, $booking->access_key ?? null);
-            if (hash_equals($expectedVoucher, $token)) {
+            if (BookingLookupShortcode::verifyVoucherToken((int) $booking->id, (string) $booking->customer_email, $booking->access_key ?? null, (string) $token)) {
                 $isAuthorized = true;
             }
         }

@@ -40,6 +40,8 @@ class WebhookService
      * - `X-Readscope-Signature`: HMAC-SHA256 of the raw body (original scheme, kept for existing receivers).
      * - `X-Readscope-Timestamp` + `X-Readscope-Signature-V2`: HMAC-SHA256 of "{timestamp}.{body}". Receivers should
      *   verify V2 and reject timestamps older than a few minutes, which makes captured requests non-replayable.
+     * - The same headers are also sent under their 1.0.x names (`X-Tourivo-*`) so existing receivers keep verifying.
+     *   The legacy headers will be removed in a future major version.
      *
      * @return array<string, string>
      */
@@ -51,11 +53,18 @@ class WebhookService
 
         $timestamp ??= time();
 
-        return [
+        $headers = [
             'X-Readscope-Signature'    => hash_hmac('sha256', $jsonPayload, $secret),
             'X-Readscope-Timestamp'    => (string) $timestamp,
             'X-Readscope-Signature-V2' => hash_hmac('sha256', $timestamp . '.' . $jsonPayload, $secret),
         ];
+
+        // Deprecated 1.0.x names, identical values.
+        foreach ($headers as $name => $value) {
+            $headers[str_replace('X-Readscope-', 'X-Tourivo-', $name)] = $value;
+        }
+
+        return $headers;
     }
 
     /**
@@ -316,6 +325,7 @@ class WebhookService
         $headers = [
             'Content-Type'    => 'application/json; charset=utf-8',
             'X-Readscope-Event' => $event,
+            'X-Tourivo-Event'   => $event, // Deprecated 1.0.x name.
             'User-Agent'      => 'Readscope Booking-Webhook/' . READSCOPE_VERSION,
         ];
         $headers += self::signatureHeaders($jsonPayload, $secret);
@@ -421,6 +431,7 @@ class WebhookService
         $headers = [
             'Content-Type'    => 'application/json; charset=utf-8',
             'X-Readscope-Event' => 'test.ping',
+            'X-Tourivo-Event'   => 'test.ping', // Deprecated 1.0.x name.
             'User-Agent'      => 'Readscope Booking-Webhook/' . READSCOPE_VERSION,
         ];
         $headers += self::signatureHeaders((string) $json, $secret);

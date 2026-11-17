@@ -23,6 +23,13 @@ if (!defined('ABSPATH')) {
 define('READSCOPE_VERSION', '1.1.0');
 // Integer that only grows when the public hooks / helpers add-ons rely on change. Readscope Booking Pro compares it, not the version.
 define('READSCOPE_API_LEVEL', 1);
+// Deprecated aliases of the 1.0.x constants, so an older Readscope Booking Pro build still detects this plugin. Use the READSCOPE_* constants.
+if (!defined('TOURIVO_VERSION')) {
+    define('TOURIVO_VERSION', READSCOPE_VERSION);
+}
+if (!defined('TOURIVO_API_LEVEL')) {
+    define('TOURIVO_API_LEVEL', READSCOPE_API_LEVEL);
+}
 define('READSCOPE_MIN_PHP_VER', '8.0');
 define('READSCOPE_PLUGIN_FILE', __FILE__);
 define('READSCOPE_PLUGIN_DIR', plugin_dir_path(__FILE__));

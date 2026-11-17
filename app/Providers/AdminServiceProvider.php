@@ -64,6 +64,11 @@ class AdminServiceProvider extends ServiceProvider
         add_action('admin_post_nopriv_readscope_verify_email', [$this, 'handleVerifyEmail']);
         add_action('admin_post_readscope_download_ics', [$this, 'handleDownloadIcs']);
         add_action('admin_post_nopriv_readscope_download_ics', [$this, 'handleDownloadIcs']);
+        // Links emailed by 1.0.x call the old action names.
+        foreach (['print_voucher' => 'handlePrintVoucher', 'verify_email' => 'handleVerifyEmail', 'download_ics' => 'handleDownloadIcs'] as $legacyAction => $legacyHandler) {
+            add_action('admin_post_tourivo_' . $legacyAction, [$this, $legacyHandler]);
+            add_action('admin_post_nopriv_tourivo_' . $legacyAction, [$this, $legacyHandler]);
+        }
 
         if (!is_admin()) {
             return;
@@ -929,9 +934,8 @@ class AdminServiceProvider extends ServiceProvider
         }
 
         // Authorization: valid HMAC token, or staff capability plus a valid nonce. Explicit sequential checks.
-        $expectedToken = BookingLookupShortcode::generateVoucherToken((int) $readscopeBooking->id, (string) $readscopeBooking->customer_email, $readscopeBooking->access_key ?? null);
         $authorized    = false;
-        if ($token !== '' && hash_equals($expectedToken, $token)) {
+        if ($token !== '' && BookingLookupShortcode::verifyVoucherToken((int) $readscopeBooking->id, (string) $readscopeBooking->customer_email, $readscopeBooking->access_key ?? null, $token)) {
             $authorized = true;
         } elseif (current_user_can('manage_readscope_bookings')) {
             if ($nonce !== '' && wp_verify_nonce($nonce, 'readscope_voucher_' . $code)) {
@@ -993,11 +997,10 @@ class AdminServiceProvider extends ServiceProvider
         }
 
         $bookingId            = (int) $readscopeBooking->id;
-        $expectedVoucherToken = BookingLookupShortcode::generateVoucherToken($bookingId, (string) $readscopeBooking->customer_email, $readscopeBooking->access_key ?? null);
         $authorized           = false;
         if ($token !== '' && ThankYouShortcode::verifyThankYouToken($bookingId, $token)) {
             $authorized = true;
-        } elseif ($token !== '' && hash_equals($expectedVoucherToken, $token)) {
+        } elseif ($token !== '' && BookingLookupShortcode::verifyVoucherToken($bookingId, (string) $readscopeBooking->customer_email, $readscopeBooking->access_key ?? null, $token)) {
             $authorized = true;
         } elseif (current_user_can('manage_readscope_bookings')) {
             if ($nonce !== '' && wp_verify_nonce($nonce, 'readscope_ics_' . $code)) {

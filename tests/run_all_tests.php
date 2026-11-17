@@ -48,6 +48,7 @@ require_once __DIR__ . '/Integration/PricingAdjustmentsTest.php';
 require_once __DIR__ . '/Integration/MultiItemBookingTest.php';
 require_once __DIR__ . '/Integration/ReviewFixesTest.php';
 require_once __DIR__ . '/Integration/HookCompatTest.php';
+require_once __DIR__ . '/Integration/LegacyTokenCompatTest.php';
 
 echo "=====================================================\n";
 echo "           Readscope Booking Automated Test Suite\n";
@@ -88,6 +89,7 @@ $testClasses = [
     \Readscope\Tests\Integration\MultiItemBookingTest::class,
     \Readscope\Tests\Integration\ReviewFixesTest::class,
     \Readscope\Tests\Integration\HookCompatTest::class,
+    \Readscope\Tests\Integration\LegacyTokenCompatTest::class,
 ];
 
 $totalTests = 0;
