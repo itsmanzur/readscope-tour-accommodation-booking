@@ -298,6 +298,16 @@ class LegacyMigrator
             self::sql($wpdb->prepare("UPDATE {$wpdb->posts} SET post_content = REPLACE(post_content, %s, %s) WHERE post_content LIKE %s", $from, $to, '%' . $wpdb->esc_like($from) . '%'));
         }
 
+        // Elementor keeps the HTML it rendered with the old widget and CSS names (_elementor_element_cache) and the old
+        // stylesheet reference (_elementor_css). Drop both for pages that use our widgets; Elementor rebuilds them on the next view.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One-time lookup of pages that embed this plugin's widgets.
+        $elementorPosts = $wpdb->get_col($wpdb->prepare("SELECT DISTINCT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_elementor_data' AND meta_value LIKE %s", '%' . $wpdb->esc_like('tourivo_') . '%'));
+        foreach ((array) $elementorPosts as $postId) {
+            foreach (['_elementor_element_cache', '_elementor_css', '_elementor_page_assets'] as $cacheKey) {
+                delete_post_meta((int) $postId, $cacheKey);
+            }
+        }
+
         // Elementor stores page layouts as JSON text.
         $json = [
             ['"widgetType":"tourivo_', '"widgetType":"readscope_'],
