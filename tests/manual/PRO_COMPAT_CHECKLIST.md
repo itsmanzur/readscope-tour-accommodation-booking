@@ -1,7 +1,7 @@
 # Readscope Booking ↔ Readscope Booking Pro compatibility checklist
 
 Run this before releasing either plugin, and after renaming, adding or removing any `readscope/...` hook.
-Both checkouts are expected side by side (`plugins/tourivo` and `plugins/tourivo-pro`).
+Both checkouts are expected side by side (`plugins/tourivo` and `plugins/readscope-pro`).
 
 ## 1. Hook names (automatic)
 
@@ -17,7 +17,7 @@ php scripts/check-hooks.php --pro=/path/to/readscope-pro
 
 ## 2. Version gate
 
-- [ ] `tourivo-pro.php` requires the oldest core that fires every hook Pro listens to
+- [ ] `readscope-pro.php` requires the oldest core that fires every hook Pro listens to
       (currently `version_compare(READSCOPE_VERSION, '1.0.0', '<')` and the matching admin notice).
 - [ ] `Requires Plugins: readscope` is still in the Pro header.
 
