@@ -40,6 +40,9 @@ class PostTypeServiceProvider extends ServiceProvider
      */
     public function registerPostTypesAndTaxonomies(): void
     {
+        // Labels are translated while registering; make sure the plugin language is active even if another plugin reset it earlier on init.
+        readscope_load_plugin_textdomain();
+
         TourPostType::register();
         HotelPostType::register();
         RoomPostType::register();
