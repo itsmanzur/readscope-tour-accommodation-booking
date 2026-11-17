@@ -1,13 +1,13 @@
-# Tourivo – Travel, Tour & Hotel Booking Engine for WordPress
+# Readscope – Travel, Tour & Hotel Booking Engine for WordPress
 
 [![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)](https://thereadscope.com)
 [![PHP](https://img.shields.io/badge/PHP-%3E%3D8.0-8892BF.svg)](https://php.net)
 [![WordPress](https://img.shields.io/badge/WordPress-%3E%3D6.0-21759B.svg)](https://wordpress.org)
 [![License](https://img.shields.io/badge/license-GPLv2-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 
-**Tourivo** is a next-generation, high-performance travel management and booking engine for WordPress. Built with a dual-engine architecture, Tourivo seamlessly powers tour operators, travel agencies, boutique hotels, resorts, and vacation rentals within a unified platform.
+**Readscope** is a next-generation, high-performance travel management and booking engine for WordPress. Built with a dual-engine architecture, Readscope seamlessly powers tour operators, travel agencies, boutique hotels, resorts, and vacation rentals within a unified platform.
 
-Unlike traditional monolithic booking plugins, Tourivo is designed from the ground up with a **Zero-jQuery lightweight reactive frontend**, **modern PSR-4 modular architecture**, and **dedicated relational database tables** featuring MySQL row-level transaction locks (`SELECT ... FOR UPDATE`) to prevent double-booking.
+Unlike traditional monolithic booking plugins, Readscope is designed from the ground up with a **Zero-jQuery lightweight reactive frontend**, **modern PSR-4 modular architecture**, and **dedicated relational database tables** featuring MySQL row-level transaction locks (`SELECT ... FOR UPDATE`) to prevent double-booking.
 
 ---
 
@@ -15,7 +15,7 @@ Unlike traditional monolithic booking plugins, Tourivo is designed from the grou
 
 - **Dual-Engine Architecture**: Manage Tour Packages (Single-day, Multi-day, Hourly, Fixed departure) and Accommodations (Hotels & Room Hierarchy) in one plugin.
 - **Interactive Availability & Pricing Manager**: Monthly calendar grid on Tour and Room edit screens with bulk date blocking, capacity adjustment, and seasonal price overrides.
-- **Anti-Double-Booking Protection**: Custom relational tables (`wp_tourivo_inventories`) with row-level locks and transaction rollbacks to prevent race conditions and overbooking.
+- **Anti-Double-Booking Protection**: Custom relational tables (`wp_readscope_inventories`) with row-level locks and transaction rollbacks to prevent race conditions and overbooking.
 - **Reactive Frontend Booking Panel**: Instant price calculation, date range picker, and guest breakdown (+ / - counters) built with pure vanilla JavaScript (Zero jQuery).
 - **Day-by-Day Itinerary Builder**: Dynamic repeater for structuring multi-day trip itineraries with meal plans and activity highlights.
 - **Inclusions & Exclusions Checklist**: Visual feature checklist for tour packages.
@@ -24,13 +24,13 @@ Unlike traditional monolithic booking plugins, Tourivo is designed from the grou
 - **Standalone Offline Checkout**: Support for Cash on Delivery, Bank Transfer, and offline payment instructions without requiring third-party dependencies.
 - **Automated HTML Email Confirmations**: Clean, responsive booking confirmation emails sent to customers and administrators.
 - **Gutenberg Blocks & Elementor Widgets**: Core server-rendered Gutenberg blocks and native Elementor widgets for tour grids, hotel listings, search bars, and booking panels.
-- **Developer-Friendly Template Overrides**: Standard template hierarchy overrideable via `your-theme/tourivo/`.
+- **Developer-Friendly Template Overrides**: Standard template hierarchy overrideable via `your-theme/readscope/`.
 
 ---
 
 ## 📂 Architecture Overview
 
-Tourivo follows clean modern PHP best practices:
+Readscope follows clean modern PHP best practices:
 
 ```
 the-readscope-tour-and-accommodation-booking/
@@ -77,27 +77,27 @@ the-readscope-tour-and-accommodation-booking/
    git clone https://github.com/itsmanzur/tourivo.git wp-content/plugins/the-readscope-tour-and-accommodation-booking
    ```
 2. Activate the plugin via **WordPress Admin -> Plugins**.
-3. Navigate to **Tourivo -> Dashboard** to import sample data or start adding your tours and hotels.
+3. Navigate to **Readscope -> Dashboard** to import sample data or start adding your tours and hotels.
 
 ---
 
 ## ⚡ Shortcodes
 
-Embed Tourivo components anywhere on your website:
+Embed Readscope components anywhere on your website:
 
 | Shortcode | Description | Example |
 |---|---|---|
-| `[tourivo_tours]` | Responsive grid of tour packages | `[tourivo_tours columns="3" count="6" destination="bali"]` |
-| `[tourivo_hotels]` | Responsive grid of hotels & resorts | `[tourivo_hotels columns="3" count="6" destination="maldives"]` |
-| `[tourivo_search_bar]` | Destination, date, and traveler search bar | `[tourivo_search_bar]` |
-| `[tourivo_booking_panel]` | Interactive booking sidebar for an item | `[tourivo_booking_panel item_id="123" item_type="tour"]` |
-| `[tourivo_booking_lookup]` | Guest booking lookup & voucher generator | `[tourivo_booking_lookup]` |
+| `[readscope_tours]` | Responsive grid of tour packages | `[readscope_tours columns="3" count="6" destination="bali"]` |
+| `[readscope_hotels]` | Responsive grid of hotels & resorts | `[readscope_hotels columns="3" count="6" destination="maldives"]` |
+| `[readscope_search_bar]` | Destination, date, and traveler search bar | `[readscope_search_bar]` |
+| `[readscope_booking_panel]` | Interactive booking sidebar for an item | `[readscope_booking_panel item_id="123" item_type="tour"]` |
+| `[readscope_booking_lookup]` | Guest booking lookup & voucher generator | `[readscope_booking_lookup]` |
 
 ---
 
 ## 🧪 Automated Testing & Quality Infrastructure
 
-Tourivo maintains a comprehensive testing and static analysis pipeline:
+Readscope maintains a comprehensive testing and static analysis pipeline:
 
 ### Running Tests Locally
 ```bash
@@ -113,7 +113,7 @@ DB_HOST=127.0.0.1 DB_NAME=your_database DB_USER=root DB_PASSWORD=root php tests/
 ```
 
 ### Static Analysis (PHPStan)
-Tourivo enforces PHPStan Level 5 static analysis:
+Readscope enforces PHPStan Level 5 static analysis:
 ```bash
 composer analyse
 # or
@@ -146,4 +146,4 @@ npm run env:stop
 
 ## 📄 License
 
-Tourivo is open-source software licensed under the [GPLv2 or later](LICENSE).
+Readscope is open-source software licensed under the [GPLv2 or later](LICENSE).

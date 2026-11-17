@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Common\Abstracts;
+namespace Readscope\Common\Abstracts;
 
 use WP_Post;
 
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  *
  * Base object model for Readscope Booking entities (Tours, Hotels, Rooms, Bookings).
  *
- * @package Tourivo\Common\Abstracts
+ * @package Readscope\Common\Abstracts
  */
 abstract class Model
 {
@@ -114,7 +114,7 @@ abstract class Model
      * @param string $size
      * @return string
      */
-    public function getThumbnailUrl(string $size = 'tourivo-card'): string
+    public function getThumbnailUrl(string $size = 'readscope-card'): string
     {
         if (!$this->post) {
             return '';

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Services;
+namespace Readscope\Services;
 
-use Tourivo\Support\Money;
+use Readscope\Support\Money;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
  * Handles advanced filtering, summary calculations, CSV/Excel generation,
  * and formula-injection-safe reporting for customer bookings.
  *
- * @package Tourivo\Services
+ * @package Readscope\Services
  */
 class ExportService
 {
@@ -35,8 +35,8 @@ class ExportService
     {
         global $wpdb;
 
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
+        $itemsTable    = $wpdb->prefix . 'readscope_booking_items';
 
         $status        = sanitize_text_field((string) ($filters['status'] ?? 'all'));
         $paymentStatus = sanitize_text_field((string) ($filters['payment_status'] ?? 'all'));
@@ -190,8 +190,8 @@ class ExportService
             }
 
             $b['items']        = $lineItems;
-            $span = \Tourivo\Support\BookingItems::span($lineItems);
-            $b['item_title']   = $lineItems !== [] ? \Tourivo\Support\BookingItems::title($lineItems, $bId) : 'N/A';
+            $span = \Readscope\Support\BookingItems::span($lineItems);
+            $b['item_title']   = $lineItems !== [] ? \Readscope\Support\BookingItems::title($lineItems, $bId) : 'N/A';
             $b['item_type']    = $firstItem['item_type'] ?? 'tour';
             $b['check_in']     = count($lineItems) > 1 ? $span['check_in'] : ($firstItem['check_in'] ?? '');
             $b['check_out']    = count($lineItems) > 1 ? $span['check_out'] : ($firstItem['check_out'] ?? '');
@@ -478,11 +478,11 @@ class ExportService
      */
     public static function handleExportRequest(): void
     {
-        if (!current_user_can('manage_tourivo_bookings')) {
+        if (!current_user_can('manage_readscope_bookings')) {
             wp_die(esc_html__('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking'), 403);
         }
 
-        check_admin_referer('tourivo_export_csv_action');
+        check_admin_referer('readscope_export_csv_action');
 
         // phpcs:disable WordPress.Security.NonceVerification.Recommended -- current_user_can() and the nonce are verified at the top of this method, before any input is read.
         $filters = [
@@ -502,7 +502,7 @@ class ExportService
             $mode = 'bookings';
         }
 
-        $filename = 'tourivo-bookings-report-' . gmdate('Y-m-d') . '.csv';
+        $filename = 'readscope-bookings-report-' . gmdate('Y-m-d') . '.csv';
 
         if (!headers_sent()) {
             header('Content-Type: text/csv; charset=utf-8');
@@ -514,7 +514,7 @@ class ExportService
         $service = new self();
         $service->generateCsv($filters, $mode);
 
-        if (!defined('TOURIVO_TEST_MODE')) {
+        if (!defined('READSCOPE_TEST_MODE')) {
             exit;
         }
     }
@@ -526,16 +526,16 @@ class ExportService
      */
     public function handlePreviewAjax(): void
     {
-        if (!current_user_can('manage_tourivo_bookings')) {
+        if (!current_user_can('manage_readscope_bookings')) {
             wp_send_json_error(['message' => __('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
-        check_ajax_referer('tourivo_admin_nonce', 'nonce');
+        check_ajax_referer('readscope_admin_nonce', 'nonce');
 
         // phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended -- current_user_can() and the nonce are verified at the top of this method, before any input is read.
         // Only the filter fields are read, each one sanitized by RequestInput::pick().
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Every key is sanitized by RequestInput::pick().
-        $req = \Tourivo\Support\RequestInput::pick(
+        $req = \Readscope\Support\RequestInput::pick(
             !empty($_POST) ? $_POST : $_GET,
             [
                 'status'         => 'text',

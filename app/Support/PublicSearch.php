@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Support;
+namespace Readscope\Support;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -15,17 +15,17 @@ if (!defined('ABSPATH')) {
  * parameters are registered as WordPress query vars and read from the parsed request (`$wp->query_vars`),
  * never from the request superglobals. Every value is sanitized and validated here, once.
  *
- * `tourivo_destination` is also the taxonomy's own query var and stays in the main query. The date and
+ * `readscope_destination` is also the taxonomy's own query var and stays in the main query. The date and
  * guest count are taken out of the main query after they are read: WordPress must keep treating
- * `/?tourivo_date=...` as the front page, exactly as it did before these vars were registered.
+ * `/?readscope_date=...` as the front page, exactly as it did before these vars were registered.
  *
- * @package Tourivo\Support
+ * @package Readscope\Support
  */
 final class PublicSearch
 {
-    public const VAR_DATE        = 'tourivo_date';
-    public const VAR_GUESTS      = 'tourivo_guests';
-    public const VAR_DESTINATION = 'tourivo_destination';
+    public const VAR_DATE        = 'readscope_date';
+    public const VAR_GUESTS      = 'readscope_guests';
+    public const VAR_DESTINATION = 'readscope_destination';
 
     /**
      * Query vars the search bar sends.

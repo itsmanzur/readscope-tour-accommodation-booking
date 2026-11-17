@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Config;
+namespace Readscope\Config;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  *
  * Provides central access to default settings, currency definitions, and options.
  *
- * @package Tourivo\Config
+ * @package Readscope\Config
  */
 class Config
 {
@@ -166,7 +166,7 @@ class Config
      */
     public static function get(string $key, mixed $default = null): mixed
     {
-        $settings = get_option('tourivo_settings', []);
+        $settings = get_option('readscope_settings', []);
         if (isset($settings[$key])) {
             return $settings[$key];
         }

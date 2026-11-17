@@ -5,10 +5,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Shortcodes\BookingLookupShortcode;
-use Tourivo\Tests\TestCase;
+use Readscope\Shortcodes\BookingLookupShortcode;
+use Readscope\Tests\TestCase;
 
 class LookupVoucherTest extends TestCase
 {
@@ -56,7 +56,7 @@ class LookupVoucherTest extends TestCase
         $this->assertStringNotContainsString('&#038;', $payload['voucher_url']);
         $parsedUrl = parse_url($payload['voucher_url']);
         parse_str($parsedUrl['query'] ?? '', $queryParams);
-        $this->assertEquals('tourivo_print_voucher', $queryParams['action'] ?? '');
+        $this->assertEquals('readscope_print_voucher', $queryParams['action'] ?? '');
         $this->assertEquals('TRV-TEST101', $queryParams['code'] ?? '');
         $this->assertNotEmpty($queryParams['token'] ?? '');
 
@@ -70,9 +70,9 @@ class LookupVoucherTest extends TestCase
     public function test_voucher_token_verification(): void
     {
         $code = 'TRV-AUTH999';
-        $validToken = wp_hash($code . '|tourivo_voucher_salt|' . gmdate('Y-m'));
+        $validToken = wp_hash($code . '|readscope_voucher_salt|' . gmdate('Y-m'));
 
-        $this->assertTrue(hash_equals($validToken, wp_hash($code . '|tourivo_voucher_salt|' . gmdate('Y-m'))));
+        $this->assertTrue(hash_equals($validToken, wp_hash($code . '|readscope_voucher_salt|' . gmdate('Y-m'))));
 
         $invalidToken = 'fake_token_123';
         $this->assertFalse(hash_equals($validToken, $invalidToken));

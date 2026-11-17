@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Support;
+namespace Readscope\Support;
 
-use Tourivo\Config\Config;
+use Readscope\Config\Config;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -25,12 +25,12 @@ if (!defined('ABSPATH')) {
  * - anek_all: Anek Bangla for text and headings
  * - theme:    the theme's fonts for text and headings, Anek Bangla for Bengali
  *
- * @package Tourivo\Support
+ * @package Readscope\Support
  */
 class Typography
 {
     public const MODES  = ['anek', 'anek_all', 'theme'];
-    public const HANDLE = 'tourivo-fonts';
+    public const HANDLE = 'readscope-fonts';
 
     /** The UI font stack WordPress admin uses. */
     public const SYSTEM_STACK = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif';
@@ -54,15 +54,15 @@ class Typography
         $themeHeading = 'var(--trv-font-theme-heading, ' . $themeText . ')';
 
         return match ($mode ?? self::mode()) {
-            'anek_all' => ['text' => '"Tourivo Anek", ' . self::SYSTEM_STACK, 'heading' => '"Tourivo Anek", ' . self::SYSTEM_STACK],
-            'theme'    => ['text' => '"Tourivo Bangla", ' . $themeText, 'heading' => '"Tourivo Bangla", ' . $themeHeading],
-            default    => ['text' => '"Tourivo Anek", ' . self::SYSTEM_STACK, 'heading' => '"Tourivo Bangla", ' . $themeHeading],
+            'anek_all' => ['text' => '"Readscope Anek", ' . self::SYSTEM_STACK, 'heading' => '"Readscope Anek", ' . self::SYSTEM_STACK],
+            'theme'    => ['text' => '"Readscope Bangla", ' . $themeText, 'heading' => '"Readscope Bangla", ' . $themeHeading],
+            default    => ['text' => '"Readscope Anek", ' . self::SYSTEM_STACK, 'heading' => '"Readscope Bangla", ' . $themeHeading],
         };
     }
 
     public static function adminStack(): string
     {
-        return '"Tourivo Bangla", ' . self::SYSTEM_STACK;
+        return '"Readscope Bangla", ' . self::SYSTEM_STACK;
     }
 
     /**
@@ -73,9 +73,9 @@ class Typography
         if (wp_style_is(self::HANDLE, 'enqueued')) {
             return;
         }
-        $file = TOURIVO_PLUGIN_DIR . 'assets/css/tourivo-fonts.css';
+        $file = READSCOPE_PLUGIN_DIR . 'assets/css/readscope-fonts.css';
         $stacks = self::frontendStacks();
-        wp_enqueue_style(self::HANDLE, TOURIVO_PLUGIN_URL . 'assets/css/tourivo-fonts.css', [], file_exists($file) ? (string) filemtime($file) : TOURIVO_VERSION);
+        wp_enqueue_style(self::HANDLE, READSCOPE_PLUGIN_URL . 'assets/css/readscope-fonts.css', [], file_exists($file) ? (string) filemtime($file) : READSCOPE_VERSION);
         wp_add_inline_style(self::HANDLE, sprintf(
             ':root{--trv-font:%s;--trv-font-heading:%s;--trv-font-admin:%s;}',
             $stacks['text'],
@@ -106,7 +106,7 @@ class Typography
             return;
         }
         $printed = true;
-        wp_print_inline_script_tag(self::themeFontScript(), ['id' => 'tourivo-theme-font']);
+        wp_print_inline_script_tag(self::themeFontScript(), ['id' => 'readscope-theme-font']);
     }
 
     public static function themeFontScript(): string

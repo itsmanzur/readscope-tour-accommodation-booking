@@ -1,7 +1,7 @@
-var TourivoWizard = {
+var ReadscopeWizard = {
     currentStep: 1,
-    nonce: tourivoWizardConfig.nonce,
-    ajaxUrl: tourivoWizardConfig.ajaxUrl,
+    nonce: readscopeWizardConfig.nonce,
+    ajaxUrl: readscopeWizardConfig.ajaxUrl,
 
     goToStep: function(step) {
         for (var i = 1; i <= 4; i++) {
@@ -35,31 +35,31 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btn1) {
         btn1.addEventListener('click', function() {
             btn1.disabled = true;
-            btn1.textContent = tourivoWizardConfig.i18n.saving;
+            btn1.textContent = readscopeWizardConfig.i18n.saving;
 
             var formData = new FormData();
-            formData.append('action', 'tourivo_wizard_save_step1');
-            formData.append('nonce', TourivoWizard.nonce);
+            formData.append('action', 'readscope_wizard_save_step1');
+            formData.append('nonce', ReadscopeWizard.nonce);
             formData.append('agency_name', document.getElementById('wz_agency_name').value);
             formData.append('notify_email', document.getElementById('wz_notify_email').value);
             formData.append('currency', document.getElementById('wz_currency_code').value);
             formData.append('currency_symbol', document.getElementById('wz_currency_symbol').value);
             formData.append('currency_position', document.getElementById('wz_currency_pos').value);
 
-            fetch(TourivoWizard.ajaxUrl, { method: 'POST', body: formData })
+            fetch(ReadscopeWizard.ajaxUrl, { method: 'POST', body: formData })
             .then(function(res) { return res.json(); })
             .then(function(data) {
                 btn1.disabled = false;
-                btn1.textContent = tourivoWizardConfig.i18n.continueToPages;
+                btn1.textContent = readscopeWizardConfig.i18n.continueToPages;
                 if (data.success) {
-                    TourivoWizard.goToStep(2);
+                    ReadscopeWizard.goToStep(2);
                 } else {
                     alert(data.data && data.data.message ? data.data.message : 'Error saving settings.');
                 }
             })
             .catch(function() {
                 btn1.disabled = false;
-                btn1.textContent = tourivoWizardConfig.i18n.continueToPages;
+                btn1.textContent = readscopeWizardConfig.i18n.continueToPages;
                 alert('Connection error.');
             });
         });
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (btn2) {
         btn2.addEventListener('click', function() {
             btn2.disabled = true;
-            btn2.textContent = tourivoWizardConfig.i18n.creatingPages;
+            btn2.textContent = readscopeWizardConfig.i18n.creatingPages;
 
             var checkedPages = [];
             document.querySelectorAll('input[name="pages[]"]:checked').forEach(function(cb) {
@@ -78,21 +78,21 @@ document.addEventListener('DOMContentLoaded', function() {
             });
 
             var formData = new FormData();
-            formData.append('action', 'tourivo_wizard_create_pages');
-            formData.append('nonce', TourivoWizard.nonce);
+            formData.append('action', 'readscope_wizard_create_pages');
+            formData.append('nonce', ReadscopeWizard.nonce);
             formData.append('pages', JSON.stringify(checkedPages));
 
-            fetch(TourivoWizard.ajaxUrl, { method: 'POST', body: formData })
+            fetch(ReadscopeWizard.ajaxUrl, { method: 'POST', body: formData })
             .then(function(res) { return res.json(); })
             .then(function(data) {
                 btn2.disabled = false;
-                btn2.textContent = tourivoWizardConfig.i18n.generatePagesNext;
-                TourivoWizard.goToStep(3);
+                btn2.textContent = readscopeWizardConfig.i18n.generatePagesNext;
+                ReadscopeWizard.goToStep(3);
             })
             .catch(function() {
                 btn2.disabled = false;
-                btn2.textContent = tourivoWizardConfig.i18n.generatePagesNext;
-                TourivoWizard.goToStep(3);
+                btn2.textContent = readscopeWizardConfig.i18n.generatePagesNext;
+                ReadscopeWizard.goToStep(3);
             });
         });
     }
@@ -106,18 +106,18 @@ document.addEventListener('DOMContentLoaded', function() {
             if (progBox) progBox.style.display = 'block';
 
             var formData = new FormData();
-            formData.append('action', 'tourivo_wizard_import_demo');
-            formData.append('nonce', TourivoWizard.nonce);
+            formData.append('action', 'readscope_wizard_import_demo');
+            formData.append('nonce', ReadscopeWizard.nonce);
 
-            fetch(TourivoWizard.ajaxUrl, { method: 'POST', body: formData })
+            fetch(ReadscopeWizard.ajaxUrl, { method: 'POST', body: formData })
             .then(function(res) { return res.json(); })
             .then(function(data) {
                 if (progBox) progBox.style.display = 'none';
-                TourivoWizard.goToStep(4);
+                ReadscopeWizard.goToStep(4);
             })
             .catch(function() {
                 if (progBox) progBox.style.display = 'none';
-                TourivoWizard.goToStep(4);
+                ReadscopeWizard.goToStep(4);
             });
         });
     }
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('[data-wizard-step]').forEach(function(btn) {
         btn.addEventListener('click', function() {
-            TourivoWizard.goToStep(parseInt(btn.getAttribute('data-wizard-step'), 10));
+            ReadscopeWizard.goToStep(parseInt(btn.getAttribute('data-wizard-step'), 10));
         });
     });
     ['wizardFormStep1', 'wizardFormStep2'].forEach(function(id) {

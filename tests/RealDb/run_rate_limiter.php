@@ -29,7 +29,7 @@ $host   = getenv('DB_HOST') ?: '127.0.0.1';
 $port   = (int) (getenv('DB_PORT') ?: 3306);
 $user   = getenv('DB_USER') ?: 'root';
 $pass   = getenv('DB_PASSWORD') !== false ? (string) getenv('DB_PASSWORD') : 'root';
-$dbName = getenv('DB_NAME') ?: 'tourivo_test';
+$dbName = getenv('DB_NAME') ?: 'readscope_test';
 $flags  = getenv('TRV_PHP_FLAGS') ? explode('|', (string) getenv('TRV_PHP_FLAGS')) : [];
 
 if (($argv[1] ?? '') === 'worker') {
@@ -37,7 +37,7 @@ if (($argv[1] ?? '') === 'worker') {
     $wk->options = 'trvrl_options';
     $allowed = 0;
     for ($i = 0; $i < (int) $argv[2]; $i++) {
-        if (\Tourivo\Support\RateLimiter::hit('rl_parallel', (int) $argv[3], 600)) {
+        if (\Readscope\Support\RateLimiter::hit('rl_parallel', (int) $argv[3], 600)) {
             $allowed++;
         }
     }
@@ -70,27 +70,27 @@ $check = static function (string $label, bool $ok) use (&$failures): void {
 echo "Server: " . $admin->server_info . "\n";
 
 $now = 1_800_000_000;
-\Tourivo\Support\RateLimiter::$clock = static function () use (&$now): int {
+\Readscope\Support\RateLimiter::$clock = static function () use (&$now): int {
     return $now;
 };
 
 $allowed = 0;
 for ($i = 0; $i < 20; $i++) {
-    $allowed += \Tourivo\Support\RateLimiter::hit('rl_seq', 5, 60) ? 1 : 0;
+    $allowed += \Readscope\Support\RateLimiter::hit('rl_seq', 5, 60) ? 1 : 0;
 }
 $check('20 sequential calls, limit 5 -> exactly 5 allowed', $allowed === 5);
 
 $now += 60;
-$check('first call after the window passes is allowed', \Tourivo\Support\RateLimiter::hit('rl_seq', 5, 60));
+$check('first call after the window passes is allowed', \Readscope\Support\RateLimiter::hit('rl_seq', 5, 60));
 $allowed = 1;
 for ($i = 0; $i < 10; $i++) {
-    $allowed += \Tourivo\Support\RateLimiter::hit('rl_seq', 5, 60) ? 1 : 0;
+    $allowed += \Readscope\Support\RateLimiter::hit('rl_seq', 5, 60) ? 1 : 0;
 }
 $check('new window allows exactly 5 again', $allowed === 5);
 
 $now += 120;
-$check('purgeExpired removes the expired row', \Tourivo\Support\RateLimiter::purgeExpired() === 1);
-\Tourivo\Support\RateLimiter::$clock = null;
+$check('purgeExpired removes the expired row', \Readscope\Support\RateLimiter::purgeExpired() === 1);
+\Readscope\Support\RateLimiter::$clock = null;
 
 $workers   = max(2, (int) (getenv('WORKERS') ?: 4));
 $perWorker = max(1, (int) (getenv('PER_WORKER') ?: 25));

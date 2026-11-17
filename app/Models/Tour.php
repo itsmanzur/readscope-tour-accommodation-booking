@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Models;
+namespace Readscope\Models;
 
-use Tourivo\Common\Abstracts\Model;
-use Tourivo\PostTypes\TourPostType;
+use Readscope\Common\Abstracts\Model;
+use Readscope\PostTypes\TourPostType;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
  *
  * Object model for Tour entities.
  *
- * @package Tourivo\Models
+ * @package Readscope\Models
  */
 class Tour extends Model
 {
@@ -27,7 +27,7 @@ class Tour extends Model
      */
     public function getTourType(): string
     {
-        return (string) ($this->getMeta('_tourivo_tour_type') ?: 'single_day');
+        return (string) ($this->getMeta('_readscope_tour_type') ?: 'single_day');
     }
 
     /**
@@ -37,7 +37,7 @@ class Tour extends Model
      */
     public function getPrice(): float
     {
-        return (float) ($this->getMeta('_tourivo_base_price') ?: 0.0);
+        return (float) ($this->getMeta('_readscope_base_price') ?: 0.0);
     }
 
     /**
@@ -47,7 +47,7 @@ class Tour extends Model
      */
     public function getSalePrice(): ?float
     {
-        $sale = $this->getMeta('_tourivo_sale_price');
+        $sale = $this->getMeta('_readscope_sale_price');
         return ($sale !== '' && $sale !== false) ? (float) $sale : null;
     }
 
@@ -83,7 +83,7 @@ class Tour extends Model
      */
     public function getFormattedPrice(): string
     {
-        return \Tourivo\Support\Money::format($this->getActivePrice());
+        return \Readscope\Support\Money::format($this->getActivePrice());
     }
 
     /**
@@ -91,7 +91,7 @@ class Tour extends Model
      */
     public function getFormattedRegularPrice(): string
     {
-        return \Tourivo\Support\Money::format($this->getPrice());
+        return \Readscope\Support\Money::format($this->getPrice());
     }
 
     /**
@@ -101,7 +101,7 @@ class Tour extends Model
      */
     public function getDuration(): string
     {
-        return (string) ($this->getMeta('_tourivo_duration') ?: '');
+        return (string) ($this->getMeta('_readscope_duration') ?: '');
     }
 
     /**
@@ -116,7 +116,7 @@ class Tour extends Model
      */
     public function getMinGuests(): int
     {
-        return (int) ($this->getMeta('_tourivo_min_guests') ?: 1);
+        return (int) ($this->getMeta('_readscope_min_guests') ?: 1);
     }
 
     /**
@@ -126,7 +126,7 @@ class Tour extends Model
      */
     public function getMaxGuests(): int
     {
-        return (int) ($this->getMeta('_tourivo_max_guests') ?: 20);
+        return (int) ($this->getMeta('_readscope_max_guests') ?: 20);
     }
 
     /**
@@ -136,7 +136,7 @@ class Tour extends Model
      */
     public function getDailyCapacity(): int
     {
-        return max(0, (int) $this->getMeta('_tourivo_daily_capacity'));
+        return max(0, (int) $this->getMeta('_readscope_daily_capacity'));
     }
 
     /**
@@ -146,7 +146,7 @@ class Tour extends Model
      */
     public function getChildPriceType(): string
     {
-        $type = (string) $this->getMeta('_tourivo_child_price_type');
+        $type = (string) $this->getMeta('_readscope_child_price_type');
         return in_array($type, ['full', 'percent', 'fixed', 'free'], true) ? $type : 'full';
     }
 
@@ -157,7 +157,7 @@ class Tour extends Model
      */
     public function getChildPriceValue(): float
     {
-        return max(0.0, (float) ($this->getMeta('_tourivo_child_price_value') ?: 0.0));
+        return max(0.0, (float) ($this->getMeta('_readscope_child_price_value') ?: 0.0));
     }
 
     /**
@@ -167,7 +167,7 @@ class Tour extends Model
      */
     public function getChildAgeLabel(): string
     {
-        return (string) ($this->getMeta('_tourivo_child_age_label') ?: '');
+        return (string) ($this->getMeta('_readscope_child_age_label') ?: '');
     }
 
     /**
@@ -177,7 +177,7 @@ class Tour extends Model
      */
     public function isInfantsFree(): bool
     {
-        $val = $this->getMeta('_tourivo_infants_free');
+        $val = $this->getMeta('_readscope_infants_free');
         if ($val === '' || $val === false || $val === null) {
             return true;
         }
@@ -191,7 +191,7 @@ class Tour extends Model
      */
     public function getBadge(): string
     {
-        return (string) ($this->getMeta('_tourivo_badge') ?: '');
+        return (string) ($this->getMeta('_readscope_badge') ?: '');
     }
 
     /**
@@ -201,7 +201,7 @@ class Tour extends Model
      */
     public function getItinerary(): array
     {
-        $itinerary = $this->getMeta('_tourivo_itinerary');
+        $itinerary = $this->getMeta('_readscope_itinerary');
         if (is_string($itinerary)) {
             $decoded = json_decode($itinerary, true);
             return is_array($decoded) ? $decoded : [];
@@ -216,7 +216,7 @@ class Tour extends Model
      */
     public function getInclusions(): array
     {
-        $inclusions = $this->getMeta('_tourivo_inclusions');
+        $inclusions = $this->getMeta('_readscope_inclusions');
         if (is_string($inclusions)) {
             $decoded = json_decode($inclusions, true);
             return is_array($decoded) ? $decoded : [];
@@ -231,7 +231,7 @@ class Tour extends Model
      */
     public function getExclusions(): array
     {
-        $exclusions = $this->getMeta('_tourivo_exclusions');
+        $exclusions = $this->getMeta('_readscope_exclusions');
         if (is_string($exclusions)) {
             $decoded = json_decode($exclusions, true);
             return is_array($decoded) ? $decoded : [];
@@ -246,7 +246,7 @@ class Tour extends Model
      */
     public function getFaqs(): array
     {
-        $faqs = $this->getMeta('_tourivo_faqs');
+        $faqs = $this->getMeta('_readscope_faqs');
         if (is_string($faqs)) {
             $decoded = json_decode($faqs, true);
             return is_array($decoded) ? $decoded : [];
@@ -261,7 +261,7 @@ class Tour extends Model
      */
     public function getPickupLocation(): string
     {
-        return (string) ($this->getMeta('_tourivo_pickup_location') ?: '');
+        return (string) ($this->getMeta('_readscope_pickup_location') ?: '');
     }
 
     /**
@@ -271,7 +271,7 @@ class Tour extends Model
      */
     public function getDropoffLocation(): string
     {
-        return (string) ($this->getMeta('_tourivo_dropoff_location') ?: '');
+        return (string) ($this->getMeta('_readscope_dropoff_location') ?: '');
     }
 
     /**
@@ -303,7 +303,7 @@ class Tour extends Model
      */
     public function getAverageRating(): float
     {
-        return (float) ($this->getMeta('_tourivo_average_rating') ?: 0.0);
+        return (float) ($this->getMeta('_readscope_average_rating') ?: 0.0);
     }
 
     /**
@@ -313,7 +313,7 @@ class Tour extends Model
      */
     public function getReviewCount(): int
     {
-        return (int) ($this->getMeta('_tourivo_review_count') ?: 0);
+        return (int) ($this->getMeta('_readscope_review_count') ?: 0);
     }
 }
 

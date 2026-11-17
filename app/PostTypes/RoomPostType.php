@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\PostTypes;
+namespace Readscope\PostTypes;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -11,13 +11,13 @@ if (!defined('ABSPATH')) {
 /**
  * Class RoomPostType
  *
- * Registers the 'tourivo_room' custom post type.
+ * Registers the 'readscope_room' custom post type.
  *
- * @package Tourivo\PostTypes
+ * @package Readscope\PostTypes
  */
 class RoomPostType
 {
-    public const POST_TYPE = 'tourivo_room';
+    public const POST_TYPE = 'readscope_room';
 
     /**
      * Register post type.
@@ -51,7 +51,7 @@ class RoomPostType
             'public'             => false,
             'publicly_queryable' => false,
             'show_ui'            => true,
-            'show_in_menu'       => 'tourivo',
+            'show_in_menu'       => 'readscope',
             'query_var'          => false,
             'rewrite'            => false,
             'capability_type'    => 'post',

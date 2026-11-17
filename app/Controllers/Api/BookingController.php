@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Controllers\Api;
+namespace Readscope\Controllers\Api;
 
-use Tourivo\Common\Abstracts\Controller;
-use Tourivo\Common\Container;
-use Tourivo\Services\BookingService;
-use Tourivo\Support\ClientIp;
-use Tourivo\Support\RateLimiter;
+use Readscope\Common\Abstracts\Controller;
+use Readscope\Common\Container;
+use Readscope\Services\BookingService;
+use Readscope\Support\ClientIp;
+use Readscope\Support\RateLimiter;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
  *
  * REST API controller for processing direct bookings and AJAX submissions.
  *
- * @package Tourivo\Controllers\Api
+ * @package Readscope\Controllers\Api
  */
 class BookingController extends Controller
 {
@@ -56,13 +56,13 @@ class BookingController extends Controller
         $rawParams = $request->get_json_params() ?: $request->get_params();
 
         // 1. Honeypot check
-        if (!empty($rawParams['tourivo_hp_check'])) {
+        if (!empty($rawParams['readscope_hp_check'])) {
             return new WP_Error('spam_detected', __('Submission blocked.', 'the-readscope-tour-and-accommodation-booking'), ['status' => 400]);
         }
 
         // 2. IP-based Rate Limiting (5 requests per 10 minutes)
         $ip = ClientIp::get();
-        if (!RateLimiter::hit('tourivo_rl_booking_' . md5($ip), 5, 600)) {
+        if (!RateLimiter::hit('readscope_rl_booking_' . md5($ip), 5, 600)) {
             return new WP_Error(
                 'too_many_requests',
                 __('Too many booking requests submitted. Please wait a few minutes before trying again.', 'the-readscope-tour-and-accommodation-booking'),
@@ -135,8 +135,8 @@ class BookingController extends Controller
         $source = [];
         if (!empty($rawParams['custom_fields']) && is_array($rawParams['custom_fields'])) {
             $source = $rawParams['custom_fields'];
-        } elseif (!empty($rawParams['tourivo_fields']) && is_array($rawParams['tourivo_fields'])) {
-            $source = $rawParams['tourivo_fields'];
+        } elseif (!empty($rawParams['readscope_fields']) && is_array($rawParams['readscope_fields'])) {
+            $source = $rawParams['readscope_fields'];
         }
 
         $fields = [];

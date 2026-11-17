@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Common\Traits;
+namespace Readscope\Common\Traits;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  *
  * Implements a thread-safe Singleton pattern for services and core orchestrators.
  *
- * @package Tourivo\Common\Traits
+ * @package Readscope\Common\Traits
  */
 trait Singleton
 {

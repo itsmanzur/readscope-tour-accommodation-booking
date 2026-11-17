@@ -122,7 +122,7 @@ $excludedPatterns = [
     '/\.log$/i',
     '/\.tmp$/i',
     '/\.sql$/i',
-    '/tourivo_project_roadmap\.md$/i',
+    '/readscope_project_roadmap\.md$/i',
 ];
 
 $zipFiles = [

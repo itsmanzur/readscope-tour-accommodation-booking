@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Admin\SetupWizard;
-use Tourivo\Common\Container;
-use Tourivo\Config\Config;
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\InventoryService;
-use Tourivo\Services\PricingService;
-use Tourivo\Shortcodes\BookingLookupShortcode;
-use Tourivo\Shortcodes\MyBookingsShortcode;
-use Tourivo\Tests\TestCase;
+use Readscope\Admin\SetupWizard;
+use Readscope\Common\Container;
+use Readscope\Config\Config;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\InventoryService;
+use Readscope\Services\PricingService;
+use Readscope\Shortcodes\BookingLookupShortcode;
+use Readscope\Shortcodes\MyBookingsShortcode;
+use Readscope\Tests\TestCase;
 use WP_User;
 
 /**
  * Class MyBookingsPortalTest
  *
- * Tests for Customer Account / "My Bookings" Portal ([tourivo_my_bookings]):
+ * Tests for Customer Account / "My Bookings" Portal ([readscope_my_bookings]):
  * 1. Guest visitor sees login prompt, registration link, and track booking fallback.
  * 2. Logged-in traveler sees their own bookings (matched by customer_id and customer_email) with strict isolation.
  * 3. Stats calculations (Upcoming, Completed, Cancelled, Total).
@@ -42,10 +42,10 @@ class MyBookingsPortalTest extends TestCase
         $this->cleanDatabaseTables();
         $this->cleanTransients();
 
-        $GLOBALS['tourivo_mock_sent_emails'] = [];
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
-        $GLOBALS['tourivo_mock_options']['admin_email'] = 'admin@example.com';
-        $GLOBALS['tourivo_mock_options']['blogname'] = 'Readscope Test Site';
+        $GLOBALS['readscope_mock_sent_emails'] = [];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_options']['admin_email'] = 'admin@example.com';
+        $GLOBALS['readscope_mock_options']['blogname'] = 'Readscope Test Site';
 
         $invRepo = new InventoryRepository();
         $this->inventoryService = new InventoryService($invRepo);
@@ -80,7 +80,7 @@ class MyBookingsPortalTest extends TestCase
 
         $output = MyBookingsShortcode::render([]);
 
-        $this->assertStringContainsString('tourivo-my-bookings-login-prompt', $output);
+        $this->assertStringContainsString('readscope-my-bookings-login-prompt', $output);
         $this->assertStringContainsString('Log in', $output);
         $this->assertStringContainsString('Track', $output);
     }
@@ -94,13 +94,13 @@ class MyBookingsPortalTest extends TestCase
         $alice->ID = 101;
         $alice->user_email = 'alice@example.com';
         $alice->display_name = 'Alice Wonderland';
-        $GLOBALS['tourivo_mock_users'][101] = $alice;
+        $GLOBALS['readscope_mock_users'][101] = $alice;
 
         $bob = new WP_User();
         $bob->ID = 102;
         $bob->user_email = 'bob@example.com';
         $bob->display_name = 'Bob Builder';
-        $GLOBALS['tourivo_mock_users'][102] = $bob;
+        $GLOBALS['readscope_mock_users'][102] = $bob;
 
         $tourId = $this->createTour(120.0, 20);
 
@@ -159,7 +159,7 @@ class MyBookingsPortalTest extends TestCase
         $user->ID = 201;
         $user->user_email = 'stats.user@example.com';
         $user->display_name = 'Stats User';
-        $GLOBALS['tourivo_mock_users'][201] = $user;
+        $GLOBALS['readscope_mock_users'][201] = $user;
 
         $tourId = $this->createTour(100.0, 30);
 
@@ -214,7 +214,7 @@ class MyBookingsPortalTest extends TestCase
         $user->ID = 301;
         $user->user_email = 'links.user@example.com';
         $user->display_name = 'Links User';
-        $GLOBALS['tourivo_mock_users'][301] = $user;
+        $GLOBALS['readscope_mock_users'][301] = $user;
 
         $tourId = $this->createTour(200.0, 10);
         $res = $this->bookingService->createBooking([
@@ -230,8 +230,8 @@ class MyBookingsPortalTest extends TestCase
 
         $output = MyBookingsShortcode::render([]);
 
-        $this->assertStringContainsString('action=tourivo_print_voucher', $output);
-        $this->assertStringContainsString('action=tourivo_download_ics', $output);
+        $this->assertStringContainsString('action=readscope_print_voucher', $output);
+        $this->assertStringContainsString('action=readscope_download_ics', $output);
         $this->assertStringContainsString('code=' . $res['booking_code'], $output);
     }
 
@@ -244,13 +244,13 @@ class MyBookingsPortalTest extends TestCase
         $alice->ID = 401;
         $alice->user_email = 'alice401@example.com';
         $alice->allcaps = [];
-        $GLOBALS['tourivo_mock_users'][401] = $alice;
+        $GLOBALS['readscope_mock_users'][401] = $alice;
 
         $bob = new WP_User();
         $bob->ID = 402;
         $bob->user_email = 'bob402@example.com';
         $bob->allcaps = [];
-        $GLOBALS['tourivo_mock_users'][402] = $bob;
+        $GLOBALS['readscope_mock_users'][402] = $bob;
 
         $tourId = $this->createTour(150.0, 10);
 
@@ -295,13 +295,13 @@ class MyBookingsPortalTest extends TestCase
         $user->ID = 501;
         $user->user_email = 'detail.user@example.com';
         $user->allcaps = [];
-        $GLOBALS['tourivo_mock_users'][501] = $user;
+        $GLOBALS['readscope_mock_users'][501] = $user;
 
         $stranger = new WP_User();
         $stranger->ID = 999;
         $stranger->user_email = 'stranger@example.com';
         $stranger->allcaps = [];
-        $GLOBALS['tourivo_mock_users'][999] = $stranger;
+        $GLOBALS['readscope_mock_users'][999] = $stranger;
 
         $tourId = $this->createTour(250.0, 10);
         $res = $this->bookingService->createBooking([
@@ -337,18 +337,18 @@ class MyBookingsPortalTest extends TestCase
         $defaults = Config::getDefaults();
         $this->assertArrayHasKey('my_bookings_page_id', $defaults);
 
-        $_POST['nonce'] = wp_create_nonce('tourivo_wizard_nonce');
+        $_POST['nonce'] = wp_create_nonce('readscope_wizard_nonce');
         $_POST['pages'] = json_encode(['my_bookings']);
 
-        $GLOBALS['tourivo_last_ajax_response'] = null;
+        $GLOBALS['readscope_last_ajax_response'] = null;
         SetupWizard::handleCreatePages();
-        $response = $GLOBALS['tourivo_last_ajax_response']['body'] ?? null;
+        $response = $GLOBALS['readscope_last_ajax_response']['body'] ?? null;
 
         $this->assertNotNull($response);
         $this->assertTrue(!empty($response['success']));
         $this->assertArrayHasKey('my_bookings', $response['data']['pages']);
 
-        $settings = get_option('tourivo_settings');
+        $settings = get_option('readscope_settings');
         $this->assertNotEmpty($settings['my_bookings_page_id']);
     }
 }

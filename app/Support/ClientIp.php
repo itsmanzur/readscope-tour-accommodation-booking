@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Support;
+namespace Readscope\Support;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  *
  * Resolves client IP address with secure proxy/Cloudflare verification and anti-spoofing checks.
  *
- * @package Tourivo\Support
+ * @package Readscope\Support
  */
 class ClientIp
 {
@@ -25,14 +25,14 @@ class ClientIp
     public static function get(): string
     {
         $remoteAddr = sanitize_text_field(wp_unslash((string) ($_SERVER['REMOTE_ADDR'] ?? '127.0.0.1')));
-        $settings = get_option('tourivo_settings', []);
+        $settings = get_option('readscope_settings', []);
 
         $rawMode = (string) ($settings['proxy_mode'] ?? '');
         $proxyMode = in_array($rawMode, ['cloudflare', 'reverse_proxy'], true) ? $rawMode : 'disabled';
 
         // Direct connection mode: never trust incoming proxy headers
         if ($proxyMode === 'disabled') {
-            return (string) apply_filters('tourivo/client_ip', $remoteAddr);
+            return (string) apply_filters('readscope/client_ip', $remoteAddr);
         }
 
         $ip = '';
@@ -50,13 +50,13 @@ class ClientIp
                 $ip = $remoteAddr;
             }
 
-            return (string) apply_filters('tourivo/client_ip', $ip);
+            return (string) apply_filters('readscope/client_ip', $ip);
         }
 
         // 2. Reverse Proxy Mode: ONLY trust headers if REMOTE_ADDR is an authenticated/trusted proxy
         if ($proxyMode === 'reverse_proxy') {
             if (!self::isTrustedProxy($remoteAddr)) {
-                return (string) apply_filters('tourivo/client_ip', $remoteAddr);
+                return (string) apply_filters('readscope/client_ip', $remoteAddr);
             }
 
             if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
@@ -94,7 +94,7 @@ class ClientIp
             $ip = $remoteAddr;
         }
 
-        return (string) apply_filters('tourivo/client_ip', $ip);
+        return (string) apply_filters('readscope/client_ip', $ip);
     }
 
     /**
@@ -114,14 +114,14 @@ class ClientIp
             'fc00::/7',
         ];
 
-        $settings = get_option('tourivo_settings', []);
+        $settings = get_option('readscope_settings', []);
         $customProxies = [];
         if (!empty($settings['trusted_proxies']) && is_string($settings['trusted_proxies'])) {
             $customProxies = array_filter(array_map('trim', preg_split('/[\r\n,]+/', $settings['trusted_proxies'])));
         }
 
         $merged = array_values(array_unique(array_merge($defaultProxies, $customProxies)));
-        $trusted = (array) apply_filters('tourivo/trusted_proxies', $merged);
+        $trusted = (array) apply_filters('readscope/trusted_proxies', $merged);
 
         foreach ($trusted as $range) {
             if (self::ipMatchesRange($ip, (string) $range)) {
@@ -165,7 +165,7 @@ class ClientIp
             '2c0f:f248::/32',
         ];
 
-        $cfRanges = (array) apply_filters('tourivo/cloudflare_ranges', $defaultRanges);
+        $cfRanges = (array) apply_filters('readscope/cloudflare_ranges', $defaultRanges);
 
         foreach ($cfRanges as $range) {
             if (self::ipMatchesRange($ip, (string) $range)) {

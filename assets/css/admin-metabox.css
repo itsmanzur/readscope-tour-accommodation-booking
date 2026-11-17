@@ -2,7 +2,7 @@
  * Readscope Booking Admin MetaBox Styles (Polished Tabbed UI Framework)
  */
 
-.tourivo-metabox-wrapper {
+.readscope-metabox-wrapper {
     display: flex;
     flex-direction: row;
     align-items: stretch;
@@ -14,25 +14,25 @@
     min-height: 320px;
 }
 
-.tourivo-tabs-nav {
+.readscope-tabs-nav {
     width: 230px;
     background: #f8fafc;
     border-right: 1px solid #e2e8f0;
     flex-shrink: 0;
 }
 
-.tourivo-tabs-nav ul {
+.readscope-tabs-nav ul {
     margin: 0;
     padding: 0;
     list-style: none;
 }
 
-.tourivo-tabs-nav li {
+.readscope-tabs-nav li {
     margin: 0;
     border-bottom: 1px solid #f1f5f9;
 }
 
-.tourivo-tabs-nav li a {
+.readscope-tabs-nav li a {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -45,7 +45,7 @@
     transition: all 0.15s ease;
 }
 
-.tourivo-tabs-nav li a .dashicons {
+.readscope-tabs-nav li a .dashicons {
     font-size: 18px;
     width: 18px;
     height: 18px;
@@ -53,61 +53,61 @@
     transition: color 0.15s ease;
 }
 
-.tourivo-tabs-nav li.active a,
-.tourivo-tabs-nav li a:hover {
+.readscope-tabs-nav li.active a,
+.readscope-tabs-nav li a:hover {
     background: #ffffff;
     color: #0d9488;
     border-left-color: #0d9488;
 }
 
-.tourivo-tabs-nav li.active a .dashicons,
-.tourivo-tabs-nav li a:hover .dashicons {
+.readscope-tabs-nav li.active a .dashicons,
+.readscope-tabs-nav li a:hover .dashicons {
     color: #0d9488;
 }
 
-.tourivo-tabs-content {
+.readscope-tabs-content {
     flex: 1;
     padding: 24px 30px;
     min-width: 0;
     background: #ffffff;
 }
 
-.tourivo-tab-pane {
+.readscope-tab-pane {
     display: none;
-    animation: tourivoFadeIn 0.2s ease-in-out;
+    animation: readscopeFadeIn 0.2s ease-in-out;
 }
 
-.tourivo-tab-pane.active {
+.readscope-tab-pane.active {
     display: block;
 }
 
-@keyframes tourivoFadeIn {
+@keyframes readscopeFadeIn {
     from { opacity: 0.7; transform: translateY(2px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-.tourivo-row {
+.readscope-row {
     display: flex;
     gap: 18px;
     flex-wrap: wrap;
     margin-bottom: 18px;
 }
 
-.tourivo-col {
+.readscope-col {
     flex: 1;
     min-width: 180px;
 }
 
-.tourivo-form-group {
+.readscope-form-group {
     margin-bottom: 18px;
 }
 
-.tourivo-form-group:last-child {
+.readscope-form-group:last-child {
     margin-bottom: 0;
 }
 
-.tourivo-form-group label,
-.tourivo-col label {
+.readscope-form-group label,
+.readscope-col label {
     display: block;
     margin-bottom: 6px;
     font-size: var(--trv-admin-text-sm);
@@ -115,8 +115,8 @@
     color: #1e293b;
 }
 
-.tourivo-form-group .description,
-.tourivo-col .description {
+.readscope-form-group .description,
+.readscope-col .description {
     margin: 5px 0 0 0;
     font-size: var(--trv-admin-text-xs);
     color: #64748b;
@@ -124,16 +124,16 @@
     line-height: 1.4;
 }
 
-.tourivo-form-group input[type="text"],
-.tourivo-form-group input[type="number"],
-.tourivo-form-group input[type="email"],
-.tourivo-form-group select,
-.tourivo-form-group textarea,
-.tourivo-col input[type="text"],
-.tourivo-col input[type="number"],
-.tourivo-col input[type="email"],
-.tourivo-col select,
-.tourivo-col textarea {
+.readscope-form-group input[type="text"],
+.readscope-form-group input[type="number"],
+.readscope-form-group input[type="email"],
+.readscope-form-group select,
+.readscope-form-group textarea,
+.readscope-col input[type="text"],
+.readscope-col input[type="number"],
+.readscope-col input[type="email"],
+.readscope-col select,
+.readscope-col textarea {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
@@ -147,23 +147,23 @@
     transition: all 0.15s ease;
 }
 
-.tourivo-form-group input:focus,
-.tourivo-col input:focus,
-.tourivo-form-group select:focus,
-.tourivo-col select:focus,
-.tourivo-form-group textarea:focus,
-.tourivo-col textarea:focus {
+.readscope-form-group input:focus,
+.readscope-col input:focus,
+.readscope-form-group select:focus,
+.readscope-col select:focus,
+.readscope-form-group textarea:focus,
+.readscope-col textarea:focus {
     border-color: #0d9488;
     outline: none;
     box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
 }
 
 /* Repeaters (Itinerary, Inclusions, FAQs) */
-.tourivo-repeater-container {
+.readscope-repeater-container {
     margin-bottom: 16px;
 }
 
-.tourivo-repeater-row {
+.readscope-repeater-row {
     background: #f8fafc;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
@@ -172,7 +172,7 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.02);
 }
 
-.tourivo-repeater-row .row-header {
+.readscope-repeater-row .row-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -183,11 +183,11 @@
     color: #0f172a;
 }
 
-.tourivo-list-repeater {
+.readscope-list-repeater {
     margin-bottom: 14px;
 }
 
-.tourivo-list-repeater .list-item-row {
+.readscope-list-repeater .list-item-row {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -215,32 +215,32 @@
 
 /* Responsive collapse on narrow viewports */
 @media (max-width: 860px) {
-    .tourivo-metabox-wrapper {
+    .readscope-metabox-wrapper {
         flex-direction: column;
     }
-    .tourivo-tabs-nav {
+    .readscope-tabs-nav {
         width: 100%;
         border-right: none;
         border-bottom: 1px solid #e2e8f0;
     }
-    .tourivo-tabs-nav ul {
+    .readscope-tabs-nav ul {
         display: flex;
         flex-wrap: wrap;
     }
-    .tourivo-tabs-nav li {
+    .readscope-tabs-nav li {
         border-bottom: none;
         border-right: 1px solid #f1f5f9;
     }
-    .tourivo-tabs-nav li a {
+    .readscope-tabs-nav li a {
         border-left: none;
         border-bottom: 3px solid transparent;
         padding: 10px 14px;
     }
-    .tourivo-tabs-nav li.active a {
+    .readscope-tabs-nav li.active a {
         border-left-color: transparent;
         border-bottom-color: #0d9488;
     }
-    .tourivo-tabs-content {
+    .readscope-tabs-content {
         padding: 18px 16px;
     }
 }
@@ -249,7 +249,7 @@
    Availability & Pricing Calendar Manager Styles
    ========================================================================== */
 
-.tourivo-availability-app {
+.readscope-availability-app {
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 8px;
@@ -257,7 +257,7 @@
     margin: -6px -12px -12px -12px;
 }
 
-.tourivo-avail-header {
+.readscope-avail-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -268,13 +268,13 @@
     border-bottom: 1px solid #e2e8f0;
 }
 
-.tourivo-avail-nav-controls {
+.readscope-avail-nav-controls {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.tourivo-avail-current-month {
+.readscope-avail-current-month {
     margin: 0;
     font-size: var(--trv-admin-text-lg);
     font-weight: 700;
@@ -283,13 +283,13 @@
     text-align: center;
 }
 
-.tourivo-avail-header-meta {
+.readscope-avail-header-meta {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.tourivo-avail-meta-badge {
+.readscope-avail-meta-badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -301,25 +301,25 @@
     color: #475569;
 }
 
-.tourivo-avail-meta-badge .dashicons {
+.readscope-avail-meta-badge .dashicons {
     font-size: 16px;
     width: 16px;
     height: 16px;
     color: #0d9488;
 }
 
-.tourivo-avail-body {
+.readscope-avail-body {
     display: flex;
     gap: 20px;
     align-items: flex-start;
 }
 
-.tourivo-avail-calendar-wrap {
+.readscope-avail-calendar-wrap {
     flex: 1;
     min-width: 0;
 }
 
-.tourivo-avail-weekdays {
+.readscope-avail-weekdays {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 6px;
@@ -327,7 +327,7 @@
     text-align: center;
 }
 
-.tourivo-avail-weekday {
+.readscope-avail-weekday {
     font-size: var(--trv-admin-text-xs);
     font-weight: 700;
     text-transform: uppercase;
@@ -337,23 +337,23 @@
     border-radius: 4px;
 }
 
-.tourivo-avail-weekday.tourivo-weekend {
+.readscope-avail-weekday.readscope-weekend {
     color: #0d9488;
 }
 
-.tourivo-avail-grid {
+.readscope-avail-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 6px;
     outline: none;
 }
 
-.tourivo-avail-grid:focus {
+.readscope-avail-grid:focus {
     box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
     border-radius: 6px;
 }
 
-.tourivo-avail-day {
+.readscope-avail-day {
     position: relative;
     display: flex;
     flex-direction: column;
@@ -368,57 +368,57 @@
     transition: all 0.15s ease;
 }
 
-.tourivo-avail-day:hover {
+.readscope-avail-day:hover {
     border-color: #0d9488;
     background: #f0fdfa;
     transform: translateY(-1px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
-.tourivo-avail-day:focus {
+.readscope-avail-day:focus {
     outline: 2px solid #0d9488;
     outline-offset: 1px;
 }
 
-.tourivo-avail-day.is-selected,
-.tourivo-avail-day[aria-selected="true"] {
+.readscope-avail-day.is-selected,
+.readscope-avail-day[aria-selected="true"] {
     background: #ccfbf1 !important;
     border-color: #0d9488 !important;
     box-shadow: 0 0 0 1px #0d9488;
 }
 
-.tourivo-avail-day.is-past {
+.readscope-avail-day.is-past {
     background: #f8fafc;
     opacity: 0.7;
 }
 
-.tourivo-avail-day.is-empty {
+.readscope-avail-day.is-empty {
     background: transparent;
     border: 1px dashed #f1f5f9;
     cursor: default;
     min-height: 82px;
 }
 
-.tourivo-avail-day.is-empty:hover {
+.readscope-avail-day.is-empty:hover {
     background: transparent;
     border-color: #f1f5f9;
     transform: none;
     box-shadow: none;
 }
 
-.tourivo-avail-day-top {
+.readscope-avail-day-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.tourivo-day-num {
+.readscope-day-num {
     font-size: var(--trv-admin-text-sm);
     font-weight: 700;
     color: #1e293b;
 }
 
-.tourivo-avail-day.is-today .tourivo-day-num {
+.readscope-avail-day.is-today .readscope-day-num {
     background: #0d9488;
     color: #ffffff;
     width: 20px;
@@ -430,7 +430,7 @@
     font-size: var(--trv-admin-text-xs);
 }
 
-.tourivo-day-badge {
+.readscope-day-badge {
     font-size: var(--trv-admin-text-xs);
     font-weight: 600;
     padding: 1px 5px;
@@ -438,34 +438,34 @@
     text-transform: uppercase;
 }
 
-.tourivo-avail-day.status-available .tourivo-day-badge {
+.readscope-avail-day.status-available .readscope-day-badge {
     background: #dcfce7;
     color: #166534;
 }
 
-.tourivo-avail-day.status-blocked .tourivo-day-badge {
+.readscope-avail-day.status-blocked .readscope-day-badge {
     background: #fee2e2;
     color: #991b1b;
 }
 
-.tourivo-avail-day.status-sold-out .tourivo-day-badge {
+.readscope-avail-day.status-sold-out .readscope-day-badge {
     background: #ede9fe;
     color: #6b21a8;
 }
 
-.tourivo-avail-day.status-blocked {
+.readscope-avail-day.status-blocked {
     background: #fef2f2;
     border-color: #fca5a5;
 }
 
-.tourivo-day-meta {
+.readscope-day-meta {
     font-size: var(--trv-admin-text-xs);
     color: #475569;
     margin-top: 4px;
     line-height: 1.3;
 }
 
-.tourivo-day-price {
+.readscope-day-price {
     font-weight: 700;
     color: #0f172a;
     font-size: var(--trv-admin-text-xs);
@@ -474,13 +474,13 @@
     justify-content: space-between;
 }
 
-.tourivo-override-icon {
+.readscope-override-icon {
     color: #d97706;
     font-size: 12px;
     font-weight: 700;
 }
 
-.tourivo-avail-legend {
+.readscope-avail-legend {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -492,7 +492,7 @@
     color: #64748b;
 }
 
-.tourivo-legend-item {
+.readscope-legend-item {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -510,7 +510,7 @@
 .legend-dot.status-sold-out  { background: #a855f7; }
 .legend-dot.status-override  { background: #d97706; }
 
-.tourivo-legend-hint {
+.readscope-legend-hint {
     margin-left: auto;
     font-size: var(--trv-admin-text-xs);
     color: #94a3b8;
@@ -519,14 +519,14 @@
     gap: 4px;
 }
 
-.tourivo-legend-hint .dashicons {
+.readscope-legend-hint .dashicons {
     font-size: 14px;
     width: 14px;
     height: 14px;
 }
 
 /* Bulk Actions Side Panel */
-.tourivo-avail-panel {
+.readscope-avail-panel {
     width: 280px;
     flex-shrink: 0;
     background: #f8fafc;
@@ -535,7 +535,7 @@
     padding: 14px;
 }
 
-.tourivo-panel-header {
+.readscope-panel-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -544,7 +544,7 @@
     border-bottom: 1px solid #e2e8f0;
 }
 
-.tourivo-selection-badge {
+.readscope-selection-badge {
     background: #0d9488;
     color: #ffffff;
     font-size: var(--trv-admin-text-xs);
@@ -553,11 +553,11 @@
     border-radius: 12px;
 }
 
-.tourivo-panel-section {
+.readscope-panel-section {
     margin-bottom: 14px;
 }
 
-.tourivo-panel-label {
+.readscope-panel-label {
     display: block;
     font-size: var(--trv-admin-text-xs);
     font-weight: 700;
@@ -567,14 +567,14 @@
     letter-spacing: 0.02em;
 }
 
-.tourivo-dow-checkboxes {
+.readscope-dow-checkboxes {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
     margin-top: 4px;
 }
 
-.tourivo-dow-checkboxes label {
+.readscope-dow-checkboxes label {
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -587,8 +587,8 @@
     cursor: pointer;
 }
 
-.tourivo-panel-select,
-.tourivo-panel-input {
+.readscope-panel-select,
+.readscope-panel-input {
     width: 100% !important;
     max-width: 100% !important;
     background: #ffffff !important;
@@ -599,14 +599,14 @@
     color: #1e293b !important;
 }
 
-.tourivo-panel-actions {
+.readscope-panel-actions {
     display: flex;
     flex-direction: column;
     gap: 8px;
     margin-top: 14px;
 }
 
-.tourivo-panel-actions .button-primary {
+.readscope-panel-actions .button-primary {
     background: #0d9488 !important;
     border-color: #0d9488 !important;
     padding: 6px 14px !important;
@@ -618,11 +618,11 @@
     gap: 6px;
 }
 
-.tourivo-panel-actions .button-secondary {
+.readscope-panel-actions .button-secondary {
     text-align: center;
 }
 
-.tourivo-panel-alert {
+.readscope-panel-alert {
     margin-top: 10px;
     padding: 8px 10px;
     border-radius: 6px;
@@ -630,35 +630,35 @@
     line-height: 1.4;
 }
 
-.tourivo-panel-alert.alert-success {
+.readscope-panel-alert.alert-success {
     background: #dcfce7;
     color: #15803d;
     border: 1px solid #86efac;
 }
 
-.tourivo-panel-alert.alert-error {
+.readscope-panel-alert.alert-error {
     background: #fee2e2;
     color: #b91c1c;
     border: 1px solid #fca5a5;
 }
 
 @media (max-width: 960px) {
-    .tourivo-avail-body {
+    .readscope-avail-body {
         flex-direction: column;
     }
-    .tourivo-avail-panel {
+    .readscope-avail-panel {
         width: 100%;
     }
 }
 
 
 /* One control height: inputs and selects line up at 40px, like the rest of wp-admin. */
-.tourivo-form-group input[type="date"],
-.tourivo-form-group input[type="url"],
-.tourivo-form-group input[type="tel"],
-.tourivo-col input[type="date"],
-.tourivo-col input[type="url"],
-.tourivo-col input[type="tel"] {
+.readscope-form-group input[type="date"],
+.readscope-form-group input[type="url"],
+.readscope-form-group input[type="tel"],
+.readscope-col input[type="date"],
+.readscope-col input[type="url"],
+.readscope-col input[type="tel"] {
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
@@ -666,10 +666,10 @@
     border-radius: 6px;
 }
 
-.tourivo-form-group input:not([type="checkbox"]):not([type="radio"]),
-.tourivo-col input:not([type="checkbox"]):not([type="radio"]),
-.tourivo-form-group select,
-.tourivo-col select {
+.readscope-form-group input:not([type="checkbox"]):not([type="radio"]),
+.readscope-col input:not([type="checkbox"]):not([type="radio"]),
+.readscope-form-group select,
+.readscope-col select {
     min-height: 40px;
     height: 40px;
     padding-top: 0;
@@ -677,16 +677,16 @@
     line-height: 38px;
 }
 
-.tourivo-form-group select,
-.tourivo-col select {
+.readscope-form-group select,
+.readscope-col select {
     padding-right: 32px;
 }
 
 /* Buttons inside Readscope Booking editor boxes, in the Readscope Booking colour (editor screens have no admin-kit body class). */
-.tourivo-metabox-wrapper .button,
-.tourivo-availability-app .button,
-.tourivo-pro-package-editor .button,
-.tourivo-tab-pane .button {
+.readscope-metabox-wrapper .button,
+.readscope-availability-app .button,
+.readscope-pro-package-editor .button,
+.readscope-tab-pane .button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -694,40 +694,40 @@
     border-radius: 6px;
 }
 
-.tourivo-metabox-wrapper .button:not(.button-primary),
-.tourivo-availability-app .button:not(.button-primary),
-.tourivo-pro-package-editor .button:not(.button-primary) {
+.readscope-metabox-wrapper .button:not(.button-primary),
+.readscope-availability-app .button:not(.button-primary),
+.readscope-pro-package-editor .button:not(.button-primary) {
     background: #fff;
     border-color: #cbd5e1;
     color: #334155;
 }
 
-.tourivo-metabox-wrapper .button:not(.button-primary):hover,
-.tourivo-availability-app .button:not(.button-primary):hover,
-.tourivo-pro-package-editor .button:not(.button-primary):hover {
+.readscope-metabox-wrapper .button:not(.button-primary):hover,
+.readscope-availability-app .button:not(.button-primary):hover,
+.readscope-pro-package-editor .button:not(.button-primary):hover {
     background: #f0fdfa;
     border-color: #0d9488;
     color: #0f766e;
 }
 
-.tourivo-metabox-wrapper .button-primary,
-.tourivo-availability-app .button-primary,
-.tourivo-pro-package-editor .button-primary {
+.readscope-metabox-wrapper .button-primary,
+.readscope-availability-app .button-primary,
+.readscope-pro-package-editor .button-primary {
     background: #0d9488;
     border-color: #0d9488;
     color: #fff;
 }
 
-.tourivo-metabox-wrapper .button-primary:hover,
-.tourivo-availability-app .button-primary:hover,
-.tourivo-pro-package-editor .button-primary:hover {
+.readscope-metabox-wrapper .button-primary:hover,
+.readscope-availability-app .button-primary:hover,
+.readscope-pro-package-editor .button-primary:hover {
     background: #0f766e;
     border-color: #0f766e;
 }
 
-.tourivo-metabox-wrapper .button .dashicons,
-.tourivo-availability-app .button .dashicons,
-.tourivo-pro-package-editor .button .dashicons {
+.readscope-metabox-wrapper .button .dashicons,
+.readscope-availability-app .button .dashicons,
+.readscope-pro-package-editor .button .dashicons {
     color: inherit;
     width: 16px;
     height: 16px;

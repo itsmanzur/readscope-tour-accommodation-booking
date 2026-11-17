@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Services;
+namespace Readscope\Services;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  *
  * Handles audit logs, internal admin notes, and activity timeline for bookings.
  *
- * @package Tourivo\Services
+ * @package Readscope\Services
  */
 class LogService
 {
@@ -29,7 +29,7 @@ class LogService
     public static function log(int $bookingId, string $action, string $details, int $userId = 0): int
     {
         global $wpdb;
-        $table = $wpdb->prefix . 'tourivo_logs';
+        $table = $wpdb->prefix . 'readscope_logs';
 
         if ($userId === 0 && is_user_logged_in()) {
             $userId = get_current_user_id();
@@ -71,7 +71,7 @@ class LogService
     public static function redactPersonalData(int $bookingId, array $knownValues = []): void
     {
         global $wpdb;
-        $table = $wpdb->prefix . 'tourivo_logs';
+        $table = $wpdb->prefix . 'readscope_logs';
 
         $placeholders = implode(',', array_fill(0, count(self::PII_ACTIONS), '%s'));
 
@@ -112,7 +112,7 @@ class LogService
     public static function getTimeline(int $bookingId): array
     {
         global $wpdb;
-        $table = $wpdb->prefix . 'tourivo_logs';
+        $table = $wpdb->prefix . 'readscope_logs';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $results = $wpdb->get_results(

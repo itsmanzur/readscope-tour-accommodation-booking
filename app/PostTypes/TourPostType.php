@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\PostTypes;
+namespace Readscope\PostTypes;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -11,16 +11,16 @@ if (!defined('ABSPATH')) {
 /**
  * Class TourPostType
  *
- * Registers the 'tourivo_tour' custom post type and its taxonomies.
+ * Registers the 'readscope_tour' custom post type and its taxonomies.
  *
- * @package Tourivo\PostTypes
+ * @package Readscope\PostTypes
  */
 class TourPostType
 {
-    public const POST_TYPE = 'tourivo_tour';
-    public const TAX_DESTINATION = 'tourivo_destination';
-    public const TAX_ACTIVITY = 'tourivo_activity_type';
-    public const TAX_FEATURE = 'tourivo_tour_feature';
+    public const POST_TYPE = 'readscope_tour';
+    public const TAX_DESTINATION = 'readscope_destination';
+    public const TAX_ACTIVITY = 'readscope_activity_type';
+    public const TAX_FEATURE = 'readscope_tour_feature';
 
     /**
      * Register post type and taxonomies.
@@ -65,7 +65,7 @@ class TourPostType
             'public'             => true,
             'publicly_queryable' => true,
             'show_ui'            => true,
-            'show_in_menu'       => 'tourivo',
+            'show_in_menu'       => 'readscope',
             'query_var'          => true,
             'rewrite'            => ['slug' => 'tours', 'with_front' => false],
             'capability_type'    => 'post',
@@ -103,7 +103,7 @@ class TourPostType
                 'menu_name'         => __('Destinations', 'the-readscope-tour-and-accommodation-booking'),
             ],
             'show_ui'           => true,
-            'show_in_menu'      => 'tourivo',
+            'show_in_menu'      => 'readscope',
             'show_admin_column' => true,
             'query_var'         => true,
             'rewrite'           => ['slug' => 'destination', 'with_front' => false],
@@ -124,7 +124,7 @@ class TourPostType
                 'menu_name'     => __('Activities', 'the-readscope-tour-and-accommodation-booking'),
             ],
             'show_ui'           => true,
-            'show_in_menu'      => 'tourivo',
+            'show_in_menu'      => 'readscope',
             'show_admin_column' => true,
             'query_var'         => true,
             'rewrite'           => ['slug' => 'activity', 'with_front' => false],
@@ -140,7 +140,7 @@ class TourPostType
                 'menu_name'     => __('Tour Features', 'the-readscope-tour-and-accommodation-booking'),
             ],
             'show_ui'           => true,
-            'show_in_menu'      => 'tourivo',
+            'show_in_menu'      => 'readscope',
             'show_admin_column' => false,
             'query_var'         => true,
             'rewrite'           => ['slug' => 'tour-feature', 'with_front' => false],

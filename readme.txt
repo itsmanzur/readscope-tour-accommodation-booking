@@ -4,7 +4,7 @@ Tags: travel, tour booking, hotel booking, booking engine, accommodation
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.0.0
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -27,7 +27,7 @@ Unlike traditional heavy booking plugins, The Readscope Tour and Accommodation B
 * **Direct Offline Checkout:** Allow travelers to book instantly with cash on delivery, bank transfer, or custom payment instructions.
 * **Automated Email Notifications:** Professional responsive HTML booking confirmations sent to both customers and administrators.
 * **Gutenberg & Elementor Integration:** Server-rendered Gutenberg Core Blocks and dedicated Elementor Widgets for Tour Grids, Hotel Grids, Search Bars, and Booking Panels.
-* **Theme Developer Friendly:** Override any single tour, single hotel, or booking panel template in your theme's `/tourivo/` directory.
+* **Theme Developer Friendly:** Override any single tour, single hotel, or booking panel template in your theme's `/readscope/` directory.
 
 ---
 
@@ -49,16 +49,16 @@ Everything above is free and fully functional. **Readscope Booking Pro** is a se
 
 Readscope Booking comes with built-in shortcodes to embed anywhere in your posts or pages:
 
-* `[tourivo_tours columns="3" count="6" destination="bali"]` – Display tour packages in a responsive grid.
-* `[tourivo_hotels columns="3" count="6" destination="maldives"]` – Display hotels & resorts in a grid.
-* `[tourivo_search_bar]` – Embed the destination, date, and traveler filter search bar.
-* `[tourivo_filter_search type="tour"]` – Search page with live destination, price and rating filters.
-* `[tourivo_booking_panel item_id="123" item_type="tour"]` – Embed the interactive booking panel for a specific item.
-* `[tourivo_booking_lookup]` – Let travelers look up a booking by code and email and print the voucher.
-* `[tourivo_thank_you]` – Booking confirmation page.
-* `[tourivo_my_bookings per_page="10" show_stats="yes"]` – Customer account portal for travelers to manage bookings, vouchers, and cancellations.
-* `[tourivo_wishlist]` – Traveler wishlist of saved tours and hotels.
-* `[tourivo_currency_switcher]` – Let visitors view prices in another currency.
+* `[readscope_tours columns="3" count="6" destination="bali"]` – Display tour packages in a responsive grid.
+* `[readscope_hotels columns="3" count="6" destination="maldives"]` – Display hotels & resorts in a grid.
+* `[readscope_search_bar]` – Embed the destination, date, and traveler filter search bar.
+* `[readscope_filter_search type="tour"]` – Search page with live destination, price and rating filters.
+* `[readscope_booking_panel item_id="123" item_type="tour"]` – Embed the interactive booking panel for a specific item.
+* `[readscope_booking_lookup]` – Let travelers look up a booking by code and email and print the voucher.
+* `[readscope_thank_you]` – Booking confirmation page.
+* `[readscope_my_bookings per_page="10" show_stats="yes"]` – Customer account portal for travelers to manage bookings, vouchers, and cancellations.
+* `[readscope_wishlist]` – Traveler wishlist of saved tours and hotels.
+* `[readscope_currency_switcher]` – Let visitors view prices in another currency.
 
 ---
 
@@ -77,7 +77,7 @@ Readscope Booking comes with built-in shortcodes to embed anywhere in your posts
 No! The free version of Readscope Booking includes its own standalone direct booking and checkout engine (supporting offline payments, bank transfers, and cash on delivery). Readscope Booking Pro provides an optional WooCommerce bridge for users who want to use WooCommerce gateways.
 
 = Can I customize the single tour and single hotel layouts? =
-Yes. Readscope Booking uses a clean template hierarchy. Simply copy `templates/single-tour.php` or `templates/single-hotel.php` to `your-theme/tourivo/` to customize the layout.
+Yes. Readscope Booking uses a clean template hierarchy. Simply copy `templates/single-tour.php` or `templates/single-hotel.php` to `your-theme/readscope/` to customize the layout.
 
 = Will Readscope Booking change my homepage or footer? =
 No. Readscope Booking only adds its own pages, blocks and shortcodes. The optional **Travel Homepage Layout** setting (off by default) is the only thing that changes the homepage, footer tagline, theme credit and empty placeholder menus, and it can be switched off again at any time.
@@ -86,7 +86,7 @@ No. Readscope Booking only adds its own pages, blocks and shortcodes. The option
 Readscope Booking requires PHP 8.0 or higher (fully compatible with PHP 8.1, 8.2, and 8.3+).
 
 = How does the anti-double-booking system work? =
-Readscope Booking uses custom relational database tables (`wp_tourivo_inventories`) with MySQL row-level transaction locks (`SELECT ... FOR UPDATE`), ensuring that concurrent users cannot book the same seat or room simultaneously.
+Readscope Booking uses custom relational database tables (`wp_readscope_inventories`) with MySQL row-level transaction locks (`SELECT ... FOR UPDATE`), ensuring that concurrent users cannot book the same seat or room simultaneously.
 
 ---
 
@@ -112,7 +112,7 @@ Readscope Booking is engineered from the ground up for strict privacy regulation
   * **Personal Data Exporter:** Integrated with WordPress Core Export Personal Data tool with 50-item batched pagination for customer bookings and inquiries.
   * **Personal Data Eraser:** Integrated with WordPress Core Erase Personal Data tool. Anonymizes customer identifiers (`customer_name`, `customer_email`, `customer_phone`, `billing_address`, `customer_notes`, `ip_address`) while legally retaining financial transaction lines for statutory tax accounting obligations. Deletes inquiries and traveler wishlist metadata.
 * **Data Minimization & IP Collection Control:** Configurable `store_ip` setting allowing operators to disable IP address storage entirely. Endpoint rate limits continue to operate using temporary, hashed transients without persisting raw IP addresses.
-* **Scheduled Data Retention:** A daily job (`tourivo_daily_privacy_retention`, off until you set a period) anonymizes bookings a set number of days after the trip has ended, and deletes inquiries older than a set number of months. You choose which booking statuses are anonymized (completed and cancelled by default; pending, on hold and confirmed can be added) under **Readscope Booking -> Settings**. Each run handles at most 200 bookings and 200 inquiries.
+* **Scheduled Data Retention:** A daily job (`readscope_daily_privacy_retention`, off until you set a period) anonymizes bookings a set number of days after the trip has ended, and deletes inquiries older than a set number of months. You choose which booking statuses are anonymized (completed and cancelled by default; pending, on hold and confirmed can be added) under **Readscope Booking -> Settings**. Each run handles at most 200 bookings and 200 inquiries.
 
 ---
 
@@ -128,6 +128,12 @@ Readscope Booking is engineered from the ground up for strict privacy regulation
 
 == Changelog ==
 
+= 1.1.0 =
+* Internal names changed from "tourivo" to "readscope" (shortcodes, database tables, post types, options, hooks, CSS classes) to match the plugin name.
+* Automatic one-time migration of all existing data: bookings, listings, settings, capabilities and scheduled jobs are kept.
+* Old `[tourivo_*]` shortcodes keep working; theme overrides in `yourtheme/tourivo/` are still found.
+* Developers: hooks, filters and the REST namespace now start with `readscope` (`readscope/*`, `readscope/v1`).
+
 = 1.0.0 =
 * Initial public release.
 * Tours and hotels in one plugin: custom post types, destinations, activities, amenities, day-by-day itineraries, room types with their own prices and capacity.
@@ -138,10 +144,13 @@ Readscope Booking is engineered from the ground up for strict privacy regulation
 * Gutenberg blocks, Elementor widgets and shortcodes for tours, hotels, search, booking panel, wishlist and currency switcher.
 * Privacy: consent checkbox with audit trail, WordPress personal data export and erase, optional IP storage, scheduled anonymization and inquiry purge.
 * Optional outbound webhooks, optional travel homepage layout (off by default).
-* Developer hooks under `tourivo/*` (for example `tourivo/booking/created`, `tourivo/booking/status_changed`, `tourivo/inquiry/created`).
+* Developer hooks under `readscope/*` (for example `readscope/booking/created`, `readscope/booking/status_changed`, `readscope/inquiry/created`).
 * Bundled Anek Bangla font for Bengali and Latin text.
 
 == Upgrade Notice ==
+
+= 1.1.0 =
+Names changed from "tourivo" to "readscope". Your data is migrated automatically on update; take a backup first as with any update.
 
 = 1.0.0 =
 Initial release of Readscope Booking.

@@ -10,105 +10,105 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if (function_exists('tourivo_load_plugin_textdomain')) {
-    tourivo_load_plugin_textdomain();
+if (function_exists('readscope_load_plugin_textdomain')) {
+    readscope_load_plugin_textdomain();
 }
 
-$tourivoDestinations = get_terms([
-    'taxonomy'   => 'tourivo_destination',
+$readscopeDestinations = get_terms([
+    'taxonomy'   => 'readscope_destination',
     'hide_empty' => false,
 ]);
 
-$tourivoSelectedDest = '';
-$tourivoQueriedPlace = get_queried_object();
-if ($tourivoQueriedPlace instanceof \WP_Term && $tourivoQueriedPlace->taxonomy === 'tourivo_destination') {
-    $tourivoSelectedDest = $tourivoQueriedPlace->slug;
-} elseif (\Tourivo\Support\PublicSearch::destination() !== '') {
-    $tourivoSelectedDest = \Tourivo\Support\PublicSearch::destination();
+$readscopeSelectedDest = '';
+$readscopeQueriedPlace = get_queried_object();
+if ($readscopeQueriedPlace instanceof \WP_Term && $readscopeQueriedPlace->taxonomy === 'readscope_destination') {
+    $readscopeSelectedDest = $readscopeQueriedPlace->slug;
+} elseif (\Readscope\Support\PublicSearch::destination() !== '') {
+    $readscopeSelectedDest = \Readscope\Support\PublicSearch::destination();
 } elseif (
-    $tourivoQueriedPlace instanceof \WP_Post
-    && in_array($tourivoQueriedPlace->post_type, ['tourivo_tour', 'tourivo_hotel'], true)
+    $readscopeQueriedPlace instanceof \WP_Post
+    && in_array($readscopeQueriedPlace->post_type, ['readscope_tour', 'readscope_hotel'], true)
 ) {
-    $tourivoPlaceTerms = get_the_terms($tourivoQueriedPlace, 'tourivo_destination');
-    if (is_array($tourivoPlaceTerms) && isset($tourivoPlaceTerms[0]) && $tourivoPlaceTerms[0] instanceof \WP_Term) {
-        $tourivoSelectedDest = $tourivoPlaceTerms[0]->slug;
+    $readscopePlaceTerms = get_the_terms($readscopeQueriedPlace, 'readscope_destination');
+    if (is_array($readscopePlaceTerms) && isset($readscopePlaceTerms[0]) && $readscopePlaceTerms[0] instanceof \WP_Term) {
+        $readscopeSelectedDest = $readscopePlaceTerms[0]->slug;
     }
 }
-$tourivoSelectedDate   = \Tourivo\Support\PublicSearch::date();
-$tourivoSelectedGuests = \Tourivo\Support\PublicSearch::guests(2);
-$tourivoBanglaDigits = (function_exists('tourivo_is_bengali') && tourivo_is_bengali())
-    || (bool) \Tourivo\Config\Config::get('use_bangla_digits', false);
+$readscopeSelectedDate   = \Readscope\Support\PublicSearch::date();
+$readscopeSelectedGuests = \Readscope\Support\PublicSearch::guests(2);
+$readscopeBanglaDigits = (function_exists('readscope_is_bengali') && readscope_is_bengali())
+    || (bool) \Readscope\Config\Config::get('use_bangla_digits', false);
 
-$tourivoDateLabel = __('Any day', 'the-readscope-tour-and-accommodation-booking');
-if ($tourivoSelectedDate !== '') {
-    $tourivoStamp = strtotime($tourivoSelectedDate . ' 12:00:00') ?: 0;
-    $tourivoMonths = [
+$readscopeDateLabel = __('Any day', 'the-readscope-tour-and-accommodation-booking');
+if ($readscopeSelectedDate !== '') {
+    $readscopeStamp = strtotime($readscopeSelectedDate . ' 12:00:00') ?: 0;
+    $readscopeMonths = [
         __('January', 'the-readscope-tour-and-accommodation-booking'), __('February', 'the-readscope-tour-and-accommodation-booking'), __('March', 'the-readscope-tour-and-accommodation-booking'),
         __('April', 'the-readscope-tour-and-accommodation-booking'), __('May', 'the-readscope-tour-and-accommodation-booking'), __('June', 'the-readscope-tour-and-accommodation-booking'),
         __('July', 'the-readscope-tour-and-accommodation-booking'), __('August', 'the-readscope-tour-and-accommodation-booking'), __('September', 'the-readscope-tour-and-accommodation-booking'),
         __('October', 'the-readscope-tour-and-accommodation-booking'), __('November', 'the-readscope-tour-and-accommodation-booking'), __('December', 'the-readscope-tour-and-accommodation-booking'),
     ];
-    if ($tourivoStamp > 0) {
-        $tourivoDateLabel = (int) wp_date('j', $tourivoStamp) . ' ' . ($tourivoMonths[(int) wp_date('n', $tourivoStamp) - 1] ?? '');
-        if ($tourivoBanglaDigits && function_exists('tourivo_bn_number')) {
-            $tourivoDateLabel = tourivo_bn_number($tourivoDateLabel);
+    if ($readscopeStamp > 0) {
+        $readscopeDateLabel = (int) wp_date('j', $readscopeStamp) . ' ' . ($readscopeMonths[(int) wp_date('n', $readscopeStamp) - 1] ?? '');
+        if ($readscopeBanglaDigits && function_exists('readscope_bn_number')) {
+            $readscopeDateLabel = readscope_bn_number($readscopeDateLabel);
         }
     }
 }
 ?>
 
-<div class="tourivo-search-bar-wrap">
-    <form class="tourivo-search-form" method="get" action="<?php echo esc_url(home_url('/')); ?>">
+<div class="readscope-search-bar-wrap">
+    <form class="readscope-search-form" method="get" action="<?php echo esc_url(home_url('/')); ?>">
         <div class="search-field destination-field">
             <label><span class="dashicons dashicons-location"></span> <?php esc_html_e('Where to?', 'the-readscope-tour-and-accommodation-booking'); ?></label>
-            <select name="tourivo_destination">
+            <select name="readscope_destination">
                 <option value=""><?php esc_html_e('All Destinations', 'the-readscope-tour-and-accommodation-booking'); ?></option>
-                <?php if (!empty($tourivoDestinations) && !is_wp_error($tourivoDestinations)) : foreach ($tourivoDestinations as $tourivoDest) : ?>
-                    <option value="<?php echo esc_attr($tourivoDest->slug); ?>" <?php selected($tourivoSelectedDest, $tourivoDest->slug); ?>><?php echo esc_html($tourivoDest->name); ?></option>
+                <?php if (!empty($readscopeDestinations) && !is_wp_error($readscopeDestinations)) : foreach ($readscopeDestinations as $readscopeDest) : ?>
+                    <option value="<?php echo esc_attr($readscopeDest->slug); ?>" <?php selected($readscopeSelectedDest, $readscopeDest->slug); ?>><?php echo esc_html($readscopeDest->name); ?></option>
                 <?php endforeach; endif; ?>
             </select>
         </div>
 
-        <div class="search-field date-field tourivo-search-date">
+        <div class="search-field date-field readscope-search-date">
             <label><span class="dashicons dashicons-calendar-alt"></span> <?php esc_html_e('When?', 'the-readscope-tour-and-accommodation-booking'); ?></label>
-            <button type="button" class="tourivo-search-date-btn" aria-expanded="false" aria-haspopup="dialog">
-                <span class="tourivo-search-date-label"><?php echo esc_html($tourivoDateLabel); ?></span>
+            <button type="button" class="readscope-search-date-btn" aria-expanded="false" aria-haspopup="dialog">
+                <span class="readscope-search-date-label"><?php echo esc_html($readscopeDateLabel); ?></span>
             </button>
-            <input type="date" class="tourivo-search-native" name="tourivo_date" value="<?php echo esc_attr($tourivoSelectedDate); ?>" min="<?php echo esc_attr(wp_date('Y-m-d')); ?>">
-            <div class="tourivo-search-cal" hidden data-today="<?php echo esc_attr(wp_date('Y-m-d')); ?>">
-                <div class="tourivo-cal" role="dialog" aria-label="<?php esc_attr_e('When?', 'the-readscope-tour-and-accommodation-booking'); ?>">
-                    <div class="tourivo-cal-nav">
-                        <button type="button" class="tourivo-cal-prev" aria-label="<?php esc_attr_e('Previous month', 'the-readscope-tour-and-accommodation-booking'); ?>">&lsaquo;</button>
-                        <strong class="tourivo-cal-title"></strong>
-                        <button type="button" class="tourivo-cal-next" aria-label="<?php esc_attr_e('Next month', 'the-readscope-tour-and-accommodation-booking'); ?>">&rsaquo;</button>
+            <input type="date" class="readscope-search-native" name="readscope_date" value="<?php echo esc_attr($readscopeSelectedDate); ?>" min="<?php echo esc_attr(wp_date('Y-m-d')); ?>">
+            <div class="readscope-search-cal" hidden data-today="<?php echo esc_attr(wp_date('Y-m-d')); ?>">
+                <div class="readscope-cal" role="dialog" aria-label="<?php esc_attr_e('When?', 'the-readscope-tour-and-accommodation-booking'); ?>">
+                    <div class="readscope-cal-nav">
+                        <button type="button" class="readscope-cal-prev" aria-label="<?php esc_attr_e('Previous month', 'the-readscope-tour-and-accommodation-booking'); ?>">&lsaquo;</button>
+                        <strong class="readscope-cal-title"></strong>
+                        <button type="button" class="readscope-cal-next" aria-label="<?php esc_attr_e('Next month', 'the-readscope-tour-and-accommodation-booking'); ?>">&rsaquo;</button>
                     </div>
-                    <div class="tourivo-cal-weekdays"></div>
-                    <div class="tourivo-cal-grid"></div>
-                    <p class="tourivo-search-cal-hint"><?php esc_html_e('Each date shows open tours, then open hotels.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
+                    <div class="readscope-cal-weekdays"></div>
+                    <div class="readscope-cal-grid"></div>
+                    <p class="readscope-search-cal-hint"><?php esc_html_e('Each date shows open tours, then open hotels.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                 </div>
             </div>
         </div>
 
         <div class="search-field guests-field">
             <label><span class="dashicons dashicons-groups"></span> <?php esc_html_e('Travelers', 'the-readscope-tour-and-accommodation-booking'); ?></label>
-            <div class="tourivo-guest-stepper">
-                <button type="button" class="tourivo-guest-minus" aria-label="<?php esc_attr_e('Fewer travelers', 'the-readscope-tour-and-accommodation-booking'); ?>">−</button>
-                <?php if ($tourivoBanglaDigits) : ?>
-                    <input type="text" class="tourivo-guest-digits" inputmode="numeric" autocomplete="off" value="<?php echo esc_attr(function_exists('tourivo_bn_number') ? tourivo_bn_number((string) $tourivoSelectedGuests) : (string) $tourivoSelectedGuests); ?>">
+            <div class="readscope-guest-stepper">
+                <button type="button" class="readscope-guest-minus" aria-label="<?php esc_attr_e('Fewer travelers', 'the-readscope-tour-and-accommodation-booking'); ?>">−</button>
+                <?php if ($readscopeBanglaDigits) : ?>
+                    <input type="text" class="readscope-guest-digits" inputmode="numeric" autocomplete="off" value="<?php echo esc_attr(function_exists('readscope_bn_number') ? readscope_bn_number((string) $readscopeSelectedGuests) : (string) $readscopeSelectedGuests); ?>">
                 <?php else : ?>
-                    <input type="number" name="tourivo_guests" min="1" max="50" value="<?php echo esc_attr((string) $tourivoSelectedGuests); ?>">
+                    <input type="number" name="readscope_guests" min="1" max="50" value="<?php echo esc_attr((string) $readscopeSelectedGuests); ?>">
                 <?php endif; ?>
-                <button type="button" class="tourivo-guest-plus" aria-label="<?php esc_attr_e('More travelers', 'the-readscope-tour-and-accommodation-booking'); ?>">+</button>
+                <button type="button" class="readscope-guest-plus" aria-label="<?php esc_attr_e('More travelers', 'the-readscope-tour-and-accommodation-booking'); ?>">+</button>
             </div>
-            <?php if ($tourivoBanglaDigits) : ?>
-                <input type="hidden" name="tourivo_guests" value="<?php echo esc_attr((string) $tourivoSelectedGuests); ?>">
+            <?php if ($readscopeBanglaDigits) : ?>
+                <input type="hidden" name="readscope_guests" value="<?php echo esc_attr((string) $readscopeSelectedGuests); ?>">
             <?php endif; ?>
         </div>
 
-        <input type="hidden" name="post_type" value="tourivo_tour">
+        <input type="hidden" name="post_type" value="readscope_tour">
 
         <div class="search-btn-field">
-            <button type="submit" class="tourivo-btn tourivo-btn-search">
+            <button type="submit" class="readscope-btn readscope-btn-search">
                 <span class="dashicons dashicons-search"></span> <?php esc_html_e('Search', 'the-readscope-tour-and-accommodation-booking'); ?>
             </button>
         </div>

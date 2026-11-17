@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Config\Config;
-use Tourivo\Database\Schema;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\InquiryService;
-use Tourivo\Services\PrivacyService;
-use Tourivo\Services\WebhookService;
-use Tourivo\Shortcodes\BookingLookupShortcode;
-use Tourivo\Support\ClientIp;
-use Tourivo\Support\Privacy;
-use Tourivo\Tests\TestCase;
+use Readscope\Config\Config;
+use Readscope\Database\Schema;
+use Readscope\Services\BookingService;
+use Readscope\Services\InquiryService;
+use Readscope\Services\PrivacyService;
+use Readscope\Services\WebhookService;
+use Readscope\Shortcodes\BookingLookupShortcode;
+use Readscope\Support\ClientIp;
+use Readscope\Support\Privacy;
+use Readscope\Tests\TestCase;
 
 /**
  * Class PrivacyGdprTest
@@ -30,7 +30,7 @@ class PrivacyGdprTest extends TestCase
     {
         parent::setUp();
         $this->cleanDatabaseTables();
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'require_consent'               => 0,
             'store_ip'                      => 1,
             'anonymize_after_months'        => 0,
@@ -39,8 +39,8 @@ class PrivacyGdprTest extends TestCase
             'webhook_include_phone'         => 0,
             'webhook_include_message'       => 0,
         ]);
-        $this->bookingService = \Tourivo\Common\Container::getInstance()->get(BookingService::class);
-        $this->inquiryService = \Tourivo\Common\Container::getInstance()->get(InquiryService::class);
+        $this->bookingService = \Readscope\Common\Container::getInstance()->get(BookingService::class);
+        $this->inquiryService = \Readscope\Common\Container::getInstance()->get(InquiryService::class);
     }
 
     /**
@@ -52,7 +52,7 @@ class PrivacyGdprTest extends TestCase
         $checkIn = gmdate('Y-m-d', strtotime('+7 days'));
 
         // 1. Consent is disabled by default -> succeeds without consent field
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'require_consent' => 0,
         ]);
 
@@ -67,7 +67,7 @@ class PrivacyGdprTest extends TestCase
         $this->assertTrue($res1['success'], 'Booking should succeed when consent is disabled.');
 
         // 2. Enable Consent Requirement
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'require_consent' => 1,
             'consent_label'   => 'I agree to {privacy} and {terms}',
         ]);
@@ -97,7 +97,7 @@ class PrivacyGdprTest extends TestCase
         $bookingId = $resWithConsent['booking_id'];
 
         global $wpdb;
-        $bookingRow = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tourivo_bookings WHERE id = %d", $bookingId));
+        $bookingRow = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}readscope_bookings WHERE id = %d", $bookingId));
         $this->assertNotEmpty($bookingRow->consent_at ?? '', 'consent_at timestamp must be recorded.');
         $this->assertNotEmpty($bookingRow->consent_version ?? '', 'consent_version hash must be recorded.');
         $this->assertEquals(Privacy::getConsentVersion(), $bookingRow->consent_version);
@@ -121,7 +121,7 @@ class PrivacyGdprTest extends TestCase
         $this->assertTrue($inqConsented['success'], 'Inquiry with consent must succeed.');
 
         $inqId = $inqConsented['inquiry_id'];
-        $inqRow = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tourivo_inquiries WHERE id = %d", $inqId));
+        $inqRow = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}readscope_inquiries WHERE id = %d", $inqId));
         $this->assertNotEmpty($inqRow->consent_at ?? '', 'Inquiry consent_at must be populated.');
         $this->assertEquals(Privacy::getConsentVersion(), $inqRow->consent_version);
     }
@@ -207,7 +207,7 @@ class PrivacyGdprTest extends TestCase
             'post_type'  => 'post',
         ]);
         // simulate user meta
-        update_user_meta(1, '_tourivo_wishlist', [10, 20]);
+        update_user_meta(1, '_readscope_wishlist', [10, 20]);
 
         // 2. Create Booking
         $res = $this->bookingService->createBooking([
@@ -241,7 +241,7 @@ class PrivacyGdprTest extends TestCase
 
         // 5. Verify Database State
         global $wpdb;
-        $bookingRow = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tourivo_bookings WHERE id = %d", $bookingId));
+        $bookingRow = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}readscope_bookings WHERE id = %d", $bookingId));
 
         $this->assertEquals('Anonymized', $bookingRow->customer_name, 'Name must be anonymized.');
         $this->assertStringContainsString('@anonymized.invalid', $bookingRow->customer_email, 'Email must be hashed invalid placeholder.');
@@ -252,7 +252,7 @@ class PrivacyGdprTest extends TestCase
         $this->assertEquals(700.0, (float) $bookingRow->total_amount, 'Total amount must remain intact.');
 
         // Inquiries for this email must be deleted
-        $inquiries = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tourivo_inquiries WHERE customer_email = %s", $email));
+        $inquiries = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}readscope_inquiries WHERE customer_email = %s", $email));
         $this->assertEmpty($inquiries, 'Inquiries for erased email must be deleted.');
 
         // 6. Verify Lookup with original email now fails (404)
@@ -266,7 +266,7 @@ class PrivacyGdprTest extends TestCase
      */
     public function test_retention_cron_batch_processing(): void
     {
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'anonymize_after_months'        => 6,
             'delete_inquiries_after_months' => 3,
         ]);
@@ -274,8 +274,8 @@ class PrivacyGdprTest extends TestCase
         $tourId = $this->createTour(200.0, 10);
 
         global $wpdb;
-        $bookingsTable  = $wpdb->prefix . 'tourivo_bookings';
-        $inquiriesTable = $wpdb->prefix . 'tourivo_inquiries';
+        $bookingsTable  = $wpdb->prefix . 'readscope_bookings';
+        $inquiriesTable = $wpdb->prefix . 'readscope_inquiries';
 
         // 1. Old completed booking (8 months ago) -> should be anonymized
         $resOld = $this->bookingService->createBooking([
@@ -352,7 +352,7 @@ class PrivacyGdprTest extends TestCase
         $tourId = $this->createTour(120.0, 10);
 
         // Disable IP storage
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'store_ip' => 0,
         ]);
 
@@ -367,17 +367,17 @@ class PrivacyGdprTest extends TestCase
         $this->assertTrue($res['success']);
 
         global $wpdb;
-        $bookingRow = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tourivo_bookings WHERE id = %d", $res['booking_id']));
+        $bookingRow = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}readscope_bookings WHERE id = %d", $res['booking_id']));
         $this->assertEquals('', $bookingRow->ip_address, 'ip_address column must be empty when store_ip is disabled.');
 
         // Verify Rate-limiting still functions with hashed IP key (without storing raw IP in DB)
         $ip = ClientIp::get();
-        $rateLimitKey = 'tourivo_rl_booking_' . md5($ip);
+        $rateLimitKey = 'readscope_rl_booking_' . md5($ip);
         for ($i = 0; $i < 5; $i++) {
-            \Tourivo\Support\RateLimiter::hit($rateLimitKey, 5, 600); // simulate 5 attempts
+            \Readscope\Support\RateLimiter::hit($rateLimitKey, 5, 600); // simulate 5 attempts
         }
 
-        $req = new \WP_REST_Request('POST', '/tourivo/v1/bookings/direct');
+        $req = new \WP_REST_Request('POST', '/readscope/v1/bookings/direct');
         $req->set_json_params([
             'item_id'        => $tourId,
             'check_in'       => gmdate('Y-m-d', strtotime('+3 days')),
@@ -386,8 +386,8 @@ class PrivacyGdprTest extends TestCase
             'customer_email' => 'blocked@example.com',
         ]);
 
-        $controller = new \Tourivo\Controllers\Api\BookingController(
-            \Tourivo\Common\Container::getInstance(),
+        $controller = new \Readscope\Controllers\Api\BookingController(
+            \Readscope\Common\Container::getInstance(),
             $this->bookingService
         );
 
@@ -415,7 +415,7 @@ class PrivacyGdprTest extends TestCase
     public function test_privacy_policy_content_conditional_webhook(): void
     {
         // Case 1: Webhook not configured
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'webhook_url' => '',
         ]);
 
@@ -425,7 +425,7 @@ class PrivacyGdprTest extends TestCase
         $this->assertStringNotContainsString('External Webhook Automations', $content1);
 
         // Case 2: Webhook configured
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'webhook_url' => 'https://hooks.zapier.com/hooks/catch/12345/abc',
         ]);
 

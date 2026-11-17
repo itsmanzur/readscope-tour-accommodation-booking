@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Support;
+namespace Readscope\Support;
 
-use Tourivo\Config\Config;
+use Readscope\Config\Config;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  *
  * Centralized currency and price formatting helper according to global Readscope Booking settings.
  *
- * @package Tourivo\Support
+ * @package Readscope\Support
  */
 class Money
 {
@@ -30,17 +30,17 @@ class Money
     {
         $num       = (float) $amount;
         $defSymbol = $currencySymbol ?: (string) Config::get('currency_symbol', '$');
-        $symbol    = (string) apply_filters('tourivo/currency_symbol', $defSymbol);
-        $position  = (string) apply_filters('tourivo/currency_position', (string) Config::get('currency_position', 'left'));
-        $decimals  = (int) apply_filters('tourivo/number_of_decimals', (int) Config::get('number_of_decimals', 2));
-        $decPoint  = (string) apply_filters('tourivo/decimal_separator', (string) Config::get('decimal_separator', '.'));
-        $thousands = (string) apply_filters('tourivo/thousand_separator', (string) Config::get('thousand_separator', ','));
+        $symbol    = (string) apply_filters('readscope/currency_symbol', $defSymbol);
+        $position  = (string) apply_filters('readscope/currency_position', (string) Config::get('currency_position', 'left'));
+        $decimals  = (int) apply_filters('readscope/number_of_decimals', (int) Config::get('number_of_decimals', 2));
+        $decPoint  = (string) apply_filters('readscope/decimal_separator', (string) Config::get('decimal_separator', '.'));
+        $thousands = (string) apply_filters('readscope/thousand_separator', (string) Config::get('thousand_separator', ','));
 
         $formattedNum = number_format($num, $decimals, $decPoint, $thousands);
 
-        $useBangla = (bool) apply_filters('tourivo/use_bangla_digits', (bool) Config::get('use_bangla_digits', false));
-        if ($useBangla && function_exists('tourivo_bn_number')) {
-            $formattedNum = tourivo_bn_number($formattedNum);
+        $useBangla = (bool) apply_filters('readscope/use_bangla_digits', (bool) Config::get('use_bangla_digits', false));
+        if ($useBangla && function_exists('readscope_bn_number')) {
+            $formattedNum = readscope_bn_number($formattedNum);
         }
 
         return match ($position) {

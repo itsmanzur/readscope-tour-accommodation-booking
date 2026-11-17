@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var form = document.getElementById('tourivo-submit-ref-form');
-    var btn = document.getElementById('tourivo-submit-ref-btn');
-    var alertEl = document.getElementById('tourivo-ref-alert');
+    var form = document.getElementById('readscope-submit-ref-form');
+    var btn = document.getElementById('readscope-submit-ref-btn');
+    var alertEl = document.getElementById('readscope-ref-alert');
     if (!form) return;
 
     form.addEventListener('submit', function(e) {
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
         alertEl.style.display = 'none';
 
         var fd = new FormData(form);
-        var ajaxEndpoint = (window.tourivoData && window.tourivoData.ajaxUrl) ? window.tourivoData.ajaxUrl : tourivoThankYouConfig.ajaxUrl;
+        var ajaxEndpoint = (window.readscopeData && window.readscopeData.ajaxUrl) ? window.readscopeData.ajaxUrl : readscopeThankYouConfig.ajaxUrl;
 
         fetch(ajaxEndpoint, {
             method: 'POST',
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(function(r) { return r.json(); })
         .then(function(res) {
             btn.disabled = false;
-            btn.textContent = tourivoThankYouConfig.i18n.submitReference;
+            btn.textContent = readscopeThankYouConfig.i18n.submitReference;
             alertEl.style.display = 'block';
 
             if (res && res.success) {
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(function() {
             btn.disabled = false;
-            btn.textContent = tourivoThankYouConfig.i18n.submitReference;
+            btn.textContent = readscopeThankYouConfig.i18n.submitReference;
             alertEl.style.display = 'block';
             alertEl.style.background = '#fee2e2';
             alertEl.style.color = '#991b1b';
@@ -47,14 +47,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Conversion tracking (dataLayer): once per booking and browser session.
 (function() {
-    var d = tourivoThankYouConfig.dataLayer;
+    var d = readscopeThankYouConfig.dataLayer;
     if (!d) return;
-    var sKey = 'tourivo_tracked_' + d.code;
+    var sKey = 'readscope_tracked_' + d.code;
 
     if (!window.sessionStorage || !window.sessionStorage.getItem(sKey)) {
         window.dataLayer = window.dataLayer || [];
         window.dataLayer.push({
-            event: 'tourivo_booking',
+            event: 'readscope_booking',
             booking_id: d.code,
             value: d.value,
             currency: d.currency

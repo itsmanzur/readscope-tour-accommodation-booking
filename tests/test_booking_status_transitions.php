@@ -86,7 +86,7 @@ namespace {
     }
 
     spl_autoload_register(function (string $class): void {
-        $prefix = 'Tourivo\\';
+        $prefix = 'Readscope\\';
         $baseDir = dirname(__DIR__) . '/app/';
         $len = strlen($prefix);
         if (strncmp($prefix, $class, $len) !== 0) {
@@ -100,11 +100,11 @@ namespace {
     });
 }
 
-namespace Tourivo\Tests {
-    use Tourivo\Services\BookingService;
-    use Tourivo\Services\InventoryService;
-    use Tourivo\Services\EmailService;
-    use Tourivo\Repositories\InventoryRepository;
+namespace Readscope\Tests {
+    use Readscope\Services\BookingService;
+    use Readscope\Services\InventoryService;
+    use Readscope\Services\EmailService;
+    use Readscope\Repositories\InventoryRepository;
 
     class MockInventoryService extends InventoryService
     {

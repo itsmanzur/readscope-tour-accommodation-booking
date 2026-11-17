@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Services;
+namespace Readscope\Services;
 
-use Tourivo\Config\Config;
-use Tourivo\Shortcodes\BookingLookupShortcode;
-use Tourivo\Support\BookingItems;
-use Tourivo\Support\Money;
+use Readscope\Config\Config;
+use Readscope\Shortcodes\BookingLookupShortcode;
+use Readscope\Support\BookingItems;
+use Readscope\Support\Money;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
  * Supports multipart responsive HTML + Plain-text (AltBody), trip reminders cron,
  * template overrides, deduplication, retry queues, and header injection defense.
  *
- * @package Tourivo\Services
+ * @package Readscope\Services
  */
 class EmailService
 {
@@ -31,18 +31,18 @@ class EmailService
      */
     public function register(): void
     {
-        add_action('tourivo/booking/created', [$this, 'onBookingCreated'], 20, 2);
-        add_action('tourivo/booking/status_changed', [$this, 'onBookingStatusChanged'], 20, 4);
-        add_action('tourivo/booking/email_verified', [$this, 'onBookingEmailVerified'], 20, 1);
-        add_action('tourivo/inquiry/created', [$this, 'onInquiryCreated'], 20, 2);
-        add_action('tourivo_process_email_delivery', [$this, 'dispatch'], 10, 4);
-        add_action('tourivo_daily_reminders', [$this, 'processDailyReminders']);
+        add_action('readscope/booking/created', [$this, 'onBookingCreated'], 20, 2);
+        add_action('readscope/booking/status_changed', [$this, 'onBookingStatusChanged'], 20, 4);
+        add_action('readscope/booking/email_verified', [$this, 'onBookingEmailVerified'], 20, 1);
+        add_action('readscope/inquiry/created', [$this, 'onInquiryCreated'], 20, 2);
+        add_action('readscope_process_email_delivery', [$this, 'dispatch'], 10, 4);
+        add_action('readscope_daily_reminders', [$this, 'processDailyReminders']);
 
         // Schedule daily reminders cron if enabled and not already scheduled (on init: schedule labels are translated)
         add_action('init', static function (): void {
             $reminderDays = (int) Config::get('reminder_days_before', 2);
-            if ($reminderDays > 0 && function_exists('wp_next_scheduled') && !wp_next_scheduled('tourivo_daily_reminders')) {
-                wp_schedule_event(time(), 'daily', 'tourivo_daily_reminders');
+            if ($reminderDays > 0 && function_exists('wp_next_scheduled') && !wp_next_scheduled('readscope_daily_reminders')) {
+                wp_schedule_event(time(), 'daily', 'readscope_daily_reminders');
             }
         }, 20);
     }
@@ -138,7 +138,7 @@ class EmailService
         // Deduplicate per transition, not per status: the same transition fired twice (same change
         // timestamp) mails once, but confirmed -> cancelled -> confirmed mails the second confirmation too.
         $changedAt = (string) ($context['changed_at'] ?? $bookingData['updated_at'] ?? '');
-        $dedupKey  = 'tourivo_email_dedup_' . $bookingId . '_' . $newStatus . '_' . md5($oldStatus . '|' . $changedAt);
+        $dedupKey  = 'readscope_email_dedup_' . $bookingId . '_' . $newStatus . '_' . md5($oldStatus . '|' . $changedAt);
         if (get_transient($dedupKey)) {
             return;
         }
@@ -209,7 +209,7 @@ class EmailService
     /**
      * Queue hook that delivers one email.
      */
-    public const QUEUE_HOOK = 'tourivo_process_email_delivery';
+    public const QUEUE_HOOK = 'readscope_process_email_delivery';
 
     /**
      * Every email type the plugin sends. Each one maps to a template in templates/emails/.
@@ -234,7 +234,7 @@ class EmailService
      * WP-Cron store their arguments in plain tables (and cron arrays in wp_options), so no name, address,
      * phone or message may be queued. dispatch() loads the record again when the job runs.
      *
-     * The 'tourivo/send_email' filter is applied here and only here: once per email, with the data of the
+     * The 'readscope/send_email' filter is applied here and only here: once per email, with the data of the
      * event that triggered it, before anything is queued. Retries and the queue worker do not ask again, and
      * sendTestEmail() does not ask at all.
      *
@@ -257,7 +257,7 @@ class EmailService
         }
 
         // Pro & third-party filter to cancel an email. The only place it runs (see the docblock).
-        $shouldSend = (bool) apply_filters('tourivo/send_email', true, $emailType, $data);
+        $shouldSend = (bool) apply_filters('readscope/send_email', true, $emailType, $data);
         if (!$shouldSend) {
             return;
         }
@@ -324,7 +324,7 @@ class EmailService
             return false;
         }
 
-        // 'tourivo/send_email' already approved this email in enqueue(); it is not asked again per attempt.
+        // 'readscope/send_email' already approved this email in enqueue(); it is not asked again per attempt.
 
         [$sent, $lastError] = $this->deliver($emailType, $recipient, $data);
 
@@ -375,8 +375,8 @@ class EmailService
      */
     protected function deliver(string $emailType, string $recipient, array $data): array
     {
-        if (function_exists('tourivo_load_plugin_textdomain')) {
-            tourivo_load_plugin_textdomain();
+        if (function_exists('readscope_load_plugin_textdomain')) {
+            readscope_load_plugin_textdomain();
         }
 
         $siteName     = get_bloginfo('name');
@@ -388,10 +388,10 @@ class EmailService
         // Generate voucher URL & lookup URL
         $voucherUrl = '';
         if ($bookingId > 0 && !empty($data['customer_email'])) {
-            $bookingRow = function_exists('tourivo_get_booking') ? tourivo_get_booking($bookingId) : null;
+            $bookingRow = function_exists('readscope_get_booking') ? readscope_get_booking($bookingId) : null;
             $token = BookingLookupShortcode::generateVoucherToken($bookingId, (string) $data['customer_email'], $bookingRow->access_key ?? null);
             $voucherUrl = add_query_arg([
-                'action' => 'tourivo_print_voucher',
+                'action' => 'readscope_print_voucher',
                 'code'   => (string) ($data['booking_code'] ?? ''),
                 'token'  => $token,
             ], admin_url('admin-post.php'));
@@ -518,7 +518,7 @@ class EmailService
     {
         if ($delay > 0) {
             if (function_exists('as_schedule_single_action')) {
-                as_schedule_single_action(time() + $delay, self::QUEUE_HOOK, $args, 'tourivo-emails');
+                as_schedule_single_action(time() + $delay, self::QUEUE_HOOK, $args, 'readscope-emails');
             } else {
                 wp_schedule_single_event(time() + $delay, self::QUEUE_HOOK, $args);
             }
@@ -526,7 +526,7 @@ class EmailService
         }
 
         if (function_exists('as_enqueue_async_action')) {
-            as_enqueue_async_action(self::QUEUE_HOOK, $args, 'tourivo-emails');
+            as_enqueue_async_action(self::QUEUE_HOOK, $args, 'readscope-emails');
         } else {
             wp_schedule_single_event(time(), self::QUEUE_HOOK, $args);
             if (function_exists('spawn_cron')) {
@@ -587,8 +587,8 @@ class EmailService
         global $wpdb;
         $targetDate = wp_date('Y-m-d', strtotime("+{$reminderDays} days"));
 
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
+        $itemsTable    = $wpdb->prefix . 'readscope_booking_items';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $bookings = $wpdb->get_results(
@@ -609,7 +609,7 @@ class EmailService
 
         foreach ($bookings as $booking) {
             $bookingId = (int) $booking->id;
-            $reminderKey = "tourivo_reminder_sent_{$bookingId}";
+            $reminderKey = "readscope_reminder_sent_{$bookingId}";
 
             if (get_transient($reminderKey)) {
                 continue;
@@ -643,7 +643,7 @@ class EmailService
      * Goes straight to wp_mail(): no queue, no deduplication transient and no booking log. The sample
      * booking has no ID, so nothing can be written against (or read from) a real booking.
      *
-     * The 'tourivo/send_email' filter and the per-type "enabled" settings do not apply: an administrator
+     * The 'readscope/send_email' filter and the per-type "enabled" settings do not apply: an administrator
      * asked for this email explicitly, and a filter that suppresses real customer mail must not make the
      * test look broken.
      *
@@ -799,12 +799,12 @@ class EmailService
     public function renderTemplate(string $templateFile, array $args = []): string
     {
         $cleanFile = ltrim($templateFile, '/');
-        $pluginTemplate = untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/emails/' . $cleanFile;
+        $pluginTemplate = untrailingslashit(READSCOPE_PLUGIN_DIR) . '/templates/emails/' . $cleanFile;
 
-        // Theme override check (your-theme/tourivo/emails/filename.php or your-theme/tourivo/filename.php)
+        // Theme override check (your-theme/readscope/emails/filename.php or your-theme/readscope/filename.php)
         $themeTemplate = function_exists('locate_template') ? locate_template([
-            'tourivo/emails/' . $cleanFile,
-            'tourivo/' . $cleanFile,
+            'readscope/emails/' . $cleanFile,
+            'readscope/' . $cleanFile,
         ]) : '';
 
         $templateToLoad = (!empty($themeTemplate) && file_exists($themeTemplate)) ? $themeTemplate : $pluginTemplate;
@@ -835,8 +835,8 @@ class EmailService
             return $value;
         }
 
-        if (function_exists('tourivo_load_plugin_textdomain')) {
-            tourivo_load_plugin_textdomain();
+        if (function_exists('readscope_load_plugin_textdomain')) {
+            readscope_load_plugin_textdomain();
         }
 
         return $this->stockCopyTranslations()[$settingKey] ?? $value;
@@ -932,7 +932,7 @@ class EmailService
     protected function getBookingData(int $bookingId): ?array
     {
         global $wpdb;
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $booking = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$bookingsTable} WHERE id = %d", $bookingId));
@@ -985,7 +985,7 @@ class EmailService
     protected function getInquiryData(int $inquiryId): ?array
     {
         global $wpdb;
-        $inquiriesTable = $wpdb->prefix . 'tourivo_inquiries';
+        $inquiriesTable = $wpdb->prefix . 'readscope_inquiries';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $inquiry = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$inquiriesTable} WHERE id = %d", $inquiryId));

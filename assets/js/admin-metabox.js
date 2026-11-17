@@ -5,19 +5,19 @@
 document.addEventListener('DOMContentLoaded', function () {
     // 1. Tab switching
     document.addEventListener('click', function (e) {
-        const link = e.target.closest('.tourivo-tabs-nav li a');
+        const link = e.target.closest('.readscope-tabs-nav li a');
         if (!link) return;
 
         e.preventDefault();
-        const parentWrapper = link.closest('.tourivo-metabox-wrapper');
+        const parentWrapper = link.closest('.readscope-metabox-wrapper');
         const parentLi = link.parentElement;
         const targetId = link.getAttribute('href');
 
         if (parentWrapper) {
-            parentWrapper.querySelectorAll('.tourivo-tabs-nav li').forEach(li => li.classList.remove('active'));
+            parentWrapper.querySelectorAll('.readscope-tabs-nav li').forEach(li => li.classList.remove('active'));
             parentLi.classList.add('active');
 
-            parentWrapper.querySelectorAll('.tourivo-tab-pane').forEach(pane => pane.classList.remove('active'));
+            parentWrapper.querySelectorAll('.readscope-tab-pane').forEach(pane => pane.classList.remove('active'));
             const targetPane = parentWrapper.querySelector(targetId);
             if (targetPane) {
                 targetPane.classList.add('active');
@@ -27,37 +27,37 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     // 2. Add Day to Itinerary
-    const addItineraryBtn = document.getElementById('tourivo-add-itinerary-btn');
-    const itineraryContainer = document.getElementById('tourivo-itinerary-repeater');
+    const addItineraryBtn = document.getElementById('readscope-add-itinerary-btn');
+    const itineraryContainer = document.getElementById('readscope-itinerary-repeater');
     if (addItineraryBtn && itineraryContainer) {
         addItineraryBtn.addEventListener('click', function () {
-            const index = itineraryContainer.querySelectorAll('.tourivo-repeater-row').length;
+            const index = itineraryContainer.querySelectorAll('.readscope-repeater-row').length;
             const dayNum = index + 1;
 
             const rowHtml = `
-                <div class="tourivo-repeater-row">
+                <div class="readscope-repeater-row">
                     <div class="row-header">
                         <strong>Day / Stage: ${dayNum}</strong>
                         <button type="button" class="button remove-row-btn">&times;</button>
                     </div>
                     <div class="row-body">
-                        <div class="tourivo-row">
-                            <div class="tourivo-col" style="flex: 0 0 100px;">
+                        <div class="readscope-row">
+                            <div class="readscope-col" style="flex: 0 0 100px;">
                                 <label>Day #</label>
-                                <input type="text" name="_tourivo_itinerary[${index}][day]" value="${dayNum}">
+                                <input type="text" name="_readscope_itinerary[${index}][day]" value="${dayNum}">
                             </div>
-                            <div class="tourivo-col">
+                            <div class="readscope-col">
                                 <label>Day Title</label>
-                                <input type="text" name="_tourivo_itinerary[${index}][title]" placeholder="e.g. City Tour & Sunset Cruise">
+                                <input type="text" name="_readscope_itinerary[${index}][title]" placeholder="e.g. City Tour & Sunset Cruise">
                             </div>
-                            <div class="tourivo-col" style="flex: 0 0 160px;">
+                            <div class="readscope-col" style="flex: 0 0 160px;">
                                 <label>Included Meals</label>
-                                <input type="text" name="_tourivo_itinerary[${index}][meals]" placeholder="Breakfast, Lunch">
+                                <input type="text" name="_readscope_itinerary[${index}][meals]" placeholder="Breakfast, Lunch">
                             </div>
                         </div>
-                        <div class="tourivo-form-group" style="margin-top: 10px;">
+                        <div class="readscope-form-group" style="margin-top: 10px;">
                             <label>Description & Details</label>
-                            <textarea rows="3" name="_tourivo_itinerary[${index}][desc]"></textarea>
+                            <textarea rows="3" name="_readscope_itinerary[${index}][desc]"></textarea>
                         </div>
                     </div>
                 </div>
@@ -67,14 +67,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 3. Add Inclusion item
-    const addIncBtn = document.getElementById('tourivo-add-inclusion-btn');
-    const incList = document.getElementById('tourivo-inclusions-list');
+    const addIncBtn = document.getElementById('readscope-add-inclusion-btn');
+    const incList = document.getElementById('readscope-inclusions-list');
     if (addIncBtn && incList) {
         addIncBtn.addEventListener('click', function () {
             const itemHtml = `
                 <div class="list-item-row">
                     <span class="dashicons dashicons-yes-alt" style="color: #10b981;"></span>
-                    <input type="text" name="_tourivo_inclusions[]" placeholder="e.g. Hotel Pickup and Drop-off">
+                    <input type="text" name="_readscope_inclusions[]" placeholder="e.g. Hotel Pickup and Drop-off">
                     <button type="button" class="button remove-list-item">&times;</button>
                 </div>
             `;
@@ -83,14 +83,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 4. Add Exclusion item
-    const addExcBtn = document.getElementById('tourivo-add-exclusion-btn');
-    const excList = document.getElementById('tourivo-exclusions-list');
+    const addExcBtn = document.getElementById('readscope-add-exclusion-btn');
+    const excList = document.getElementById('readscope-exclusions-list');
     if (addExcBtn && excList) {
         addExcBtn.addEventListener('click', function () {
             const itemHtml = `
                 <div class="list-item-row">
                     <span class="dashicons dashicons-dismiss" style="color: #ef4444;"></span>
-                    <input type="text" name="_tourivo_exclusions[]" placeholder="e.g. Personal Expenses & Tips">
+                    <input type="text" name="_readscope_exclusions[]" placeholder="e.g. Personal Expenses & Tips">
                     <button type="button" class="button remove-list-item">&times;</button>
                 </div>
             `;
@@ -99,25 +99,25 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 5. Add FAQ item
-    const addFaqBtn = document.getElementById('tourivo-add-faq-btn');
-    const faqList = document.getElementById('tourivo-faqs-list');
+    const addFaqBtn = document.getElementById('readscope-add-faq-btn');
+    const faqList = document.getElementById('readscope-faqs-list');
     if (addFaqBtn && faqList) {
         addFaqBtn.addEventListener('click', function () {
-            const i = faqList.querySelectorAll('.tourivo-repeater-row').length;
+            const i = faqList.querySelectorAll('.readscope-repeater-row').length;
             const faqHtml = `
-                <div class="tourivo-repeater-row">
+                <div class="readscope-repeater-row">
                     <div class="row-header">
                         <strong>Question & Answer</strong>
                         <button type="button" class="button remove-row-btn">&times;</button>
                     </div>
                     <div class="row-body">
-                        <div class="tourivo-form-group">
+                        <div class="readscope-form-group">
                             <label>Question</label>
-                            <input type="text" name="_tourivo_faqs[${i}][question]" placeholder="e.g. Is lunch provided?">
+                            <input type="text" name="_readscope_faqs[${i}][question]" placeholder="e.g. Is lunch provided?">
                         </div>
-                        <div class="tourivo-form-group">
+                        <div class="readscope-form-group">
                             <label>Answer</label>
-                            <textarea rows="2" name="_tourivo_faqs[${i}][answer]"></textarea>
+                            <textarea rows="2" name="_readscope_faqs[${i}][answer]"></textarea>
                         </div>
                     </div>
                 </div>
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // 6. Global event delegation for removal buttons
     document.addEventListener('click', function (e) {
         if (e.target.classList.contains('remove-row-btn')) {
-            e.target.closest('.tourivo-repeater-row').remove();
+            e.target.closest('.readscope-repeater-row').remove();
         }
         if (e.target.classList.contains('remove-list-item')) {
             e.target.closest('.list-item-row').remove();
@@ -139,10 +139,10 @@ document.addEventListener('DOMContentLoaded', function () {
     // =========================================================================
     // 7. Availability & Pricing Calendar Manager (Vanilla JS)
     // =========================================================================
-    const availApp = document.getElementById('tourivo-availability-app');
+    const availApp = document.getElementById('readscope-availability-app');
     if (!availApp) return;
 
-    const config = window.tourivoAvailabilityConfig || {
+    const config = window.readscopeAvailabilityConfig || {
         ajaxUrl: '/wp-admin/admin-ajax.php',
         nonce: '',
         isBengali: false,
@@ -171,17 +171,17 @@ document.addEventListener('DOMContentLoaded', function () {
     let lastClickedDate = null;
     let daysDataMap = {};
 
-    const monthTitleEl = availApp.querySelector('.tourivo-avail-current-month');
-    const gridEl = document.getElementById('tourivo-avail-grid');
-    const prevBtn = availApp.querySelector('.tourivo-avail-nav-prev');
-    const nextBtn = availApp.querySelector('.tourivo-avail-nav-next');
-    const todayBtn = availApp.querySelector('.tourivo-avail-nav-today');
-    const defCapEl = availApp.querySelector('.tourivo-avail-def-cap');
-    const defPriceEl = availApp.querySelector('.tourivo-avail-def-price');
-    const selectionBadge = document.getElementById('tourivo-selection-badge');
-    const applyBtn = document.getElementById('tourivo-bulk-apply-btn');
-    const clearBtn = document.getElementById('tourivo-bulk-clear-btn');
-    const alertBox = document.getElementById('tourivo-panel-alert');
+    const monthTitleEl = availApp.querySelector('.readscope-avail-current-month');
+    const gridEl = document.getElementById('readscope-avail-grid');
+    const prevBtn = availApp.querySelector('.readscope-avail-nav-prev');
+    const nextBtn = availApp.querySelector('.readscope-avail-nav-next');
+    const todayBtn = availApp.querySelector('.readscope-avail-nav-today');
+    const defCapEl = availApp.querySelector('.readscope-avail-def-cap');
+    const defPriceEl = availApp.querySelector('.readscope-avail-def-price');
+    const selectionBadge = document.getElementById('readscope-selection-badge');
+    const applyBtn = document.getElementById('readscope-bulk-apply-btn');
+    const clearBtn = document.getElementById('readscope-bulk-clear-btn');
+    const alertBox = document.getElementById('readscope-panel-alert');
 
     function escapeHtml(value) {
         return String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
@@ -196,7 +196,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function showAlert(msg, isError = false) {
         if (!alertBox) return;
         alertBox.textContent = msg;
-        alertBox.className = 'tourivo-panel-alert ' + (isError ? 'alert-error' : 'alert-success');
+        alertBox.className = 'readscope-panel-alert ' + (isError ? 'alert-error' : 'alert-success');
         alertBox.style.display = 'block';
         setTimeout(() => {
             if (alertBox && !isError) alertBox.style.display = 'none';
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Synchronize ARIA state and selection classes on rendered day elements
-        const allDayTiles = gridEl.querySelectorAll('.tourivo-avail-day[data-date]');
+        const allDayTiles = gridEl.querySelectorAll('.readscope-avail-day[data-date]');
         allDayTiles.forEach(tile => {
             const date = tile.getAttribute('data-date');
             const isSel = selectedDates.has(date);
@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         const formData = new FormData();
-        formData.append('action', 'tourivo_get_admin_calendar');
+        formData.append('action', 'readscope_get_admin_calendar');
         formData.append('nonce', config.nonce);
         formData.append('item_id', itemId);
         formData.append('item_type', itemType);
@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         for (let i = 1; i < firstDayOfWeek; i++) {
             const blankTile = document.createElement('div');
-            blankTile.className = 'tourivo-avail-day is-empty';
+            blankTile.className = 'readscope-avail-day is-empty';
             blankTile.setAttribute('aria-hidden', 'true');
             gridEl.appendChild(blankTile);
         }
@@ -288,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const isSelected = selectedDates.has(dateStr);
 
             const dayTile = document.createElement('div');
-            dayTile.className = `tourivo-avail-day status-${dayData.status}`;
+            dayTile.className = `readscope-avail-day status-${dayData.status}`;
             if (isSelected) dayTile.classList.add('is-selected');
             if (dayData.is_today) dayTile.classList.add('is-today');
             if (dayData.is_past) dayTile.classList.add('is-past');
@@ -307,18 +307,18 @@ document.addEventListener('DOMContentLoaded', function () {
             dayTile.setAttribute('aria-label', ariaLabel);
 
             const priceOverrideIcon = dayData.price_override !== null
-                ? '<span class="tourivo-override-icon" title="Custom Price Override">★</span>'
+                ? '<span class="readscope-override-icon" title="Custom Price Override">★</span>'
                 : '';
 
             dayTile.innerHTML = `
-                <div class="tourivo-avail-day-top">
-                    <span class="tourivo-day-num">${formatNumber(dayData.day)}</span>
-                    <span class="tourivo-day-badge">${statusLabel}</span>
+                <div class="readscope-avail-day-top">
+                    <span class="readscope-day-num">${formatNumber(dayData.day)}</span>
+                    <span class="readscope-day-badge">${statusLabel}</span>
                 </div>
-                <div class="tourivo-day-meta">
+                <div class="readscope-day-meta">
                     <div>Cap: <strong>${formatNumber(dayData.total_capacity)}</strong> | Booked: <strong>${formatNumber(dayData.booked_count)}</strong></div>
                 </div>
-                <div class="tourivo-day-price">
+                <div class="readscope-day-price">
                     <span>${escapeHtml(dayData.formatted_price)}</span>
                     ${priceOverrideIcon}
                 </div>
@@ -380,7 +380,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        const tiles = Array.from(gridEl.querySelectorAll('.tourivo-avail-day[data-date]'));
+        const tiles = Array.from(gridEl.querySelectorAll('.readscope-avail-day[data-date]'));
         const currentIdx = tiles.indexOf(tile);
         if (currentIdx === -1) return;
 
@@ -447,14 +447,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            const statusVal = document.getElementById('tourivo-bulk-status')?.value || '';
-            const capVal = document.getElementById('tourivo-bulk-capacity')?.value || '';
-            const priceVal = document.getElementById('tourivo-bulk-price')?.value || '';
-            const resetPriceVal = document.getElementById('tourivo-bulk-reset-price')?.checked || false;
-            const forceVal = document.getElementById('tourivo-bulk-force')?.checked || false;
+            const statusVal = document.getElementById('readscope-bulk-status')?.value || '';
+            const capVal = document.getElementById('readscope-bulk-capacity')?.value || '';
+            const priceVal = document.getElementById('readscope-bulk-price')?.value || '';
+            const resetPriceVal = document.getElementById('readscope-bulk-reset-price')?.checked || false;
+            const forceVal = document.getElementById('readscope-bulk-force')?.checked || false;
 
             // Day-of-week filters
-            const dowChecks = Array.from(availApp.querySelectorAll('.tourivo-dow-check:checked')).map(cb => parseInt(cb.value, 10));
+            const dowChecks = Array.from(availApp.querySelectorAll('.readscope-dow-check:checked')).map(cb => parseInt(cb.value, 10));
 
             if (!statusVal && capVal === '' && priceVal === '' && !resetPriceVal) {
                 showAlert(config.i18n.noChanges, true);
@@ -469,7 +469,7 @@ document.addEventListener('DOMContentLoaded', function () {
             applyBtn.classList.add('updating-message');
 
             const formData = new FormData();
-            formData.append('action', 'tourivo_update_availability');
+            formData.append('action', 'readscope_update_availability');
             formData.append('nonce', config.nonce);
             formData.append('item_id', itemId);
             formData.append('item_type', itemType);
@@ -503,10 +503,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 showAlert(response.data?.message || 'Availability updated successfully!', false);
 
                 // Reset bulk form inputs
-                if (document.getElementById('tourivo-bulk-status')) document.getElementById('tourivo-bulk-status').value = '';
-                if (document.getElementById('tourivo-bulk-capacity')) document.getElementById('tourivo-bulk-capacity').value = '';
-                if (document.getElementById('tourivo-bulk-price')) document.getElementById('tourivo-bulk-price').value = '';
-                if (document.getElementById('tourivo-bulk-reset-price')) document.getElementById('tourivo-bulk-reset-price').checked = false;
+                if (document.getElementById('readscope-bulk-status')) document.getElementById('readscope-bulk-status').value = '';
+                if (document.getElementById('readscope-bulk-capacity')) document.getElementById('readscope-bulk-capacity').value = '';
+                if (document.getElementById('readscope-bulk-price')) document.getElementById('readscope-bulk-price').value = '';
+                if (document.getElementById('readscope-bulk-reset-price')) document.getElementById('readscope-bulk-reset-price').checked = false;
 
                 // Refresh calendar grid
                 fetchAndRenderCalendar(currentYear, currentMonth);

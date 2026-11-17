@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Support;
+namespace Readscope\Support;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * template that needs it, so nothing is printed inline. Values that come from PHP (nonces, URLs,
  * translated strings, booking data) are handed over as one JSON object per script.
  *
- * @package Tourivo\Support
+ * @package Readscope\Support
  */
 final class PortalAssets
 {
@@ -25,11 +25,11 @@ final class PortalAssets
      * @var array<string, array{style?: string, script?: string, global?: string}>
      */
     private const ASSETS = [
-        'thank-you'    => ['style' => 'css/tourivo-thank-you.css', 'script' => 'js/tourivo-thank-you.js', 'global' => 'tourivoThankYouConfig'],
-        'my-bookings'  => ['style' => 'css/tourivo-my-bookings.css', 'script' => 'js/tourivo-my-bookings.js', 'global' => 'tourivoMyBookingsConfig'],
-        'lookup'       => ['style' => 'css/tourivo-booking-lookup.css', 'script' => 'js/tourivo-booking-lookup.js', 'global' => 'tourivoLookupConfig'],
-        'voucher'      => ['style' => 'css/tourivo-voucher.css', 'script' => 'js/tourivo-voucher.js'],
-        'setup-wizard' => ['style' => 'css/tourivo-setup-wizard.css', 'script' => 'js/tourivo-setup-wizard.js', 'global' => 'tourivoWizardConfig'],
+        'thank-you'    => ['style' => 'css/readscope-thank-you.css', 'script' => 'js/readscope-thank-you.js', 'global' => 'readscopeThankYouConfig'],
+        'my-bookings'  => ['style' => 'css/readscope-my-bookings.css', 'script' => 'js/readscope-my-bookings.js', 'global' => 'readscopeMyBookingsConfig'],
+        'lookup'       => ['style' => 'css/readscope-booking-lookup.css', 'script' => 'js/readscope-booking-lookup.js', 'global' => 'readscopeLookupConfig'],
+        'voucher'      => ['style' => 'css/readscope-voucher.css', 'script' => 'js/readscope-voucher.js'],
+        'setup-wizard' => ['style' => 'css/readscope-setup-wizard.css', 'script' => 'js/readscope-setup-wizard.js', 'global' => 'readscopeWizardConfig'],
     ];
 
     /**
@@ -121,7 +121,7 @@ final class PortalAssets
      */
     public static function handle(string $key): string
     {
-        return 'tourivo-' . $key;
+        return 'readscope-' . $key;
     }
 
     /**
@@ -136,11 +136,11 @@ final class PortalAssets
         $handle = self::handle($key);
 
         if (isset($def['style']) && !wp_style_is($handle, 'registered')) {
-            wp_register_style($handle, TOURIVO_PLUGIN_URL . 'assets/' . $def['style'], [], TOURIVO_VERSION);
+            wp_register_style($handle, READSCOPE_PLUGIN_URL . 'assets/' . $def['style'], [], READSCOPE_VERSION);
         }
 
         if (isset($def['script']) && !wp_script_is($handle, 'registered')) {
-            wp_register_script($handle, TOURIVO_PLUGIN_URL . 'assets/' . $def['script'], [], TOURIVO_VERSION, true);
+            wp_register_script($handle, READSCOPE_PLUGIN_URL . 'assets/' . $def['script'], [], READSCOPE_VERSION, true);
         }
     }
 }

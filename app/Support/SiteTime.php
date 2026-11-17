@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Support;
+namespace Readscope\Support;
 
 use DateTimeImmutable;
 use DateTimeZone;
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
  * (created_at, updated_at) are stored in UTC. These helpers keep the two apart so nothing shifts by the
  * site's UTC offset.
  *
- * @package Tourivo\Support
+ * @package Readscope\Support
  */
 final class SiteTime
 {

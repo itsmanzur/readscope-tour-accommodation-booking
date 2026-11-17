@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Database\Migrations;
+namespace Readscope\Database\Migrations;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -11,15 +11,15 @@ if (!defined('ABSPATH')) {
 /**
  * Class CreateInquiriesTable
  *
- * Migration for creating the inquiries table: wp_tourivo_inquiries.
+ * Migration for creating the inquiries table: wp_readscope_inquiries.
  *
- * @package Tourivo\Database\Migrations
+ * @package Readscope\Database\Migrations
  */
 class CreateInquiriesTable implements MigrationInterface
 {
     public function getName(): string
     {
-        return 'create_tourivo_inquiries_table';
+        return 'create_readscope_inquiries_table';
     }
 
     public function getVersion(): string

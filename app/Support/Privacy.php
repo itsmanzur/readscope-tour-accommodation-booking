@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Support;
+namespace Readscope\Support;
 
-use Tourivo\Config\Config;
-use Tourivo\Services\LogService;
+use Readscope\Config\Config;
+use Readscope\Services\LogService;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
  * Handles GDPR / Privacy compliance, user consent versioning,
  * WordPress Personal Data Exporters, Erasers, and Privacy Policy guide.
  *
- * @package Tourivo\Support
+ * @package Readscope\Support
  */
 class Privacy
 {
@@ -127,7 +127,7 @@ class Privacy
      */
     public static function registerExporter(array $exporters): array
     {
-        $exporters['tourivo'] = [
+        $exporters['readscope'] = [
             'exporter_friendly_name' => __('Readscope Bookings & Inquiries', 'the-readscope-tour-and-accommodation-booking'),
             'callback'               => [self::class, 'exportPersonalData'],
         ];
@@ -143,7 +143,7 @@ class Privacy
      */
     public static function registerEraser(array $erasers): array
     {
-        $erasers['tourivo'] = [
+        $erasers['readscope'] = [
             'eraser_friendly_name' => __('Readscope Personal Data Eraser', 'the-readscope-tour-and-accommodation-booking'),
             'callback'             => [self::class, 'erasePersonalData'],
         ];
@@ -223,8 +223,8 @@ class Privacy
         $number       = 50;
         $offset       = ($page - 1) * $number;
 
-        $bookingsTable  = $wpdb->prefix . 'tourivo_bookings';
-        $inquiriesTable = $wpdb->prefix . 'tourivo_inquiries';
+        $bookingsTable  = $wpdb->prefix . 'readscope_bookings';
+        $inquiriesTable = $wpdb->prefix . 'readscope_inquiries';
 
         $totalBookings = (int) $wpdb->get_var($wpdb->prepare(
             "SELECT COUNT(*) FROM {$bookingsTable} WHERE customer_email = %s",
@@ -277,9 +277,9 @@ class Privacy
                 }
 
                 $data[] = [
-                    'group_id'    => 'tourivo-bookings',
+                    'group_id'    => 'readscope-bookings',
                     'group_label' => __('Readscope Bookings', 'the-readscope-tour-and-accommodation-booking'),
-                    'item_id'     => 'tourivo-booking-' . $booking->id,
+                    'item_id'     => 'readscope-booking-' . $booking->id,
                     'data'        => array_merge([
                         ['name' => __('Booking Code', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($booking->booking_code ?? '')],
                         ['name' => __('Customer Name', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($booking->customer_name ?? '')],
@@ -312,9 +312,9 @@ class Privacy
 
             foreach ($inquiries as $inquiry) {
                 $data[] = [
-                    'group_id'    => 'tourivo-inquiries',
+                    'group_id'    => 'readscope-inquiries',
                     'group_label' => __('Readscope Inquiries', 'the-readscope-tour-and-accommodation-booking'),
-                    'item_id'     => 'tourivo-inquiry-' . $inquiry->id,
+                    'item_id'     => 'readscope-inquiry-' . $inquiry->id,
                     'data'        => [
                         ['name' => __('Inquirer Name', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($inquiry->customer_name ?? '')],
                         ['name' => __('Email Address', 'the-readscope-tour-and-accommodation-booking'), 'value' => (string) ($inquiry->customer_email ?? '')],
@@ -352,8 +352,8 @@ class Privacy
         global $wpdb;
 
         $emailAddress   = sanitize_email($emailAddress);
-        $bookingsTable  = $wpdb->prefix . 'tourivo_bookings';
-        $inquiriesTable = $wpdb->prefix . 'tourivo_inquiries';
+        $bookingsTable  = $wpdb->prefix . 'readscope_bookings';
+        $inquiriesTable = $wpdb->prefix . 'readscope_inquiries';
 
         // 1. Fetch matching bookings to anonymize
         $bookings = $wpdb->get_results($wpdb->prepare(
@@ -409,7 +409,7 @@ class Privacy
             $user = get_user_by('email', $emailAddress);
             if ($user && isset($user->ID)) {
                 if (function_exists('delete_user_meta')) {
-                    delete_user_meta((int) $user->ID, '_tourivo_wishlist');
+                    delete_user_meta((int) $user->ID, '_readscope_wishlist');
                 }
             }
         }

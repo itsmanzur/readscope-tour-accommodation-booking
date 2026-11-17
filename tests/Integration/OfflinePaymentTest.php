@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Common\Container;
-use Tourivo\Config\Config;
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\InventoryService;
-use Tourivo\Services\PaymentService;
-use Tourivo\Services\PricingService;
-use Tourivo\Shortcodes\BookingLookupShortcode;
-use Tourivo\Shortcodes\ThankYouShortcode;
-use Tourivo\Tests\TestCase;
+use Readscope\Common\Container;
+use Readscope\Config\Config;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\InventoryService;
+use Readscope\Services\PaymentService;
+use Readscope\Services\PricingService;
+use Readscope\Shortcodes\BookingLookupShortcode;
+use Readscope\Shortcodes\ThankYouShortcode;
+use Readscope\Tests\TestCase;
 use WP_User;
 
 /**
@@ -112,7 +112,7 @@ class OfflinePaymentTest extends TestCase
      */
     public function test_offline_payment_methods_configuration(): void
     {
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'bank_transfer_enabled'        => true,
             'bank_name'                    => 'Standard Chartered',
             'bank_account_name'            => 'Readscope Holidays Ltd.',
@@ -137,7 +137,7 @@ class OfflinePaymentTest extends TestCase
      */
     public function test_bank_details_html_rendering(): void
     {
-        update_option('tourivo_settings', array_merge(Config::getDefaults(), [
+        update_option('readscope_settings', array_merge(Config::getDefaults(), [
             'bank_transfer_enabled' => true,
             'bank_name'             => 'City Bank Global',
             'bank_account_name'     => 'Readscope Booking Agency',
@@ -237,7 +237,7 @@ class OfflinePaymentTest extends TestCase
         global $wpdb;
 
         $adminUser = wp_set_current_user(1);
-        $adminUser->allcaps['manage_tourivo_bookings'] = true;
+        $adminUser->allcaps['manage_readscope_bookings'] = true;
 
         $bookingId = $this->insertMockBooking([
             'total_amount'   => 800.00,
@@ -275,7 +275,7 @@ class OfflinePaymentTest extends TestCase
         global $wpdb;
 
         $adminUser = wp_set_current_user(1);
-        $adminUser->allcaps['manage_tourivo_bookings'] = true;
+        $adminUser->allcaps['manage_readscope_bookings'] = true;
 
         $bookingId = $this->insertMockBooking([
             'total_amount'   => 1200.00,
@@ -308,7 +308,7 @@ class OfflinePaymentTest extends TestCase
     public function test_admin_record_payment_unauthorized_fails(): void
     {
         $nonAdmin = wp_set_current_user(99);
-        $nonAdmin->allcaps['manage_tourivo_bookings'] = false;
+        $nonAdmin->allcaps['manage_readscope_bookings'] = false;
 
         $bookingId = $this->insertMockBooking();
 

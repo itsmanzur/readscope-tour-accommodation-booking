@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Common\Container;
-use Tourivo\Providers\TemplateServiceProvider;
-use Tourivo\Tests\TestCase;
+use Readscope\Common\Container;
+use Readscope\Providers\TemplateServiceProvider;
+use Readscope\Tests\TestCase;
 
 /**
  * Class TravelHomepageOptInTest
@@ -28,21 +28,21 @@ class TravelHomepageOptInTest extends TestCase
      */
     private function registeredCallbacks(): array
     {
-        $GLOBALS['tourivo_mock_filters'] = [];
-        $GLOBALS['tourivo_mock_action_callbacks'] = [];
+        $GLOBALS['readscope_mock_filters'] = [];
+        $GLOBALS['readscope_mock_action_callbacks'] = [];
 
         $provider = new TemplateServiceProvider(Container::getInstance());
         $provider->boot();
 
         $names = [];
-        foreach ((array) $GLOBALS['tourivo_mock_filters'] as $callbacks) {
+        foreach ((array) $GLOBALS['readscope_mock_filters'] as $callbacks) {
             foreach ((array) $callbacks as $cb) {
                 if (is_array($cb) && ($cb[0] ?? null) === $provider) {
                     $names[] = (string) $cb[1];
                 }
             }
         }
-        foreach ((array) $GLOBALS['tourivo_mock_action_callbacks'] as $entries) {
+        foreach ((array) $GLOBALS['readscope_mock_action_callbacks'] as $entries) {
             foreach ((array) $entries as $entry) {
                 $cb = $entry['callback'] ?? null;
                 if (is_array($cb) && ($cb[0] ?? null) === $provider) {
@@ -56,7 +56,7 @@ class TravelHomepageOptInTest extends TestCase
 
     public function test_site_wide_changes_are_off_by_default(): void
     {
-        update_option('tourivo_settings', []);
+        update_option('readscope_settings', []);
         $names = $this->registeredCallbacks();
 
         foreach (self::SITE_WIDE_CALLBACKS as $callback) {
@@ -68,13 +68,13 @@ class TravelHomepageOptInTest extends TestCase
 
     public function test_site_wide_changes_register_when_enabled(): void
     {
-        update_option('tourivo_settings', ['travel_homepage' => 1]);
+        update_option('readscope_settings', ['travel_homepage' => 1]);
         $names = $this->registeredCallbacks();
 
         foreach (self::SITE_WIDE_CALLBACKS as $callback) {
             $this->assertContains($callback, $names, "{$callback} should run once the owner opts in.");
         }
 
-        update_option('tourivo_settings', []);
+        update_option('readscope_settings', []);
     }
 }

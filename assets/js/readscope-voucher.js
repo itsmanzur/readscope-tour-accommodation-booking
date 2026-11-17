@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('[data-tourivo-action]').forEach(function(btn) {
+    document.querySelectorAll('[data-readscope-action]').forEach(function(btn) {
         btn.addEventListener('click', function() {
-            if (btn.getAttribute('data-tourivo-action') === 'print') {
+            if (btn.getAttribute('data-readscope-action') === 'print') {
                 window.print();
             } else {
                 window.close();

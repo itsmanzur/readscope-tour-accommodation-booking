@@ -25,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Tourivo\\": "app/"
+            "Readscope\\": "app/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tourivo\\Tests\\": "tests/"
+            "Readscope\\Tests\\": "tests/"
         }
     },
     "config": {

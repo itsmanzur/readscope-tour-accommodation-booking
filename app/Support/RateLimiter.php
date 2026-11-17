@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Support;
+namespace Readscope\Support;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -14,9 +14,9 @@ if (!defined('ABSPATH')) {
  * Fixed-window request counter shared by every public Readscope Booking endpoint.
  *
  * Both back ends increment atomically, so a burst of parallel requests cannot slip past the limit:
- * - Persistent object cache: `wp_cache_add()` + `wp_cache_incr()` in the `tourivo_rate_limit` group.
+ * - Persistent object cache: `wp_cache_add()` + `wp_cache_incr()` in the `readscope_rate_limit` group.
  * - Otherwise (or if the cache refuses to increment): one `INSERT ... ON DUPLICATE KEY UPDATE` on the options
- *   table. Each bucket is one row, option_name `tourivo_rl_<md5(key)>`, option_value `<count>|<expires_ts>`,
+ *   table. Each bucket is one row, option_name `readscope_rl_<md5(key)>`, option_value `<count>|<expires_ts>`,
  *   autoload `no`. The statement restarts the window (count 1, expiry now + window) when the stored expiry has
  *   passed and otherwise increments the count; the new count is read back from the same connection.
  *
@@ -25,14 +25,14 @@ if (!defined('ABSPATH')) {
  * treated as limited (fail closed).
  *
  * Expired rows are removed by purgeExpired() (daily cron, plus 1% of DB-path hits); the Uninstaller drops all
- * `tourivo_rl_%` options.
+ * `readscope_rl_%` options.
  *
- * @package Tourivo\Support
+ * @package Readscope\Support
  */
 class RateLimiter
 {
-    private const CACHE_GROUP = 'tourivo_rate_limit';
-    private const ROW_PREFIX  = 'tourivo_rl_';
+    private const CACHE_GROUP = 'readscope_rate_limit';
+    private const ROW_PREFIX  = 'readscope_rl_';
 
     /**
      * Clock override for tests (returns a unix timestamp). Leave null in production.
@@ -45,7 +45,7 @@ class RateLimiter
     /**
      * Register one attempt against $key and report whether it is still within the limit.
      *
-     * @param string $key    Unique bucket key (e.g. 'tourivo_rl_booking_' . md5($ip)).
+     * @param string $key    Unique bucket key (e.g. 'readscope_rl_booking_' . md5($ip)).
      * @param int    $limit  Maximum attempts allowed per window.
      * @param int    $window Window length in seconds.
      * @return bool True when the attempt is allowed, false when the limit is exhausted.
@@ -119,14 +119,14 @@ class RateLimiter
         $now     = self::now();
         $expires = $now + max(1, $window);
 
-        if ($wpdb->query('SET @tourivo_rl_c = 1') === false) { // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Session variable used to read the new count back atomically.
+        if ($wpdb->query('SET @readscope_rl_c = 1') === false) { // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Session variable used to read the new count back atomically.
             return null;
         }
 
         $sql = $wpdb->prepare(
             "INSERT INTO {$wpdb->options} (option_name, option_value, autoload) VALUES (%s, %s, 'no')
              ON DUPLICATE KEY UPDATE option_value = CONCAT(
-                 @tourivo_rl_c := IF(CAST(SUBSTRING_INDEX(option_value, '|', -1) AS UNSIGNED) <= %d, 1, CAST(SUBSTRING_INDEX(option_value, '|', 1) AS UNSIGNED) + 1),
+                 @readscope_rl_c := IF(CAST(SUBSTRING_INDEX(option_value, '|', -1) AS UNSIGNED) <= %d, 1, CAST(SUBSTRING_INDEX(option_value, '|', 1) AS UNSIGNED) + 1),
                  '|',
                  IF(CAST(SUBSTRING_INDEX(option_value, '|', -1) AS UNSIGNED) <= %d, %d, CAST(SUBSTRING_INDEX(option_value, '|', -1) AS UNSIGNED))
              )", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name from $wpdb->options; all values are bound below.
@@ -141,7 +141,7 @@ class RateLimiter
             return null;
         }
 
-        $count = $wpdb->get_var('SELECT @tourivo_rl_c'); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Reads the session variable set by the upsert.
+        $count = $wpdb->get_var('SELECT @readscope_rl_c'); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Reads the session variable set by the upsert.
         return is_numeric($count) ? (int) $count : null;
     }
 

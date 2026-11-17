@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Shortcodes;
+namespace Readscope\Shortcodes;
 
-use Tourivo\Models\Hotel;
-use Tourivo\Models\Tour;
-use Tourivo\PostTypes\HotelPostType;
-use Tourivo\PostTypes\TourPostType;
+use Readscope\Models\Hotel;
+use Readscope\Models\Tour;
+use Readscope\PostTypes\HotelPostType;
+use Readscope\PostTypes\TourPostType;
 use WP_Query;
 
 if (!defined('ABSPATH')) {
@@ -17,15 +17,15 @@ if (!defined('ABSPATH')) {
 /**
  * Class FilterSearchShortcode
  *
- * Shortcode: [tourivo_filter_search type="tour" columns="3" count="9" layout="top"]
+ * Shortcode: [readscope_filter_search type="tour" columns="3" count="9" layout="top"]
  *
- * @package Tourivo\Shortcodes
+ * @package Readscope\Shortcodes
  */
 class FilterSearchShortcode
 {
     public static function register(): void
     {
-        add_shortcode('tourivo_filter_search', [self::class, 'render']);
+        add_shortcode('readscope_filter_search', [self::class, 'render']);
     }
 
     /**
@@ -41,7 +41,7 @@ class FilterSearchShortcode
             'columns' => 3,
             'count'   => 9,
             'layout'  => 'top', // 'top' or 'sidebar'
-        ], (array) $atts, 'tourivo_filter_search');
+        ], (array) $atts, 'readscope_filter_search');
 
         $type = ($attributes['type'] === 'hotel') ? 'hotel' : 'tour';
         $cols = max(1, min(4, (int) $attributes['columns']));
@@ -58,28 +58,28 @@ class FilterSearchShortcode
             'hide_empty' => false,
         ]) : [];
 
-        $currency = (string) apply_filters('tourivo/currency_symbol', '$');
+        $currency = (string) apply_filters('readscope/currency_symbol', '$');
 
         ob_start();
         ?>
-        <div class="tourivo-live-filter-wrapper tourivo-layout-<?php echo esc_attr($layout); ?>" 
+        <div class="readscope-live-filter-wrapper readscope-layout-<?php echo esc_attr($layout); ?>" 
              data-type="<?php echo esc_attr($type); ?>" 
              data-columns="<?php echo esc_attr((string) $cols); ?>" 
              data-count="<?php echo esc_attr((string) $count); ?>">
 
             <!-- Filter Controls Bar -->
-            <form class="tourivo-filter-form">
-                <div class="tourivo-filter-grid">
+            <form class="readscope-filter-form">
+                <div class="readscope-filter-grid">
                     <!-- Keyword Search -->
-                    <div class="tourivo-filter-col filter-keyword">
+                    <div class="readscope-filter-col filter-keyword">
                         <label for="filter-keyword-<?php echo esc_attr($type); ?>">🔍 <?php esc_html_e('Search', 'the-readscope-tour-and-accommodation-booking'); ?></label>
-                        <input type="text" id="filter-keyword-<?php echo esc_attr($type); ?>" name="s" class="tourivo-filter-input" placeholder="<?php echo $type === 'hotel' ? esc_attr__('Search hotels, cities...', 'the-readscope-tour-and-accommodation-booking') : esc_attr__('Search trips, keywords...', 'the-readscope-tour-and-accommodation-booking'); ?>">
+                        <input type="text" id="filter-keyword-<?php echo esc_attr($type); ?>" name="s" class="readscope-filter-input" placeholder="<?php echo $type === 'hotel' ? esc_attr__('Search hotels, cities...', 'the-readscope-tour-and-accommodation-booking') : esc_attr__('Search trips, keywords...', 'the-readscope-tour-and-accommodation-booking'); ?>">
                     </div>
 
                     <!-- Destination -->
-                    <div class="tourivo-filter-col filter-destination">
+                    <div class="readscope-filter-col filter-destination">
                         <label for="filter-dest-<?php echo esc_attr($type); ?>">📍 <?php esc_html_e('Destination', 'the-readscope-tour-and-accommodation-booking'); ?></label>
-                        <select id="filter-dest-<?php echo esc_attr($type); ?>" name="destination" class="tourivo-filter-select">
+                        <select id="filter-dest-<?php echo esc_attr($type); ?>" name="destination" class="readscope-filter-select">
                             <option value=""><?php esc_html_e('All Destinations', 'the-readscope-tour-and-accommodation-booking'); ?></option>
                             <?php if (!empty($destinations) && !is_wp_error($destinations)) : foreach ($destinations as $dest) : ?>
                                 <option value="<?php echo esc_attr($dest->slug); ?>"><?php echo esc_html($dest->name); ?></option>
@@ -89,9 +89,9 @@ class FilterSearchShortcode
 
                     <?php if ($type === 'tour') : ?>
                         <!-- Activity Type -->
-                        <div class="tourivo-filter-col filter-activity">
+                        <div class="readscope-filter-col filter-activity">
                             <label for="filter-act-<?php echo esc_attr($type); ?>">🏷️ <?php esc_html_e('Activity', 'the-readscope-tour-and-accommodation-booking'); ?></label>
-                            <select id="filter-act-<?php echo esc_attr($type); ?>" name="activity" class="tourivo-filter-select">
+                            <select id="filter-act-<?php echo esc_attr($type); ?>" name="activity" class="readscope-filter-select">
                                 <option value=""><?php esc_html_e('All Activities', 'the-readscope-tour-and-accommodation-booking'); ?></option>
                                 <?php if (!empty($activities) && !is_wp_error($activities)) : foreach ($activities as $act) : ?>
                                     <option value="<?php echo esc_attr($act->slug); ?>"><?php echo esc_html($act->name); ?></option>
@@ -100,9 +100,9 @@ class FilterSearchShortcode
                         </div>
 
                         <!-- Duration Filter -->
-                        <div class="tourivo-filter-col filter-duration">
+                        <div class="readscope-filter-col filter-duration">
                             <label for="filter-dur-<?php echo esc_attr($type); ?>">⏱️ <?php esc_html_e('Duration', 'the-readscope-tour-and-accommodation-booking'); ?></label>
-                            <select id="filter-dur-<?php echo esc_attr($type); ?>" name="duration" class="tourivo-filter-select">
+                            <select id="filter-dur-<?php echo esc_attr($type); ?>" name="duration" class="readscope-filter-select">
                                 <option value=""><?php esc_html_e('Any Duration', 'the-readscope-tour-and-accommodation-booking'); ?></option>
                                 <option value="short"><?php esc_html_e('1 - 3 Days', 'the-readscope-tour-and-accommodation-booking'); ?></option>
                                 <option value="medium"><?php esc_html_e('4 - 7 Days', 'the-readscope-tour-and-accommodation-booking'); ?></option>
@@ -111,9 +111,9 @@ class FilterSearchShortcode
                         </div>
                     <?php else : ?>
                         <!-- Star Rating for Hotels -->
-                        <div class="tourivo-filter-col filter-rating">
+                        <div class="readscope-filter-col filter-rating">
                             <label for="filter-stars-<?php echo esc_attr($type); ?>">⭐ <?php esc_html_e('Star Rating', 'the-readscope-tour-and-accommodation-booking'); ?></label>
-                            <select id="filter-stars-<?php echo esc_attr($type); ?>" name="star_rating" class="tourivo-filter-select">
+                            <select id="filter-stars-<?php echo esc_attr($type); ?>" name="star_rating" class="readscope-filter-select">
                                 <option value=""><?php esc_html_e('All Ratings', 'the-readscope-tour-and-accommodation-booking'); ?></option>
                                 <option value="5">★★★★★ (5 Star)</option>
                                 <option value="4">★★★★☆ (4+ Star)</option>
@@ -123,18 +123,18 @@ class FilterSearchShortcode
                     <?php endif; ?>
 
                     <!-- Price Range Slider -->
-                    <div class="tourivo-filter-col filter-price">
+                    <div class="readscope-filter-col filter-price">
                         <div class="price-header-labels">
                             <label>💰 <?php esc_html_e('Max Budget:', 'the-readscope-tour-and-accommodation-booking'); ?></label>
-                            <span class="tourivo-price-display"><strong><?php echo esc_html($currency); ?><span class="price-val-indicator">2000</span></strong></span>
+                            <span class="readscope-price-display"><strong><?php echo esc_html($currency); ?><span class="price-val-indicator">2000</span></strong></span>
                         </div>
-                        <input type="range" name="max_price" class="tourivo-filter-range" min="0" max="5000" step="50" value="5000">
+                        <input type="range" name="max_price" class="readscope-filter-range" min="0" max="5000" step="50" value="5000">
                     </div>
 
                     <!-- Sort Order -->
-                    <div class="tourivo-filter-col filter-sort">
+                    <div class="readscope-filter-col filter-sort">
                         <label for="filter-sort-<?php echo esc_attr($type); ?>">🔀 <?php esc_html_e('Sort By', 'the-readscope-tour-and-accommodation-booking'); ?></label>
-                        <select id="filter-sort-<?php echo esc_attr($type); ?>" name="orderby" class="tourivo-filter-select">
+                        <select id="filter-sort-<?php echo esc_attr($type); ?>" name="orderby" class="readscope-filter-select">
                             <option value="newest"><?php esc_html_e('Newest First', 'the-readscope-tour-and-accommodation-booking'); ?></option>
                             <option value="price_low"><?php esc_html_e('Price: Low to High', 'the-readscope-tour-and-accommodation-booking'); ?></option>
                             <option value="price_high"><?php esc_html_e('Price: High to Low', 'the-readscope-tour-and-accommodation-booking'); ?></option>
@@ -144,8 +144,8 @@ class FilterSearchShortcode
                     </div>
 
                     <!-- Reset Button -->
-                    <div class="tourivo-filter-col filter-reset">
-                        <button type="button" class="tourivo-btn-reset-filters">
+                    <div class="readscope-filter-col filter-reset">
+                        <button type="button" class="readscope-btn-reset-filters">
                             <span class="dashicons dashicons-image-rotate"></span> <?php esc_html_e('Reset', 'the-readscope-tour-and-accommodation-booking'); ?>
                         </button>
                     </div>
@@ -153,20 +153,20 @@ class FilterSearchShortcode
             </form>
 
             <!-- Results Counter & Live Grid -->
-            <div class="tourivo-filter-results-bar">
-                <p class="tourivo-results-counter">
+            <div class="readscope-filter-results-bar">
+                <p class="readscope-results-counter">
                     <span class="dashicons dashicons-list-view"></span> <span class="counter-num">...</span> <?php esc_html_e('items found', 'the-readscope-tour-and-accommodation-booking'); ?>
                 </p>
             </div>
 
-            <div class="tourivo-filter-grid-container" style="position: relative; min-height: 200px;">
-                <div class="tourivo-filter-loader" style="display: none;">
+            <div class="readscope-filter-grid-container" style="position: relative; min-height: 200px;">
+                <div class="readscope-filter-loader" style="display: none;">
                     <span class="dashicons dashicons-update spin"></span>
                 </div>
-                <div class="tourivo-grid tourivo-live-results" style="--trv-grid-cols: <?php echo esc_attr((string)$cols); ?>;">
+                <div class="readscope-grid readscope-live-results" style="--trv-grid-cols: <?php echo esc_attr((string)$cols); ?>;">
                     <!-- Pre-rendered Initial Posts -->
                     <?php
-                    \Tourivo\Support\Html::print(self::queryAndRender([
+                    \Readscope\Support\Html::print(self::queryAndRender([
                         'type'     => sanitize_key($type),
                         'columns'  => absint($cols),
                         'count'    => absint($count),
@@ -231,14 +231,14 @@ class FilterSearchShortcode
         $metaQuery = [];
         if ($type === 'tour' && $maxPrice > 0) {
             $metaQuery[] = [
-                'key'     => '_tourivo_base_price',
+                'key'     => '_readscope_base_price',
                 'value'   => $maxPrice,
                 'type'    => 'NUMERIC',
                 'compare' => '<=',
             ];
         } elseif ($type === 'hotel' && $maxPrice > 0) {
             $metaQuery[] = [
-                'key'     => '_tourivo_min_price',
+                'key'     => '_readscope_min_price',
                 'value'   => $maxPrice,
                 'type'    => 'NUMERIC',
                 'compare' => '<=',
@@ -248,21 +248,21 @@ class FilterSearchShortcode
         if ($type === 'tour' && !empty($duration)) {
             if ($duration === 'short') {
                 $metaQuery[] = [
-                    'key'     => '_tourivo_duration_days',
+                    'key'     => '_readscope_duration_days',
                     'value'   => [1, 3],
                     'type'    => 'NUMERIC',
                     'compare' => 'BETWEEN',
                 ];
             } elseif ($duration === 'medium') {
                 $metaQuery[] = [
-                    'key'     => '_tourivo_duration_days',
+                    'key'     => '_readscope_duration_days',
                     'value'   => [4, 7],
                     'type'    => 'NUMERIC',
                     'compare' => 'BETWEEN',
                 ];
             } elseif ($duration === 'long') {
                 $metaQuery[] = [
-                    'key'     => '_tourivo_duration_days',
+                    'key'     => '_readscope_duration_days',
                     'value'   => 8,
                     'type'    => 'NUMERIC',
                     'compare' => '>=',
@@ -272,7 +272,7 @@ class FilterSearchShortcode
 
         if ($type === 'hotel' && $starRating > 0) {
             $metaQuery[] = [
-                'key'     => '_tourivo_star_rating',
+                'key'     => '_readscope_star_rating',
                 'value'   => $starRating,
                 'type'    => 'NUMERIC',
                 'compare' => '>=',
@@ -286,17 +286,17 @@ class FilterSearchShortcode
         // Sorting
         switch ($orderby) {
             case 'price_low':
-                $args['meta_key'] = ($type === 'tour') ? '_tourivo_base_price' : '_tourivo_min_price';
+                $args['meta_key'] = ($type === 'tour') ? '_readscope_base_price' : '_readscope_min_price';
                 $args['orderby'] = 'meta_value_num';
                 $args['order'] = 'ASC';
                 break;
             case 'price_high':
-                $args['meta_key'] = ($type === 'tour') ? '_tourivo_base_price' : '_tourivo_min_price';
+                $args['meta_key'] = ($type === 'tour') ? '_readscope_base_price' : '_readscope_min_price';
                 $args['orderby'] = 'meta_value_num';
                 $args['order'] = 'DESC';
                 break;
             case 'rating':
-                $args['meta_key'] = '_tourivo_average_rating';
+                $args['meta_key'] = '_readscope_average_rating';
                 $args['orderby'] = 'meta_value_num';
                 $args['order'] = 'DESC';
                 break;
@@ -315,7 +315,7 @@ class FilterSearchShortcode
         // phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_tax_query, WordPress.DB.SlowDBQuery.slow_db_query_meta_query, WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 
         if (!$query->have_posts()) {
-            return '<div class="tourivo-no-results-msg" style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #64748b;">
+            return '<div class="readscope-no-results-msg" style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #64748b;">
                 <div style="font-size: var(--trv-text-3xl); margin-bottom: 8px;">🔍</div>
                 <p><strong>' . esc_html__('No results found matching your filters.', 'the-readscope-tour-and-accommodation-booking') . '</strong></p>
                 <small>' . esc_html__('Try adjusting your keywords, budget, or destination criteria.', 'the-readscope-tour-and-accommodation-booking') . '</small>
@@ -328,10 +328,10 @@ class FilterSearchShortcode
             $post = get_post();
             if ($type === 'tour') {
                 $tour = new Tour($post);
-                tourivo_get_template('cards/tour-card.php', ['tour' => $tour]);
+                readscope_get_template('cards/tour-card.php', ['tour' => $tour]);
             } else {
                 $hotel = new Hotel($post);
-                tourivo_get_template('cards/hotel-card.php', ['hotel' => $hotel]);
+                readscope_get_template('cards/hotel-card.php', ['hotel' => $hotel]);
             }
         }
         wp_reset_postdata();

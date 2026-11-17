@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Common;
+namespace Readscope\Common;
 
 use Closure;
 use Exception;
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
  *
  * A lightweight, PSR-11 inspired Dependency Injection Container with automatic autowiring.
  *
- * @package Tourivo\Common
+ * @package Readscope\Common
  */
 class Container
 {
@@ -53,8 +53,8 @@ class Container
     public static function getInstance(): self
     {
         if (self::$instance === null) {
-            if (class_exists(\Tourivo\Core\Plugin::class)) {
-                self::$instance = \Tourivo\Core\Plugin::instance()->container();
+            if (class_exists(\Readscope\Core\Plugin::class)) {
+                self::$instance = \Readscope\Core\Plugin::instance()->container();
             } else {
                 self::$instance = new self();
             }

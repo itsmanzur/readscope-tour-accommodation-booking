@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Providers;
+namespace Readscope\Providers;
 
-use Tourivo\Blocks\BlockManager;
-use Tourivo\Common\Abstracts\ServiceProvider;
-use Tourivo\Shortcodes\BookingLookupShortcode;
-use Tourivo\Shortcodes\BookingPanelShortcode;
-use Tourivo\Shortcodes\CurrencySwitcherShortcode;
-use Tourivo\Shortcodes\FilterSearchShortcode;
-use Tourivo\Shortcodes\HotelGridShortcode;
-use Tourivo\Shortcodes\MyBookingsShortcode;
-use Tourivo\Shortcodes\SearchBarShortcode;
-use Tourivo\Shortcodes\ThankYouShortcode;
-use Tourivo\Shortcodes\TourGridShortcode;
-use Tourivo\Shortcodes\WishlistShortcode;
+use Readscope\Blocks\BlockManager;
+use Readscope\Common\Abstracts\ServiceProvider;
+use Readscope\Shortcodes\BookingLookupShortcode;
+use Readscope\Shortcodes\BookingPanelShortcode;
+use Readscope\Shortcodes\CurrencySwitcherShortcode;
+use Readscope\Shortcodes\FilterSearchShortcode;
+use Readscope\Shortcodes\HotelGridShortcode;
+use Readscope\Shortcodes\MyBookingsShortcode;
+use Readscope\Shortcodes\SearchBarShortcode;
+use Readscope\Shortcodes\ThankYouShortcode;
+use Readscope\Shortcodes\TourGridShortcode;
+use Readscope\Shortcodes\WishlistShortcode;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -26,7 +26,7 @@ if (!defined('ABSPATH')) {
  *
  * Registers shortcodes and Gutenberg blocks.
  *
- * @package Tourivo\Providers
+ * @package Readscope\Providers
  */
 class BlockServiceProvider extends ServiceProvider
 {

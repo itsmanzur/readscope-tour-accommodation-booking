@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Admin;
+namespace Readscope\Admin;
 
-use Tourivo\Common\Container;
-use Tourivo\Services\InquiryService;
+use Readscope\Common\Container;
+use Readscope\Services\InquiryService;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
  *
  * Renders the Admin Trip Inquiries & Consultation Requests management view.
  *
- * @package Tourivo\Admin
+ * @package Readscope\Admin
  */
 class InquiriesTable
 {
@@ -25,7 +25,7 @@ class InquiriesTable
      */
     public static function render(): void
     {
-        if (!current_user_can('manage_tourivo_bookings')) {
+        if (!current_user_can('manage_readscope_bookings')) {
             wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'the-readscope-tour-and-accommodation-booking'), 403);
         }
 
@@ -38,7 +38,7 @@ class InquiriesTable
         $inquiries      = $inquiryService->getInquiries(['status' => $statusFilter, 'limit' => 50]);
 
         global $wpdb;
-        $table = $wpdb->prefix . 'tourivo_inquiries';
+        $table = $wpdb->prefix . 'readscope_inquiries';
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $countAll     = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$table}");
         $countNew     = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$table} WHERE status = 'new'");
@@ -46,13 +46,13 @@ class InquiriesTable
         $countClosed  = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$table} WHERE status = 'closed'");
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
-        $baseUrl = admin_url('admin.php?page=tourivo-inquiries');
+        $baseUrl = admin_url('admin.php?page=readscope-inquiries');
         ?>
-        <div class="wrap tourivo-admin-wrap">
-            <div class="tourivo-page-header">
-                <div class="tourivo-page-header__text">
+        <div class="wrap readscope-admin-wrap">
+            <div class="readscope-page-header">
+                <div class="readscope-page-header__text">
                     <h1><?php esc_html_e('Inquiries', 'the-readscope-tour-and-accommodation-booking'); ?></h1>
-                    <p class="tourivo-subtitle"><?php esc_html_e('Manage leads and custom trip questions submitted by travelers through the "Ask an Expert" inquiry modal.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
+                    <p class="readscope-subtitle"><?php esc_html_e('Manage leads and custom trip questions submitted by travelers through the "Ask an Expert" inquiry modal.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                 </div>
             </div>
             <hr class="wp-header-end">
@@ -65,7 +65,7 @@ class InquiriesTable
                 <li><a href="<?php echo esc_url($baseUrl . '&status=closed'); ?>" class="<?php echo $statusFilter === 'closed' ? 'current' : ''; ?>"><?php esc_html_e('Closed', 'the-readscope-tour-and-accommodation-booking'); ?> <span class="count">(<?php echo esc_html((string)$countClosed); ?>)</span></a></li>
             </ul>
 
-            <table class="wp-list-table widefat fixed striped tourivo-inquiries-table">
+            <table class="wp-list-table widefat fixed striped readscope-inquiries-table">
                 <thead>
                     <tr>
                         <th style="width: 140px;"><?php esc_html_e('Date', 'the-readscope-tour-and-accommodation-booking'); ?></th>
@@ -81,7 +81,7 @@ class InquiriesTable
                     <?php if (empty($inquiries)) : ?>
                         <tr>
                             <td colspan="7">
-                                <div class="tourivo-empty">
+                                <div class="readscope-empty">
                                     <span class="dashicons dashicons-email-alt" aria-hidden="true"></span>
                                     <p><?php esc_html_e('No inquiries found.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                                 </div>
@@ -109,7 +109,7 @@ class InquiriesTable
                                 <strong><?php echo esc_html($inq['customer_name']); ?></strong>
                                 <br><a href="mailto:<?php echo esc_attr($inq['customer_email']); ?>"><?php echo esc_html($inq['customer_email']); ?></a>
                                 <?php if (!empty($inq['customer_phone'])) : ?>
-                                    <br><small class="tourivo-inline-icon"><span class="dashicons dashicons-phone" aria-hidden="true"></span><?php echo esc_html($inq['customer_phone']); ?></small>
+                                    <br><small class="readscope-inline-icon"><span class="dashicons dashicons-phone" aria-hidden="true"></span><?php echo esc_html($inq['customer_phone']); ?></small>
                                 <?php endif; ?>
                             </td>
                             <td>
@@ -122,16 +122,16 @@ class InquiriesTable
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <span class="tourivo-inline-icon"><span class="dashicons dashicons-calendar-alt" aria-hidden="true"></span><?php echo esc_html($inq['travel_date'] ?: __('Flexible', 'the-readscope-tour-and-accommodation-booking')); ?></span>
-                                <br><small class="tourivo-inline-icon"><span class="dashicons dashicons-groups" aria-hidden="true"></span><?php echo esc_html((string) $inq['guests']); ?> <?php esc_html_e('Guests', 'the-readscope-tour-and-accommodation-booking'); ?></small>
+                                <span class="readscope-inline-icon"><span class="dashicons dashicons-calendar-alt" aria-hidden="true"></span><?php echo esc_html($inq['travel_date'] ?: __('Flexible', 'the-readscope-tour-and-accommodation-booking')); ?></span>
+                                <br><small class="readscope-inline-icon"><span class="dashicons dashicons-groups" aria-hidden="true"></span><?php echo esc_html((string) $inq['guests']); ?> <?php esc_html_e('Guests', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                             </td>
                             <td>
-                                <div class="tourivo-inquiry-message">
+                                <div class="readscope-inquiry-message">
                                     <?php echo nl2br(esc_html($inq['message'])); ?>
                                 </div>
                             </td>
                             <td>
-                                <select class="change-inquiry-status-select" data-id="<?php echo esc_attr($inq['id']); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_inquiry_nonce')); ?>">
+                                <select class="change-inquiry-status-select" data-id="<?php echo esc_attr($inq['id']); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce('readscope_inquiry_nonce')); ?>">
                                     <option value="new" <?php selected($inq['status'], 'new'); ?>><?php esc_html_e('New', 'the-readscope-tour-and-accommodation-booking'); ?></option>
                                     <option value="replied" <?php selected($inq['status'], 'replied'); ?>><?php esc_html_e('Replied', 'the-readscope-tour-and-accommodation-booking'); ?></option>
                                     <option value="closed" <?php selected($inq['status'], 'closed'); ?>><?php esc_html_e('Closed', 'the-readscope-tour-and-accommodation-booking'); ?></option>
@@ -141,7 +141,7 @@ class InquiriesTable
                                 <a href="<?php echo esc_url($mailtoUrl); ?>" class="button button-small button-primary" target="_blank">
                                     <span class="dashicons dashicons-email" aria-hidden="true"></span><?php esc_html_e('Reply', 'the-readscope-tour-and-accommodation-booking'); ?>
                                 </a>
-                                <button type="button" class="button button-small delete-inquiry-btn tourivo-button-danger" data-id="<?php echo esc_attr($inq['id']); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_inquiry_nonce')); ?>" aria-label="<?php esc_attr_e('Delete', 'the-readscope-tour-and-accommodation-booking'); ?>">
+                                <button type="button" class="button button-small delete-inquiry-btn readscope-button-danger" data-id="<?php echo esc_attr($inq['id']); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce('readscope_inquiry_nonce')); ?>" aria-label="<?php esc_attr_e('Delete', 'the-readscope-tour-and-accommodation-booking'); ?>">
                                     <span class="dashicons dashicons-trash" aria-hidden="true"></span>
                                 </button>
                             </td>

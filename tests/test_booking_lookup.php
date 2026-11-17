@@ -154,7 +154,7 @@ namespace {
     }
 
     spl_autoload_register(function (string $class): void {
-        $prefix = 'Tourivo\\';
+        $prefix = 'Readscope\\';
         $baseDir = dirname(__DIR__) . '/app/';
         $len = strlen($prefix);
         if (strncmp($prefix, $class, $len) !== 0) {
@@ -168,8 +168,8 @@ namespace {
     });
 }
 
-namespace Tourivo\Tests {
-    use Tourivo\Shortcodes\BookingLookupShortcode;
+namespace Readscope\Tests {
+    use Readscope\Shortcodes\BookingLookupShortcode;
 
     class FakeWpdb
     {
@@ -266,12 +266,12 @@ namespace Tourivo\Tests {
             $urlParts = parse_url($voucherUrl);
             parse_str($urlParts['query'] ?? '', $queryParams);
 
-            $this->assert('Voucher URL has action tourivo_print_voucher', ($queryParams['action'] ?? '') === 'tourivo_print_voucher');
+            $this->assert('Voucher URL has action readscope_print_voucher', ($queryParams['action'] ?? '') === 'readscope_print_voucher');
             $this->assert('Voucher URL has code parameter matching TRV-DSOUZA99', ($queryParams['code'] ?? '') === 'TRV-DSOUZA99');
             $this->assert('Voucher URL has valid non-empty token parameter', !empty($queryParams['token']));
 
             // (d) items_html should have properly escaped HTML
-            $this->assert('items_html is formatted HTML string', strpos($data['items_html'], 'tourivo-lookup-item-row') !== false);
+            $this->assert('items_html is formatted HTML string', strpos($data['items_html'], 'readscope-lookup-item-row') !== false);
 
             echo "All BookingLookup tests passed successfully!\n\n";
         }

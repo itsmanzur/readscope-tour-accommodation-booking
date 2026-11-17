@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Admin\MetaBoxes;
+namespace Readscope\Admin\MetaBoxes;
 
-use Tourivo\Common\Abstracts\MetaBox;
-use Tourivo\PostTypes\RoomPostType;
-use Tourivo\PostTypes\TourPostType;
+use Readscope\Common\Abstracts\MetaBox;
+use Readscope\PostTypes\RoomPostType;
+use Readscope\PostTypes\TourPostType;
 use WP_Post;
 
 if (!defined('ABSPATH')) {
@@ -18,11 +18,11 @@ if (!defined('ABSPATH')) {
  *
  * Interactive Availability and Pricing Calendar manager metabox for Tour and Room edit screens.
  *
- * @package Tourivo\Admin\MetaBoxes
+ * @package Readscope\Admin\MetaBoxes
  */
 class AvailabilityMetaBox extends MetaBox
 {
-    protected string $id = 'tourivo_availability_manager';
+    protected string $id = 'readscope_availability_manager';
     protected string $title = 'Availability & Pricing Calendar';
     protected string|array $postTypes = [TourPostType::POST_TYPE, RoomPostType::POST_TYPE];
     protected string $context = 'normal';

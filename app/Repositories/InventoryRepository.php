@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Repositories;
+namespace Readscope\Repositories;
 
 use wpdb;
 
@@ -13,9 +13,9 @@ if (!defined('ABSPATH')) {
 /**
  * Class InventoryRepository
  *
- * Data Access Layer for the wp_tourivo_inventories table with row-level transaction safety.
+ * Data Access Layer for the wp_readscope_inventories table with row-level transaction safety.
  *
- * @package Tourivo\Repositories
+ * @package Readscope\Repositories
  */
 class InventoryRepository
 {
@@ -40,7 +40,7 @@ class InventoryRepository
     {
         global $wpdb;
         $this->db = $wpdb;
-        $this->table = ($wpdb ? $wpdb->prefix : 'wp_') . 'tourivo_inventories';
+        $this->table = ($wpdb ? $wpdb->prefix : 'wp_') . 'readscope_inventories';
     }
 
     /**

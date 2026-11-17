@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Shortcodes;
+namespace Readscope\Shortcodes;
 
-use Tourivo\Common\Container;
-use Tourivo\Config\Config;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\LogService;
-use Tourivo\Support\ClientIp;
-use Tourivo\Support\RateLimiter;
-use Tourivo\Support\Money;
-use Tourivo\Support\SiteTime;
+use Readscope\Common\Container;
+use Readscope\Config\Config;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\LogService;
+use Readscope\Support\ClientIp;
+use Readscope\Support\RateLimiter;
+use Readscope\Support\Money;
+use Readscope\Support\SiteTime;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -27,9 +27,9 @@ if (!defined('ABSPATH')) {
  * - Customer Cancellation Request / Direct Self-Cancel (within configured window)
  * - LogService & Admin alert integration
  *
- * Shortcode: [tourivo_booking_lookup]
+ * Shortcode: [readscope_booking_lookup]
  *
- * @package Tourivo\Shortcodes
+ * @package Readscope\Shortcodes
  */
 class BookingLookupShortcode
 {
@@ -40,19 +40,19 @@ class BookingLookupShortcode
      */
     public static function register(): void
     {
-        add_shortcode('tourivo_booking_lookup', [self::class, 'render']);
+        add_shortcode('readscope_booking_lookup', [self::class, 'render']);
 
         // Lookup AJAX
-        add_action('wp_ajax_tourivo_lookup_booking', [self::class, 'handleLookupAjax']);
-        add_action('wp_ajax_nopriv_tourivo_lookup_booking', [self::class, 'handleLookupAjax']);
+        add_action('wp_ajax_readscope_lookup_booking', [self::class, 'handleLookupAjax']);
+        add_action('wp_ajax_nopriv_readscope_lookup_booking', [self::class, 'handleLookupAjax']);
 
         // Cancellation Request AJAX
-        add_action('wp_ajax_tourivo_request_booking_cancellation', [self::class, 'handleCancellationAjax']);
-        add_action('wp_ajax_nopriv_tourivo_request_booking_cancellation', [self::class, 'handleCancellationAjax']);
+        add_action('wp_ajax_readscope_request_booking_cancellation', [self::class, 'handleCancellationAjax']);
+        add_action('wp_ajax_nopriv_readscope_request_booking_cancellation', [self::class, 'handleCancellationAjax']);
 
         // Nonce refresh for cached pages
-        add_action('wp_ajax_tourivo_get_lookup_nonce', [self::class, 'handleGetLookupNonce']);
-        add_action('wp_ajax_nopriv_tourivo_get_lookup_nonce', [self::class, 'handleGetLookupNonce']);
+        add_action('wp_ajax_readscope_get_lookup_nonce', [self::class, 'handleGetLookupNonce']);
+        add_action('wp_ajax_nopriv_readscope_get_lookup_nonce', [self::class, 'handleGetLookupNonce']);
     }
 
     /**
@@ -66,13 +66,13 @@ class BookingLookupShortcode
         $attributes = shortcode_atts([
             'title'       => __('Track Your Booking', 'the-readscope-tour-and-accommodation-booking'),
             'description' => __('Enter your booking reference code and email to check your reservation status and download your voucher.', 'the-readscope-tour-and-accommodation-booking'),
-        ], (array) $atts, 'tourivo_booking_lookup');
+        ], (array) $atts, 'readscope_booking_lookup');
 
         ob_start();
-        tourivo_get_template('booking-lookup.php', [
-            'tourivoLookupTitle' => sanitize_text_field((string) $attributes['title']),
-            'tourivoLookupDesc'  => sanitize_text_field((string) $attributes['description']),
-            'tourivoNonce'       => wp_create_nonce('tourivo_lookup_nonce'),
+        readscope_get_template('booking-lookup.php', [
+            'readscopeLookupTitle' => sanitize_text_field((string) $attributes['title']),
+            'readscopeLookupDesc'  => sanitize_text_field((string) $attributes['description']),
+            'readscopeNonce'       => wp_create_nonce('readscope_lookup_nonce'),
         ]);
 
         return ob_get_clean() ?: '';
@@ -87,13 +87,13 @@ class BookingLookupShortcode
     {
         nocache_headers();
         wp_send_json_success([
-            'nonce' => wp_create_nonce('tourivo_lookup_nonce'),
+            'nonce' => wp_create_nonce('readscope_lookup_nonce'),
         ]);
     }
 
 
     /**
-     * Require a valid lookup nonce. Cached pages obtain a fresh one through `tourivo_get_lookup_nonce`,
+     * Require a valid lookup nonce. Cached pages obtain a fresh one through `readscope_get_lookup_nonce`,
      * so a missing or stale token is always rejected with the machine-readable `nonce_expired` code.
      *
      * @return bool True when the request carries a valid nonce; otherwise an error response was already sent.
@@ -103,7 +103,7 @@ class BookingLookupShortcode
         // phpcs:ignore WordPress.Security.NonceVerification.Missing -- This line reads the nonce itself, for wp_verify_nonce() below.
         $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash((string) $_POST['nonce'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
 
-        if ($nonce !== '' && wp_verify_nonce($nonce, 'tourivo_lookup_nonce')) {
+        if ($nonce !== '' && wp_verify_nonce($nonce, 'readscope_lookup_nonce')) {
             return true;
         }
 
@@ -123,13 +123,13 @@ class BookingLookupShortcode
     public static function handleLookupAjax(): void
     {
         // Check Honeypot spam field
-        if (!empty($_POST['tourivo_hp_check'])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
+        if (!empty($_POST['readscope_hp_check'])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
             wp_send_json_error(['message' => __('Submission blocked.', 'the-readscope-tour-and-accommodation-booking')], 400);
         }
 
         $ip = ClientIp::get();
         // Rate limiting: max 10 lookup attempts per 5 minutes per IP
-        if (!RateLimiter::hit('tourivo_lookup_' . md5($ip), 10, 300)) {
+        if (!RateLimiter::hit('readscope_lookup_' . md5($ip), 10, 300)) {
             wp_send_json_error([
                 'message' => __('Too many lookup attempts. Please wait a few minutes before trying again.', 'the-readscope-tour-and-accommodation-booking'),
             ], 429);
@@ -150,8 +150,8 @@ class BookingLookupShortcode
         }
 
         global $wpdb;
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
+        $itemsTable    = $wpdb->prefix . 'readscope_booking_items';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $booking = $wpdb->get_row($wpdb->prepare(
@@ -183,7 +183,7 @@ class BookingLookupShortcode
      */
     public static function handleCancellationAjax(): void
     {
-        if (!empty($_POST['tourivo_hp_check'])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
+        if (!empty($_POST['readscope_hp_check'])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
             wp_send_json_error(['message' => __('Submission blocked.', 'the-readscope-tour-and-accommodation-booking')], 400);
             return;
         }
@@ -219,7 +219,7 @@ class BookingLookupShortcode
         $ip = ClientIp::get();
 
         // Rate limiting: max 10 attempts per 5 minutes per IP
-        if (!RateLimiter::hit('tourivo_cancel_req_' . md5($ip), 10, 300)) {
+        if (!RateLimiter::hit('readscope_cancel_req_' . md5($ip), 10, 300)) {
             return [
                 'success' => false,
                 'code'    => 429,
@@ -236,8 +236,8 @@ class BookingLookupShortcode
         }
 
         global $wpdb;
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
+        $itemsTable    = $wpdb->prefix . 'readscope_booking_items';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $booking = $wpdb->get_row($wpdb->prepare(
@@ -273,7 +273,7 @@ class BookingLookupShortcode
             ];
         }
 
-        $item = \Tourivo\Support\BookingItems::summaryRow(\Tourivo\Support\BookingItems::forBooking($bookingId), $bookingId);
+        $item = \Readscope\Support\BookingItems::summaryRow(\Readscope\Support\BookingItems::forBooking($bookingId), $bookingId);
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         $selfCancelHours = (int) Config::get('customer_self_cancel_hours', 0);
@@ -368,7 +368,7 @@ class BookingLookupShortcode
             $emailService->enqueue('admin_booking_cancelled', $adminEmail, $bookingData);
         }
 
-        do_action('tourivo/booking/cancel_requested', $bookingId, $reason);
+        do_action('readscope/booking/cancel_requested', $bookingId, $reason);
 
         return [
             'success' => true,
@@ -386,10 +386,10 @@ class BookingLookupShortcode
      */
     public static function formatLookupResponseData(object $booking, array $items): array
     {
-        $currencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
+        $currencySymbol = (string) apply_filters('readscope/currency_symbol', '$');
         $voucherToken   = self::generateVoucherToken((int) $booking->id, (string) $booking->customer_email, $booking->access_key ?? null);
         $voucherUrl     = add_query_arg([
-            'action' => 'tourivo_print_voucher',
+            'action' => 'readscope_print_voucher',
             'code'   => $booking->booking_code,
             'token'  => $voucherToken,
         ], admin_url('admin-post.php'));
@@ -420,7 +420,7 @@ class BookingLookupShortcode
             $dateRange = $checkOutFormatted ? "{$checkInFormatted} → {$checkOutFormatted}" : $checkInFormatted;
             $typeLabel = ($item->item_type === 'room' || $item->item_type === 'hotel_room') ? esc_html__('Hotel Stay', 'the-readscope-tour-and-accommodation-booking') : esc_html__('Tour Package', 'the-readscope-tour-and-accommodation-booking');
 
-            $itemsHtml .= '<div class="tourivo-lookup-item-row" style="padding: 12px; background: #f8fafc; border-radius: 8px; margin-bottom: 8px; border: 1px solid #e2e8f0;">';
+            $itemsHtml .= '<div class="readscope-lookup-item-row" style="padding: 12px; background: #f8fafc; border-radius: 8px; margin-bottom: 8px; border: 1px solid #e2e8f0;">';
             $itemsHtml .= '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 4px;">';
             $itemsHtml .= '<div><strong style="color:#0f172a; font-size: var(--trv-text-base);">' . esc_html($item->item_title) . '</strong> <span style="display:inline-block; font-size: var(--trv-text-xs); padding:2px 6px; background:#e0e7ff; color:#3730a3; border-radius:4px; font-weight:600; margin-left:6px;">' . esc_html($typeLabel) . '</span></div>';
             $itemsHtml .= '<div style="font-weight:700; color:#0f172a;">' . esc_html(Money::format((float) $item->total_price, $currencySymbol)) . '</div>';
@@ -482,9 +482,9 @@ class BookingLookupShortcode
         $salt = wp_salt('nonce');
 
         if ($accessKey !== null && $accessKey !== '') {
-            return hash_hmac('sha256', "tourivo_voucher_{$bookingId}_key_{$accessKey}", $salt);
+            return hash_hmac('sha256', "readscope_voucher_{$bookingId}_key_{$accessKey}", $salt);
         }
 
-        return hash_hmac('sha256', "tourivo_voucher_{$bookingId}_{$email}", $salt);
+        return hash_hmac('sha256', "readscope_voucher_{$bookingId}_{$email}", $salt);
     }
 }

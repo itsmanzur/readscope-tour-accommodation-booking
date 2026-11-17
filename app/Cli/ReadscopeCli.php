@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Cli;
+namespace Readscope\Cli;
 
-use Tourivo\Database\Schema;
-use Tourivo\Models\Tour;
-use Tourivo\Models\Hotel;
-use Tourivo\Models\Room;
-use Tourivo\Services\InventoryService;
+use Readscope\Database\Schema;
+use Readscope\Models\Tour;
+use Readscope\Models\Hotel;
+use Readscope\Models\Room;
+use Readscope\Services\InventoryService;
 use WP_CLI;
 use WP_CLI_Command;
 
@@ -22,23 +22,23 @@ if (!defined('ABSPATH')) {
  * ## EXAMPLES
  *
  *     # List latest bookings
- *     wp tourivo booking list --limit=10
+ *     wp readscope booking list --limit=10
  *
  *     # Get details of booking #12
- *     wp tourivo booking get 12
+ *     wp readscope booking get 12
  *
  *     # Update booking status
- *     wp tourivo booking set-status 12 confirmed
+ *     wp readscope booking set-status 12 confirmed
  *
  *     # Run database migrations
- *     wp tourivo db migrate
+ *     wp readscope db migrate
  *
  *     # View system booking statistics
- *     wp tourivo stats
+ *     wp readscope stats
  *
- * @package Tourivo\Cli
+ * @package Readscope\Cli
  */
-class TourivoCli extends WP_CLI_Command
+class ReadscopeCli extends WP_CLI_Command
 {
     /**
      * Manage Readscope Booking bookings.
@@ -65,9 +65,9 @@ class TourivoCli extends WP_CLI_Command
      *
      * ## EXAMPLES
      *
-     *     wp tourivo booking list --status=confirmed
-     *     wp tourivo booking get 45
-     *     wp tourivo booking set-status 45 confirmed
+     *     wp readscope booking list --status=confirmed
+     *     wp readscope booking get 45
+     *     wp readscope booking set-status 45 confirmed
      *
      * @subcommand booking
      * @param array<int, string>    $args
@@ -78,7 +78,7 @@ class TourivoCli extends WP_CLI_Command
     {
         global $wpdb;
         $action = $args[0] ?? 'list';
-        $table  = $wpdb->prefix . 'tourivo_bookings';
+        $table  = $wpdb->prefix . 'readscope_bookings';
 
         switch ($action) {
             case 'list':
@@ -90,7 +90,7 @@ class TourivoCli extends WP_CLI_Command
                     // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                     $results = $wpdb->get_results(
                         $wpdb->prepare(
-                            "SELECT id, booking_code, customer_name, customer_email, total_amount, currency, booking_status, payment_status, created_at FROM {$wpdb->prefix}tourivo_bookings WHERE booking_status = %s ORDER BY id DESC LIMIT %d",
+                            "SELECT id, booking_code, customer_name, customer_email, total_amount, currency, booking_status, payment_status, created_at FROM {$wpdb->prefix}readscope_bookings WHERE booking_status = %s ORDER BY id DESC LIMIT %d",
                             $status,
                             $limit
                         ),
@@ -100,7 +100,7 @@ class TourivoCli extends WP_CLI_Command
                     // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                     $results = $wpdb->get_results(
                         $wpdb->prepare(
-                            "SELECT id, booking_code, customer_name, customer_email, total_amount, currency, booking_status, payment_status, created_at FROM {$wpdb->prefix}tourivo_bookings ORDER BY id DESC LIMIT %d",
+                            "SELECT id, booking_code, customer_name, customer_email, total_amount, currency, booking_status, payment_status, created_at FROM {$wpdb->prefix}readscope_bookings ORDER BY id DESC LIMIT %d",
                             $limit
                         ),
                         ARRAY_A
@@ -118,11 +118,11 @@ class TourivoCli extends WP_CLI_Command
             case 'get':
                 $id = isset($args[1]) ? (int) $args[1] : 0;
                 if ($id <= 0) {
-                    WP_CLI::error(__('Please provide a valid numeric booking ID. Example: wp tourivo booking get 12', 'the-readscope-tour-and-accommodation-booking'));
+                    WP_CLI::error(__('Please provide a valid numeric booking ID. Example: wp readscope booking get 12', 'the-readscope-tour-and-accommodation-booking'));
                 }
 
                 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-                $booking = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tourivo_bookings WHERE id = %d", $id), ARRAY_A);
+                $booking = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}readscope_bookings WHERE id = %d", $id), ARRAY_A);
                 if (!$booking) {
                     /* translators: %d: Numeric booking ID */
                     WP_CLI::error(sprintf(__('Booking #%d not found.', 'the-readscope-tour-and-accommodation-booking'), $id));
@@ -145,10 +145,10 @@ class TourivoCli extends WP_CLI_Command
                 $newStatus = isset($args[2]) ? sanitize_text_field($args[2]) : '';
 
                 if ($id <= 0 || empty($newStatus)) {
-                    WP_CLI::error(__('Usage: wp tourivo booking set-status <id> <status>', 'the-readscope-tour-and-accommodation-booking'));
+                    WP_CLI::error(__('Usage: wp readscope booking set-status <id> <status>', 'the-readscope-tour-and-accommodation-booking'));
                 }
 
-                $bookingService = \Tourivo\Common\Container::getInstance()->get(\Tourivo\Services\BookingService::class);
+                $bookingService = \Readscope\Common\Container::getInstance()->get(\Readscope\Services\BookingService::class);
                 $result = $bookingService->changeStatus($id, $newStatus, ['source' => 'wp_cli']);
 
                 if ($result['success']) {
@@ -169,7 +169,7 @@ class TourivoCli extends WP_CLI_Command
      *
      * ## EXAMPLES
      *
-     *     wp tourivo db migrate
+     *     wp readscope db migrate
      *
      * @subcommand db
      * @param array<int, string>    $args
@@ -186,7 +186,7 @@ class TourivoCli extends WP_CLI_Command
             WP_CLI::success(__('Readscope Booking database schema migrated successfully.', 'the-readscope-tour-and-accommodation-booking'));
         } else {
             /* translators: %s: Unknown command name */
-            WP_CLI::error(sprintf(__('Unknown db command "%s". Use: wp tourivo db migrate', 'the-readscope-tour-and-accommodation-booking'), $sub));
+            WP_CLI::error(sprintf(__('Unknown db command "%s". Use: wp readscope db migrate', 'the-readscope-tour-and-accommodation-booking'), $sub));
         }
     }
 
@@ -209,7 +209,7 @@ class TourivoCli extends WP_CLI_Command
      *
      * ## EXAMPLES
      *
-     *     wp tourivo inventory 15 --check_in=2026-11-01
+     *     wp readscope inventory 15 --check_in=2026-11-01
      *
      * @subcommand inventory
      * @param array<int, string>    $args
@@ -220,16 +220,16 @@ class TourivoCli extends WP_CLI_Command
     {
         $itemId = isset($args[0]) ? (int) $args[0] : 0;
         if ($itemId <= 0) {
-            WP_CLI::error(__('Please specify a valid item ID. Example: wp tourivo inventory 15', 'the-readscope-tour-and-accommodation-booking'));
+            WP_CLI::error(__('Please specify a valid item ID. Example: wp readscope inventory 15', 'the-readscope-tour-and-accommodation-booking'));
         }
 
         $postType = get_post_type($itemId);
-        $itemType = ($postType === 'tourivo_room') ? 'room' : 'tour';
+        $itemType = ($postType === 'readscope_room') ? 'room' : 'tour';
         $checkIn  = $assocArgs['check_in'] ?? current_time('Y-m-d');
         $checkOut = $assocArgs['check_out'] ?? null;
         $timeSlot = $assocArgs['time_slot'] ?? 'all_day';
 
-        $inventoryRepo = new \Tourivo\Repositories\InventoryRepository();
+        $inventoryRepo = new \Readscope\Repositories\InventoryRepository();
         $inventoryService = new InventoryService($inventoryRepo);
 
         $avail = $inventoryService->checkAvailability($itemId, $itemType, $checkIn, $checkOut, $timeSlot, 1);
@@ -250,7 +250,7 @@ class TourivoCli extends WP_CLI_Command
      *
      * ## EXAMPLES
      *
-     *     wp tourivo stats
+     *     wp readscope stats
      *
      * @subcommand stats
      * @return void
@@ -260,19 +260,19 @@ class TourivoCli extends WP_CLI_Command
         global $wpdb;
 
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $totalBookings   = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}tourivo_bookings");
+        $totalBookings   = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}readscope_bookings");
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $confirmedCount  = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}tourivo_bookings WHERE booking_status = 'confirmed'");
+        $confirmedCount  = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}readscope_bookings WHERE booking_status = 'confirmed'");
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $pendingCount    = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}tourivo_bookings WHERE booking_status = 'pending'");
+        $pendingCount    = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}readscope_bookings WHERE booking_status = 'pending'");
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $cancelledCount  = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}tourivo_bookings WHERE booking_status = 'cancelled'");
+        $cancelledCount  = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}readscope_bookings WHERE booking_status = 'cancelled'");
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $grossRevenue    = (float) $wpdb->get_var("SELECT SUM(total_amount) FROM {$wpdb->prefix}tourivo_bookings WHERE payment_status = 'paid'");
+        $grossRevenue    = (float) $wpdb->get_var("SELECT SUM(total_amount) FROM {$wpdb->prefix}readscope_bookings WHERE payment_status = 'paid'");
 
-        $toursCount      = (int) wp_count_posts('tourivo_tour')->publish;
-        $hotelsCount     = (int) wp_count_posts('tourivo_hotel')->publish;
-        $roomsCount      = (int) wp_count_posts('tourivo_room')->publish;
+        $toursCount      = (int) wp_count_posts('readscope_tour')->publish;
+        $hotelsCount     = (int) wp_count_posts('readscope_hotel')->publish;
+        $roomsCount      = (int) wp_count_posts('readscope_room')->publish;
 
         $rows = [
             ['Metric' => 'Total Bookings', 'Value' => (string) $totalBookings],

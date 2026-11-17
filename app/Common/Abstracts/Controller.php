@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Common\Abstracts;
+namespace Readscope\Common\Abstracts;
 
-use Tourivo\Common\Container;
-use Tourivo\Common\Traits\Hookable;
+use Readscope\Common\Container;
+use Readscope\Common\Traits\Hookable;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
  *
  * Base controller for handling HTTP, AJAX, REST API or Admin requests.
  *
- * @package Tourivo\Common\Abstracts
+ * @package Readscope\Common\Abstracts
  */
 abstract class Controller
 {
@@ -74,10 +74,10 @@ abstract class Controller
      */
     protected function render(string $templatePath, array $args = []): string
     {
-        $template = untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/' . ltrim($templatePath, '/');
+        $template = untrailingslashit(READSCOPE_PLUGIN_DIR) . '/templates/' . ltrim($templatePath, '/');
 
-        // Check if theme overrides exist: {theme}/tourivo/{templatePath}
-        $themeTemplate = locate_template(['tourivo/' . ltrim($templatePath, '/')]);
+        // Check if theme overrides exist: {theme}/readscope/{templatePath}
+        $themeTemplate = locate_template(['readscope/' . ltrim($templatePath, '/'), 'tourivo/' . ltrim($templatePath, '/')]);
         if (!empty($themeTemplate) && file_exists($themeTemplate)) {
             $template = $themeTemplate;
         }

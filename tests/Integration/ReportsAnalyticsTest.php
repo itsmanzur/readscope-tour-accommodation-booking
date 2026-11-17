@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Common\Container;
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\InventoryService;
-use Tourivo\Services\PricingService;
-use Tourivo\Services\ReportingService;
-use Tourivo\Tests\TestCase;
+use Readscope\Common\Container;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\InventoryService;
+use Readscope\Services\PricingService;
+use Readscope\Services\ReportingService;
+use Readscope\Tests\TestCase;
 use WP_User;
 
 /**
@@ -375,7 +375,7 @@ class ReportsAnalyticsTest extends TestCase
     public function test_unauthorized_user_cannot_export_or_view(): void
     {
         $nonAdmin = wp_set_current_user(99);
-        $nonAdmin->allcaps['manage_tourivo_bookings'] = false;
+        $nonAdmin->allcaps['manage_readscope_bookings'] = false;
 
         $caughtException = false;
         try {

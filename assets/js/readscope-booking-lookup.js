@@ -1,21 +1,21 @@
 document.addEventListener('DOMContentLoaded', function() {
-    var form = document.getElementById('tourivoLookupForm');
-    var btn = document.getElementById('tourivoLookupBtn');
-    var errorBox = document.getElementById('tourivoLookupError');
-    var resultBox = document.getElementById('tourivoLookupResult');
+    var form = document.getElementById('readscopeLookupForm');
+    var btn = document.getElementById('readscopeLookupBtn');
+    var errorBox = document.getElementById('readscopeLookupError');
+    var resultBox = document.getElementById('readscopeLookupResult');
     var cancelBtn = document.getElementById('resCancelBtn');
-    var cancelBox = document.getElementById('tourivoCancelBox');
-    var confirmCancelBtn = document.getElementById('tourivoConfirmCancelBtn');
-    var dismissCancelBtn = document.getElementById('tourivoDismissCancelBtn');
-    var cancelAlert = document.getElementById('tourivoCancelAlert');
+    var cancelBox = document.getElementById('readscopeCancelBox');
+    var confirmCancelBtn = document.getElementById('readscopeConfirmCancelBtn');
+    var dismissCancelBtn = document.getElementById('readscopeDismissCancelBtn');
+    var cancelAlert = document.getElementById('readscopeCancelAlert');
 
     var currentBooking = null;
-    var trvAjaxUrl = tourivoLookupConfig.ajaxUrl;
+    var trvAjaxUrl = readscopeLookupConfig.ajaxUrl;
 
     // POST to admin-ajax with the lookup nonce. A cached page may carry a stale nonce, so on a
     // `nonce_expired` reply fetch a fresh one once and transparently retry.
     function trvPost(formData, retried) {
-        formData.set('nonce', document.getElementById('tourivo_lookup_nonce').value);
+        formData.set('nonce', document.getElementById('readscope_lookup_nonce').value);
 
         return fetch(trvAjaxUrl, {
             method: 'POST',
@@ -29,13 +29,13 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             var nonceRequest = new FormData();
-            nonceRequest.append('action', 'tourivo_get_lookup_nonce');
+            nonceRequest.append('action', 'readscope_get_lookup_nonce');
 
             return fetch(trvAjaxUrl, { method: 'POST', body: nonceRequest })
                 .then(function(res) { return res.json(); })
                 .then(function(fresh) {
                     if (fresh && fresh.success && fresh.data && fresh.data.nonce) {
-                        document.getElementById('tourivo_lookup_nonce').value = fresh.data.nonce;
+                        document.getElementById('readscope_lookup_nonce').value = fresh.data.nonce;
                         return trvPost(formData, true);
                     }
                     return data;
@@ -48,14 +48,14 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 
-        var codeInput = document.getElementById('tourivo_lookup_code');
-        var emailInput = document.getElementById('tourivo_lookup_email');
+        var codeInput = document.getElementById('readscope_lookup_code');
+        var emailInput = document.getElementById('readscope_lookup_email');
 
         var code = codeInput ? codeInput.value.trim() : '';
         var email = emailInput ? emailInput.value.trim() : '';
 
         if (!code || !email) {
-            showError(tourivoLookupConfig.i18n.pleaseEnterBothYour);
+            showError(readscopeLookupConfig.i18n.pleaseEnterBothYour);
             return;
         }
 
@@ -68,9 +68,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (cancelBox) cancelBox.style.display = 'none';
 
         var formData = new FormData();
-        formData.append('action', 'tourivo_lookup_booking');
-        formData.append('nonce', document.getElementById('tourivo_lookup_nonce').value);
-        formData.append('tourivo_hp_check', document.getElementById('tourivo_hp_check').value);
+        formData.append('action', 'readscope_lookup_booking');
+        formData.append('nonce', document.getElementById('readscope_lookup_nonce').value);
+        formData.append('readscope_hp_check', document.getElementById('readscope_hp_check').value);
         formData.append('booking_code', code);
         formData.append('customer_email', email);
 
@@ -84,14 +84,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 currentBooking = data.data;
                 renderResult(data.data);
             } else {
-                showError((data.data && data.data.message) ? data.data.message : tourivoLookupConfig.i18n.couldNotRetrieveReservation);
+                showError((data.data && data.data.message) ? data.data.message : readscopeLookupConfig.i18n.couldNotRetrieveReservation);
             }
         })
         .catch(function() {
             btn.disabled = false;
             btn.querySelector('.btn-text').style.display = 'inline';
             btn.querySelector('.btn-spinner').style.display = 'none';
-            showError(tourivoLookupConfig.i18n.connectionErrorPleaseTry);
+            showError(readscopeLookupConfig.i18n.connectionErrorPleaseTry);
         });
     });
 
@@ -112,30 +112,30 @@ document.addEventListener('DOMContentLoaded', function() {
         confirmCancelBtn.addEventListener('click', function() {
             if (!currentBooking) return;
 
-            var reasonInput = document.getElementById('tourivo_cancel_reason');
+            var reasonInput = document.getElementById('readscope_cancel_reason');
             var reason = reasonInput ? reasonInput.value.trim() : '';
 
             confirmCancelBtn.disabled = true;
-            confirmCancelBtn.textContent = tourivoLookupConfig.i18n.processing;
+            confirmCancelBtn.textContent = readscopeLookupConfig.i18n.processing;
             if (cancelAlert) cancelAlert.style.display = 'none';
 
             var formData = new FormData();
-            formData.append('action', 'tourivo_request_booking_cancellation');
+            formData.append('action', 'readscope_request_booking_cancellation');
             formData.append('booking_code', currentBooking.booking_code);
             formData.append('customer_email', currentBooking.customer_email);
             formData.append('reason', reason);
-            formData.append('tourivo_hp_check', document.getElementById('tourivo_hp_check').value);
+            formData.append('readscope_hp_check', document.getElementById('readscope_hp_check').value);
 
             trvPost(formData)
             .then(function(data) {
                 confirmCancelBtn.disabled = false;
-                confirmCancelBtn.textContent = tourivoLookupConfig.i18n.confirmCancellation;
+                confirmCancelBtn.textContent = readscopeLookupConfig.i18n.confirmCancellation;
 
                 if (cancelAlert) {
                     cancelAlert.style.display = 'block';
                     if (data.success) {
                         cancelAlert.style.color = '#15803d';
-                        cancelAlert.textContent = '✓ ' + (data.data.message || tourivoLookupConfig.i18n.requestSubmittedSuccessfully);
+                        cancelAlert.textContent = '✓ ' + (data.data.message || readscopeLookupConfig.i18n.requestSubmittedSuccessfully);
 
                         if (data.data.mode === 'cancelled') {
                             var statusBadge = document.getElementById('resBookingStatus');
@@ -151,17 +151,17 @@ document.addEventListener('DOMContentLoaded', function() {
                         }
                     } else {
                         cancelAlert.style.color = '#b91c1c';
-                        cancelAlert.textContent = '✕ ' + ((data.data && data.data.message) ? data.data.message : tourivoLookupConfig.i18n.failedToSubmitCancellation);
+                        cancelAlert.textContent = '✕ ' + ((data.data && data.data.message) ? data.data.message : readscopeLookupConfig.i18n.failedToSubmitCancellation);
                     }
                 }
             })
             .catch(function() {
                 confirmCancelBtn.disabled = false;
-                confirmCancelBtn.textContent = tourivoLookupConfig.i18n.confirmCancellation;
+                confirmCancelBtn.textContent = readscopeLookupConfig.i18n.confirmCancellation;
                 if (cancelAlert) {
                     cancelAlert.style.display = 'block';
                     cancelAlert.style.color = '#b91c1c';
-                    cancelAlert.textContent = '✕ ' + tourivoLookupConfig.i18n.connectionErrorPleaseTry;
+                    cancelAlert.textContent = '✕ ' + readscopeLookupConfig.i18n.connectionErrorPleaseTry;
                 }
             });
         });
@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function renderResult(b) {
         document.getElementById('resBookingCode').textContent = '#' + b.booking_code;
-        document.getElementById('resCreatedAt').textContent = tourivoLookupConfig.i18n.bookedOn + ' ' + b.created_at;
+        document.getElementById('resCreatedAt').textContent = readscopeLookupConfig.i18n.bookedOn + ' ' + b.created_at;
         
         var statusBadge = document.getElementById('resBookingStatus');
         statusBadge.textContent = b.booking_status;

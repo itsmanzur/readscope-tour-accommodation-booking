@@ -5,11 +5,11 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Unit;
+namespace Readscope\Tests\Unit;
 
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\InventoryService;
-use Tourivo\Tests\TestCase;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\InventoryService;
+use Readscope\Tests\TestCase;
 
 class DateValidationTest extends TestCase
 {

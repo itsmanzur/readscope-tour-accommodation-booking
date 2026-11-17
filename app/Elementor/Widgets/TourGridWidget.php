@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Elementor\Widgets;
+namespace Readscope\Elementor\Widgets;
 
-use Tourivo\Shortcodes\TourGridShortcode;
+use Readscope\Shortcodes\TourGridShortcode;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -19,13 +19,13 @@ if (!class_exists('\Elementor\Widget_Base')) {
  *
  * Elementor Widget for displaying Tours in a modern grid.
  *
- * @package Tourivo\Elementor\Widgets
+ * @package Readscope\Elementor\Widgets
  */
 class TourGridWidget extends \Elementor\Widget_Base
 {
     public function get_name(): string
     {
-        return 'tourivo_tour_grid';
+        return 'readscope_tour_grid';
     }
 
     public function get_title(): string
@@ -40,7 +40,7 @@ class TourGridWidget extends \Elementor\Widget_Base
 
     public function get_categories(): array
     {
-        return ['tourivo-elements'];
+        return ['readscope-elements'];
     }
 
     public function get_keywords(): array
@@ -105,6 +105,6 @@ class TourGridWidget extends \Elementor\Widget_Base
             'destination' => isset($settings['destination']) ? sanitize_text_field($settings['destination']) : '',
         ]);
 
-        \Tourivo\Support\Html::print($content);
+        \Readscope\Support\Html::print($content);
     }
 }

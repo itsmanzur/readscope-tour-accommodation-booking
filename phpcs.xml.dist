@@ -56,17 +56,17 @@
     <rule ref="WordPress.WP.Capabilities">
         <properties>
             <property name="custom_capabilities" type="array">
-                <element value="manage_tourivo"/>
-                <element value="manage_tourivo_bookings"/>
-                <element value="manage_tourivo_tours"/>
-                <element value="manage_tourivo_hotels"/>
-                <element value="manage_tourivo_settings"/>
-                <element value="manage_tourivo_checkin"/>
+                <element value="manage_readscope"/>
+                <element value="manage_readscope_bookings"/>
+                <element value="manage_readscope_tours"/>
+                <element value="manage_readscope_hotels"/>
+                <element value="manage_readscope_settings"/>
+                <element value="manage_readscope_checkin"/>
             </property>
         </properties>
     </rule>
 
-    <!-- Templates/views are included inside functions (tourivo_get_template, loadView), so their local
+    <!-- Templates/views are included inside functions (readscope_get_template, loadView), so their local
          variables are not globals and need no plugin prefix. -->
     <rule ref="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound">
         <exclude-pattern>*/templates/*</exclude-pattern>
@@ -86,9 +86,9 @@
     <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
         <properties>
             <property name="prefixes" type="array">
-                <element value="tourivo"/>
+                <element value="readscope"/>
                 <element value="Readscope Booking"/>
-                <element value="TOURIVO"/>
+                <element value="READSCOPE"/>
             </property>
         </properties>
     </rule>

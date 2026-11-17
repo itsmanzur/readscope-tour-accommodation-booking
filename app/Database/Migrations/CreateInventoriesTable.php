@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Database\Migrations;
+namespace Readscope\Database\Migrations;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -11,15 +11,15 @@ if (!defined('ABSPATH')) {
 /**
  * Class CreateInventoriesTable
  *
- * Migration for creating capacity and inventory tracking table: wp_tourivo_inventories.
+ * Migration for creating capacity and inventory tracking table: wp_readscope_inventories.
  *
- * @package Tourivo\Database\Migrations
+ * @package Readscope\Database\Migrations
  */
 class CreateInventoriesTable implements MigrationInterface
 {
     public function getName(): string
     {
-        return 'create_tourivo_inventories_table';
+        return 'create_readscope_inventories_table';
     }
 
     public function getVersion(): string

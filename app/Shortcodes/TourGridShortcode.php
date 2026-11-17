@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Shortcodes;
+namespace Readscope\Shortcodes;
 
-use Tourivo\Models\Tour;
-use Tourivo\PostTypes\TourPostType;
+use Readscope\Models\Tour;
+use Readscope\PostTypes\TourPostType;
 use WP_Query;
 
 if (!defined('ABSPATH')) {
@@ -15,15 +15,15 @@ if (!defined('ABSPATH')) {
 /**
  * Class TourGridShortcode
  *
- * Shortcode: [tourivo_tours columns="3" count="6" destination="..." activity="..."]
+ * Shortcode: [readscope_tours columns="3" count="6" destination="..." activity="..."]
  *
- * @package Tourivo\Shortcodes
+ * @package Readscope\Shortcodes
  */
 class TourGridShortcode
 {
     public static function register(): void
     {
-        add_shortcode('tourivo_tours', [self::class, 'render']);
+        add_shortcode('readscope_tours', [self::class, 'render']);
     }
 
     /**
@@ -41,7 +41,7 @@ class TourGridShortcode
             'activity'    => '',
             'orderby'     => 'date',
             'order'       => 'DESC',
-        ], (array) $atts, 'tourivo_tours');
+        ], (array) $atts, 'readscope_tours');
 
         $args = [
             'post_type'      => TourPostType::POST_TYPE,
@@ -75,17 +75,17 @@ class TourGridShortcode
         // phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 
         if (!$query->have_posts()) {
-            return '<p class="tourivo-no-items">' . esc_html__('No tours found matching criteria.', 'the-readscope-tour-and-accommodation-booking') . '</p>';
+            return '<p class="readscope-no-items">' . esc_html__('No tours found matching criteria.', 'the-readscope-tour-and-accommodation-booking') . '</p>';
         }
 
         $cols = max(1, min(4, (int) $attributes['columns']));
 
         ob_start();
-        echo '<div class="tourivo-grid" style="--trv-grid-cols: ' . esc_attr((string)$cols) . ';">';
+        echo '<div class="readscope-grid" style="--trv-grid-cols: ' . esc_attr((string)$cols) . ';">';
         while ($query->have_posts()) {
             $query->the_post();
             $tour = new Tour(get_post());
-            tourivo_get_template('cards/tour-card.php', ['tour' => $tour]);
+            readscope_get_template('cards/tour-card.php', ['tour' => $tour]);
         }
         echo '</div>';
         wp_reset_postdata();

@@ -14,22 +14,22 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$tourivoSiteName     = isset($siteName) && is_string($siteName) ? $siteName : get_bloginfo('name');
-$tourivoPrimaryColor = isset($primaryColor) && is_string($primaryColor) ? $primaryColor : '#0d9488';
-$tourivoHeading      = isset($emailHeading) && is_string($emailHeading) ? $emailHeading : '';
-$tourivoIsTest       = !empty($isTest);
-$tourivoLang         = 'en';
-if (function_exists('tourivo_current_locale')) {
-    $tourivoLocale = tourivo_current_locale();
-    $tourivoLang = str_starts_with($tourivoLocale, 'bn') ? 'bn' : (substr($tourivoLocale, 0, 2) ?: 'en');
+$readscopeSiteName     = isset($siteName) && is_string($siteName) ? $siteName : get_bloginfo('name');
+$readscopePrimaryColor = isset($primaryColor) && is_string($primaryColor) ? $primaryColor : '#0d9488';
+$readscopeHeading      = isset($emailHeading) && is_string($emailHeading) ? $emailHeading : '';
+$readscopeIsTest       = !empty($isTest);
+$readscopeLang         = 'en';
+if (function_exists('readscope_current_locale')) {
+    $readscopeLocale = readscope_current_locale();
+    $readscopeLang = str_starts_with($readscopeLocale, 'bn') ? 'bn' : (substr($readscopeLocale, 0, 2) ?: 'en');
 }
 ?>
 <!DOCTYPE html>
-<html lang="<?php echo esc_attr($tourivoLang); ?>">
+<html lang="<?php echo esc_attr($readscopeLang); ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo esc_html($tourivoHeading ?: $tourivoSiteName); ?></title>
+    <title><?php echo esc_html($readscopeHeading ?: $readscopeSiteName); ?></title>
     <style>
         body {
             /* Bengali faces come before the generic family: many mail apps stop at the first generic name. */
@@ -42,7 +42,7 @@ if (function_exists('tourivo_current_locale')) {
             -webkit-text-size-adjust: 100%;
             -ms-text-size-adjust: 100%;
         }
-        .tourivo-email-wrapper {
+        .readscope-email-wrapper {
             max-width: 600px;
             margin: 0 auto;
             background: #ffffff;
@@ -51,56 +51,56 @@ if (function_exists('tourivo_current_locale')) {
             border: 1px solid #e2e8f0;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
         }
-        .tourivo-email-header {
-            background-color: <?php echo esc_attr($tourivoPrimaryColor); ?>;
+        .readscope-email-header {
+            background-color: <?php echo esc_attr($readscopePrimaryColor); ?>;
             color: #ffffff;
             padding: 28px 24px;
             text-align: center;
         }
-        .tourivo-email-header h1 {
+        .readscope-email-header h1 {
             margin: 0;
             font-size: 22px;
             font-weight: 700;
             color: #ffffff;
         }
-        .tourivo-email-header p {
+        .readscope-email-header p {
             margin: 6px 0 0 0;
             opacity: 0.92;
             font-size: 14px;
             color: #ffffff;
         }
-        .tourivo-email-content {
+        .readscope-email-content {
             padding: 28px 24px;
         }
-        .tourivo-info-card {
+        .readscope-info-card {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
             border-radius: 8px;
             padding: 16px 18px;
             margin: 20px 0;
         }
-        .tourivo-info-row {
+        .readscope-info-row {
             display: flex;
             justify-content: space-between;
             padding: 7px 0;
             border-bottom: 1px solid #e2e8f0;
             font-size: 14px;
         }
-        .tourivo-info-row:last-child {
+        .readscope-info-row:last-child {
             border-bottom: none;
         }
-        .tourivo-info-label {
+        .readscope-info-label {
             color: #64748b;
             font-weight: 600;
         }
-        .tourivo-info-value {
+        .readscope-info-value {
             color: #0f172a;
             font-weight: 700;
             text-align: right;
         }
-        .tourivo-btn {
+        .readscope-btn {
             display: inline-block;
-            background-color: <?php echo esc_attr($tourivoPrimaryColor); ?>;
+            background-color: <?php echo esc_attr($readscopePrimaryColor); ?>;
             color: #ffffff !important;
             text-decoration: none;
             padding: 12px 24px;
@@ -110,7 +110,7 @@ if (function_exists('tourivo_current_locale')) {
             margin-top: 16px;
             text-align: center;
         }
-        .tourivo-test-badge {
+        .readscope-test-badge {
             background: #fef3c7;
             color: #92400e;
             padding: 4px 10px;
@@ -122,7 +122,7 @@ if (function_exists('tourivo_current_locale')) {
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
-        .tourivo-email-footer {
+        .readscope-email-footer {
             text-align: center;
             font-size: 13px;
             color: #64748b;
@@ -130,11 +130,11 @@ if (function_exists('tourivo_current_locale')) {
             background: #f8fafc;
             border-top: 1px solid #e2e8f0;
         }
-        .tourivo-email-footer a {
-            color: <?php echo esc_attr($tourivoPrimaryColor); ?>;
+        .readscope-email-footer a {
+            color: <?php echo esc_attr($readscopePrimaryColor); ?>;
             text-decoration: none;
         }
-        .tourivo-highlight-box {
+        .readscope-highlight-box {
             background: #f0fdf4;
             border: 1px solid #bbf7d0;
             border-radius: 8px;
@@ -143,7 +143,7 @@ if (function_exists('tourivo_current_locale')) {
             color: #166534;
             font-size: 14px;
         }
-        .tourivo-warning-box {
+        .readscope-warning-box {
             background: #fffbeb;
             border: 1px solid #fde68a;
             border-radius: 8px;
@@ -155,27 +155,27 @@ if (function_exists('tourivo_current_locale')) {
     </style>
 </head>
 <body>
-    <div class="tourivo-email-wrapper">
-        <div class="tourivo-email-header">
-            <?php if ($tourivoIsTest) : ?>
-                <div><span class="tourivo-test-badge"><?php esc_html_e('TEST NOTIFICATION', 'the-readscope-tour-and-accommodation-booking'); ?></span></div>
+    <div class="readscope-email-wrapper">
+        <div class="readscope-email-header">
+            <?php if ($readscopeIsTest) : ?>
+                <div><span class="readscope-test-badge"><?php esc_html_e('TEST NOTIFICATION', 'the-readscope-tour-and-accommodation-booking'); ?></span></div>
             <?php endif; ?>
-            <h1><?php echo esc_html($tourivoHeading); ?></h1>
-            <p><?php echo esc_html($tourivoSiteName); ?></p>
+            <h1><?php echo esc_html($readscopeHeading); ?></h1>
+            <p><?php echo esc_html($readscopeSiteName); ?></p>
         </div>
 
-        <div class="tourivo-email-content">
+        <div class="readscope-email-content">
             <?php
             // Escape late: the body is filtered here, at output, with an allowlist made for HTML email.
             // The extra inline CSS properties are allowed only for this one wp_kses() call.
-            add_filter('safe_style_css', [\Tourivo\Support\Html::class, 'emailSafeCss']);
-            echo wp_kses((string) $emailBodyContent, \Tourivo\Support\Html::emailAllowedHtml());
-            remove_filter('safe_style_css', [\Tourivo\Support\Html::class, 'emailSafeCss']);
+            add_filter('safe_style_css', [\Readscope\Support\Html::class, 'emailSafeCss']);
+            echo wp_kses((string) $emailBodyContent, \Readscope\Support\Html::emailAllowedHtml());
+            remove_filter('safe_style_css', [\Readscope\Support\Html::class, 'emailSafeCss']);
             ?>
         </div>
 
-        <div class="tourivo-email-footer">
-            <p style="margin: 0 0 6px 0;">&copy; <?php echo esc_html(gmdate('Y')); ?> <strong><?php echo esc_html($tourivoSiteName); ?></strong>. <?php esc_html_e('All rights reserved.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
+        <div class="readscope-email-footer">
+            <p style="margin: 0 0 6px 0;">&copy; <?php echo esc_html(gmdate('Y')); ?> <strong><?php echo esc_html($readscopeSiteName); ?></strong>. <?php esc_html_e('All rights reserved.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
             <p style="margin: 0;"><a href="<?php echo esc_url(home_url('/')); ?>"><?php echo esc_url(home_url('/')); ?></a></p>
         </div>
     </div>

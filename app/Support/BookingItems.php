@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Support;
+namespace Readscope\Support;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
  * A booking can hold several items (for example a package's tours and hotel nights). These helpers give
  * the screens, emails and exports one title and one date range for the whole booking.
  *
- * @package Tourivo\Support
+ * @package Readscope\Support
  */
 final class BookingItems
 {
@@ -27,14 +27,14 @@ final class BookingItems
     {
         global $wpdb;
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $rows = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tourivo_booking_items WHERE booking_id = %d ORDER BY id ASC", $bookingId));
+        $rows = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$wpdb->prefix}readscope_booking_items WHERE booking_id = %d ORDER BY id ASC", $bookingId));
 
         return is_array($rows) ? array_values($rows) : [];
     }
 
     /**
      * One title for the booking: the item's own title, or the items joined ("Tour + Hotel - Room").
-     * Add-ons can name the whole booking (e.g. a package) through the tourivo/booking/title filter.
+     * Add-ons can name the whole booking (e.g. a package) through the readscope/booking/title filter.
      *
      * @param array<int, object|array<string, mixed>> $rows
      * @param array<string, mixed>                     $context Booking data when the title is built at creation.
@@ -56,7 +56,7 @@ final class BookingItems
             $title = implode(' + ', $titles);
         }
 
-        return (string) apply_filters('tourivo/booking/title', $title, $bookingId, $rows, $context);
+        return (string) apply_filters('readscope/booking/title', $title, $bookingId, $rows, $context);
     }
 
     /**

@@ -1,13 +1,13 @@
-.tourivo-wizard-body {
+.readscope-wizard-body {
     max-width: 820px;
     margin: 40px auto;
     font-family: var(--trv-font-admin, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
 }
-.tourivo-wizard-header {
+.readscope-wizard-header {
     text-align: center;
     margin-bottom: 30px;
 }
-.tourivo-wizard-brand {
+.readscope-wizard-brand {
     display: inline-flex;
     align-items: center;
     gap: 10px;
@@ -37,13 +37,13 @@
     color: #64748b;
     margin: 6px 0 0;
 }
-.tourivo-wizard-steps {
+.readscope-wizard-steps {
     display: flex;
     justify-content: space-between;
     margin-bottom: 24px;
     position: relative;
 }
-.tourivo-wizard-steps::before {
+.readscope-wizard-steps::before {
     content: '';
     position: absolute;
     top: 18px;

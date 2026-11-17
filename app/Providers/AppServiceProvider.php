@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Providers;
+namespace Readscope\Providers;
 
-use Tourivo\Common\Abstracts\ServiceProvider;
-use Tourivo\Config\Config;
-use Tourivo\Services\ReviewService;
+use Readscope\Common\Abstracts\ServiceProvider;
+use Readscope\Config\Config;
+use Readscope\Services\ReviewService;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -17,15 +17,15 @@ if (!defined('ABSPATH')) {
  *
  * Registers core application services, i18n textdomain loading, and core hooks.
  *
- * @package Tourivo\Providers
+ * @package Readscope\Providers
  */
 class AppServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
         // Core application bindings
-        $this->container->singleton(\Tourivo\Services\WebhookService::class, fn () => new \Tourivo\Services\WebhookService());
-        $this->container->singleton(\Tourivo\Services\EmailService::class, fn () => new \Tourivo\Services\EmailService());
+        $this->container->singleton(\Readscope\Services\WebhookService::class, fn () => new \Readscope\Services\WebhookService());
+        $this->container->singleton(\Readscope\Services\EmailService::class, fn () => new \Readscope\Services\EmailService());
     }
 
     public function boot(): void
@@ -34,34 +34,34 @@ class AppServiceProvider extends ServiceProvider
         new ReviewService();
 
         // Initialize Webhook Dispatcher
-        $webhookService = $this->container->get(\Tourivo\Services\WebhookService::class);
+        $webhookService = $this->container->get(\Readscope\Services\WebhookService::class);
         $webhookService->register();
 
         // Initialize Email Dispatcher & Cron
-        $emailService = $this->container->get(\Tourivo\Services\EmailService::class);
+        $emailService = $this->container->get(\Readscope\Services\EmailService::class);
         $emailService->register();
 
         // Initialize Privacy Tools & GDPR Compliance
-        \Tourivo\Support\Privacy::register();
+        \Readscope\Support\Privacy::register();
 
         // Register daily retention cron hook
-        add_action('tourivo_daily_privacy_retention', [\Tourivo\Services\PrivacyService::class, 'runDailyRetention']);
+        add_action('readscope_daily_privacy_retention', [\Readscope\Services\PrivacyService::class, 'runDailyRetention']);
         // The same daily event also drops expired rate-limit counters.
-        add_action('tourivo_daily_privacy_retention', [\Tourivo\Support\RateLimiter::class, 'purgeExpired']);
+        add_action('readscope_daily_privacy_retention', [\Readscope\Support\RateLimiter::class, 'purgeExpired']);
         // Scheduling reads the translated cron schedule labels, so it waits for init.
         add_action('init', static function (): void {
-            if (!wp_next_scheduled('tourivo_daily_privacy_retention')) {
-                wp_schedule_event(time(), 'daily', 'tourivo_daily_privacy_retention');
+            if (!wp_next_scheduled('readscope_daily_privacy_retention')) {
+                wp_schedule_event(time(), 'daily', 'readscope_daily_privacy_retention');
             }
         }, 20);
 
         // Register WP-CLI command if CLI environment
         if (defined('WP_CLI') && WP_CLI && class_exists('\WP_CLI')) {
-            \WP_CLI::add_command('tourivo', \Tourivo\Cli\TourivoCli::class);
+            \WP_CLI::add_command('readscope', \Readscope\Cli\ReadscopeCli::class);
         }
 
         // Currency code filter
-        add_filter('tourivo/currency_code', static function (string $default = 'USD'): string {
+        add_filter('readscope/currency_code', static function (string $default = 'USD'): string {
             return (string) Config::get('currency', $default);
         });
 
@@ -76,8 +76,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function setupThemeSupport(): void
     {
-        add_image_size('tourivo-card', 600, 400, true);
-        add_image_size('tourivo-gallery', 1200, 800, true);
-        add_image_size('tourivo-thumbnail', 150, 150, true);
+        add_image_size('readscope-card', 600, 400, true);
+        add_image_size('readscope-gallery', 1200, 800, true);
+        add_image_size('readscope-thumbnail', 150, 150, true);
     }
 }

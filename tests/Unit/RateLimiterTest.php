@@ -5,10 +5,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Unit;
+namespace Readscope\Tests\Unit;
 
-use Tourivo\Support\RateLimiter;
-use Tourivo\Tests\TestCase;
+use Readscope\Support\RateLimiter;
+use Readscope\Tests\TestCase;
 
 class RateLimiterTest extends TestCase
 {
@@ -20,9 +20,9 @@ class RateLimiterTest extends TestCase
         global $wpdb;
         $wpdb->rl_rows = [];
         $wpdb->rl_fail = false;
-        $GLOBALS['tourivo_mock_ext_object_cache'] = false;
-        $GLOBALS['tourivo_current_user_id']       = 0;
-        unset($GLOBALS['tourivo_mock_user_caps']);
+        $GLOBALS['readscope_mock_ext_object_cache'] = false;
+        $GLOBALS['readscope_current_user_id']       = 0;
+        unset($GLOBALS['readscope_mock_user_caps']);
         RateLimiter::$clock = fn (): int => $this->now;
     }
 
@@ -32,8 +32,8 @@ class RateLimiterTest extends TestCase
         $wpdb->rl_rows = [];
         $wpdb->rl_fail = false;
         RateLimiter::$clock = null;
-        $GLOBALS['tourivo_current_user_id'] = 0;
-        unset($GLOBALS['tourivo_mock_user_caps']);
+        $GLOBALS['readscope_current_user_id'] = 0;
+        unset($GLOBALS['readscope_mock_user_caps']);
         parent::tearDown();
     }
 
@@ -100,18 +100,18 @@ class RateLimiterTest extends TestCase
     {
         global $wpdb;
         $wpdb->rl_fail = true;
-        $GLOBALS['tourivo_current_user_id'] = 7;
+        $GLOBALS['readscope_current_user_id'] = 7;
 
-        $GLOBALS['tourivo_mock_user_caps'] = ['manage_options' => true];
+        $GLOBALS['readscope_mock_user_caps'] = ['manage_options' => true];
         $this->assertTrue(RateLimiter::hit('t_fail_admin', 5, 60));
 
-        $GLOBALS['tourivo_mock_user_caps'] = ['manage_options' => false];
+        $GLOBALS['readscope_mock_user_caps'] = ['manage_options' => false];
         $this->assertFalse(RateLimiter::hit('t_fail_user', 5, 60), 'A logged-in non-admin is still limited.');
     }
 
     public function test_object_cache_path_is_used_when_available(): void
     {
-        $GLOBALS['tourivo_mock_ext_object_cache'] = true;
+        $GLOBALS['readscope_mock_ext_object_cache'] = true;
 
         $allowed = 0;
         for ($i = 0; $i < 20; $i++) {

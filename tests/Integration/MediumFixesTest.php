@@ -6,21 +6,21 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Admin\BookingsTable;
-use Tourivo\Admin\SettingsPage;
-use Tourivo\Common\Container;
-use Tourivo\Config\Config;
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\InventoryService;
-use Tourivo\Services\LogService;
-use Tourivo\Services\WebhookService;
-use Tourivo\Shortcodes\ThankYouShortcode;
-use Tourivo\Support\Privacy;
-use Tourivo\Tests\TestCase;
+use Readscope\Admin\BookingsTable;
+use Readscope\Admin\SettingsPage;
+use Readscope\Common\Container;
+use Readscope\Config\Config;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\InventoryService;
+use Readscope\Services\LogService;
+use Readscope\Services\WebhookService;
+use Readscope\Shortcodes\ThankYouShortcode;
+use Readscope\Support\Privacy;
+use Readscope\Tests\TestCase;
 
 class MediumFixesTest extends TestCase
 {
@@ -30,10 +30,10 @@ class MediumFixesTest extends TestCase
     {
         parent::setUp();
         $this->cleanDatabaseTables();
-        $GLOBALS['tourivo_mock_options']          = ['admin_email' => 'admin@example.com'];
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
-        $GLOBALS['tourivo_mock_action_callbacks'] = [];
-        $GLOBALS['tourivo_mock_fail_next_booking_insert'] = 0;
+        $GLOBALS['readscope_mock_options']          = ['admin_email' => 'admin@example.com'];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_action_callbacks'] = [];
+        $GLOBALS['readscope_mock_fail_next_booking_insert'] = 0;
         $_POST = [];
         Config::flushDefaults();
 
@@ -45,7 +45,7 @@ class MediumFixesTest extends TestCase
     protected function tearDown(): void
     {
         $_POST = [];
-        $GLOBALS['tourivo_mock_fail_next_booking_insert'] = 0;
+        $GLOBALS['readscope_mock_fail_next_booking_insert'] = 0;
         parent::tearDown();
     }
 
@@ -65,16 +65,16 @@ class MediumFixesTest extends TestCase
         $tour = $this->createTour(100.0, 10);
         global $wpdb;
 
-        update_option('tourivo_settings', ['default_booking_status' => 'confirmed']);
+        update_option('readscope_settings', ['default_booking_status' => 'confirmed']);
         $a = $this->bookings->createBooking($this->payload($tour, 30));
         $this->assertEquals('confirmed', $wpdb->bookings[$a['booking_id']]['booking_status']);
 
-        update_option('tourivo_settings', ['default_booking_status' => 'pending']);
+        update_option('readscope_settings', ['default_booking_status' => 'pending']);
         $b = $this->bookings->createBooking($this->payload($tour, 31, ['customer_email' => 'b@example.com']));
         $this->assertEquals('pending', $wpdb->bookings[$b['booking_id']]['booking_status']);
 
         // Garbage in the option can never create a booking with a bogus status.
-        update_option('tourivo_settings', ['default_booking_status' => 'refunded']);
+        update_option('readscope_settings', ['default_booking_status' => 'refunded']);
         $c = $this->bookings->createBooking($this->payload($tour, 32, ['customer_email' => 'c@example.com']));
         $this->assertEquals('pending', $wpdb->bookings[$c['booking_id']]['booking_status']);
     }
@@ -110,7 +110,7 @@ class MediumFixesTest extends TestCase
     public function test_booking_code_collision_is_retried(): void
     {
         $tour = $this->createTour(100.0, 10);
-        $GLOBALS['tourivo_mock_fail_next_booking_insert'] = 2; // first two draws collide
+        $GLOBALS['readscope_mock_fail_next_booking_insert'] = 2; // first two draws collide
 
         $res = $this->bookings->createBooking($this->payload($tour));
 
@@ -122,7 +122,7 @@ class MediumFixesTest extends TestCase
     public function test_exhausted_code_retries_release_inventory(): void
     {
         $tour = $this->createTour(100.0, 10);
-        $GLOBALS['tourivo_mock_fail_next_booking_insert'] = 3;
+        $GLOBALS['readscope_mock_fail_next_booking_insert'] = 3;
 
         $res = $this->bookings->createBooking($this->payload($tour));
 
@@ -217,12 +217,12 @@ class MediumFixesTest extends TestCase
         $body = '{"event":"booking.created"}';
         $h    = WebhookService::signatureHeaders($body, 'topsecret', 1700000000);
 
-        $this->assertEquals(hash_hmac('sha256', $body, 'topsecret'), $h['X-Tourivo-Signature'], 'Legacy header unchanged.');
-        $this->assertEquals('1700000000', $h['X-Tourivo-Timestamp']);
-        $this->assertEquals(hash_hmac('sha256', '1700000000.' . $body, 'topsecret'), $h['X-Tourivo-Signature-V2']);
+        $this->assertEquals(hash_hmac('sha256', $body, 'topsecret'), $h['X-Readscope-Signature'], 'Legacy header unchanged.');
+        $this->assertEquals('1700000000', $h['X-Readscope-Timestamp']);
+        $this->assertEquals(hash_hmac('sha256', '1700000000.' . $body, 'topsecret'), $h['X-Readscope-Signature-V2']);
 
         $replayed = WebhookService::signatureHeaders($body, 'topsecret', 1700000999);
-        $this->assertNotEquals($h['X-Tourivo-Signature-V2'], $replayed['X-Tourivo-Signature-V2'], 'Different timestamp -> different signature.');
+        $this->assertNotEquals($h['X-Readscope-Signature-V2'], $replayed['X-Readscope-Signature-V2'], 'Different timestamp -> different signature.');
 
         $this->assertEquals([], WebhookService::signatureHeaders($body, ''), 'No secret, no signature headers.');
     }
@@ -239,7 +239,7 @@ class MediumFixesTest extends TestCase
             'webhook_events'         => ['booking.created'],
         ];
         SettingsPage::saveSettings();
-        $saved = get_option('tourivo_settings');
+        $saved = get_option('readscope_settings');
 
         $this->assertEquals('USD', $saved['currency'], 'Invalid code falls back to the previous/default value.');
         $this->assertEquals('pending', $saved['default_booking_status']);
@@ -248,7 +248,7 @@ class MediumFixesTest extends TestCase
 
         $_POST = ['currency' => 'bdt', 'default_booking_status' => 'confirmed', 'border_radius' => '12px'];
         SettingsPage::saveSettings();
-        $saved = get_option('tourivo_settings');
+        $saved = get_option('readscope_settings');
         $this->assertEquals('BDT', $saved['currency']);
         $this->assertEquals('confirmed', $saved['default_booking_status']);
         $this->assertEquals('12px', $saved['border_radius']);
@@ -261,7 +261,7 @@ class MediumFixesTest extends TestCase
         $this->assertEquals('USD', Config::get('currency'));
         $this->assertTrue(Config::getDefaults() === Config::getDefaults());
 
-        update_option('tourivo_settings', ['currency' => 'GBP']);
+        update_option('readscope_settings', ['currency' => 'GBP']);
         $this->assertEquals('GBP', Config::get('currency'), 'Saved settings must win immediately, no stale cache.');
         $this->assertEquals('pending', Config::get('default_booking_status'), 'Unsaved keys still come from defaults.');
     }

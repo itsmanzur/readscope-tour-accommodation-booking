@@ -5,13 +5,13 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\InventoryService;
-use Tourivo\Tests\TestCase;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\InventoryService;
+use Readscope\Tests\TestCase;
 
 class BookingStatusTransitionTest extends TestCase
 {
@@ -50,7 +50,7 @@ class BookingStatusTransitionTest extends TestCase
 
         if ($wpdb) {
             $inv = $wpdb->get_row($wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}tourivo_inventories WHERE item_id = %d AND event_date = %s",
+                "SELECT * FROM {$wpdb->prefix}readscope_inventories WHERE item_id = %d AND event_date = %s",
                 $tourId,
                 $date
             ));
@@ -63,7 +63,7 @@ class BookingStatusTransitionTest extends TestCase
 
         if ($wpdb) {
             $inv = $wpdb->get_row($wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}tourivo_inventories WHERE item_id = %d AND event_date = %s",
+                "SELECT * FROM {$wpdb->prefix}readscope_inventories WHERE item_id = %d AND event_date = %s",
                 $tourId,
                 $date
             ));
@@ -104,7 +104,7 @@ class BookingStatusTransitionTest extends TestCase
         global $wpdb;
         if ($wpdb) {
             $status = $wpdb->get_var($wpdb->prepare(
-                "SELECT booking_status FROM {$wpdb->prefix}tourivo_bookings WHERE id = %d",
+                "SELECT booking_status FROM {$wpdb->prefix}readscope_bookings WHERE id = %d",
                 $bookingAId
             ));
             $this->assertEquals('cancelled', $status);
@@ -136,7 +136,7 @@ class BookingStatusTransitionTest extends TestCase
         global $wpdb;
         if ($wpdb) {
             $inv = $wpdb->get_row($wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}tourivo_inventories WHERE item_id = %d AND event_date = %s",
+                "SELECT * FROM {$wpdb->prefix}readscope_inventories WHERE item_id = %d AND event_date = %s",
                 $tourId,
                 $date
             ));

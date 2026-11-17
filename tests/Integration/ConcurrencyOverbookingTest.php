@@ -5,13 +5,13 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\InventoryService;
-use Tourivo\Tests\TestCase;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\InventoryService;
+use Readscope\Tests\TestCase;
 
 class ConcurrencyOverbookingTest extends TestCase
 {
@@ -58,7 +58,7 @@ class ConcurrencyOverbookingTest extends TestCase
         global $wpdb;
         if ($wpdb) {
             $inv = $wpdb->get_row($wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}tourivo_inventories WHERE item_id = %d AND event_date = %s",
+                "SELECT * FROM {$wpdb->prefix}readscope_inventories WHERE item_id = %d AND event_date = %s",
                 $tourId,
                 $date
             ));

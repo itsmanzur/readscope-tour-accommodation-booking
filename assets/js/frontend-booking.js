@@ -3,10 +3,10 @@
  */
 
 document.addEventListener('DOMContentLoaded', function () {
-    const panels = document.querySelectorAll('.tourivo-booking-panel');
+    const panels = document.querySelectorAll('.readscope-booking-panel');
 
     function formatMoney(amount, symbol) {
-        const money = (window.tourivoData && window.tourivoData.money) || {};
+        const money = (window.readscopeData && window.readscopeData.money) || {};
         const decimals = Number.isInteger(money.decimals) ? money.decimals : 2;
         const decimalSep = typeof money.decimal === 'string' ? money.decimal : '.';
         const thousandSep = typeof money.thousand === 'string' ? money.thousand : ',';
@@ -42,13 +42,13 @@ document.addEventListener('DOMContentLoaded', function () {
         const itemType = (panel.dataset.itemType === 'hotel_room' || panel.dataset.itemType === 'room') ? 'room' : 'tour';
         const baseUnitPrice = parseFloat(panel.dataset.unitPrice) || 0;
 
-        const checkInInput = panel.querySelector('#tourivo-check-in');
-        const checkOutInput = panel.querySelector('#tourivo-check-out');
+        const checkInInput = panel.querySelector('#readscope-check-in');
+        const checkOutInput = panel.querySelector('#readscope-check-out');
         const roomsInput = panel.querySelector('#rooms-count');
         const adultsInput = panel.querySelector('#adults-count');
         const childrenInput = panel.querySelector('#children-count');
         const infantsInput = panel.querySelector('#infants-count');
-        const breakdownItems = panel.querySelector('#tourivo-breakdown-items');
+        const breakdownItems = panel.querySelector('#readscope-breakdown-items');
         const calcLabel = panel.querySelector('#breakdown-calc-label');
         const breakdownTotalVal = panel.querySelector('#breakdown-total-val');
         const subtotalRow = panel.querySelector('#breakdown-subtotal-row');
@@ -60,38 +60,38 @@ document.addEventListener('DOMContentLoaded', function () {
         const taxLabel = panel.querySelector('#breakdown-tax-label');
         const taxVal = panel.querySelector('#breakdown-tax-val');
         const grandTotalVal = panel.querySelector('#live-grand-total');
-        const statusBadge = panel.querySelector('#tourivo-avail-status');
-        const bookingForm = panel.querySelector('#tourivo-booking-form');
-        const submitBtn = panel.querySelector('#tourivo-submit-btn');
-        const alertBox = panel.querySelector('#tourivo-panel-alert');
+        const statusBadge = panel.querySelector('#readscope-avail-status');
+        const bookingForm = panel.querySelector('#readscope-booking-form');
+        const submitBtn = panel.querySelector('#readscope-submit-btn');
+        const alertBox = panel.querySelector('#readscope-panel-alert');
 
         let checkAbortController = null;
         let checkDebounceTimer = null;
         let quoteSerial = 0;
-        const priceBox = panel.querySelector('#tourivo-price-breakdown');
+        const priceBox = panel.querySelector('#readscope-price-breakdown');
 
         function setQuotePending(pending) {
             if (!priceBox) return;
             priceBox.classList.toggle('is-calculating', pending);
             priceBox.setAttribute('aria-busy', pending ? 'true' : 'false');
-            let status = priceBox.querySelector('.tourivo-calculating');
+            let status = priceBox.querySelector('.readscope-calculating');
             if (!pending) {
                 if (status) status.remove();
                 return;
             }
             if (!status) {
                 status = document.createElement('p');
-                status.className = 'tourivo-calculating';
+                status.className = 'readscope-calculating';
                 priceBox.appendChild(status);
             }
-            const label = window.tourivoData && window.tourivoData.i18n && window.tourivoData.i18n.calculating;
+            const label = window.readscopeData && window.readscopeData.i18n && window.readscopeData.i18n.calculating;
             status.textContent = label || 'Calculating the price...';
         }
 
         function syncCheckoutStep(available) {
             const datesReady = itemType !== 'room' || !!(checkOutInput && checkOutInput.value);
             const open = !!available && datesReady;
-            panel.querySelectorAll('.tourivo-checkout-step').forEach(function (el) {
+            panel.querySelectorAll('.readscope-checkout-step').forEach(function (el) {
                 el.hidden = !open;
             });
         }
@@ -148,13 +148,13 @@ document.addEventListener('DOMContentLoaded', function () {
             checkOutInput.addEventListener('change', recalculatePrice);
         }
 
-        panel.querySelectorAll('.tourivo-addon-checkbox').forEach(function (cb) {
+        panel.querySelectorAll('.readscope-addon-checkbox').forEach(function (cb) {
             cb.addEventListener('change', recalculatePrice);
         });
 
         const couponInput = panel.querySelector('[name="coupon_code"]');
-        const couponMessage = panel.querySelector('.tourivo-coupon-message');
-        panel.querySelector('.tourivo-apply-coupon')?.addEventListener('click', function () {
+        const couponMessage = panel.querySelector('.readscope-coupon-message');
+        panel.querySelector('.readscope-apply-coupon')?.addEventListener('click', function () {
             if (checkInInput && !checkInInput.value) {
                 if (couponMessage) {
                     couponMessage.textContent = 'Choose your travel dates before applying a code.';
@@ -167,14 +167,14 @@ document.addEventListener('DOMContentLoaded', function () {
         initAvailabilityCalendar();
 
         function initAvailabilityCalendar() {
-            const cal = panel.querySelector('.tourivo-cal');
-            const summary = panel.querySelector('.tourivo-cal-summary');
-            const dateFields = panel.querySelector('.tourivo-date-fields');
+            const cal = panel.querySelector('.readscope-cal');
+            const summary = panel.querySelector('.readscope-cal-summary');
+            const dateFields = panel.querySelector('.readscope-date-fields');
             if (!cal || !checkInInput) {
                 return;
             }
 
-            const copy = (window.tourivoData && window.tourivoData.calendar) || {};
+            const copy = (window.readscopeData && window.readscopeData.calendar) || {};
             const weekdays = Array.isArray(copy.weekdays) && copy.weekdays.length === 7
                 ? copy.weekdays
                 : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -191,12 +191,12 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             const today = cal.dataset.today || '';
-            const title = cal.querySelector('.tourivo-cal-title');
-            const weekdayRow = cal.querySelector('.tourivo-cal-weekdays');
-            const grid = cal.querySelector('.tourivo-cal-grid');
-            const note = cal.querySelector('.tourivo-cal-note');
-            const prev = cal.querySelector('.tourivo-cal-prev');
-            const next = cal.querySelector('.tourivo-cal-next');
+            const title = cal.querySelector('.readscope-cal-title');
+            const weekdayRow = cal.querySelector('.readscope-cal-weekdays');
+            const grid = cal.querySelector('.readscope-cal-grid');
+            const note = cal.querySelector('.readscope-cal-note');
+            const prev = cal.querySelector('.readscope-cal-prev');
+            const next = cal.querySelector('.readscope-cal-next');
             const cache = {};
             const inflight = {};
             let awaitingCheckout = false;
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const monthData = cache[view.y + '-' + view.m];
                 if (!monthData) {
                     const loading = document.createElement('p');
-                    loading.className = 'tourivo-cal-loading';
+                    loading.className = 'readscope-cal-loading';
                     loading.textContent = text.loading;
                     grid.appendChild(loading);
                     return;
@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const cout = checkOutInput ? checkOutInput.value : '';
 
                 for (let i = 0; i < firstDow; i++) {
-                    grid.appendChild(document.createElement('span')).className = 'tourivo-cal-pad';
+                    grid.appendChild(document.createElement('span')).className = 'readscope-cal-pad';
                 }
 
                 for (let day = 1; day <= daysInMonth; day++) {
@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const canLeave = awaitingCheckout && cin && iso > cin;
                     const button = document.createElement('button');
                     button.type = 'button';
-                    button.className = 'tourivo-cal-day';
+                    button.className = 'readscope-cal-day';
                     button.dataset.date = iso;
                     if (past) button.classList.add('is-past');
                     if (closed) button.classList.add('is-soldout');
@@ -306,10 +306,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     button.disabled = past || !info || (closed && !canLeave);
 
                     const num = document.createElement('span');
-                    num.className = 'tourivo-cal-num';
+                    num.className = 'readscope-cal-num';
                     num.textContent = String(day);
                     const spots = document.createElement('span');
-                    spots.className = 'tourivo-cal-spots';
+                    spots.className = 'readscope-cal-spots';
                     if (!past && info) {
                         spots.textContent = closed ? text.soldOut : String(info.spots);
                     }
@@ -333,9 +333,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     await inflight[key];
                     return;
                 }
-                const rest = window.tourivoData && window.tourivoData.restUrl;
+                const rest = window.readscopeData && window.readscopeData.restUrl;
                 if (!rest) throw new Error('calendar');
-                const url = new URL(rest + 'tourivo/v1/availability/calendar');
+                const url = new URL(rest + 'readscope/v1/availability/calendar');
                 url.searchParams.set('item_id', itemId);
                 url.searchParams.set('item_type', itemType);
                 url.searchParams.set('year', String(year));
@@ -445,12 +445,12 @@ document.addEventListener('DOMContentLoaded', function () {
             prev?.addEventListener('click', function () { shiftMonth(-1); });
             next?.addEventListener('click', function () { shiftMonth(1); });
             grid?.addEventListener('click', function (event) {
-                const button = event.target.closest('.tourivo-cal-day');
+                const button = event.target.closest('.readscope-cal-day');
                 if (!button || button.disabled) return;
                 choose(button.dataset.date || '');
             });
 
-            if (!window.tourivoData || !window.tourivoData.restUrl) {
+            if (!window.readscopeData || !window.readscopeData.restUrl) {
                 useNativeDates();
                 return;
             }
@@ -501,7 +501,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             // Real-time backend quote & availability verification with debounce (~250ms) & AbortController
-            if (window.tourivoData && window.tourivoData.restUrl && checkIn) {
+            if (window.readscopeData && window.readscopeData.restUrl && checkIn) {
                 if (itemType === 'room' && checkOutInput && !checkOutInput.value) {
                     syncCheckoutStep(false);
                 }
@@ -515,7 +515,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const serial = ++quoteSerial;
 
                     // 1. Fetch Authoritative Price Quote
-                    const quoteUrl = new URL(window.tourivoData.restUrl + 'tourivo/v1/pricing/quote');
+                    const quoteUrl = new URL(window.readscopeData.restUrl + 'readscope/v1/pricing/quote');
                     quoteUrl.searchParams.set('item_id', itemId);
                     quoteUrl.searchParams.set('item_type', itemType);
                     quoteUrl.searchParams.set('check_in', checkIn);
@@ -524,7 +524,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     quoteUrl.searchParams.set('children', children);
                     quoteUrl.searchParams.set('infants', infants);
                     quoteUrl.searchParams.set('rooms', rooms);
-                    panel.querySelectorAll('.tourivo-addon-checkbox:checked').forEach(function (cb) {
+                    panel.querySelectorAll('.readscope-addon-checkbox:checked').forEach(function (cb) {
                         if (cb.value) {
                             quoteUrl.searchParams.append('selected_addons[]', cb.value);
                         }
@@ -625,7 +625,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         });
 
                     // 2. Availability Check
-                    const checkUrl = new URL(window.tourivoData.restUrl + 'tourivo/v1/availability/check');
+                    const checkUrl = new URL(window.readscopeData.restUrl + 'readscope/v1/availability/check');
                     checkUrl.searchParams.set('item_id', itemId);
                     checkUrl.searchParams.set('item_type', itemType);
                     checkUrl.searchParams.set('start_date', checkIn);
@@ -673,7 +673,7 @@ document.addEventListener('DOMContentLoaded', function () {
             bookingForm.addEventListener('submit', function (e) {
                 e.preventDefault();
 
-                if (!window.tourivoData || !window.tourivoData.restUrl) {
+                if (!window.readscopeData || !window.readscopeData.restUrl) {
                     alert('Readscope Booking REST API endpoint is not configured.');
                     return;
                 }
@@ -681,7 +681,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const formData = new FormData(bookingForm);
                 const customFields = {};
                 formData.forEach(function (value, key) {
-                    const match = key.match(/^tourivo_fields\[(.+)\]$/);
+                    const match = key.match(/^readscope_fields\[(.+)\]$/);
                     if (match) {
                         customFields[match[1]] = value;
                     }
@@ -701,7 +701,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     customer_notes: formData.get('customer_notes') || '',
                     payment_method: formData.get('payment_method') || 'offline',
                     consent: formData.get('consent') ? 1 : 0,
-                    tourivo_hp_check: formData.get('tourivo_hp_check') || '',
+                    readscope_hp_check: formData.get('readscope_hp_check') || '',
                     selected_addons: formData.getAll('selected_addons[]'),
                     coupon_code: formData.get('coupon_code') || '',
                     custom_fields: customFields,
@@ -714,11 +714,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     alertBox.textContent = '';
                 }
 
-                fetch(window.tourivoData.restUrl + 'tourivo/v1/bookings/direct', {
+                fetch(window.readscopeData.restUrl + 'readscope/v1/bookings/direct', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-WP-Nonce': window.tourivoData.nonce || '',
+                        'X-WP-Nonce': window.readscopeData.nonce || '',
                     },
                     body: JSON.stringify(payload),
                 })
@@ -759,12 +759,12 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // 5. Trip Inquiry Modal Open / Close / Submit
-        const openInquiryBtn = panel.querySelector('#tourivo-open-inquiry-modal');
-        const inquiryModal = panel.querySelector('#tourivo-inquiry-modal');
-        const closeInquiryBtns = panel.querySelectorAll('.close-inquiry-modal, .tourivo-modal-overlay');
-        const inquiryForm = panel.querySelector('#tourivo-inquiry-form');
-        const inquirySubmitBtn = panel.querySelector('#tourivo-inquiry-submit-btn');
-        const inquiryAlert = panel.querySelector('#tourivo-inquiry-alert');
+        const openInquiryBtn = panel.querySelector('#readscope-open-inquiry-modal');
+        const inquiryModal = panel.querySelector('#readscope-inquiry-modal');
+        const closeInquiryBtns = panel.querySelectorAll('.close-inquiry-modal, .readscope-modal-overlay');
+        const inquiryForm = panel.querySelector('#readscope-inquiry-form');
+        const inquirySubmitBtn = panel.querySelector('#readscope-inquiry-submit-btn');
+        const inquiryAlert = panel.querySelector('#readscope-inquiry-alert');
 
         if (openInquiryBtn && inquiryModal) {
             openInquiryBtn.addEventListener('click', function () {
@@ -783,7 +783,7 @@ document.addEventListener('DOMContentLoaded', function () {
             inquiryForm.addEventListener('submit', function (e) {
                 e.preventDefault();
 
-                if (!window.tourivoData || !window.tourivoData.ajaxUrl) {
+                if (!window.readscopeData || !window.readscopeData.ajaxUrl) {
                     alert('AJAX URL is not configured.');
                     return;
                 }
@@ -793,9 +793,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (inquiryAlert) inquiryAlert.style.display = 'none';
 
                 const formData = new FormData(inquiryForm);
-                formData.append('_wpnonce', window.tourivoData.frontendNonce || '');
+                formData.append('_wpnonce', window.readscopeData.frontendNonce || '');
 
-                fetch(window.tourivoData.ajaxUrl, {
+                fetch(window.readscopeData.ajaxUrl, {
                     method: 'POST',
                     body: formData,
                 })
@@ -839,19 +839,19 @@ document.addEventListener('DOMContentLoaded', function () {
        LIVE AJAX SEARCH & FILTER CONTROLLER
        ======================================================= */
     function initLiveFilters() {
-        const filterWrappers = document.querySelectorAll('.tourivo-live-filter-wrapper');
+        const filterWrappers = document.querySelectorAll('.readscope-live-filter-wrapper');
 
         filterWrappers.forEach(wrap => {
-            const form = wrap.querySelector('.tourivo-filter-form');
+            const form = wrap.querySelector('.readscope-filter-form');
             if (form) {
                 form.addEventListener('submit', e => e.preventDefault());
             }
-            const rangeInput = wrap.querySelector('.tourivo-filter-range');
+            const rangeInput = wrap.querySelector('.readscope-filter-range');
             const priceIndicator = wrap.querySelector('.price-val-indicator');
-            const resultsGrid = wrap.querySelector('.tourivo-live-results');
-            const loader = wrap.querySelector('.tourivo-filter-loader');
+            const resultsGrid = wrap.querySelector('.readscope-live-results');
+            const loader = wrap.querySelector('.readscope-filter-loader');
             const counterNum = wrap.querySelector('.counter-num');
-            const resetBtn = wrap.querySelector('.tourivo-btn-reset-filters');
+            const resetBtn = wrap.querySelector('.readscope-btn-reset-filters');
             const type = wrap.dataset.type || 'tour';
             const count = wrap.dataset.count || 9;
             const cols = wrap.dataset.columns || 3;
@@ -867,7 +867,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             function fetchFilteredResults() {
-                if (!window.tourivoData || !window.tourivoData.ajaxUrl) return;
+                if (!window.readscopeData || !window.readscopeData.ajaxUrl) return;
 
                 if (loader) loader.style.display = 'flex';
                 if (resultsGrid) resultsGrid.style.opacity = '0.4';
@@ -879,13 +879,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const formData = new FormData(form);
                 const params = new URLSearchParams(formData);
-                params.set('action', 'tourivo_filter_items');
-                params.set('nonce', window.tourivoData.frontendNonce || '');
+                params.set('action', 'readscope_filter_items');
+                params.set('nonce', window.readscopeData.frontendNonce || '');
                 params.set('type', type);
                 params.set('count', count);
                 params.set('columns', cols);
 
-                fetch(`${window.tourivoData.ajaxUrl}?${params.toString()}`, { signal: filterAbortController.signal })
+                fetch(`${window.readscopeData.ajaxUrl}?${params.toString()}`, { signal: filterAbortController.signal })
                     .then(res => res.json())
                     .then(res => {
                         if (loader) loader.style.display = 'none';
@@ -896,7 +896,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 // Refresh wishlist button active states for newly injected cards
                                 syncWishlistButtonStates();
                                 // Count items
-                                const cardCount = resultsGrid.querySelectorAll('.tourivo-card').length;
+                                const cardCount = resultsGrid.querySelectorAll('.readscope-card').length;
                                 if (counterNum) counterNum.textContent = cardCount;
                             }
                         }
@@ -911,18 +911,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Initial counter sync
             if (resultsGrid && counterNum) {
-                counterNum.textContent = resultsGrid.querySelectorAll('.tourivo-card').length;
+                counterNum.textContent = resultsGrid.querySelectorAll('.readscope-card').length;
             }
 
             // Listen to inputs
-            wrap.querySelectorAll('.tourivo-filter-input, .tourivo-filter-range').forEach(input => {
+            wrap.querySelectorAll('.readscope-filter-input, .readscope-filter-range').forEach(input => {
                 input.addEventListener('input', function () {
                     clearTimeout(debounceTimer);
                     debounceTimer = setTimeout(fetchFilteredResults, 350);
                 });
             });
 
-            wrap.querySelectorAll('.tourivo-filter-select').forEach(select => {
+            wrap.querySelectorAll('.readscope-filter-select').forEach(select => {
                 select.addEventListener('change', fetchFilteredResults);
             });
 
@@ -945,7 +945,7 @@ document.addEventListener('DOMContentLoaded', function () {
     /* =======================================================
        TRAVELER WISHLIST CONTROLLER
        ======================================================= */
-    const WISHLIST_STORAGE_KEY = 'tourivo_traveler_wishlist';
+    const WISHLIST_STORAGE_KEY = 'readscope_traveler_wishlist';
 
     function getLocalWishlist() {
         try {
@@ -962,12 +962,12 @@ document.addEventListener('DOMContentLoaded', function () {
         } catch (e) {}
 
         // Background server sync if available
-        if (window.tourivoData && window.tourivoData.ajaxUrl) {
+        if (window.readscopeData && window.readscopeData.ajaxUrl) {
             const fd = new FormData();
-            fd.append('action', 'tourivo_sync_wishlist');
-            fd.append('nonce', window.tourivoData.frontendNonce || '');
+            fd.append('action', 'readscope_sync_wishlist');
+            fd.append('nonce', window.readscopeData.frontendNonce || '');
             ids.forEach(id => fd.append('ids[]', id));
-            fetch(window.tourivoData.ajaxUrl, { method: 'POST', body: fd }).catch(() => {});
+            fetch(window.readscopeData.ajaxUrl, { method: 'POST', body: fd }).catch(() => {});
         }
     }
 
@@ -989,7 +989,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function syncWishlistButtonStates() {
         const list = getLocalWishlist();
-        document.querySelectorAll('.tourivo-wishlist-toggle').forEach(btn => {
+        document.querySelectorAll('.readscope-wishlist-toggle').forEach(btn => {
             const id = parseInt(btn.dataset.id, 10);
             if (list.includes(id)) {
                 btn.classList.add('is-active');
@@ -998,7 +998,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        document.querySelectorAll('.tourivo-wishlist-toggle-single').forEach(btn => {
+        document.querySelectorAll('.readscope-wishlist-toggle-single').forEach(btn => {
             const id = parseInt(btn.dataset.id, 10);
             const label = btn.querySelector('.wishlist-btn-label');
             if (list.includes(id)) {
@@ -1013,7 +1013,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Global Click Listener for Wishlist Toggle Buttons
     document.addEventListener('click', function (e) {
-        const cardBtn = e.target.closest('.tourivo-wishlist-toggle');
+        const cardBtn = e.target.closest('.readscope-wishlist-toggle');
         if (cardBtn) {
             e.preventDefault();
             e.stopPropagation();
@@ -1022,7 +1022,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        const singleBtn = e.target.closest('.tourivo-wishlist-toggle-single');
+        const singleBtn = e.target.closest('.readscope-wishlist-toggle-single');
         if (singleBtn) {
             e.preventDefault();
             const id = singleBtn.dataset.id;
@@ -1035,13 +1035,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Wishlist Shortcode Page Loader
     function initWishlistPage() {
-        const wishlistWrap = document.querySelector('.tourivo-wishlist-wrap');
+        const wishlistWrap = document.querySelector('.readscope-wishlist-wrap');
         if (!wishlistWrap) return;
 
-        const loader = wishlistWrap.querySelector('#tourivo-wishlist-loading');
-        const grid = wishlistWrap.querySelector('#tourivo-wishlist-grid');
-        const emptyState = wishlistWrap.querySelector('#tourivo-wishlist-empty');
-        const countLabel = wishlistWrap.querySelector('#tourivo-wishlist-total-count');
+        const loader = wishlistWrap.querySelector('#readscope-wishlist-loading');
+        const grid = wishlistWrap.querySelector('#readscope-wishlist-grid');
+        const emptyState = wishlistWrap.querySelector('#readscope-wishlist-empty');
+        const countLabel = wishlistWrap.querySelector('#readscope-wishlist-total-count');
 
         const savedIds = getLocalWishlist();
 
@@ -1054,14 +1054,14 @@ document.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        if (!window.tourivoData || !window.tourivoData.ajaxUrl) return;
+        if (!window.readscopeData || !window.readscopeData.ajaxUrl) return;
 
         const formData = new FormData();
-        formData.append('action', 'tourivo_get_wishlist_items');
-        formData.append('nonce', window.tourivoData.frontendNonce || '');
+        formData.append('action', 'readscope_get_wishlist_items');
+        formData.append('nonce', window.readscopeData.frontendNonce || '');
         savedIds.forEach(id => formData.append('ids[]', id));
 
-        fetch(window.tourivoData.ajaxUrl, {
+        fetch(window.readscopeData.ajaxUrl, {
             method: 'POST',
             body: formData,
         })
@@ -1092,8 +1092,8 @@ document.addEventListener('DOMContentLoaded', function () {
        INTERACTIVE STAR RATING PICKER
        ======================================================= */
     function initStarRatingPicker() {
-        const picker = document.querySelector('#tourivo-star-picker');
-        const ratingInput = document.querySelector('#tourivo_rating_input');
+        const picker = document.querySelector('#readscope-star-picker');
+        const ratingInput = document.querySelector('#readscope_rating_input');
 
         if (!picker || !ratingInput) return;
 
@@ -1144,12 +1144,12 @@ document.addEventListener('DOMContentLoaded', function () {
        MULTI-CURRENCY FRONTEND SWITCHER
        ======================================================= */
     function initCurrencySwitcher() {
-        const currencySelect = document.getElementById('tourivo-currency-select');
+        const currencySelect = document.getElementById('readscope-currency-select');
         if (!currencySelect) return;
 
         let storedCurrency = null;
         try {
-            storedCurrency = localStorage.getItem('tourivo_active_currency');
+            storedCurrency = localStorage.getItem('readscope_active_currency');
         } catch (e) {}
 
         if (storedCurrency && currencySelect.querySelector(`option[value="${storedCurrency}"]`)) {
@@ -1163,7 +1163,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const rate = parseFloat(selectedOpt.dataset.rate) || 1.0;
 
             try {
-                localStorage.setItem('tourivo_active_currency', code);
+                localStorage.setItem('readscope_active_currency', code);
             } catch (e) {}
 
             // Update live booking panel if present
@@ -1172,13 +1172,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 const basePrice = parseFloat(panel.dataset.unitPrice) || 0;
                 panel.dataset.convertedUnitPrice = (basePrice * rate).toFixed(2);
 
-                const livePriceAmount = panel.querySelector('#tourivo-live-price');
+                const livePriceAmount = panel.querySelector('#readscope-live-price');
                 if (livePriceAmount) {
                     livePriceAmount.textContent = formatMoney(basePrice * rate, symbol);
                 }
 
                 // Dispatch input event to recalculate
-                const checkInInput = panel.querySelector('#tourivo-check-in');
+                const checkInInput = panel.querySelector('#readscope-check-in');
                 if (checkInInput) {
                     checkInInput.dispatchEvent(new Event('change'));
                 }
@@ -1193,7 +1193,7 @@ document.addEventListener('DOMContentLoaded', function () {
        ======================================================= */
     function initLightbox() {
         const galleryImages = Array.from(document.querySelectorAll(
-            '.tourivo-hero-img img, .tourivo-featured-banner img, .tourivo-gallery-item img, .tourivo-gallery-grid img, .tourivo-room-card-img img'
+            '.readscope-hero-img img, .readscope-featured-banner img, .readscope-gallery-item img, .readscope-gallery-grid img, .readscope-room-card-img img'
         ));
 
         if (galleryImages.length === 0) return;
@@ -1201,28 +1201,28 @@ document.addEventListener('DOMContentLoaded', function () {
         let currentIndex = 0;
         let activeImagesList = [];
 
-        let overlay = document.getElementById('tourivo-lightbox-overlay');
+        let overlay = document.getElementById('readscope-lightbox-overlay');
         if (!overlay) {
             overlay = document.createElement('div');
-            overlay.id = 'tourivo-lightbox-overlay';
-            overlay.className = 'tourivo-lightbox-overlay';
+            overlay.id = 'readscope-lightbox-overlay';
+            overlay.className = 'readscope-lightbox-overlay';
             overlay.innerHTML = `
-                <div class="tourivo-lightbox-container">
-                    <button type="button" class="tourivo-lightbox-close" aria-label="Close">&times;</button>
-                    <button type="button" class="tourivo-lightbox-prev" aria-label="Previous">&#8249;</button>
-                    <img class="tourivo-lightbox-img" src="" alt="">
-                    <div class="tourivo-lightbox-caption"></div>
-                    <button type="button" class="tourivo-lightbox-next" aria-label="Next">&#8250;</button>
+                <div class="readscope-lightbox-container">
+                    <button type="button" class="readscope-lightbox-close" aria-label="Close">&times;</button>
+                    <button type="button" class="readscope-lightbox-prev" aria-label="Previous">&#8249;</button>
+                    <img class="readscope-lightbox-img" src="" alt="">
+                    <div class="readscope-lightbox-caption"></div>
+                    <button type="button" class="readscope-lightbox-next" aria-label="Next">&#8250;</button>
                 </div>
             `;
             document.body.appendChild(overlay);
         }
 
-        const imgEl = overlay.querySelector('.tourivo-lightbox-img');
-        const captionEl = overlay.querySelector('.tourivo-lightbox-caption');
-        const closeBtn = overlay.querySelector('.tourivo-lightbox-close');
-        const prevBtn = overlay.querySelector('.tourivo-lightbox-prev');
-        const nextBtn = overlay.querySelector('.tourivo-lightbox-next');
+        const imgEl = overlay.querySelector('.readscope-lightbox-img');
+        const captionEl = overlay.querySelector('.readscope-lightbox-caption');
+        const closeBtn = overlay.querySelector('.readscope-lightbox-close');
+        const prevBtn = overlay.querySelector('.readscope-lightbox-prev');
+        const nextBtn = overlay.querySelector('.readscope-lightbox-next');
 
         function showImage(index) {
             if (index < 0) index = activeImagesList.length - 1;
@@ -1258,9 +1258,9 @@ document.addEventListener('DOMContentLoaded', function () {
             img.style.cursor = 'zoom-in';
             img.addEventListener('click', function (e) {
                 e.preventDefault();
-                const parentSection = img.closest('.tourivo-container') || document;
+                const parentSection = img.closest('.readscope-container') || document;
                 const sectionImgs = Array.from(parentSection.querySelectorAll(
-                    '.tourivo-hero-img img, .tourivo-featured-banner img, .tourivo-gallery-item img, .tourivo-gallery-grid img, .tourivo-room-card-img img'
+                    '.readscope-hero-img img, .readscope-featured-banner img, .readscope-gallery-item img, .readscope-gallery-grid img, .readscope-room-card-img img'
                 ));
                 const list = sectionImgs.length > 0 ? sectionImgs : galleryImages;
                 const idx = list.indexOf(img);
@@ -1300,19 +1300,19 @@ document.addEventListener('DOMContentLoaded', function () {
     initLightbox();
 
     function initSearchCalendars() {
-        const forms = document.querySelectorAll('.tourivo-search-form');
-        if (!forms.length || !window.tourivoData || !window.tourivoData.restUrl) {
+        const forms = document.querySelectorAll('.readscope-search-form');
+        if (!forms.length || !window.readscopeData || !window.readscopeData.restUrl) {
             return;
         }
 
-        const text = window.tourivoData.calendar || {};
+        const text = window.readscopeData.calendar || {};
         const weekdays = text.weekdays || [];
         const months = text.months || [];
         const banglaDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
 
         function digits(value) {
             const raw = String(value);
-            if (!window.tourivoData.money || !window.tourivoData.money.bangla) {
+            if (!window.readscopeData.money || !window.readscopeData.money.bangla) {
                 return raw;
             }
             return raw.replace(/\d/g, function (digit) {
@@ -1321,16 +1321,16 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         forms.forEach(function (form) {
-            const field = form.querySelector('.tourivo-search-date');
-            const button = field && field.querySelector('.tourivo-search-date-btn');
-            const label = field && field.querySelector('.tourivo-search-date-label');
-            const input = field && field.querySelector('.tourivo-search-native');
-            const pop = field && field.querySelector('.tourivo-search-cal');
-            const grid = field && field.querySelector('.tourivo-cal-grid');
-            const title = field && field.querySelector('.tourivo-cal-title');
-            const prev = field && field.querySelector('.tourivo-cal-prev');
-            const next = field && field.querySelector('.tourivo-cal-next');
-            const heads = field && field.querySelector('.tourivo-cal-weekdays');
+            const field = form.querySelector('.readscope-search-date');
+            const button = field && field.querySelector('.readscope-search-date-btn');
+            const label = field && field.querySelector('.readscope-search-date-label');
+            const input = field && field.querySelector('.readscope-search-native');
+            const pop = field && field.querySelector('.readscope-search-cal');
+            const grid = field && field.querySelector('.readscope-cal-grid');
+            const title = field && field.querySelector('.readscope-cal-title');
+            const prev = field && field.querySelector('.readscope-cal-prev');
+            const next = field && field.querySelector('.readscope-cal-next');
+            const heads = field && field.querySelector('.readscope-cal-weekdays');
             if (!field || !button || !label || !input || !pop || !grid || !title || !prev || !next) {
                 return;
             }
@@ -1361,13 +1361,13 @@ document.addEventListener('DOMContentLoaded', function () {
             setLabel();
 
             function guests() {
-                const guestInput = form.querySelector('[name="tourivo_guests"]');
+                const guestInput = form.querySelector('[name="readscope_guests"]');
                 const count = guestInput ? parseInt(guestInput.value, 10) : 1;
                 return Math.max(1, Math.min(50, Number.isFinite(count) ? count : 1));
             }
 
             function destination() {
-                const select = form.querySelector('[name="tourivo_destination"]');
+                const select = form.querySelector('[name="readscope_destination"]');
                 return select ? select.value : '';
             }
 
@@ -1380,7 +1380,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (cache[key]) {
                     return Promise.resolve(cache[key]);
                 }
-                const url = new URL(window.tourivoData.restUrl + 'tourivo/v1/availability/search');
+                const url = new URL(window.readscopeData.restUrl + 'readscope/v1/availability/search');
                 url.searchParams.set('year', String(year));
                 url.searchParams.set('month', String(month));
                 url.searchParams.set('guests', String(guests()));
@@ -1412,7 +1412,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 grid.innerHTML = '';
                 for (let pad = 0; pad < startPad; pad++) {
                     const blank = document.createElement('span');
-                    blank.className = 'tourivo-cal-pad';
+                    blank.className = 'readscope-cal-pad';
                     grid.appendChild(blank);
                 }
 
@@ -1425,7 +1425,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     const closed = past || (tours < 1 && hotels < 1);
                     const dayButton = document.createElement('button');
                     dayButton.type = 'button';
-                    dayButton.className = 'tourivo-cal-day ' + (closed ? 'is-soldout' : (info.status === 'limited' ? 'is-limited' : 'is-available'));
+                    dayButton.className = 'readscope-cal-day ' + (closed ? 'is-soldout' : (info.status === 'limited' ? 'is-limited' : 'is-available'));
                     if (input.value === iso) {
                         dayButton.classList.add('is-selected');
                     }
@@ -1434,8 +1434,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     const tourLabel = (text.toursOpen || '%d tours open').replace('%d', digits(tours));
                     const hotelLabel = (text.hotelsOpen || '%d hotels open').replace('%d', digits(hotels));
                     dayButton.setAttribute('aria-label', digits(day) + ' ' + (months[month] || '') + ', ' + tourLabel + ', ' + hotelLabel);
-                    const spots = past ? '' : (closed ? (text.soldOut || '0') : '<span class="tourivo-cal-tours">' + digits(tours) + '</span><span class="tourivo-cal-hotels">' + digits(hotels) + '</span>');
-                    dayButton.innerHTML = '<span class="tourivo-cal-num">' + digits(day) + '</span><span class="tourivo-cal-spots">' + spots + '</span>';
+                    const spots = past ? '' : (closed ? (text.soldOut || '0') : '<span class="readscope-cal-tours">' + digits(tours) + '</span><span class="readscope-cal-hotels">' + digits(hotels) + '</span>');
+                    dayButton.innerHTML = '<span class="readscope-cal-num">' + digits(day) + '</span><span class="readscope-cal-spots">' + spots + '</span>';
                     grid.appendChild(dayButton);
                 }
 
@@ -1486,7 +1486,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 showMonth();
             });
             grid.addEventListener('click', function (event) {
-                const day = event.target.closest('.tourivo-cal-day');
+                const day = event.target.closest('.readscope-cal-day');
                 if (!day || day.disabled || !day.dataset.date) {
                     return;
                 }
@@ -1514,9 +1514,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }).catch(function () {});
             }
-            const guestInput = form.querySelector('[name="tourivo_guests"]');
-            const destInput = form.querySelector('[name="tourivo_destination"]');
-            const shownGuests = form.querySelector('.tourivo-guest-digits');
+            const guestInput = form.querySelector('[name="readscope_guests"]');
+            const destInput = form.querySelector('[name="readscope_destination"]');
+            const shownGuests = form.querySelector('.readscope-guest-digits');
             if (shownGuests && guestInput) {
                 const guestAscii = { '০': '0', '১': '1', '২': '2', '৩': '3', '৪': '4', '৫': '5', '৬': '6', '৭': '7', '৮': '8', '৯': '9' };
                 function readGuests(raw) {
@@ -1580,10 +1580,10 @@ document.addEventListener('DOMContentLoaded', function () {
             if (event.key !== 'Escape') {
                 return;
             }
-            document.querySelectorAll('.tourivo-search-date').forEach(function (field) {
+            document.querySelectorAll('.readscope-search-date').forEach(function (field) {
                 field.dataset.open = '0';
-                const pop = field.querySelector('.tourivo-search-cal');
-                const button = field.querySelector('.tourivo-search-date-btn');
+                const pop = field.querySelector('.readscope-search-cal');
+                const button = field.querySelector('.readscope-search-date-btn');
                 if (pop) {
                     pop.hidden = true;
                 }
@@ -1604,7 +1604,7 @@ function initGuestSteppers() {
 
     function toDigits(value) {
         const raw = String(value);
-        if (!window.tourivoData || !window.tourivoData.money || !window.tourivoData.money.bangla) {
+        if (!window.readscopeData || !window.readscopeData.money || !window.readscopeData.money.bangla) {
             return raw;
         }
         return raw.replace(/\d/g, function (digit) {
@@ -1626,12 +1626,12 @@ function initGuestSteppers() {
         return Math.max(1, Math.min(50, count));
     }
 
-    document.querySelectorAll('.tourivo-guest-stepper').forEach(function (stepper) {
+    document.querySelectorAll('.readscope-guest-stepper').forEach(function (stepper) {
         const field = stepper.closest('.guests-field') || stepper;
-        const shown = stepper.querySelector('.tourivo-guest-digits');
-        const named = field.querySelector('[name="tourivo_guests"]');
-        const minus = stepper.querySelector('.tourivo-guest-minus');
-        const plus = stepper.querySelector('.tourivo-guest-plus');
+        const shown = stepper.querySelector('.readscope-guest-digits');
+        const named = field.querySelector('[name="readscope_guests"]');
+        const minus = stepper.querySelector('.readscope-guest-minus');
+        const plus = stepper.querySelector('.readscope-guest-plus');
         if (!named || !minus || !plus) {
             return;
         }

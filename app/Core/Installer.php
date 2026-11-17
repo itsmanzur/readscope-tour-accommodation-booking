@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Core;
+namespace Readscope\Core;
 
-use Tourivo\Config\Config;
-use Tourivo\Database\Schema;
+use Readscope\Config\Config;
+use Readscope\Database\Schema;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
  *
  * Runs upon plugin activation: migrations, default settings, capability provisioning.
  *
- * @package Tourivo\Core
+ * @package Readscope\Core
  */
 class Installer
 {
@@ -52,7 +52,7 @@ class Installer
             require_once ABSPATH . 'wp-admin/includes/plugin.php';
         }
 
-        if (!is_plugin_active_for_network(plugin_basename(TOURIVO_PLUGIN_FILE))) {
+        if (!is_plugin_active_for_network(plugin_basename(READSCOPE_PLUGIN_FILE))) {
             return;
         }
 
@@ -72,24 +72,24 @@ class Installer
         Schema::migrate();
 
         // 2. Set default options if not existing
-        if (!get_option('tourivo_settings')) {
-            update_option('tourivo_settings', Config::getDefaults());
+        if (!get_option('readscope_settings')) {
+            update_option('readscope_settings', Config::getDefaults());
         }
 
         // 3. Set plugin installed timestamp & version
-        if (!get_option('tourivo_installed_at')) {
-            update_option('tourivo_installed_at', current_time('mysql'));
+        if (!get_option('readscope_installed_at')) {
+            update_option('readscope_installed_at', current_time('mysql'));
         }
-        update_option('tourivo_version', TOURIVO_VERSION);
+        update_option('readscope_version', READSCOPE_VERSION);
 
         // 4. Add custom user capabilities to administrator
         self::addCapabilities();
 
         // 5. Fire activation action hook for add-ons (like Readscope Booking Pro)
-        do_action('tourivo/activated');
+        do_action('readscope/activated');
 
         // Flag rewrite rules to be flushed safely on next init hook
-        update_option('tourivo_flush_rewrite', 1);
+        update_option('readscope_flush_rewrite', 1);
     }
 
     /**
@@ -105,12 +105,12 @@ class Installer
         }
 
         $capabilities = [
-            'manage_tourivo',
-            'manage_tourivo_bookings',
-            'manage_tourivo_tours',
-            'manage_tourivo_hotels',
-            'manage_tourivo_settings',
-            'manage_tourivo_checkin',
+            'manage_readscope',
+            'manage_readscope_bookings',
+            'manage_readscope_tours',
+            'manage_readscope_hotels',
+            'manage_readscope_settings',
+            'manage_readscope_checkin',
         ];
 
         foreach ($capabilities as $cap) {

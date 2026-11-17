@@ -18,7 +18,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
     tests_add_filter('muplugins_loaded', static function () {
         require dirname(__DIR__) . '/the-readscope-tour-and-accommodation-booking.php';
-        \Tourivo\Database\Schema::migrate();
+        \Readscope\Database\Schema::migrate();
     });
 
     require $_tests_dir . '/includes/bootstrap.php';
@@ -27,17 +27,17 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     if (!defined('ABSPATH')) {
         define('ABSPATH', dirname(__DIR__) . '/');
     }
-    if (!defined('TOURIVO_TEST_MODE')) {
-        define('TOURIVO_TEST_MODE', true);
+    if (!defined('READSCOPE_TEST_MODE')) {
+        define('READSCOPE_TEST_MODE', true);
     }
-    if (!defined('TOURIVO_VERSION')) {
-        define('TOURIVO_VERSION', '1.4.0');
+    if (!defined('READSCOPE_VERSION')) {
+        define('READSCOPE_VERSION', '1.4.0');
     }
-    if (!defined('TOURIVO_PLUGIN_DIR')) {
-        define('TOURIVO_PLUGIN_DIR', dirname(__DIR__) . '/');
+    if (!defined('READSCOPE_PLUGIN_DIR')) {
+        define('READSCOPE_PLUGIN_DIR', dirname(__DIR__) . '/');
     }
-    if (!defined('TOURIVO_PLUGIN_URL')) {
-        define('TOURIVO_PLUGIN_URL', 'http://localhost/wp-content/plugins/the-readscope-tour-and-accommodation-booking/');
+    if (!defined('READSCOPE_PLUGIN_URL')) {
+        define('READSCOPE_PLUGIN_URL', 'http://localhost/wp-content/plugins/the-readscope-tour-and-accommodation-booking/');
     }
     if (!defined('HOUR_IN_SECONDS')) {
         define('HOUR_IN_SECONDS', 3600);
@@ -57,7 +57,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
     // PSR-4 Autoloader
     spl_autoload_register(static function (string $class) {
-        $prefix = 'Tourivo\\';
+        $prefix = 'Readscope\\';
         $baseDir = dirname(__DIR__) . '/app/';
         $len = strlen($prefix);
         if (strncmp($prefix, $class, $len) !== 0) {
@@ -71,16 +71,16 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     });
 
     // Mock storage
-    $GLOBALS['tourivo_mock_options'] = [
+    $GLOBALS['readscope_mock_options'] = [
         'admin_email' => 'admin@example.com',
         'blogname'    => 'Readscope Test Site',
     ];
-    $GLOBALS['tourivo_mock_transients'] = [];
-    $GLOBALS['tourivo_mock_posts'] = [];
-    $GLOBALS['tourivo_mock_postmeta'] = [];
-    $GLOBALS['tourivo_mock_terms'] = [];
-    $GLOBALS['tourivo_mock_actions'] = [];
-    $GLOBALS['tourivo_mock_filters'] = [];
+    $GLOBALS['readscope_mock_transients'] = [];
+    $GLOBALS['readscope_mock_posts'] = [];
+    $GLOBALS['readscope_mock_postmeta'] = [];
+    $GLOBALS['readscope_mock_terms'] = [];
+    $GLOBALS['readscope_mock_actions'] = [];
+    $GLOBALS['readscope_mock_filters'] = [];
 
     // Mock WordPress WP_Post
     if (!class_exists('WP_Post')) {
@@ -139,11 +139,11 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                 $trimmed = trim($query);
 
                 // RateLimiter: emulate the atomic options-table upsert, the user variable and the clean-up deletes
-                if (stripos($trimmed, 'SET @tourivo_rl_c') === 0) {
+                if (stripos($trimmed, 'SET @readscope_rl_c') === 0) {
                     $this->rl_var = 1;
                     return 0;
                 }
-                if (stripos($trimmed, 'INSERT INTO') === 0 && strpos($trimmed, '@tourivo_rl_c') !== false) {
+                if (stripos($trimmed, 'INSERT INTO') === 0 && strpos($trimmed, '@readscope_rl_c') !== false) {
                     if ($this->rl_fail) {
                         return false;
                     }
@@ -160,7 +160,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     }
                     return 1;
                 }
-                if (stripos($trimmed, 'DELETE FROM') === 0 && preg_match('/tourivo\\\\?_rl/', $trimmed)) {
+                if (stripos($trimmed, 'DELETE FROM') === 0 && preg_match('/readscope\\\\?_rl/', $trimmed)) {
                     $deleted = 0;
                     if (preg_match("/option_name = '([^']+)'/", $trimmed, $m)) {
                         $deleted = isset($this->rl_rows[$m[1]]) ? 1 : 0;
@@ -180,13 +180,13 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     return 1;
                 }
 
-                // 0. INSERT IGNORE INTO wp_tourivo_inventories: create the row only if it does not exist yet
-                if (stripos($trimmed, 'INSERT IGNORE INTO') !== false && stripos($trimmed, 'tourivo_inventories') !== false) {
+                // 0. INSERT IGNORE INTO wp_readscope_inventories: create the row only if it does not exist yet
+                if (stripos($trimmed, 'INSERT IGNORE INTO') !== false && stripos($trimmed, 'readscope_inventories') !== false) {
                     if (preg_match("/VALUES\s*\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*'([^']+)'/is", $trimmed, $m)) {
                         $key = "{$m[1]}_{$m[3]}";
                         // While the "lose the first-row race" hook is armed, ensureRow() is a no-op so the fallback
                         // INSERT path (and its retry) is what gets exercised.
-                        if (isset($this->inventories[$key]) || !empty($GLOBALS['tourivo_mock_fail_next_inventory_insert'])) {
+                        if (isset($this->inventories[$key]) || !empty($GLOBALS['readscope_mock_fail_next_inventory_insert'])) {
                             $this->rows_affected = 0;
                             return 0;
                         }
@@ -201,12 +201,12 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     }
                 }
 
-                // 1. INSERT INTO wp_tourivo_inventories
-                if (stripos($trimmed, 'INSERT INTO') !== false && stripos($trimmed, 'tourivo_inventories') !== false) {
+                // 1. INSERT INTO wp_readscope_inventories
+                if (stripos($trimmed, 'INSERT INTO') !== false && stripos($trimmed, 'readscope_inventories') !== false) {
                     // Test hook: simulate losing the "first row for this date" race (a concurrent writer inserts the
                     // row first, our INSERT then fails with a duplicate-key error).
-                    if (!empty($GLOBALS['tourivo_mock_fail_next_inventory_insert'])) {
-                        $GLOBALS['tourivo_mock_fail_next_inventory_insert'] = false;
+                    if (!empty($GLOBALS['readscope_mock_fail_next_inventory_insert'])) {
+                        $GLOBALS['readscope_mock_fail_next_inventory_insert'] = false;
                         if (preg_match("/VALUES\s*\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*,\s*(\d+)/i", $trimmed, $mr)) {
                             $this->inventories["{$mr[1]}_{$mr[3]}"] = [
                                 'id' => count($this->inventories) + 1, 'item_id' => (int) $mr[1], 'item_type' => $mr[2],
@@ -295,8 +295,8 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     }
                 }
 
-                // 2. UPDATE wp_tourivo_inventories
-                if (stripos($trimmed, 'UPDATE') !== false && stripos($trimmed, 'tourivo_inventories') !== false) {
+                // 2. UPDATE wp_readscope_inventories
+                if (stripos($trimmed, 'UPDATE') !== false && stripos($trimmed, 'readscope_inventories') !== false) {
                     if (preg_match('/SET\s+booked_count\s*=\s*(\d+)\s*,\s*reserved_count\s*=\s*(\d+)\s*,\s*status\s*=\s*\'([^\']+)\'.*WHERE\s+item_id\s*=\s*(\d+).*event_date\s*=\s*\'([^\']+)\'/is', $trimmed, $m)) {
                         $booked   = (int) $m[1];
                         $reserved = (int) $m[2];
@@ -363,8 +363,8 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     }
                 }
 
-                // 3. UPDATE wp_tourivo_bookings
-                if (stripos($trimmed, 'UPDATE') !== false && stripos($trimmed, 'tourivo_bookings') !== false) {
+                // 3. UPDATE wp_readscope_bookings
+                if (stripos($trimmed, 'UPDATE') !== false && stripos($trimmed, 'readscope_bookings') !== false) {
                     // Atomic payment (Readscope Booking Pro PaymentRecorder): paid_amount = LEAST(total_amount, paid_amount + X), assigned last.
                     if (preg_match('/paid_amount\s*=\s*LEAST\(total_amount,\s*paid_amount\s*\+\s*([0-9.]+)\)\s+WHERE\s+id\s*=\s*(\d+)/is', $trimmed, $m)) {
                         $id = (int) $m[2];
@@ -426,8 +426,8 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     }
                 }
 
-                // 3b. UPDATE wp_tourivo_logs (PII redaction)
-                if (stripos($trimmed, 'UPDATE') !== false && stripos($trimmed, 'tourivo_logs') !== false) {
+                // 3b. UPDATE wp_readscope_logs (PII redaction)
+                if (stripos($trimmed, 'UPDATE') !== false && stripos($trimmed, 'readscope_logs') !== false) {
                     if (preg_match("/SET\s+details\s*=\s*'([^']*)'\s+WHERE\s+booking_id\s*=\s*(\d+)\s+AND\s+action\s+IN\s*\(([^)]*)\)/is", $trimmed, $m)) {
                         $actions = array_map(static fn ($a) => trim($a, " '"), explode(',', $m[3]));
                         $n = 0;
@@ -442,8 +442,8 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     }
                 }
 
-                // 4. DELETE FROM wp_tourivo_inquiries
-                if (stripos($trimmed, 'DELETE FROM') !== false && stripos($trimmed, 'tourivo_inquiries') !== false) {
+                // 4. DELETE FROM wp_readscope_inquiries
+                if (stripos($trimmed, 'DELETE FROM') !== false && stripos($trimmed, 'readscope_inquiries') !== false) {
                     if (preg_match("/customer_email\s*=\s*'([^']+)'/i", $trimmed, $m)) {
                         $targetEmail = $m[1];
                         $cnt = 0;
@@ -475,9 +475,9 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
             public function get_var(?string $query = null, int $x = 0, int $y = 0): mixed {
                 if (!$query) return null;
-                if ($query === 'SELECT @tourivo_rl_c') return $this->rl_var;
+                if ($query === 'SELECT @readscope_rl_c') return $this->rl_var;
                 if (stripos($query, 'COUNT(*)') !== false) {
-                    if (stripos($query, 'tourivo_inquiries') !== false) {
+                    if (stripos($query, 'readscope_inquiries') !== false) {
                         if (preg_match("/customer_email\s*=\s*'([^']+)'/i", $query, $mEmail)) {
                             $cnt = 0;
                             foreach ($this->inquiries as $inq) {
@@ -495,7 +495,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                         }
                         return count($this->inquiries);
                     }
-                    if (stripos($query, 'tourivo_bookings') !== false) {
+                    if (stripos($query, 'readscope_bookings') !== false) {
                         if (preg_match("/customer_email\s*=\s*'([^']+)'/i", $query, $mEmail)) {
                             $cnt = 0;
                             foreach ($this->bookings as $b) {
@@ -524,9 +524,9 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     return $this->bookings[$id]['booking_status'] ?? null;
                 }
                 if (stripos($query, 'SHOW TABLES') !== false) {
-                    return 'wp_tourivo_bookings';
+                    return 'wp_readscope_bookings';
                 }
-                if (stripos($query, 'tourivo_inventories') !== false && stripos($query, 'SELECT 1') !== false) {
+                if (stripos($query, 'readscope_inventories') !== false && stripos($query, 'SELECT 1') !== false) {
                     $itemIds = [];
                     if (preg_match('/item_id\s+IN\s*\(([^)]+)\)/i', $query, $mIds)) {
                         $itemIds = array_map('intval', explode(',', $mIds[1]));
@@ -593,20 +593,20 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
             public function get_col(?string $query = null, int $x = 0): array {
                 if (!$query) return [];
-                if (stripos($query, 'tourivo_bookings') !== false && stripos($query, 'HAVING') !== false) {
+                if (stripos($query, 'readscope_bookings') !== false && stripos($query, 'HAVING') !== false) {
                     return array_map(static fn ($b) => $b['id'], $this->retentionCandidates($query));
                 }
                 if (stripos($query, 'option_name') !== false && preg_match("/LIKE\s+'([^']*)'/i", $query, $mLike)) {
                     $prefix = rtrim(str_replace('\\_', '_', stripslashes($mLike[1])), '%');
                     $names = [];
-                    foreach (array_keys($GLOBALS['tourivo_mock_options'] ?? []) as $name) {
+                    foreach (array_keys($GLOBALS['readscope_mock_options'] ?? []) as $name) {
                         if (str_starts_with((string) $name, $prefix)) {
                             $names[] = (string) $name;
                         }
                     }
                     return $names;
                 }
-                if (stripos($query, 'tourivo_inquiries') !== false) {
+                if (stripos($query, 'readscope_inquiries') !== false) {
                     $res = [];
                     $cutoff = null;
                     if (preg_match("/created_at\s*<=\s*'([^']+)'/i", $query, $mDate)) {
@@ -626,14 +626,14 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             public function get_row(?string $query = null, string $output = OBJECT, int $y = 0): mixed {
                 if (!$query) return null;
 
-                if (stripos($query, 'tourivo_inquiries') !== false) {
+                if (stripos($query, 'readscope_inquiries') !== false) {
                     if (preg_match('/id\s*=\s*(\d+)/i', $query, $m)) {
                         $id = (int) $m[1];
                         return isset($this->inquiries[$id]) ? (object) $this->inquiries[$id] : null;
                     }
                 }
 
-                if (stripos($query, 'tourivo_bookings') !== false) {
+                if (stripos($query, 'readscope_bookings') !== false) {
                     if (preg_match('/id\s*=\s*(\d+)/i', $query, $m)) {
                         $id = (int) $m[1];
                         return isset($this->bookings[$id]) ? (object) $this->bookings[$id] : null;
@@ -655,7 +655,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     }
                 }
 
-                if (stripos($query, 'tourivo_booking_items') !== false) {
+                if (stripos($query, 'readscope_booking_items') !== false) {
                     if (preg_match('/booking_id\s*=\s*(\d+)/i', $query, $m)) {
                         $bookingId = (int) $m[1];
                         foreach ($this->booking_items as $item) {
@@ -666,7 +666,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     }
                 }
 
-                if (stripos($query, 'tourivo_inventories') !== false) {
+                if (stripos($query, 'readscope_inventories') !== false) {
                     if (preg_match('/item_id\s*=\s*(\d+)/i', $query, $mItem) && preg_match("/event_date\s*=\s*'([^']+)'/i", $query, $mDate)) {
                         $itemId = (int) $mItem[1];
                         $date = $mDate[1];
@@ -689,11 +689,11 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             public function get_results(?string $query = null, string $output = OBJECT): array {
                 if (!$query) return [];
 
-                if (stripos($query, 'tourivo_bookings') !== false && stripos($query, 'HAVING') !== false) {
+                if (stripos($query, 'readscope_bookings') !== false && stripos($query, 'HAVING') !== false) {
                     return array_map(static fn ($b) => $output === ARRAY_A ? $b : (object) $b, $this->retentionCandidates($query));
                 }
 
-                if (stripos($query, 'tourivo_inquiries') !== false) {
+                if (stripos($query, 'readscope_inquiries') !== false) {
                     $matched = [];
                     $targetEmail = null;
                     if (preg_match("/customer_email\s*=\s*'([^']+)'/i", $query, $mEmail)) {
@@ -714,7 +714,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     return $matched;
                 }
 
-                if (stripos($query, 'tourivo_bookings') !== false && stripos($query, 'tourivo_booking_items') === false) {
+                if (stripos($query, 'readscope_bookings') !== false && stripos($query, 'readscope_booking_items') === false) {
                     $matched = [];
                     $targetEmail = null;
                     $targetCustomerId = null;
@@ -792,7 +792,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     return $matched;
                 }
 
-                if (stripos($query, 'tourivo_booking_items') !== false && stripos($query, 'tourivo_bookings') === false) {
+                if (stripos($query, 'readscope_booking_items') !== false && stripos($query, 'readscope_bookings') === false) {
                     $wanted = null;
                     if (preg_match('/booking_id\s+IN\s*\(([^)]+)\)/i', $query, $mIn)) {
                         $wanted = array_map('intval', explode(',', $mIn[1]));
@@ -838,7 +838,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     }
                     return $res;
                 }
-                if (stripos($query, 'tourivo_inventories') !== false) {
+                if (stripos($query, 'readscope_inventories') !== false) {
                     if (stripos($query, 'recorded_days') !== false) {
                         $itemIds = [];
                         if (preg_match('/item_id\s+IN\s*\(([^)]+)\)/i', $query, $mIds)) {
@@ -892,7 +892,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     return $res;
                 }
 
-                if (stripos($query, 'tourivo_logs') !== false) {
+                if (stripos($query, 'readscope_logs') !== false) {
                     if (preg_match('/booking_id\s*=\s*(\d+)/i', $query, $m)) {
                         $bookingId = (int) $m[1];
                         $res = [];
@@ -905,7 +905,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     }
                 }
 
-                if (stripos($query, 'tourivo_bookings') !== false && stripos($query, 'tourivo_booking_items') !== false) {
+                if (stripos($query, 'readscope_bookings') !== false && stripos($query, 'readscope_booking_items') !== false) {
                     if (preg_match("/DATE\(i\.check_in\)\s*=\s*'([^']+)'/i", $query, $mDate)) {
                         $targetDate = $mDate[1];
                         $res = [];
@@ -938,10 +938,10 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             }
 
             public function insert(string $table, array $data, ?array $format = null): int|bool {
-                if (stripos($table, 'tourivo_bookings') !== false) {
+                if (stripos($table, 'readscope_bookings') !== false) {
                     // Test hook: simulate N unique-key (booking_code) collisions
-                    if (!empty($GLOBALS['tourivo_mock_fail_next_booking_insert'])) {
-                        $GLOBALS['tourivo_mock_fail_next_booking_insert']--;
+                    if (!empty($GLOBALS['readscope_mock_fail_next_booking_insert'])) {
+                        $GLOBALS['readscope_mock_fail_next_booking_insert']--;
                         $this->rows_affected = 0;
                         return false;
                     }
@@ -953,7 +953,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     $this->rows_affected = 1;
                     return 1;
                 }
-                if (stripos($table, 'tourivo_inquiries') !== false) {
+                if (stripos($table, 'readscope_inquiries') !== false) {
                     $id = count($this->inquiries) + 1;
                     $data['id'] = $id;
                     $data['created_at'] = $data['created_at'] ?? gmdate('Y-m-d H:i:s');
@@ -962,7 +962,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     $this->rows_affected = 1;
                     return 1;
                 }
-                if (stripos($table, 'tourivo_booking_items') !== false) {
+                if (stripos($table, 'readscope_booking_items') !== false) {
                     $id = count($this->booking_items) + 1;
                     $data['id'] = $id;
                     $this->booking_items[$id] = $data;
@@ -970,7 +970,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     $this->rows_affected = 1;
                     return 1;
                 }
-                if (stripos($table, 'tourivo_inventories') !== false) {
+                if (stripos($table, 'readscope_inventories') !== false) {
                     $key = "{$data['item_id']}_{$data['event_date']}";
                     $data['id'] = count($this->inventories) + 1;
                     $this->inventories[$key] = $data;
@@ -978,7 +978,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     $this->rows_affected = 1;
                     return 1;
                 }
-                if (stripos($table, 'tourivo_logs') !== false) {
+                if (stripos($table, 'readscope_logs') !== false) {
                     $id = count($this->logs) + 1;
                     $data['id'] = $id;
                     $this->logs[$id] = $data;
@@ -991,7 +991,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             }
 
             public function update(string $table, array $data, array $where, ?array $format = null, ?array $where_format = null): int|bool {
-                if (stripos($table, 'tourivo_bookings') !== false) {
+                if (stripos($table, 'readscope_bookings') !== false) {
                     $id = (int) ($where['id'] ?? 0);
                     if (isset($this->bookings[$id])) {
                         if (isset($where['booking_status']) && $this->bookings[$id]['booking_status'] !== $where['booking_status']) {
@@ -1005,7 +1005,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     $this->rows_affected = 0;
                     return 0;
                 }
-                if (stripos($table, 'tourivo_inquiries') !== false) {
+                if (stripos($table, 'readscope_inquiries') !== false) {
                     $id = (int) ($where['id'] ?? 0);
                     if (isset($this->inquiries[$id])) {
                         $this->inquiries[$id] = array_merge($this->inquiries[$id], $data);
@@ -1013,7 +1013,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                         return 1;
                     }
                 }
-                if (stripos($table, 'tourivo_inventories') !== false) {
+                if (stripos($table, 'readscope_inventories') !== false) {
                     $id = (int) ($where['id'] ?? 0);
                     foreach ($this->inventories as $k => $inv) {
                         if ((int)($inv['id'] ?? 0) === $id) {
@@ -1023,7 +1023,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                         }
                     }
                 }
-                if (stripos($table, 'tourivo_logs') !== false) {
+                if (stripos($table, 'readscope_logs') !== false) {
                     $id = (int) ($where['id'] ?? 0);
                     if (isset($this->logs[$id])) {
                         $this->logs[$id] = array_merge($this->logs[$id], $data);
@@ -1039,14 +1039,14 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
             public function delete(string $table, array $where, ?array $where_format = null): int|bool {
                 $deleted = 0;
-                if (stripos($table, 'tourivo_booking_items') !== false) {
+                if (stripos($table, 'readscope_booking_items') !== false) {
                     foreach ($this->booking_items as $k => $item) {
                         if (isset($where['booking_id']) && (int) $item['booking_id'] === (int) $where['booking_id']) {
                             unset($this->booking_items[$k]);
                             $deleted++;
                         }
                     }
-                } elseif (stripos($table, 'tourivo_bookings') !== false) {
+                } elseif (stripos($table, 'readscope_bookings') !== false) {
                     $id = (int) ($where['id'] ?? 0);
                     if (isset($this->bookings[$id])) {
                         unset($this->bookings[$id]);
@@ -1197,27 +1197,27 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
         function wp_slash(mixed $val): mixed { return is_string($val) ? addslashes($val) : $val; }
     }
     // Asset registry: records what the plugin registers, enqueues and attaches as inline data.
-    $GLOBALS['tourivo_test_assets'] = ['registered' => [], 'enqueued' => [], 'inline' => []];
+    $GLOBALS['readscope_test_assets'] = ['registered' => [], 'enqueued' => [], 'inline' => []];
     if (!function_exists('wp_register_style')) {
-        function wp_register_style(string $handle, string $src = '', array $deps = [], mixed $ver = false): bool { $GLOBALS['tourivo_test_assets']['registered']['style:' . $handle] = $src; return true; }
+        function wp_register_style(string $handle, string $src = '', array $deps = [], mixed $ver = false): bool { $GLOBALS['readscope_test_assets']['registered']['style:' . $handle] = $src; return true; }
     }
     if (!function_exists('wp_register_script')) {
-        function wp_register_script(string $handle, string $src = '', array $deps = [], mixed $ver = false, mixed $args = []): bool { $GLOBALS['tourivo_test_assets']['registered']['script:' . $handle] = $src; return true; }
+        function wp_register_script(string $handle, string $src = '', array $deps = [], mixed $ver = false, mixed $args = []): bool { $GLOBALS['readscope_test_assets']['registered']['script:' . $handle] = $src; return true; }
     }
     if (!function_exists('wp_enqueue_style')) {
-        function wp_enqueue_style(string $handle, string $src = '', array $deps = [], mixed $ver = false): void { $GLOBALS['tourivo_test_assets']['enqueued']['style:' . $handle] = true; }
+        function wp_enqueue_style(string $handle, string $src = '', array $deps = [], mixed $ver = false): void { $GLOBALS['readscope_test_assets']['enqueued']['style:' . $handle] = true; }
     }
     if (!function_exists('wp_enqueue_script')) {
-        function wp_enqueue_script(string $handle, string $src = '', array $deps = [], mixed $ver = false, mixed $args = []): void { $GLOBALS['tourivo_test_assets']['enqueued']['script:' . $handle] = true; }
+        function wp_enqueue_script(string $handle, string $src = '', array $deps = [], mixed $ver = false, mixed $args = []): void { $GLOBALS['readscope_test_assets']['enqueued']['script:' . $handle] = true; }
     }
     if (!function_exists('wp_style_is')) {
-        function wp_style_is(string $handle, string $status = 'enqueued'): bool { return isset($GLOBALS['tourivo_test_assets'][$status]['style:' . $handle]); }
+        function wp_style_is(string $handle, string $status = 'enqueued'): bool { return isset($GLOBALS['readscope_test_assets'][$status]['style:' . $handle]); }
     }
     if (!function_exists('wp_script_is')) {
-        function wp_script_is(string $handle, string $status = 'enqueued'): bool { return isset($GLOBALS['tourivo_test_assets'][$status]['script:' . $handle]); }
+        function wp_script_is(string $handle, string $status = 'enqueued'): bool { return isset($GLOBALS['readscope_test_assets'][$status]['script:' . $handle]); }
     }
     if (!function_exists('wp_add_inline_script')) {
-        function wp_add_inline_script(string $handle, string $data, string $position = 'after'): bool { $GLOBALS['tourivo_test_assets']['inline'][$handle][] = $data; return true; }
+        function wp_add_inline_script(string $handle, string $data, string $position = 'after'): bool { $GLOBALS['readscope_test_assets']['inline'][$handle][] = $data; return true; }
     }
     if (!function_exists('wp_print_scripts')) {
         function wp_print_scripts(mixed $handles = false): array { return []; }
@@ -1275,9 +1275,9 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     }
     if (!function_exists('apply_filters')) {
         function apply_filters(string $hook_name, mixed $value, ...$args): mixed {
-            global $tourivo_mock_filters;
-            if (isset($tourivo_mock_filters[$hook_name])) {
-                foreach ($tourivo_mock_filters[$hook_name] as $cb) {
+            global $readscope_mock_filters;
+            if (isset($readscope_mock_filters[$hook_name])) {
+                foreach ($readscope_mock_filters[$hook_name] as $cb) {
                     $value = $cb($value, ...$args);
                 }
             }
@@ -1306,17 +1306,17 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     }
     if (!function_exists('add_filter')) {
         function add_filter(string $hook_name, callable $callback, int $priority = 10, int $accepted_args = 1): void {
-            global $tourivo_mock_filters;
-            $tourivo_mock_filters[$hook_name][] = $callback;
+            global $readscope_mock_filters;
+            $readscope_mock_filters[$hook_name][] = $callback;
         }
     }
     if (!function_exists('remove_filter')) {
         function remove_filter(string $hook_name, callable $callback, int $priority = 10): bool {
-            global $tourivo_mock_filters;
-            if (isset($tourivo_mock_filters[$hook_name])) {
-                foreach ($tourivo_mock_filters[$hook_name] as $idx => $cb) {
+            global $readscope_mock_filters;
+            if (isset($readscope_mock_filters[$hook_name])) {
+                foreach ($readscope_mock_filters[$hook_name] as $idx => $cb) {
                     if ($cb === $callback) {
-                        unset($tourivo_mock_filters[$hook_name][$idx]);
+                        unset($readscope_mock_filters[$hook_name][$idx]);
                         return true;
                     }
                 }
@@ -1326,8 +1326,8 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     }
     if (!function_exists('add_action')) {
         function add_action(string $hook_name, callable $callback, int $priority = 10, int $accepted_args = 1): void {
-            global $tourivo_mock_action_callbacks;
-            $tourivo_mock_action_callbacks[$hook_name][] = [
+            global $readscope_mock_action_callbacks;
+            $readscope_mock_action_callbacks[$hook_name][] = [
                 'callback'      => $callback,
                 'priority'      => $priority,
                 'accepted_args' => $accepted_args,
@@ -1336,11 +1336,11 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     }
     if (!function_exists('remove_action')) {
         function remove_action(string $hook_name, callable $callback, int $priority = 10): bool {
-            global $tourivo_mock_action_callbacks;
-            if (isset($tourivo_mock_action_callbacks[$hook_name])) {
-                foreach ($tourivo_mock_action_callbacks[$hook_name] as $idx => $entry) {
+            global $readscope_mock_action_callbacks;
+            if (isset($readscope_mock_action_callbacks[$hook_name])) {
+                foreach ($readscope_mock_action_callbacks[$hook_name] as $idx => $entry) {
                     if ($entry['callback'] === $callback) {
-                        unset($tourivo_mock_action_callbacks[$hook_name][$idx]);
+                        unset($readscope_mock_action_callbacks[$hook_name][$idx]);
                         return true;
                     }
                 }
@@ -1350,10 +1350,10 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     }
     if (!function_exists('do_action')) {
         function do_action(string $hook_name, ...$args): void {
-            global $tourivo_mock_actions, $tourivo_mock_action_callbacks;
-            $tourivo_mock_actions[] = ['hook' => $hook_name, 'args' => $args];
-            if (!empty($tourivo_mock_action_callbacks[$hook_name])) {
-                foreach ($tourivo_mock_action_callbacks[$hook_name] as $entry) {
+            global $readscope_mock_actions, $readscope_mock_action_callbacks;
+            $readscope_mock_actions[] = ['hook' => $hook_name, 'args' => $args];
+            if (!empty($readscope_mock_action_callbacks[$hook_name])) {
+                foreach ($readscope_mock_action_callbacks[$hook_name] as $entry) {
                     $cb = $entry['callback'];
                     $accepted = $entry['accepted_args'] ?? count($args);
                     $passed = array_slice($args, 0, $accepted);
@@ -1365,8 +1365,8 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     // In WordPress actions and filters share one registry; the mock keeps two, so has_* checks both.
     if (!function_exists('has_filter')) {
         function has_filter(string $hook_name, mixed $callback = false): bool {
-            global $tourivo_mock_filters, $tourivo_mock_action_callbacks;
-            return !empty($tourivo_mock_filters[$hook_name]) || !empty($tourivo_mock_action_callbacks[$hook_name]);
+            global $readscope_mock_filters, $readscope_mock_action_callbacks;
+            return !empty($readscope_mock_filters[$hook_name]) || !empty($readscope_mock_action_callbacks[$hook_name]);
         }
     }
     if (!function_exists('has_action')) {
@@ -1376,7 +1376,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     }
     if (!function_exists('_deprecated_hook')) {
         function _deprecated_hook(string $hook, string $version, string $replacement = '', string $message = ''): void {
-            $GLOBALS['tourivo_mock_deprecated_hooks'][] = ['hook' => $hook, 'version' => $version, 'replacement' => $replacement];
+            $GLOBALS['readscope_mock_deprecated_hooks'][] = ['hook' => $hook, 'version' => $version, 'replacement' => $replacement];
         }
     }
     if (!function_exists('do_action_deprecated')) {
@@ -1399,41 +1399,45 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     }
     if (!function_exists('get_option')) {
         function get_option(string $option, mixed $default = false): mixed {
-            global $tourivo_mock_options;
-            return $tourivo_mock_options[$option] ?? $default;
+            global $readscope_mock_options;
+            // No 1.0.x ("tourivo") data exists in the test environment: the legacy migration counts as done.
+            if ('readscope_legacy_migrated' === $option) {
+                return $readscope_mock_options[$option] ?? 'none';
+            }
+            return $readscope_mock_options[$option] ?? $default;
         }
     }
     if (!function_exists('update_option')) {
         function update_option(string $option, mixed $value, mixed $autoload = null): bool {
-            global $tourivo_mock_options;
-            $tourivo_mock_options[$option] = $value;
+            global $readscope_mock_options;
+            $readscope_mock_options[$option] = $value;
             return true;
         }
     }
     if (!function_exists('delete_option')) {
         function delete_option(string $option): bool {
-            global $tourivo_mock_options;
-            unset($tourivo_mock_options[$option]);
+            global $readscope_mock_options;
+            unset($readscope_mock_options[$option]);
             return true;
         }
     }
     if (!function_exists('get_transient')) {
         function get_transient(string $transient): mixed {
-            global $tourivo_mock_transients;
-            return $tourivo_mock_transients[$transient] ?? false;
+            global $readscope_mock_transients;
+            return $readscope_mock_transients[$transient] ?? false;
         }
     }
     if (!function_exists('set_transient')) {
         function set_transient(string $transient, mixed $value, int $expiration = 0): bool {
-            global $tourivo_mock_transients;
-            $tourivo_mock_transients[$transient] = $value;
+            global $readscope_mock_transients;
+            $readscope_mock_transients[$transient] = $value;
             return true;
         }
     }
     if (!function_exists('delete_transient')) {
         function delete_transient(string $transient): bool {
-            global $tourivo_mock_transients;
-            unset($tourivo_mock_transients[$transient]);
+            global $readscope_mock_transients;
+            unset($readscope_mock_transients[$transient]);
             return true;
         }
     }
@@ -1442,38 +1446,38 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     }
     if (!function_exists('wp_using_ext_object_cache')) {
         function wp_using_ext_object_cache(?bool $using = null): bool {
-            return !empty($GLOBALS['tourivo_mock_ext_object_cache']);
+            return !empty($GLOBALS['readscope_mock_ext_object_cache']);
         }
     }
     if (!function_exists('wp_cache_add')) {
         function wp_cache_add(string|int $key, mixed $data, string $group = '', int $expire = 0): bool {
-            global $tourivo_mock_transients;
+            global $readscope_mock_transients;
             $k = 'cache_' . $group . '_' . $key;
-            if (isset($tourivo_mock_transients[$k])) {
+            if (isset($readscope_mock_transients[$k])) {
                 return false;
             }
-            $tourivo_mock_transients[$k] = $data;
+            $readscope_mock_transients[$k] = $data;
             return true;
         }
     }
     if (!function_exists('wp_cache_incr')) {
         function wp_cache_incr(string|int $key, int $offset = 1, string $group = ''): int|false {
-            global $tourivo_mock_transients;
+            global $readscope_mock_transients;
             $k = 'cache_' . $group . '_' . $key;
-            if (!isset($tourivo_mock_transients[$k])) {
+            if (!isset($readscope_mock_transients[$k])) {
                 return false;
             }
-            $tourivo_mock_transients[$k] = (int) $tourivo_mock_transients[$k] + $offset;
-            return $tourivo_mock_transients[$k];
+            $readscope_mock_transients[$k] = (int) $readscope_mock_transients[$k] + $offset;
+            return $readscope_mock_transients[$k];
         }
     }
     if (!function_exists('wp_cache_get')) {
         function wp_cache_get(string|int $key, string $group = '', bool $force = false, bool &$found = null): mixed {
-            global $tourivo_mock_transients;
+            global $readscope_mock_transients;
             $k = 'cache_' . $group . '_' . $key;
-            if (isset($tourivo_mock_transients[$k])) {
+            if (isset($readscope_mock_transients[$k])) {
                 $found = true;
-                return $tourivo_mock_transients[$k];
+                return $readscope_mock_transients[$k];
             }
             $found = false;
             return false;
@@ -1481,17 +1485,17 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     }
     if (!function_exists('wp_cache_set')) {
         function wp_cache_set(string|int $key, mixed $data, string $group = '', int $expire = 0): bool {
-            global $tourivo_mock_transients;
+            global $readscope_mock_transients;
             $k = 'cache_' . $group . '_' . $key;
-            $tourivo_mock_transients[$k] = $data;
+            $readscope_mock_transients[$k] = $data;
             return true;
         }
     }
     if (!function_exists('wp_cache_delete')) {
         function wp_cache_delete(string $key, string $group = ''): bool {
-            global $tourivo_mock_transients;
+            global $readscope_mock_transients;
             $k = 'cache_' . $group . '_' . $key;
-            unset($tourivo_mock_transients[$k]);
+            unset($readscope_mock_transients[$k]);
             return true;
         }
     }
@@ -1512,33 +1516,33 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
         }
     }
 
-    $GLOBALS['tourivo_current_user_id'] = 0;
-    $GLOBALS['tourivo_mock_users'] = [];
+    $GLOBALS['readscope_current_user_id'] = 0;
+    $GLOBALS['readscope_mock_users'] = [];
 
     if (!function_exists('wp_set_current_user')) {
         function wp_set_current_user(int $id, string $name = ''): WP_User {
-            global $tourivo_current_user_id, $tourivo_mock_users;
-            $tourivo_current_user_id = $id;
+            global $readscope_current_user_id, $readscope_mock_users;
+            $readscope_current_user_id = $id;
             if ($id <= 0) {
                 return new WP_User(0);
             }
-            if (!isset($tourivo_mock_users[$id])) {
+            if (!isset($readscope_mock_users[$id])) {
                 $u = new WP_User($id);
                 $u->ID = $id;
                 $u->user_email = "user{$id}@example.com";
                 $u->display_name = $name ?: "User {$id}";
-                $tourivo_mock_users[$id] = $u;
+                $readscope_mock_users[$id] = $u;
             }
-            return $tourivo_mock_users[$id];
+            return $readscope_mock_users[$id];
         }
     }
 
     if (!function_exists('wp_get_current_user')) {
         function wp_get_current_user(): WP_User {
-            global $tourivo_current_user_id, $tourivo_mock_users;
-            $id = $tourivo_current_user_id ?? 0;
-            if ($id > 0 && isset($tourivo_mock_users[$id])) {
-                return $tourivo_mock_users[$id];
+            global $readscope_current_user_id, $readscope_mock_users;
+            $id = $readscope_current_user_id ?? 0;
+            if ($id > 0 && isset($readscope_mock_users[$id])) {
+                return $readscope_mock_users[$id];
             }
             return new WP_User($id);
         }
@@ -1546,28 +1550,28 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
     if (!function_exists('is_user_logged_in')) {
         function is_user_logged_in(): bool {
-            global $tourivo_current_user_id;
-            return !empty($tourivo_current_user_id);
+            global $readscope_current_user_id;
+            return !empty($readscope_current_user_id);
         }
     }
     if (!function_exists('get_current_user_id')) {
         function get_current_user_id(): int {
-            global $tourivo_current_user_id;
-            return (int) ($tourivo_current_user_id ?? 0);
+            global $readscope_current_user_id;
+            return (int) ($readscope_current_user_id ?? 0);
         }
     }
     if (!function_exists('current_user_can')) {
         function current_user_can(string $capability, ...$args): bool {
-            global $tourivo_current_user_id, $tourivo_mock_users, $tourivo_mock_user_caps;
-            if (isset($tourivo_mock_user_caps)) {
-                return !empty($tourivo_mock_user_caps[$capability]);
+            global $readscope_current_user_id, $readscope_mock_users, $readscope_mock_user_caps;
+            if (isset($readscope_mock_user_caps)) {
+                return !empty($readscope_mock_user_caps[$capability]);
             }
-            if (isset($tourivo_current_user_id) && $tourivo_current_user_id === 0) {
+            if (isset($readscope_current_user_id) && $readscope_current_user_id === 0) {
                 return false;
             }
-            $userId = (int) ($tourivo_current_user_id ?? 0);
-            if ($userId > 0 && isset($tourivo_mock_users[$userId])) {
-                $user = $tourivo_mock_users[$userId];
+            $userId = (int) ($readscope_current_user_id ?? 0);
+            if ($userId > 0 && isset($readscope_mock_users[$userId])) {
+                $user = $readscope_mock_users[$userId];
                 if (isset($user->allcaps) && is_array($user->allcaps)) {
                     return !empty($user->allcaps[$capability]);
                 }
@@ -1596,9 +1600,9 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     }
     if (!function_exists('get_user_by')) {
         function get_user_by(string $field, mixed $value): object|bool {
-            global $tourivo_mock_users;
-            if (!empty($tourivo_mock_users)) {
-                foreach ($tourivo_mock_users as $u) {
+            global $readscope_mock_users;
+            if (!empty($readscope_mock_users)) {
+                foreach ($readscope_mock_users as $u) {
                     if ($field === 'id' && (int)$u->ID === (int)$value) return $u;
                     if ($field === 'email' && strcasecmp((string)$u->user_email, (string)$value) === 0) return $u;
                 }
@@ -1626,8 +1630,8 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
         }
     }
 
-    $GLOBALS['tourivo_mock_sent_emails'] = [];
-    $GLOBALS['tourivo_mock_scheduled_events'] = [];
+    $GLOBALS['readscope_mock_sent_emails'] = [];
+    $GLOBALS['readscope_mock_scheduled_events'] = [];
 
     if (!function_exists('wp_mail')) {
         function wp_mail(mixed ...$args): bool {
@@ -1657,18 +1661,18 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     do_action('wp_mail_failed', new WP_Error('wp_mail_failed', 'Simulated mail failure'));
                     return false;
                 }
-                $GLOBALS['tourivo_mock_sent_emails'][] = $atts;
+                $GLOBALS['readscope_mock_sent_emails'][] = $atts;
                 return (bool) $pre;
             }
 
-            $GLOBALS['tourivo_mock_sent_emails'][] = $atts;
+            $GLOBALS['readscope_mock_sent_emails'][] = $atts;
             return true;
         }
     }
 
     if (!function_exists('wp_schedule_single_event')) {
         function wp_schedule_single_event(int $timestamp, string $hook, array $args = [], bool $wp_error = false): bool {
-            $GLOBALS['tourivo_mock_scheduled_events'][] = [
+            $GLOBALS['readscope_mock_scheduled_events'][] = [
                 'type'      => 'single',
                 'timestamp' => $timestamp,
                 'hook'      => $hook,
@@ -1680,7 +1684,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
     if (!function_exists('wp_schedule_event')) {
         function wp_schedule_event(int $timestamp, string $recurrence, string $hook, array $args = [], bool $wp_error = false): bool {
-            $GLOBALS['tourivo_mock_scheduled_events'][] = [
+            $GLOBALS['readscope_mock_scheduled_events'][] = [
                 'type'       => 'recurring',
                 'recurrence' => $recurrence,
                 'timestamp'  => $timestamp,
@@ -1693,7 +1697,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
     if (!function_exists('wp_next_scheduled')) {
         function wp_next_scheduled(string $hook, array $args = []): int|false {
-            foreach ($GLOBALS['tourivo_mock_scheduled_events'] ?? [] as $ev) {
+            foreach ($GLOBALS['readscope_mock_scheduled_events'] ?? [] as $ev) {
                 if ($ev['hook'] === $hook) {
                     return $ev['timestamp'] ?? time();
                 }
@@ -1705,11 +1709,11 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     if (!function_exists('wp_clear_scheduled_hook')) {
         function wp_clear_scheduled_hook(string $hook, array $args = [], bool $wp_error = false): int|false {
             $count = 0;
-            if (isset($GLOBALS['tourivo_mock_scheduled_events'])) {
-                foreach ($GLOBALS['tourivo_mock_scheduled_events'] as $k => $ev) {
+            if (isset($GLOBALS['readscope_mock_scheduled_events'])) {
+                foreach ($GLOBALS['readscope_mock_scheduled_events'] as $k => $ev) {
                     // Like WordPress: only WP-Cron events with exactly these args (default: none).
                     if ($ev['hook'] === $hook && !str_starts_with((string) $ev['type'], 'action_scheduler') && ($ev['args'] ?? []) === $args) {
-                        unset($GLOBALS['tourivo_mock_scheduled_events'][$k]);
+                        unset($GLOBALS['readscope_mock_scheduled_events'][$k]);
                         $count++;
                     }
                 }
@@ -1722,9 +1726,9 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     if (!function_exists('wp_unschedule_hook')) {
         function wp_unschedule_hook(string $hook, bool $wp_error = false): int|false {
             $count = 0;
-            foreach ($GLOBALS['tourivo_mock_scheduled_events'] ?? [] as $k => $ev) {
+            foreach ($GLOBALS['readscope_mock_scheduled_events'] ?? [] as $k => $ev) {
                 if ($ev['hook'] === $hook && !str_starts_with((string) $ev['type'], 'action_scheduler')) {
-                    unset($GLOBALS['tourivo_mock_scheduled_events'][$k]);
+                    unset($GLOBALS['readscope_mock_scheduled_events'][$k]);
                     $count++;
                 }
             }
@@ -1734,9 +1738,9 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
     if (!function_exists('as_unschedule_all_actions')) {
         function as_unschedule_all_actions(string $hook, ?array $args = null, string $group = ''): void {
-            foreach ($GLOBALS['tourivo_mock_scheduled_events'] ?? [] as $k => $ev) {
+            foreach ($GLOBALS['readscope_mock_scheduled_events'] ?? [] as $k => $ev) {
                 if ($ev['hook'] === $hook && str_starts_with((string) $ev['type'], 'action_scheduler')) {
-                    unset($GLOBALS['tourivo_mock_scheduled_events'][$k]);
+                    unset($GLOBALS['readscope_mock_scheduled_events'][$k]);
                 }
             }
         }
@@ -1748,56 +1752,56 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
     if (!function_exists('as_enqueue_async_action')) {
         function as_enqueue_async_action(string $hook, array $args = [], string $group = ''): int {
-            $GLOBALS['tourivo_mock_scheduled_events'][] = [
+            $GLOBALS['readscope_mock_scheduled_events'][] = [
                 'type'  => 'action_scheduler_async',
                 'hook'  => $hook,
                 'args'  => $args,
                 'group' => $group,
             ];
-            return count($GLOBALS['tourivo_mock_scheduled_events']);
+            return count($GLOBALS['readscope_mock_scheduled_events']);
         }
     }
 
     if (!function_exists('as_schedule_single_action')) {
         function as_schedule_single_action(int $timestamp, string $hook, array $args = [], string $group = ''): int {
-            $GLOBALS['tourivo_mock_scheduled_events'][] = [
+            $GLOBALS['readscope_mock_scheduled_events'][] = [
                 'type'      => 'action_scheduler_single',
                 'timestamp' => $timestamp,
                 'hook'      => $hook,
                 'args'      => $args,
                 'group'     => $group,
             ];
-            return count($GLOBALS['tourivo_mock_scheduled_events']);
+            return count($GLOBALS['readscope_mock_scheduled_events']);
         }
     }
 
     // Mock Posts and PostMeta
     if (!function_exists('wp_insert_post')) {
         function wp_insert_post(array $args): int {
-            global $tourivo_mock_posts;
-            $id = count($tourivo_mock_posts) + 1;
+            global $readscope_mock_posts;
+            $id = count($readscope_mock_posts) + 1;
             $args['ID'] = $id;
             $args['post_status'] = $args['post_status'] ?? 'publish';
-            $tourivo_mock_posts[$id] = new WP_Post($args);
+            $readscope_mock_posts[$id] = new WP_Post($args);
             return $id;
         }
     }
     if (!function_exists('wp_update_post')) {
         function wp_update_post(array $args): int {
-            global $tourivo_mock_posts;
+            global $readscope_mock_posts;
             $id = (int) ($args['ID'] ?? 0);
-            if (isset($tourivo_mock_posts[$id])) {
-                $cur = (array) $tourivo_mock_posts[$id];
-                $tourivo_mock_posts[$id] = new WP_Post(array_merge($cur, $args));
+            if (isset($readscope_mock_posts[$id])) {
+                $cur = (array) $readscope_mock_posts[$id];
+                $readscope_mock_posts[$id] = new WP_Post(array_merge($cur, $args));
             }
             return $id;
         }
     }
     if (!function_exists('get_page_by_path')) {
         function get_page_by_path(string $page_path, string $output = OBJECT, array|string $post_type = 'page'): ?object {
-            global $tourivo_mock_posts;
-            if (!empty($tourivo_mock_posts)) {
-                foreach ($tourivo_mock_posts as $post) {
+            global $readscope_mock_posts;
+            if (!empty($readscope_mock_posts)) {
+                foreach ($readscope_mock_posts as $post) {
                     $p = (array) $post;
                     if (($p['post_name'] ?? '') === $page_path) {
                         return is_object($post) ? $post : (object) $post;
@@ -1809,9 +1813,9 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     }
     if (!function_exists('get_the_title')) {
         function get_the_title(int|WP_Post|null $post = 0): string {
-            global $tourivo_mock_posts;
+            global $readscope_mock_posts;
             $id = is_object($post) ? (int) $post->ID : (int) $post;
-            return $tourivo_mock_posts[$id]->post_title ?? 'Test Item Title';
+            return $readscope_mock_posts[$id]->post_title ?? 'Test Item Title';
         }
     }
     if (!function_exists('get_permalink')) {
@@ -1834,27 +1838,27 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     }
     if (!function_exists('get_post')) {
         function get_post(int $postId): ?WP_Post {
-            global $tourivo_mock_posts;
-            return $tourivo_mock_posts[$postId] ?? null;
+            global $readscope_mock_posts;
+            return $readscope_mock_posts[$postId] ?? null;
         }
     }
     if (!function_exists('get_post_status')) {
         function get_post_status(int $postId): string|bool {
-            global $tourivo_mock_posts;
-            return $tourivo_mock_posts[$postId]->post_status ?? false;
+            global $readscope_mock_posts;
+            return $readscope_mock_posts[$postId]->post_status ?? false;
         }
     }
     if (!function_exists('get_post_type')) {
         function get_post_type(int $postId): string|bool {
-            global $tourivo_mock_posts;
-            return $tourivo_mock_posts[$postId]->post_type ?? false;
+            global $readscope_mock_posts;
+            return $readscope_mock_posts[$postId]->post_type ?? false;
         }
     }
     if (!function_exists('get_posts')) {
         function get_posts(array $args): array {
-            global $tourivo_mock_posts, $tourivo_mock_postmeta;
+            global $readscope_mock_posts, $readscope_mock_postmeta;
             $res = [];
-            foreach ($tourivo_mock_posts as $id => $post) {
+            foreach ($readscope_mock_posts as $id => $post) {
                 if (isset($args['post_type'])) {
                     $pts = (array) $args['post_type'];
                     if (!in_array($post->post_type, $pts, true)) continue;
@@ -1863,7 +1867,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     if ($post->post_title !== $args['title']) continue;
                 }
                 if (isset($args['meta_key']) && isset($args['meta_value'])) {
-                    if (($tourivo_mock_postmeta[$id][$args['meta_key']] ?? null) != $args['meta_value']) {
+                    if (($readscope_mock_postmeta[$id][$args['meta_key']] ?? null) != $args['meta_value']) {
                         continue;
                     }
                 }
@@ -1877,32 +1881,32 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     }
     if (!function_exists('get_post_meta')) {
         function get_post_meta(int $postId, string $key = '', bool $single = false): mixed {
-            global $tourivo_mock_postmeta;
-            if (empty($key)) return $tourivo_mock_postmeta[$postId] ?? [];
-            $val = $tourivo_mock_postmeta[$postId][$key] ?? '';
+            global $readscope_mock_postmeta;
+            if (empty($key)) return $readscope_mock_postmeta[$postId] ?? [];
+            $val = $readscope_mock_postmeta[$postId][$key] ?? '';
             return $single ? $val : [$val];
         }
     }
     if (!function_exists('update_post_meta')) {
         function update_post_meta(int $postId, string $key, mixed $value): bool {
-            global $tourivo_mock_postmeta;
-            $tourivo_mock_postmeta[$postId][$key] = $value;
+            global $readscope_mock_postmeta;
+            $readscope_mock_postmeta[$postId][$key] = $value;
             return true;
         }
     }
     if (!function_exists('delete_post_meta')) {
         function delete_post_meta(int $postId, string $key, mixed $value = ''): bool {
-            global $tourivo_mock_postmeta;
-            if (isset($tourivo_mock_postmeta[$postId][$key])) {
-                unset($tourivo_mock_postmeta[$postId][$key]);
+            global $readscope_mock_postmeta;
+            if (isset($readscope_mock_postmeta[$postId][$key])) {
+                unset($readscope_mock_postmeta[$postId][$key]);
             }
             return true;
         }
     }
     if (!function_exists('wp_delete_post')) {
         function wp_delete_post(int $postId, bool $force = false): bool {
-            global $tourivo_mock_posts, $tourivo_mock_postmeta;
-            unset($tourivo_mock_posts[$postId], $tourivo_mock_postmeta[$postId]);
+            global $readscope_mock_posts, $readscope_mock_postmeta;
+            unset($readscope_mock_posts[$postId], $readscope_mock_postmeta[$postId]);
             return true;
         }
     }
@@ -1919,7 +1923,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     }
     if (!function_exists('wp_verify_nonce')) {
         function wp_verify_nonce(string $nonce, string|int $action = -1): int|bool {
-            return ($nonce === 'mock_nonce_' . md5((string) $action) || $nonce === 'valid_nonce' || $nonce === 'tourivo_test_nonce');
+            return ($nonce === 'mock_nonce_' . md5((string) $action) || $nonce === 'valid_nonce' || $nonce === 'readscope_test_nonce');
         }
     }
     if (!function_exists('check_ajax_referer')) {
@@ -1956,7 +1960,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             if ($data !== null) {
                 $response['data'] = $data;
             }
-            $GLOBALS['tourivo_last_ajax_response'] = [
+            $GLOBALS['readscope_last_ajax_response'] = [
                 'status' => $status_code ?: 200,
                 'body'   => $response,
             ];
@@ -1968,7 +1972,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             if ($data !== null) {
                 $response['data'] = $data;
             }
-            $GLOBALS['tourivo_last_ajax_response'] = [
+            $GLOBALS['readscope_last_ajax_response'] = [
                 'status' => $status_code ?: 400,
                 'body'   => $response,
             ];
@@ -1979,17 +1983,17 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
         function nocache_headers(): array { return []; }
     }
 
-    $GLOBALS['tourivo_mock_shortcodes'] = [];
+    $GLOBALS['readscope_mock_shortcodes'] = [];
     if (!function_exists('add_shortcode')) {
         function add_shortcode(string $tag, callable $callback): void {
-            global $tourivo_mock_shortcodes;
-            $tourivo_mock_shortcodes[$tag] = $callback;
+            global $readscope_mock_shortcodes;
+            $readscope_mock_shortcodes[$tag] = $callback;
         }
     }
     if (!function_exists('do_shortcode')) {
         function do_shortcode(string $content, bool $ignore_html = false): string {
-            global $tourivo_mock_shortcodes;
-            foreach ($tourivo_mock_shortcodes as $tag => $cb) {
+            global $readscope_mock_shortcodes;
+            foreach ($readscope_mock_shortcodes as $tag => $cb) {
                 if (str_contains($content, "[{$tag}")) {
                     $content = (string) preg_replace_callback("/\\[{$tag}(?:\\s+([^\\]]*))?\\]/", function ($matches) use ($cb) {
                         $attrStr = $matches[1] ?? '';
@@ -2007,30 +2011,30 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             return $content;
         }
     }
-    $GLOBALS['tourivo_mock_usermeta'] = [];
+    $GLOBALS['readscope_mock_usermeta'] = [];
 
     if (!function_exists('update_user_meta')) {
         function update_user_meta(int $userId, string $key, mixed $value): bool {
-            global $tourivo_mock_usermeta;
-            $tourivo_mock_usermeta[$userId][$key] = $value;
+            global $readscope_mock_usermeta;
+            $readscope_mock_usermeta[$userId][$key] = $value;
             return true;
         }
     }
 
     if (!function_exists('get_user_meta')) {
         function get_user_meta(int $userId, string $key = '', bool $single = false): mixed {
-            global $tourivo_mock_usermeta;
-            if (empty($key)) return $tourivo_mock_usermeta[$userId] ?? [];
-            $val = $tourivo_mock_usermeta[$userId][$key] ?? '';
+            global $readscope_mock_usermeta;
+            if (empty($key)) return $readscope_mock_usermeta[$userId] ?? [];
+            $val = $readscope_mock_usermeta[$userId][$key] ?? '';
             return $single ? $val : [$val];
         }
     }
 
     if (!function_exists('delete_user_meta')) {
         function delete_user_meta(int $userId, string $key, mixed $value = ''): bool {
-            global $tourivo_mock_usermeta;
-            if (isset($tourivo_mock_usermeta[$userId][$key])) {
-                unset($tourivo_mock_usermeta[$userId][$key]);
+            global $readscope_mock_usermeta;
+            if (isset($readscope_mock_usermeta[$userId][$key])) {
+                unset($readscope_mock_usermeta[$userId][$key]);
             }
             return true;
         }
@@ -2044,7 +2048,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
     if (!function_exists('wp_add_privacy_policy_content')) {
         function wp_add_privacy_policy_content(string $plugin_name, string $policy_text): void {
-            $GLOBALS['tourivo_mock_privacy_policy_content'][$plugin_name] = $policy_text;
+            $GLOBALS['readscope_mock_privacy_policy_content'][$plugin_name] = $policy_text;
         }
     }
 
@@ -2065,21 +2069,21 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
         function get_role(string $role): ?object { return null; }
     }
     if (!function_exists('is_multisite')) {
-        function is_multisite(): bool { return !empty($GLOBALS['tourivo_mock_is_multisite']); }
+        function is_multisite(): bool { return !empty($GLOBALS['readscope_mock_is_multisite']); }
     }
     if (!function_exists('get_sites')) {
-        function get_sites(array $args = []): array { return $GLOBALS['tourivo_mock_sites'] ?? []; }
+        function get_sites(array $args = []): array { return $GLOBALS['readscope_mock_sites'] ?? []; }
     }
     if (!function_exists('switch_to_blog')) {
-        function switch_to_blog(int $blogId): bool { $GLOBALS['tourivo_mock_blog_log'][] = "switch:{$blogId}"; return true; }
+        function switch_to_blog(int $blogId): bool { $GLOBALS['readscope_mock_blog_log'][] = "switch:{$blogId}"; return true; }
     }
     if (!function_exists('restore_current_blog')) {
-        function restore_current_blog(): bool { $GLOBALS['tourivo_mock_blog_log'][] = 'restore'; return true; }
+        function restore_current_blog(): bool { $GLOBALS['readscope_mock_blog_log'][] = 'restore'; return true; }
     }
 
     if (!function_exists('register_rest_route')) {
         function register_rest_route(string $route_namespace, string $route, array $args = [], bool $override = false): bool {
-            $GLOBALS['tourivo_mock_rest_routes'][$route_namespace . $route] = $args;
+            $GLOBALS['readscope_mock_rest_routes'][$route_namespace . $route] = $args;
             return true;
         }
     }

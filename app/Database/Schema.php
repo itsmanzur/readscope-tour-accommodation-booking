@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Database;
+namespace Readscope\Database;
 
-use Tourivo\Database\Migrations\CreateBookingsTable;
-use Tourivo\Database\Migrations\CreateBookingItemsTable;
-use Tourivo\Database\Migrations\CreateInquiriesTable;
-use Tourivo\Database\Migrations\CreateInventoriesTable;
-use Tourivo\Database\Migrations\CreateLogsTable;
-use Tourivo\Database\Migrations\MigrationInterface;
+use Readscope\Database\Migrations\CreateBookingsTable;
+use Readscope\Database\Migrations\CreateBookingItemsTable;
+use Readscope\Database\Migrations\CreateInquiriesTable;
+use Readscope\Database\Migrations\CreateInventoriesTable;
+use Readscope\Database\Migrations\CreateLogsTable;
+use Readscope\Database\Migrations\MigrationInterface;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -20,19 +20,19 @@ if (!defined('ABSPATH')) {
  *
  * Runs database migrations and manages Readscope Booking custom tables.
  *
- * @package Tourivo\Database
+ * @package Readscope\Database
  */
 class Schema
 {
     /**
      * Database version option key.
      */
-    public const DB_VERSION_OPTION = 'tourivo_db_version';
+    public const DB_VERSION_OPTION = 'readscope_db_version';
 
     /**
      * Current schema version.
      */
-    public const CURRENT_DB_VERSION = '1.0.0';
+    public const CURRENT_DB_VERSION = '1.1.0';
 
     /**
      * Get the registered migrations list.
@@ -53,7 +53,7 @@ class Schema
     /**
      * Migration lock transient key.
      */
-    public const MIGRATION_LOCK_TRANSIENT = 'tourivo_migrating_lock';
+    public const MIGRATION_LOCK_TRANSIENT = 'readscope_migrating_lock';
 
     /**
      * Run all migrations.
@@ -71,11 +71,14 @@ class Schema
         try {
             global $wpdb;
 
+            // Move 1.0.x ("tourivo") tables and data first, so dbDelta never creates empty duplicates.
+            LegacyMigrator::maybeRun();
+
             if (!function_exists('dbDelta')) {
                 require_once ABSPATH . 'wp-admin/includes/upgrade.php';
             }
 
-            $prefix = $wpdb->prefix . 'tourivo_';
+            $prefix = $wpdb->prefix . 'readscope_';
             $charsetCollate = $wpdb->get_charset_collate();
 
             foreach (self::getMigrations() as $migrationClass) {
@@ -103,7 +106,7 @@ class Schema
     {
         global $wpdb;
 
-        $prefix = $wpdb->prefix . 'tourivo_';
+        $prefix = $wpdb->prefix . 'readscope_';
 
         foreach (array_reverse(self::getMigrations()) as $migrationClass) {
             /** @var MigrationInterface $migration */

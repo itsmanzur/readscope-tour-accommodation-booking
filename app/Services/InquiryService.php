@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Services;
+namespace Readscope\Services;
 
-use Tourivo\Common\Traits\Singleton;
+use Readscope\Common\Traits\Singleton;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  *
  * Manages traveler trip inquiries, expert consultation requests, and notifications.
  *
- * @package Tourivo\Services
+ * @package Readscope\Services
  */
 class InquiryService
 {
@@ -37,16 +37,16 @@ class InquiryService
     public function createInquiry(array $data): array
     {
         global $wpdb;
-        $table = $wpdb->prefix . 'tourivo_inquiries';
+        $table = $wpdb->prefix . 'readscope_inquiries';
 
         // 1. Honeypot defense
-        if (!empty($data['tourivo_inq_hp'])) {
+        if (!empty($data['readscope_inq_hp'])) {
             return ['success' => false, 'message' => __('Invalid submission.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
         // 2. IP Rate Limiting (5 inquiries per 10 minutes)
-        $ip = \Tourivo\Support\ClientIp::get();
-        if (!\Tourivo\Support\RateLimiter::hit('tourivo_rl_inq_' . md5($ip), 5, 600)) {
+        $ip = \Readscope\Support\ClientIp::get();
+        if (!\Readscope\Support\RateLimiter::hit('readscope_rl_inq_' . md5($ip), 5, 600)) {
             return [
                 'success' => false,
                 'message' => __('Too many inquiries submitted. Please wait a few minutes before trying again.', 'the-readscope-tour-and-accommodation-booking'),
@@ -64,7 +64,7 @@ class InquiryService
         $message   = isset($data['message']) ? sanitize_textarea_field((string) $data['message']) : '';
 
         // Consent verification
-        $requireConsent = (bool) \Tourivo\Config\Config::get('require_consent', false);
+        $requireConsent = (bool) \Readscope\Config\Config::get('require_consent', false);
         if ($requireConsent && empty($data['consent'])) {
             return [
                 'success' => false,
@@ -99,11 +99,11 @@ class InquiryService
         }
 
         $nowGmt         = gmdate('Y-m-d H:i:s');
-        $storeIp        = (bool) \Tourivo\Config\Config::get('store_ip', true);
+        $storeIp        = (bool) \Readscope\Config\Config::get('store_ip', true);
         $storedIp       = $storeIp ? $ip : '';
         $hasConsent     = !empty($data['consent']);
         $consentAt      = $hasConsent ? $nowGmt : null;
-        $consentVersion = $hasConsent ? \Tourivo\Support\Privacy::getConsentVersion() : null;
+        $consentVersion = $hasConsent ? \Readscope\Support\Privacy::getConsentVersion() : null;
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
         $inserted = $wpdb->insert(
@@ -139,7 +139,7 @@ class InquiryService
         $itemPost = get_post($itemId);
         $itemTitle = $itemPost ? $itemPost->post_title : __('General Travel Inquiry', 'the-readscope-tour-and-accommodation-booking');
 
-        do_action('tourivo/inquiry/created', $inquiryId, [
+        do_action('readscope/inquiry/created', $inquiryId, [
             'inquiry_id'  => $inquiryId,
             'item_id'     => $itemId,
             'item_type'   => ($itemType === 'hotel_room' || $itemType === 'room') ? 'room' : 'tour',
@@ -168,7 +168,7 @@ class InquiryService
     public function getInquiries(array $args = []): array
     {
         global $wpdb;
-        $table = $wpdb->prefix . 'tourivo_inquiries';
+        $table = $wpdb->prefix . 'readscope_inquiries';
 
         $status = $args['status'] ?? '';
         $limit  = isset($args['limit']) ? (int) $args['limit'] : 20;
@@ -198,7 +198,7 @@ class InquiryService
     public function updateStatus(int $id, string $status): bool
     {
         global $wpdb;
-        $table = $wpdb->prefix . 'tourivo_inquiries';
+        $table = $wpdb->prefix . 'readscope_inquiries';
 
         if (!in_array($status, ['new', 'replied', 'closed'], true)) {
             return false;
@@ -221,7 +221,7 @@ class InquiryService
     public function deleteInquiry(int $id): bool
     {
         global $wpdb;
-        $table = $wpdb->prefix . 'tourivo_inquiries';
+        $table = $wpdb->prefix . 'readscope_inquiries';
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         return (bool) $wpdb->delete($table, ['id' => $id]);
         // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching

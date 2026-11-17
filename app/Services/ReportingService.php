@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Services;
+namespace Readscope\Services;
 
-use Tourivo\Support\Money;
+use Readscope\Support\Money;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
  * Provides business analytics, sales metrics, tax filing calculations, occupancy stats,
  * and accounting CSV exports for Readscope Booking administrators.
  *
- * @package Tourivo\Services
+ * @package Readscope\Services
  */
 class ReportingService
 {
@@ -128,8 +128,8 @@ class ReportingService
     {
         global $wpdb;
 
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
+        $itemsTable    = $wpdb->prefix . 'readscope_booking_items';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
         $bookings = (array) $wpdb->get_results($wpdb->prepare(
@@ -221,7 +221,7 @@ class ReportingService
     {
         global $wpdb;
 
-        $inventoriesTable = $wpdb->prefix . 'tourivo_inventories';
+        $inventoriesTable = $wpdb->prefix . 'readscope_inventories';
         $startDay = substr($startDate, 0, 10);
         $endDay   = substr($endDate, 0, 10);
 
@@ -265,8 +265,8 @@ class ReportingService
     {
         global $wpdb;
 
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
+        $itemsTable    = $wpdb->prefix . 'readscope_booking_items';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
         $bookings = (array) $wpdb->get_results($wpdb->prepare(
@@ -362,7 +362,7 @@ class ReportingService
     {
         global $wpdb;
 
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
         $bookings = (array) $wpdb->get_results($wpdb->prepare(
@@ -417,8 +417,8 @@ class ReportingService
         }
 
         global $wpdb;
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
+        $itemsTable    = $wpdb->prefix . 'readscope_booking_items';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
         $bookings = (array) $wpdb->get_results($wpdb->prepare(
@@ -552,23 +552,23 @@ class ReportingService
      */
     public function handleExportRequest(): void
     {
-        if (!current_user_can('manage_tourivo_bookings')) {
+        if (!current_user_can('manage_readscope_bookings')) {
             wp_die(esc_html__('Unauthorized access. You do not have permission to export reports.', 'the-readscope-tour-and-accommodation-booking'), 403);
         }
 
-        check_admin_referer('tourivo_reports_action', 'tourivo_reports_nonce');
+        check_admin_referer('readscope_reports_action', 'readscope_reports_nonce');
 
         // phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended -- current_user_can() and the nonce are verified at the top of this method, before any input is read.
         // Only the filter fields are read, each one sanitized. The nonce was checked above.
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Every key is sanitized by RequestInput::pick().
-        $req       = \Tourivo\Support\RequestInput::pick(!empty($_POST) ? $_POST : $_GET, ['period' => 'text', 'start_date' => 'text', 'end_date' => 'text']);
+        $req       = \Readscope\Support\RequestInput::pick(!empty($_POST) ? $_POST : $_GET, ['period' => 'text', 'start_date' => 'text', 'end_date' => 'text']);
         $period    = $req['period'] ?? 'this_month';
         $startDate = $req['start_date'] ?? null;
         $endDate   = $req['end_date'] ?? null;
         // phpcs:enable WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended
 
         $range    = $this->resolveDateRange($period, $startDate, $endDate);
-        $filename = 'tourivo-accounting-report-' . gmdate('Ymd-His') . '.csv';
+        $filename = 'readscope-accounting-report-' . gmdate('Ymd-His') . '.csv';
 
         if (!headers_sent()) {
             header('Content-Type: text/csv; charset=UTF-8');
@@ -579,7 +579,7 @@ class ReportingService
 
         $this->exportAccountingCsv($range['start'], $range['end']);
 
-        if (!defined('TOURIVO_TEST_MODE')) {
+        if (!defined('READSCOPE_TEST_MODE')) {
             exit;
         }
     }

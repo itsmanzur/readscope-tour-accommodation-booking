@@ -5,27 +5,27 @@
  * Provides a standardized template engine, price formatting, and model accessor helpers
  * for theme developers, child themes, and third-party integrations.
  *
- * @package Tourivo\Support
+ * @package Readscope\Support
  */
 
 declare(strict_types=1);
 
-use Tourivo\Config\Config;
-use Tourivo\Models\Hotel;
-use Tourivo\Models\Room;
-use Tourivo\Models\Tour;
-use Tourivo\Support\Money;
+use Readscope\Config\Config;
+use Readscope\Models\Hotel;
+use Readscope\Models\Room;
+use Readscope\Models\Tour;
+use Readscope\Support\Money;
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-if (!function_exists('tourivo_template_header')) {
+if (!function_exists('readscope_template_header')) {
     /**
      * Open a single tour or hotel page with the active theme header.
      * Block themes have no header.php, so the site menu is printed from the header template part.
      */
-    function tourivo_template_header(): void
+    function readscope_template_header(): void
     {
         $blockTheme = function_exists('wp_is_block_theme') && wp_is_block_theme() && function_exists('block_header_area');
         if (!$blockTheme) {
@@ -45,15 +45,15 @@ if (!function_exists('tourivo_template_header')) {
         echo '>';
         wp_body_open();
         block_header_area();
-        echo '<main class="wp-block-group tourivo-block-main">';
+        echo '<main class="wp-block-group readscope-block-main">';
     }
 }
 
-if (!function_exists('tourivo_template_footer')) {
+if (!function_exists('readscope_template_footer')) {
     /**
      * Close a single tour or hotel page with the active theme footer.
      */
-    function tourivo_template_footer(): void
+    function readscope_template_footer(): void
     {
         $blockTheme = function_exists('wp_is_block_theme') && wp_is_block_theme() && function_exists('block_footer_area');
         if (!$blockTheme) {
@@ -70,53 +70,55 @@ if (!function_exists('tourivo_template_footer')) {
     }
 }
 
-if (!function_exists('tourivo_place_search')) {
+if (!function_exists('readscope_place_search')) {
     /**
      * Print the trip search bar on a single tour or hotel page.
      */
-    function tourivo_place_search(): void
+    function readscope_place_search(): void
     {
-        do_action('tourivo/place_search');
+        do_action('readscope/place_search');
     }
 }
 
-if (!function_exists('tourivo_related_place')) {
+if (!function_exists('readscope_related_place')) {
     /**
      * Print other tours and hotels in the same destination.
      */
-    function tourivo_related_place(): void
+    function readscope_related_place(): void
     {
-        do_action('tourivo/related_place');
+        do_action('readscope/related_place');
     }
 }
 
-if (!function_exists('tourivo_locate_template')) {
+if (!function_exists('readscope_locate_template')) {
     /**
      * Locate a template and return the path for inclusion.
      *
      * Search order:
-     * 1. yourtheme/tourivo/$template_name
+     * 1. yourtheme/readscope/$template_name
      * 2. yourtheme/$template_name
      * 3. plugins/the-readscope-tour-and-accommodation-booking/templates/$template_name
      *
      * @param string $templateName Template to locate.
-     * @param string $templatePath Subdirectory in theme (default 'tourivo/').
+     * @param string $templatePath Subdirectory in theme (default 'readscope/').
      * @param string $defaultPath  Fallback plugin template path.
      * @return string
      */
-    function tourivo_locate_template(string $templateName, string $templatePath = '', string $defaultPath = ''): string
+    function readscope_locate_template(string $templateName, string $templatePath = '', string $defaultPath = ''): string
     {
         if (empty($templatePath)) {
-            $templatePath = (string) apply_filters('tourivo/template_path', 'tourivo/');
+            $templatePath = (string) apply_filters('readscope/template_path', 'readscope/');
         }
 
         if (empty($defaultPath)) {
-            $defaultPath = untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/';
+            $defaultPath = untrailingslashit(READSCOPE_PLUGIN_DIR) . '/templates/';
         }
 
         // Look within theme/child-theme first
         $template = locate_template([
             trailingslashit($templatePath) . $templateName,
+            // Overrides created for 1.0.x lived in yourtheme/tourivo/.
+            'tourivo/' . $templateName,
             $templateName,
         ]);
 
@@ -125,31 +127,31 @@ if (!function_exists('tourivo_locate_template')) {
             $template = trailingslashit($defaultPath) . $templateName;
         }
 
-        return (string) apply_filters('tourivo/locate_template', $template, $templateName, $templatePath);
+        return (string) apply_filters('readscope/locate_template', $template, $templateName, $templatePath);
     }
 }
 
-if (!function_exists('tourivo_get_template')) {
+if (!function_exists('readscope_get_template')) {
     /**
      * Load a template with arguments.
      *
      * @param string               $templateName Template name (e.g. 'single-tour.php' or 'cards/tour-card.php').
      * @param array<string, mixed> $args         Arguments to extract and pass into the template scope.
-     * @param string               $templatePath Subdirectory in theme (default 'tourivo/').
+     * @param string               $templatePath Subdirectory in theme (default 'readscope/').
      * @param string               $defaultPath  Fallback plugin template path.
      * @return void
      */
-    function tourivo_get_template(string $templateName, array $args = [], string $templatePath = '', string $defaultPath = ''): void
+    function readscope_get_template(string $templateName, array $args = [], string $templatePath = '', string $defaultPath = ''): void
     {
-        $args = (array) apply_filters('tourivo/template_args', $args, $templateName);
+        $args = (array) apply_filters('readscope/template_args', $args, $templateName);
 
-        $located = tourivo_locate_template($templateName, $templatePath, $defaultPath);
+        $located = readscope_locate_template($templateName, $templatePath, $defaultPath);
 
         if (!file_exists($located)) {
             return;
         }
 
-        do_action('tourivo/before_template', $templateName, $located, $args);
+        do_action('readscope/before_template', $templateName, $located, $args);
 
         if (!empty($args)) {
             extract($args); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract
@@ -157,11 +159,11 @@ if (!function_exists('tourivo_get_template')) {
 
         include $located;
 
-        do_action('tourivo/after_template', $templateName, $located, $args);
+        do_action('readscope/after_template', $templateName, $located, $args);
     }
 }
 
-if (!function_exists('tourivo_get_template_part')) {
+if (!function_exists('readscope_get_template_part')) {
     /**
      * Load a template part into a template.
      *
@@ -170,25 +172,25 @@ if (!function_exists('tourivo_get_template_part')) {
      * @param array<string, mixed> $args Arguments to pass into template part.
      * @return void
      */
-    function tourivo_get_template_part(string $slug, string $name = '', array $args = []): void
+    function readscope_get_template_part(string $slug, string $name = '', array $args = []): void
     {
         $template = '';
 
         if (!empty($name)) {
-            $template = tourivo_locate_template("{$slug}-{$name}.php");
+            $template = readscope_locate_template("{$slug}-{$name}.php");
         }
 
         if (empty($template) || !file_exists($template)) {
-            $template = tourivo_locate_template("{$slug}.php");
+            $template = readscope_locate_template("{$slug}.php");
         }
 
         if (!empty($template) && file_exists($template)) {
-            tourivo_get_template(basename($template), $args, dirname($template));
+            readscope_get_template(basename($template), $args, dirname($template));
         }
     }
 }
 
-if (!function_exists('tourivo_format_price')) {
+if (!function_exists('readscope_format_price')) {
     /**
      * Format a price with currency symbol and formatting rules.
      *
@@ -196,23 +198,23 @@ if (!function_exists('tourivo_format_price')) {
      * @param string|null $currency Currency code or symbol (optional).
      * @return string
      */
-    function tourivo_format_price(float $amount, ?string $currency = null): string
+    function readscope_format_price(float $amount, ?string $currency = null): string
     {
         return Money::format($amount, $currency);
     }
 }
 
-if (!function_exists('tourivo_get_tour')) {
+if (!function_exists('readscope_get_tour')) {
     /**
      * Get a Tour model instance by ID or current post.
      *
      * @param int|null $postId
      * @return Tour|null
      */
-    function tourivo_get_tour(?int $postId = null): ?Tour
+    function readscope_get_tour(?int $postId = null): ?Tour
     {
         $id = $postId ?: (int) get_the_ID();
-        if ($id <= 0 || get_post_type($id) !== 'tourivo_tour') {
+        if ($id <= 0 || get_post_type($id) !== 'readscope_tour') {
             return null;
         }
 
@@ -220,17 +222,17 @@ if (!function_exists('tourivo_get_tour')) {
     }
 }
 
-if (!function_exists('tourivo_get_hotel')) {
+if (!function_exists('readscope_get_hotel')) {
     /**
      * Get a Hotel model instance by ID or current post.
      *
      * @param int|null $postId
      * @return Hotel|null
      */
-    function tourivo_get_hotel(?int $postId = null): ?Hotel
+    function readscope_get_hotel(?int $postId = null): ?Hotel
     {
         $id = $postId ?: (int) get_the_ID();
-        if ($id <= 0 || get_post_type($id) !== 'tourivo_hotel') {
+        if ($id <= 0 || get_post_type($id) !== 'readscope_hotel') {
             return null;
         }
 
@@ -238,17 +240,17 @@ if (!function_exists('tourivo_get_hotel')) {
     }
 }
 
-if (!function_exists('tourivo_get_room')) {
+if (!function_exists('readscope_get_room')) {
     /**
      * Get a Room model instance by ID or current post.
      *
      * @param int|null $postId
      * @return Room|null
      */
-    function tourivo_get_room(?int $postId = null): ?Room
+    function readscope_get_room(?int $postId = null): ?Room
     {
         $id = $postId ?: (int) get_the_ID();
-        if ($id <= 0 || get_post_type($id) !== 'tourivo_room') {
+        if ($id <= 0 || get_post_type($id) !== 'readscope_room') {
             return null;
         }
 
@@ -256,42 +258,42 @@ if (!function_exists('tourivo_get_room')) {
     }
 }
 
-if (!function_exists('tourivo_get_booking')) {
+if (!function_exists('readscope_get_booking')) {
     /**
      * Retrieve booking object from database by numeric ID.
      *
      * @param int $bookingId
      * @return object|null
      */
-    function tourivo_get_booking(int $bookingId): ?object
+    function readscope_get_booking(int $bookingId): ?object
     {
         global $wpdb;
         if ($bookingId <= 0 || !$wpdb) {
             return null;
         }
 
-        $cacheKey = 'tourivo_booking_' . $bookingId;
-        $cached   = wp_cache_get($cacheKey, 'tourivo');
+        $cacheKey = 'readscope_booking_' . $bookingId;
+        $cached   = wp_cache_get($cacheKey, 'readscope');
         if ($cached !== false) {
             return is_object($cached) ? $cached : null;
         }
 
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $row = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tourivo_bookings WHERE id = %d LIMIT 1", $bookingId));
-        wp_cache_set($cacheKey, $row ?: '', 'tourivo', 3600);
+        $row = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}readscope_bookings WHERE id = %d LIMIT 1", $bookingId));
+        wp_cache_set($cacheKey, $row ?: '', 'readscope', 3600);
 
         return $row ?: null;
     }
 }
 
-if (!function_exists('tourivo_get_booking_by_code')) {
+if (!function_exists('readscope_get_booking_by_code')) {
     /**
      * Retrieve booking object by reference code.
      *
      * @param string $bookingCode
      * @return object|null
      */
-    function tourivo_get_booking_by_code(string $bookingCode): ?object
+    function readscope_get_booking_by_code(string $bookingCode): ?object
     {
         global $wpdb;
         $bookingCode = sanitize_text_field($bookingCode);
@@ -299,65 +301,65 @@ if (!function_exists('tourivo_get_booking_by_code')) {
             return null;
         }
 
-        $cacheKey = 'tourivo_booking_code_' . md5($bookingCode);
-        $cached   = wp_cache_get($cacheKey, 'tourivo');
+        $cacheKey = 'readscope_booking_code_' . md5($bookingCode);
+        $cached   = wp_cache_get($cacheKey, 'readscope');
         if ($cached !== false) {
             return is_object($cached) ? $cached : null;
         }
 
         // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $row = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tourivo_bookings WHERE booking_code = %s LIMIT 1", $bookingCode));
-        wp_cache_set($cacheKey, $row ?: '', 'tourivo', 3600);
+        $row = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}readscope_bookings WHERE booking_code = %s LIMIT 1", $bookingCode));
+        wp_cache_set($cacheKey, $row ?: '', 'readscope', 3600);
 
         return $row ?: null;
     }
 }
 
-if (!function_exists('tourivo_is_tour')) {
+if (!function_exists('readscope_is_tour')) {
     /**
      * Check if currently viewing a single tour or tour archive.
      *
      * @param int|null $postId
      * @return bool
      */
-    function tourivo_is_tour(?int $postId = null): bool
+    function readscope_is_tour(?int $postId = null): bool
     {
         if ($postId !== null) {
-            return get_post_type($postId) === 'tourivo_tour';
+            return get_post_type($postId) === 'readscope_tour';
         }
 
-        return is_singular('tourivo_tour') || is_post_type_archive('tourivo_tour') || is_tax(['tourivo_destination', 'tourivo_activity']);
+        return is_singular('readscope_tour') || is_post_type_archive('readscope_tour') || is_tax(['readscope_destination', 'readscope_activity']);
     }
 }
 
-if (!function_exists('tourivo_is_hotel')) {
+if (!function_exists('readscope_is_hotel')) {
     /**
      * Check if currently viewing a single hotel or hotel archive.
      *
      * @param int|null $postId
      * @return bool
      */
-    function tourivo_is_hotel(?int $postId = null): bool
+    function readscope_is_hotel(?int $postId = null): bool
     {
         if ($postId !== null) {
-            return get_post_type($postId) === 'tourivo_hotel';
+            return get_post_type($postId) === 'readscope_hotel';
         }
 
-        return is_singular('tourivo_hotel') || is_post_type_archive('tourivo_hotel') || is_tax(['tourivo_hotel_type', 'tourivo_amenity']);
+        return is_singular('readscope_hotel') || is_post_type_archive('readscope_hotel') || is_tax(['readscope_hotel_type', 'readscope_amenity']);
     }
 }
 
-if (!function_exists('tourivo_get_destinations')) {
+if (!function_exists('readscope_get_destinations')) {
     /**
      * Get list of all tour destinations.
      *
      * @param array<string, mixed> $args
      * @return array<\WP_Term>
      */
-    function tourivo_get_destinations(array $args = []): array
+    function readscope_get_destinations(array $args = []): array
     {
         $defaults = [
-            'taxonomy'   => 'tourivo_destination',
+            'taxonomy'   => 'readscope_destination',
             'hide_empty' => false,
         ];
         $parsed = wp_parse_args($args, $defaults);
@@ -367,17 +369,17 @@ if (!function_exists('tourivo_get_destinations')) {
     }
 }
 
-if (!function_exists('tourivo_get_activities')) {
+if (!function_exists('readscope_get_activities')) {
     /**
      * Get list of all tour activities.
      *
      * @param array<string, mixed> $args
      * @return array<\WP_Term>
      */
-    function tourivo_get_activities(array $args = []): array
+    function readscope_get_activities(array $args = []): array
     {
         $defaults = [
-            'taxonomy'   => 'tourivo_activity',
+            'taxonomy'   => 'readscope_activity',
             'hide_empty' => false,
         ];
         $parsed = wp_parse_args($args, $defaults);
@@ -387,7 +389,7 @@ if (!function_exists('tourivo_get_activities')) {
     }
 }
 
-if (!function_exists('tourivo_render_wishlist_button')) {
+if (!function_exists('readscope_render_wishlist_button')) {
     /**
      * Render a reactive wishlist heart button for any item card or template.
      *
@@ -396,11 +398,11 @@ if (!function_exists('tourivo_render_wishlist_button')) {
      * @param string $cssClass Additional custom CSS classes.
      * @return string
      */
-    function tourivo_render_wishlist_button(int $itemId, string $itemType = 'tour', string $cssClass = ''): string
+    function readscope_render_wishlist_button(int $itemId, string $itemType = 'tour', string $cssClass = ''): string
     {
         $itemId   = absint($itemId);
         $itemType = esc_attr($itemType);
-        $classes  = 'tourivo-card-wishlist-btn ' . esc_attr($cssClass);
+        $classes  = 'readscope-card-wishlist-btn ' . esc_attr($cssClass);
 
         return sprintf(
             '<button type="button" class="%s" data-id="%d" data-type="%s" aria-label="%s" title="%s"><span class="dashicons dashicons-heart"></span></button>',
@@ -413,14 +415,14 @@ if (!function_exists('tourivo_render_wishlist_button')) {
     }
 }
 
-if (!function_exists('tourivo_bn_number')) {
+if (!function_exists('readscope_bn_number')) {
     /**
      * Convert English numbers to Bengali digits.
      *
      * @param int|float|string $number
      * @return string
      */
-    function tourivo_bn_number($number): string
+    function readscope_bn_number($number): string
     {
         $en = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
         $bn = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
@@ -428,14 +430,14 @@ if (!function_exists('tourivo_bn_number')) {
     }
 }
 
-if (!function_exists('tourivo_format_date')) {
+if (!function_exists('readscope_format_date')) {
     /**
      * Format a Y-m-d date with the plugin language's month name.
      *
      * @param string $date
      * @return string
      */
-    function tourivo_format_date(string $date): string
+    function readscope_format_date(string $date): string
     {
         if (!preg_match('/^\d{4}-\d{2}-\d{2}/', $date)) {
             return $date;
@@ -453,20 +455,20 @@ if (!function_exists('tourivo_format_date')) {
             __('October', 'the-readscope-tour-and-accommodation-booking'), __('November', 'the-readscope-tour-and-accommodation-booking'), __('December', 'the-readscope-tour-and-accommodation-booking'),
         ];
         $label = (int) wp_date('j', $stamp) . ' ' . ($months[(int) wp_date('n', $stamp) - 1] ?? '') . ' ' . wp_date('Y', $stamp);
-        $banglaDigits = (function_exists('tourivo_is_bengali') && tourivo_is_bengali())
+        $banglaDigits = (function_exists('readscope_is_bengali') && readscope_is_bengali())
             || (bool) Config::get('use_bangla_digits', false);
 
-        return $banglaDigits ? tourivo_bn_number($label) : $label;
+        return $banglaDigits ? readscope_bn_number($label) : $label;
     }
 }
 
-if (!function_exists('tourivo_current_locale')) {
+if (!function_exists('readscope_current_locale')) {
     /**
      * Get the active plugin locale code (e.g. 'en_US', 'bn_BD').
      *
      * @return string
      */
-    function tourivo_current_locale(): string
+    function readscope_current_locale(): string
     {
         $lang = (string) Config::get('plugin_language', 'default');
         if ('bn' === $lang) {
@@ -484,20 +486,20 @@ if (!function_exists('tourivo_current_locale')) {
     }
 }
 
-if (!function_exists('tourivo_is_bengali')) {
+if (!function_exists('readscope_is_bengali')) {
     /**
      * Check if the current plugin language is Bengali.
      *
      * @return bool
      */
-    function tourivo_is_bengali(): bool
+    function readscope_is_bengali(): bool
     {
-        $locale = tourivo_current_locale();
+        $locale = readscope_current_locale();
         return str_starts_with($locale, 'bn');
     }
 }
 
-if (!function_exists('tourivo_load_plugin_textdomain')) {
+if (!function_exists('readscope_load_plugin_textdomain')) {
     /**
      * Centralized loader for plugin textdomain with language switcher & WP.org priority.
      *
@@ -507,13 +509,13 @@ if (!function_exists('tourivo_load_plugin_textdomain')) {
      * @param string|null $customLocale Optional specific locale to load.
      * @return void
      */
-    function tourivo_load_plugin_textdomain(?string $customLocale = null): void
+    function readscope_load_plugin_textdomain(?string $customLocale = null): void
     {
         if (!function_exists('unload_textdomain') || !function_exists('load_textdomain')) {
             return;
         }
 
-        $locale = $customLocale ?: tourivo_current_locale();
+        $locale = $customLocale ?: readscope_current_locale();
 
         unload_textdomain('the-readscope-tour-and-accommodation-booking');
 
@@ -522,7 +524,7 @@ if (!function_exists('tourivo_load_plugin_textdomain')) {
         }
 
         $wporgFile   = defined('WP_LANG_DIR') ? WP_LANG_DIR . '/plugins/the-readscope-tour-and-accommodation-booking-' . $locale . '.mo' : '';
-        $bundledFile = defined('TOURIVO_PLUGIN_DIR') ? TOURIVO_PLUGIN_DIR . 'languages/the-readscope-tour-and-accommodation-booking-' . $locale . '.mo' : '';
+        $bundledFile = defined('READSCOPE_PLUGIN_DIR') ? READSCOPE_PLUGIN_DIR . 'languages/the-readscope-tour-and-accommodation-booking-' . $locale . '.mo' : '';
         $bundledPhp  = $bundledFile !== '' ? (string) preg_replace('/\.mo$/', '.l10n.php', $bundledFile) : '';
 
         // 1. Prioritize WP.org translation updates if available
@@ -534,7 +536,7 @@ if (!function_exists('tourivo_load_plugin_textdomain')) {
         } else {
             // 3. Fallback standard loader
             // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound
-            load_plugin_textdomain('the-readscope-tour-and-accommodation-booking', false, dirname(plugin_basename(TOURIVO_PLUGIN_FILE)) . '/languages');
+            load_plugin_textdomain('the-readscope-tour-and-accommodation-booking', false, dirname(plugin_basename(READSCOPE_PLUGIN_FILE)) . '/languages');
         }
     }
 }

@@ -7,7 +7,7 @@
  *
  * Environment variables (optional):
  *   DB_HOST=127.0.0.1 (or localhost:3306)
- *   DB_NAME=local (or tourivo_test)
+ *   DB_NAME=local (or readscope_test)
  *   DB_USER=root
  *   DB_PASSWORD=root
  *   TABLE_PREFIX=wp_
@@ -29,7 +29,7 @@ $dbName = getenv('DB_NAME') ?: 'local';
 $dbUser = getenv('DB_USER') ?: 'root';
 $dbPass = getenv('DB_PASSWORD') !== false ? getenv('DB_PASSWORD') : 'root';
 $prefix = getenv('TABLE_PREFIX') ?: 'wp_';
-$tableName = $prefix . 'tourivo_inventories';
+$tableName = $prefix . 'readscope_inventories';
 
 echo "Connecting to MySQL server at {$dbHost}:{$dbPort} (DB: {$dbName})...\n";
 

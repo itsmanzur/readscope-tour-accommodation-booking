@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Admin;
+namespace Readscope\Admin;
 
-use Tourivo\Config\Config;
-use Tourivo\Database\Seeder;
-use Tourivo\Shortcodes\CurrencySwitcherShortcode;
+use Readscope\Config\Config;
+use Readscope\Database\Seeder;
+use Readscope\Shortcodes\CurrencySwitcherShortcode;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
  * Interactive Onboarding & Setup Wizard for Readscope Booking.
  * Guides site administrators through currency settings, core pages generation, and 1-click demo data import.
  *
- * @package Tourivo\Admin
+ * @package Readscope\Admin
  */
 class SetupWizard
 {
@@ -29,10 +29,10 @@ class SetupWizard
      */
     public static function enqueueAssets(): void
     {
-        \Tourivo\Support\PortalAssets::enqueue(
+        \Readscope\Support\PortalAssets::enqueue(
             'setup-wizard',
             [
-                'nonce'   => wp_create_nonce('tourivo_wizard_nonce'),
+                'nonce'   => wp_create_nonce('readscope_wizard_nonce'),
                 'ajaxUrl' => admin_url('admin-ajax.php'),
                 'i18n'    => [
                     'saving' => __('Saving...', 'the-readscope-tour-and-accommodation-booking'),
@@ -51,7 +51,7 @@ class SetupWizard
      */
     public static function render(): void
     {
-        if (!current_user_can('manage_tourivo_settings')) {
+        if (!current_user_can('manage_readscope_settings')) {
             wp_die(esc_html__('You do not have permission to access the setup wizard.', 'the-readscope-tour-and-accommodation-booking'));
         }
 
@@ -61,13 +61,13 @@ class SetupWizard
         $fromName       = Config::get('email_from_name', get_bloginfo('name'));
         $notifyEmail    = Config::get('email_notification_address', get_option('admin_email'));
         $currencies     = CurrencySwitcherShortcode::getCurrencies();
-        $nonce          = wp_create_nonce('tourivo_wizard_nonce');
+        $nonce          = wp_create_nonce('readscope_wizard_nonce');
         ?>
-        <div class="tourivo-wizard-body">
-            <div class="tourivo-wizard-container">
+        <div class="readscope-wizard-body">
+            <div class="readscope-wizard-container">
                 <!-- Wizard Logo Header -->
-                <div class="tourivo-wizard-header">
-                    <div class="tourivo-wizard-brand">
+                <div class="readscope-wizard-header">
+                    <div class="readscope-wizard-brand">
                         <span class="brand-icon dashicons dashicons-palmtree" aria-hidden="true"></span>
                         <h1 class="brand-title">Readscope Booking</h1>
                     </div>
@@ -75,7 +75,7 @@ class SetupWizard
                 </div>
 
                 <!-- Step Navigation Progress Bar -->
-                <div class="tourivo-wizard-steps">
+                <div class="readscope-wizard-steps">
                     <div class="wizard-step active" id="step-nav-1">
                         <span class="step-num">1</span>
                         <span class="step-label"><?php esc_html_e('Store & Currency', 'the-readscope-tour-and-accommodation-booking'); ?></span>
@@ -144,7 +144,7 @@ class SetupWizard
                         </div>
 
                         <div class="wizard-footer">
-                            <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo')); ?>" class="wizard-skip-link"><?php esc_html_e('Skip Setup', 'the-readscope-tour-and-accommodation-booking'); ?></a>
+                            <a href="<?php echo esc_url(admin_url('admin.php?page=readscope')); ?>" class="wizard-skip-link"><?php esc_html_e('Skip Setup', 'the-readscope-tour-and-accommodation-booking'); ?></a>
                             <button type="button" class="wizard-btn wizard-btn-primary" id="btnSaveStep1">
                                 <?php esc_html_e('Continue to Pages →', 'the-readscope-tour-and-accommodation-booking'); ?>
                             </button>
@@ -290,7 +290,7 @@ class SetupWizard
                             <strong><?php esc_html_e('Track Booking Portal', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                             <small><?php esc_html_e('Customer self-service', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                         </a>
-                        <a href="<?php echo esc_url(admin_url('post-new.php?post_type=tourivo_tour')); ?>" class="quick-link-box">
+                        <a href="<?php echo esc_url(admin_url('post-new.php?post_type=readscope_tour')); ?>" class="quick-link-box">
                             <span class="ql-icon dashicons dashicons-plus-alt2" aria-hidden="true"></span>
                             <strong><?php esc_html_e('Create First Tour', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                             <small><?php esc_html_e('Add your custom itinerary', 'the-readscope-tour-and-accommodation-booking'); ?></small>
@@ -298,7 +298,7 @@ class SetupWizard
                     </div>
 
                     <div style="margin-top: 32px; border-top: 1px solid #e2e8f0; padding-top: 24px;">
-                        <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo')); ?>" class="wizard-btn wizard-btn-primary" style="padding: 12px 32px; font-size: var(--trv-admin-text-lg);">
+                        <a href="<?php echo esc_url(admin_url('admin.php?page=readscope')); ?>" class="wizard-btn wizard-btn-primary" style="padding: 12px 32px; font-size: var(--trv-admin-text-lg);">
                             <?php esc_html_e('Go to Readscope Booking Dashboard', 'the-readscope-tour-and-accommodation-booking'); ?>
                         </a>
                     </div>
@@ -314,9 +314,9 @@ class SetupWizard
      */
     public static function handleSaveStep1(): void
     {
-        check_ajax_referer('tourivo_wizard_nonce', 'nonce');
+        check_ajax_referer('readscope_wizard_nonce', 'nonce');
 
-        if (!current_user_can('manage_tourivo_settings')) {
+        if (!current_user_can('manage_readscope_settings')) {
             wp_send_json_error(['message' => __('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
@@ -332,7 +332,7 @@ class SetupWizard
         $rawPosition      = isset($_POST['currency_position']) ? sanitize_text_field(wp_unslash((string) $_POST['currency_position'])) : 'left';
         $currencyPos      = in_array($rawPosition, $allowedPositions, true) ? $rawPosition : 'left';
 
-        $currentSettings = get_option('tourivo_settings', Config::getDefaults());
+        $currentSettings = get_option('readscope_settings', Config::getDefaults());
         $merged = array_merge($currentSettings, [
             'email_from_name'            => $agencyName,
             'email_notification_address' => $notifyEmail,
@@ -341,7 +341,7 @@ class SetupWizard
             'currency_position'          => $currencyPos,
         ]);
 
-        update_option('tourivo_settings', $merged);
+        update_option('readscope_settings', $merged);
         wp_send_json_success(['message' => __('Settings saved successfully.', 'the-readscope-tour-and-accommodation-booking')]);
     }
 
@@ -350,9 +350,9 @@ class SetupWizard
      */
     public static function handleCreatePages(): void
     {
-        check_ajax_referer('tourivo_wizard_nonce', 'nonce');
+        check_ajax_referer('readscope_wizard_nonce', 'nonce');
 
-        if (!current_user_can('manage_tourivo_settings')) {
+        if (!current_user_can('manage_readscope_settings')) {
             wp_send_json_error(['message' => __('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
@@ -366,37 +366,37 @@ class SetupWizard
             'tours'    => [
                 'title'   => 'Tours & Trips',
                 'slug'    => 'tours',
-                'content' => '<!-- wp:shortcode -->[tourivo_tours columns="3" count="9"]<!-- /wp:shortcode -->',
+                'content' => '<!-- wp:shortcode -->[readscope_tours columns="3" count="9"]<!-- /wp:shortcode -->',
             ],
             'hotels'   => [
                 'title'   => 'Hotels & Accommodations',
                 'slug'    => 'hotels',
-                'content' => '<!-- wp:shortcode -->[tourivo_hotels columns="3" count="9"]<!-- /wp:shortcode -->',
+                'content' => '<!-- wp:shortcode -->[readscope_hotels columns="3" count="9"]<!-- /wp:shortcode -->',
             ],
             'search'   => [
                 'title'   => 'Search Trips & Stays',
                 'slug'    => 'search-trips',
-                'content' => '<!-- wp:shortcode -->[tourivo_filter_search type="tour"]<!-- /wp:shortcode -->',
+                'content' => '<!-- wp:shortcode -->[readscope_filter_search type="tour"]<!-- /wp:shortcode -->',
             ],
             'track'    => [
                 'title'   => 'Track My Booking',
                 'slug'    => 'track-booking',
-                'content' => '<!-- wp:shortcode -->[tourivo_booking_lookup]<!-- /wp:shortcode -->',
+                'content' => '<!-- wp:shortcode -->[readscope_booking_lookup]<!-- /wp:shortcode -->',
             ],
             'wishlist' => [
                 'title'   => 'My Wishlist',
                 'slug'    => 'wishlist',
-                'content' => '<!-- wp:shortcode -->[tourivo_wishlist]<!-- /wp:shortcode -->',
+                'content' => '<!-- wp:shortcode -->[readscope_wishlist]<!-- /wp:shortcode -->',
             ],
             'thankyou' => [
                 'title'   => 'Booking Confirmation',
                 'slug'    => 'booking-confirmation',
-                'content' => '<!-- wp:shortcode -->[tourivo_thank_you]<!-- /wp:shortcode -->',
+                'content' => '<!-- wp:shortcode -->[readscope_thank_you]<!-- /wp:shortcode -->',
             ],
             'my_bookings' => [
                 'title'   => 'My Bookings',
                 'slug'    => 'my-bookings',
-                'content' => '<!-- wp:shortcode -->[tourivo_my_bookings]<!-- /wp:shortcode -->',
+                'content' => '<!-- wp:shortcode -->[readscope_my_bookings]<!-- /wp:shortcode -->',
             ],
         ];
 
@@ -409,7 +409,7 @@ class SetupWizard
             'my_bookings' => 'my_bookings_page_id',
         ];
 
-        $currentSettings = get_option('tourivo_settings', Config::getDefaults());
+        $currentSettings = get_option('readscope_settings', Config::getDefaults());
         $created = [];
 
         foreach ($requested as $key) {
@@ -447,7 +447,7 @@ class SetupWizard
         }
         $currentSettings['travel_homepage'] = in_array('travel_homepage', $requested, true) ? 1 : 0;
 
-        update_option('tourivo_settings', $currentSettings);
+        update_option('readscope_settings', $currentSettings);
         wp_send_json_success(['pages' => $created]);
     }
 
@@ -456,9 +456,9 @@ class SetupWizard
      */
     public static function handleImportDemo(): void
     {
-        check_ajax_referer('tourivo_wizard_nonce', 'nonce');
+        check_ajax_referer('readscope_wizard_nonce', 'nonce');
 
-        if (!current_user_can('manage_tourivo_settings')) {
+        if (!current_user_can('manage_readscope_settings')) {
             wp_send_json_error(['message' => __('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 

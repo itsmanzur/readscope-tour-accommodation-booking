@@ -13,15 +13,15 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$tourivoBooking = isset($booking) && is_array($booking) ? $booking : [];
-$tourivoLookup  = isset($lookupUrl) && is_string($lookupUrl) ? $lookupUrl : '';
-$tourivoExtra   = isset($additionalContent) && is_string($additionalContent) ? $additionalContent : '';
-$tourivoDate    = static function (string $value): string {
+$readscopeBooking = isset($booking) && is_array($booking) ? $booking : [];
+$readscopeLookup  = isset($lookupUrl) && is_string($lookupUrl) ? $lookupUrl : '';
+$readscopeExtra   = isset($additionalContent) && is_string($additionalContent) ? $additionalContent : '';
+$readscopeDate    = static function (string $value): string {
     if ($value === '') {
         return '';
     }
 
-    return function_exists('tourivo_format_date') ? tourivo_format_date($value) : $value;
+    return function_exists('readscope_format_date') ? readscope_format_date($value) : $value;
 };
 ?>
 <p style="font-size: 15px; margin-top: 0;">
@@ -30,7 +30,7 @@ $tourivoDate    = static function (string $value): string {
         sprintf(
             /* translators: %s: Customer Name */
             __('Hello %s,', 'the-readscope-tour-and-accommodation-booking'),
-            $tourivoBooking['customer_name'] ?? __('Traveler', 'the-readscope-tour-and-accommodation-booking')
+            $readscopeBooking['customer_name'] ?? __('Traveler', 'the-readscope-tour-and-accommodation-booking')
         )
     );
     ?>
@@ -39,37 +39,37 @@ $tourivoDate    = static function (string $value): string {
     <?php esc_html_e('Your reservation has been cancelled. Below are the details of the cancelled booking for your reference:', 'the-readscope-tour-and-accommodation-booking'); ?>
 </p>
 
-<div class="tourivo-warning-box" style="background: #fef2f2; border-color: #fecaca; color: #991b1b;">
+<div class="readscope-warning-box" style="background: #fef2f2; border-color: #fecaca; color: #991b1b;">
     <strong>❌ <?php esc_html_e('Booking Status: Cancelled', 'the-readscope-tour-and-accommodation-booking'); ?></strong><br>
     <?php esc_html_e('This reservation has been cancelled and any reserved seats or rooms have been released.', 'the-readscope-tour-and-accommodation-booking'); ?>
 </div>
 
-<div class="tourivo-info-card">
-    <div class="tourivo-info-row">
-        <span class="tourivo-info-label"><?php esc_html_e('Booking Reference:', 'the-readscope-tour-and-accommodation-booking'); ?></span>
-        <span class="tourivo-info-value" style="color: #0284c7;"><?php echo esc_html($tourivoBooking['booking_code'] ?? __('N/A', 'the-readscope-tour-and-accommodation-booking')); ?></span>
+<div class="readscope-info-card">
+    <div class="readscope-info-row">
+        <span class="readscope-info-label"><?php esc_html_e('Booking Reference:', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+        <span class="readscope-info-value" style="color: #0284c7;"><?php echo esc_html($readscopeBooking['booking_code'] ?? __('N/A', 'the-readscope-tour-and-accommodation-booking')); ?></span>
     </div>
-    <?php if (!empty($tourivoBooking['item_title'])) : ?>
-        <div class="tourivo-info-row">
-            <span class="tourivo-info-label"><?php esc_html_e('Trip / Stay:', 'the-readscope-tour-and-accommodation-booking'); ?></span>
-            <span class="tourivo-info-value"><?php echo esc_html($tourivoBooking['item_title']); ?></span>
+    <?php if (!empty($readscopeBooking['item_title'])) : ?>
+        <div class="readscope-info-row">
+            <span class="readscope-info-label"><?php esc_html_e('Trip / Stay:', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+            <span class="readscope-info-value"><?php echo esc_html($readscopeBooking['item_title']); ?></span>
         </div>
     <?php endif; ?>
-    <?php if (!empty($tourivoBooking['check_in'])) : ?>
-        <div class="tourivo-info-row">
-            <span class="tourivo-info-label"><?php esc_html_e('Scheduled Check-in:', 'the-readscope-tour-and-accommodation-booking'); ?></span>
-            <span class="tourivo-info-value"><?php echo esc_html($tourivoDate((string) $tourivoBooking['check_in'])); ?></span>
+    <?php if (!empty($readscopeBooking['check_in'])) : ?>
+        <div class="readscope-info-row">
+            <span class="readscope-info-label"><?php esc_html_e('Scheduled Check-in:', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+            <span class="readscope-info-value"><?php echo esc_html($readscopeDate((string) $readscopeBooking['check_in'])); ?></span>
         </div>
     <?php endif; ?>
-    <div class="tourivo-info-row">
-        <span class="tourivo-info-label"><?php esc_html_e('Total Amount:', 'the-readscope-tour-and-accommodation-booking'); ?></span>
-        <span class="tourivo-info-value"><?php echo esc_html($tourivoBooking['total_amount'] ?? '$0.00'); ?></span>
+    <div class="readscope-info-row">
+        <span class="readscope-info-label"><?php esc_html_e('Total Amount:', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+        <span class="readscope-info-value"><?php echo esc_html($readscopeBooking['total_amount'] ?? '$0.00'); ?></span>
     </div>
 </div>
 
-<?php if (!empty($tourivoExtra)) : ?>
+<?php if (!empty($readscopeExtra)) : ?>
     <div style="margin: 20px 0; font-size: 14px; color: #334155;">
-        <?php echo wp_kses_post($tourivoExtra); ?>
+        <?php echo wp_kses_post($readscopeExtra); ?>
     </div>
 <?php endif; ?>
 

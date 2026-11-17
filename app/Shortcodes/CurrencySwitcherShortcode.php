@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Shortcodes;
+namespace Readscope\Shortcodes;
 
-use Tourivo\Config\Config;
+use Readscope\Config\Config;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -13,15 +13,15 @@ if (!defined('ABSPATH')) {
 /**
  * Class CurrencySwitcherShortcode
  *
- * Shortcode: [tourivo_currency_switcher style="dropdown"]
+ * Shortcode: [readscope_currency_switcher style="dropdown"]
  *
- * @package Tourivo\Shortcodes
+ * @package Readscope\Shortcodes
  */
 class CurrencySwitcherShortcode
 {
     public static function register(): void
     {
-        add_shortcode('tourivo_currency_switcher', [self::class, 'render']);
+        add_shortcode('readscope_currency_switcher', [self::class, 'render']);
     }
 
     /**
@@ -42,7 +42,7 @@ class CurrencySwitcherShortcode
             'AED' => ['name' => 'AED - UAE Dirham', 'symbol' => 'AED ', 'rate' => 3.67, 'position' => 'left'],
         ];
 
-        return (array) apply_filters('tourivo/currency_rates', $defaultCurrencies);
+        return (array) apply_filters('readscope/currency_rates', $defaultCurrencies);
     }
 
     /**
@@ -55,18 +55,18 @@ class CurrencySwitcherShortcode
     {
         $attributes = shortcode_atts([
             'style' => 'dropdown', // 'dropdown' or 'pills'
-        ], (array) $atts, 'tourivo_currency_switcher');
+        ], (array) $atts, 'readscope_currency_switcher');
 
         $currencies = self::getCurrencies();
         $baseCurrency = Config::get('currency', 'USD');
 
         ob_start();
         ?>
-        <div class="tourivo-currency-switcher-wrap style-<?php echo esc_attr($attributes['style']); ?>">
-            <label for="tourivo-currency-select" class="currency-label">
+        <div class="readscope-currency-switcher-wrap style-<?php echo esc_attr($attributes['style']); ?>">
+            <label for="readscope-currency-select" class="currency-label">
                 <span class="dashicons dashicons-money-alt"></span>
             </label>
-            <select id="tourivo-currency-select" class="tourivo-currency-select" aria-label="<?php esc_attr_e('Select Currency', 'the-readscope-tour-and-accommodation-booking'); ?>">
+            <select id="readscope-currency-select" class="readscope-currency-select" aria-label="<?php esc_attr_e('Select Currency', 'the-readscope-tour-and-accommodation-booking'); ?>">
                 <?php foreach ($currencies as $code => $cur) : ?>
                     <option value="<?php echo esc_attr($code); ?>" 
                             data-symbol="<?php echo esc_attr($cur['symbol']); ?>" 

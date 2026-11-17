@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Providers;
+namespace Readscope\Providers;
 
-use Tourivo\Common\Abstracts\ServiceProvider;
-use Tourivo\PostTypes\HotelPostType;
-use Tourivo\PostTypes\RoomPostType;
-use Tourivo\PostTypes\TourPostType;
+use Readscope\Common\Abstracts\ServiceProvider;
+use Readscope\PostTypes\HotelPostType;
+use Readscope\PostTypes\RoomPostType;
+use Readscope\PostTypes\TourPostType;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
  *
  * Registers all Readscope Booking custom post types and taxonomies.
  *
- * @package Tourivo\Providers
+ * @package Readscope\Providers
  */
 class PostTypeServiceProvider extends ServiceProvider
 {
@@ -52,9 +52,9 @@ class PostTypeServiceProvider extends ServiceProvider
      */
     public function maybeFlushRewriteRules(): void
     {
-        if (get_option('tourivo_flush_rewrite')) {
+        if (get_option('readscope_flush_rewrite')) {
             flush_rewrite_rules(false);
-            delete_option('tourivo_flush_rewrite');
+            delete_option('readscope_flush_rewrite');
         }
     }
 }

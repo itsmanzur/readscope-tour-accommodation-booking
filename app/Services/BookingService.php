@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Services;
+namespace Readscope\Services;
 
 use Exception;
-use Tourivo\Config\Config;
-use Tourivo\Models\Room;
-use Tourivo\Models\Tour;
-use Tourivo\Shortcodes\ThankYouShortcode;
-use Tourivo\Support\BookingItems;
-use Tourivo\Support\ClientIp;
-use Tourivo\Support\Money;
-use Tourivo\Support\RateLimiter;
+use Readscope\Config\Config;
+use Readscope\Models\Room;
+use Readscope\Models\Tour;
+use Readscope\Shortcodes\ThankYouShortcode;
+use Readscope\Support\BookingItems;
+use Readscope\Support\ClientIp;
+use Readscope\Support\Money;
+use Readscope\Support\RateLimiter;
 use wpdb;
 
 if (!defined('ABSPATH')) {
@@ -24,7 +24,7 @@ if (!defined('ABSPATH')) {
  *
  * Central service for creating, managing and processing tour & accommodation bookings.
  *
- * @package Tourivo\Services
+ * @package Readscope\Services
  */
 class BookingService
 {
@@ -96,9 +96,9 @@ class BookingService
 
         $postType = get_post_type($itemId);
 
-        if ($postType === 'tourivo_tour') {
+        if ($postType === 'readscope_tour') {
             $itemType = 'tour';
-        } elseif ($postType === 'tourivo_room') {
+        } elseif ($postType === 'readscope_room') {
             $itemType = 'room';
         } else {
             return ['success' => false, 'message' => __('Invalid booking item type.', 'the-readscope-tour-and-accommodation-booking')];
@@ -145,8 +145,8 @@ class BookingService
 
         // Per-address throttle: stops one inbox being flooded with booking mail from rotating IPs.
         if (!$trusted) {
-            $emailLimit = max(1, (int) apply_filters('tourivo/booking/email_rate_limit', 5));
-            if (!RateLimiter::hit('tourivo_rl_email_' . md5(strtolower($customerEmail)), $emailLimit, 3600)) {
+            $emailLimit = max(1, (int) apply_filters('readscope/booking/email_rate_limit', 5));
+            if (!RateLimiter::hit('readscope_rl_email_' . md5(strtolower($customerEmail)), $emailLimit, 3600)) {
                 return ['success' => false, 'message' => __('Too many booking requests were made for this email address. Please try again later.', 'the-readscope-tour-and-accommodation-booking')];
             }
         }
@@ -187,7 +187,7 @@ class BookingService
         }
 
         $submittedFields = (isset($data['custom_fields']) && is_array($data['custom_fields'])) ? $data['custom_fields'] : [];
-        $customFields = apply_filters('tourivo/sanitize_checkout_fields', $submittedFields, $data, $trusted);
+        $customFields = apply_filters('readscope/sanitize_checkout_fields', $submittedFields, $data, $trusted);
         if (is_wp_error($customFields)) {
             return ['success' => false, 'message' => $customFields->get_error_message()];
         }
@@ -236,7 +236,7 @@ class BookingService
          * Booking-wide price lines, such as a package discount: [['title' => string, 'total' => float], ...],
          * negative for discounts. They are shown with the first item's lines.
          */
-        $bookingAdjustments = (array) apply_filters('tourivo/booking/adjustments', [], $data, $quote, array_column($extraLines, 'quote'));
+        $bookingAdjustments = (array) apply_filters('readscope/booking/adjustments', [], $data, $quote, array_column($extraLines, 'quote'));
         foreach ($bookingAdjustments as $adjustment) {
             $amount = round((float) ($adjustment['total'] ?? 0), 2);
             if ($amount == 0.0 || empty($adjustment['title'])) {
@@ -271,10 +271,10 @@ class BookingService
                 return;
             }
             $couponHeld = false;
-            do_action('tourivo/booking/coupon_rollback', $quote, $data);
+            do_action('readscope/booking/coupon_rollback', $quote, $data);
         };
         if (!empty($quote['coupon']['code'])) {
-            $couponGate = apply_filters('tourivo/booking/coupon_commit', true, $quote, $data);
+            $couponGate = apply_filters('readscope/booking/coupon_commit', true, $quote, $data);
             if ($couponGate !== true) {
                 $message = is_string($couponGate) ? $couponGate : __('This coupon could not be applied.', 'the-readscope-tour-and-accommodation-booking');
                 return ['success' => false, 'message' => $message];
@@ -293,7 +293,7 @@ class BookingService
             $foundUser = get_user_by('email', $customerEmail);
             if ($foundUser) {
                 $customerId = (int) $foundUser->ID;
-            } elseif (is_user_logged_in() && !current_user_can('manage_tourivo_bookings')) {
+            } elseif (is_user_logged_in() && !current_user_can('manage_readscope_bookings')) {
                 $currentUser = wp_get_current_user();
                 if ($currentUser && strcasecmp((string) $currentUser->user_email, $customerEmail) === 0) {
                     $customerId = (int) $currentUser->ID;
@@ -315,7 +315,7 @@ class BookingService
             $bookingStatus        = $this->defaultBookingStatus();
             $paymentStatus        = 'pending';
             // Add-ons that collect payment themselves (e.g. a WooCommerce checkout) register their method here.
-            $allowedPublicMethods = (array) apply_filters('tourivo/public_payment_methods', ['offline', 'bank_transfer', 'cash_on_arrival'], $data);
+            $allowedPublicMethods = (array) apply_filters('readscope/public_payment_methods', ['offline', 'bank_transfer', 'cash_on_arrival'], $data);
             $reqMethod           = sanitize_text_field((string) ($data['payment_method'] ?? 'offline'));
             $paymentMethod        = in_array($reqMethod, $allowedPublicMethods, true) ? $reqMethod : 'offline';
         }
@@ -328,15 +328,15 @@ class BookingService
         // 7. Generate unique booking code
         $bookingCode = self::generateBookingCode();
 
-        $bookingsTable  = $this->db->prefix . 'tourivo_bookings';
-        $itemsTable     = $this->db->prefix . 'tourivo_booking_items';
-        $logsTable      = $this->db->prefix . 'tourivo_logs';
+        $bookingsTable  = $this->db->prefix . 'readscope_bookings';
+        $itemsTable     = $this->db->prefix . 'readscope_booking_items';
+        $logsTable      = $this->db->prefix . 'readscope_logs';
         $storeIp        = (bool) Config::get('store_ip', true);
         $ipAddress      = $storeIp ? ClientIp::get() : '';
         $nowGmt         = gmdate('Y-m-d H:i:s');
         $hasConsent     = !empty($data['consent']);
         $consentAt      = $hasConsent ? $nowGmt : null;
-        $consentVersion = $hasConsent ? \Tourivo\Support\Privacy::getConsentVersion() : null;
+        $consentVersion = $hasConsent ? \Readscope\Support\Privacy::getConsentVersion() : null;
         // Public bookings must prove ownership of the address before staff/customers are notified or the hold persists.
         $requireVerification = !$trusted && (bool) Config::get('require_email_verification', false);
 
@@ -496,7 +496,7 @@ class BookingService
             $this->db->query('ROLLBACK');
             $releaseCommittedInventory();
             $releaseCouponHold();
-            do_action('tourivo/booking/error', $e);
+            do_action('readscope/booking/error', $e);
 
             // Internal details stay out of the customer-facing response.
             return ['success' => false, 'message' => __('An unexpected error occurred while creating your booking. Please try again.', 'the-readscope-tour-and-accommodation-booking')];
@@ -550,7 +550,7 @@ class BookingService
             ),
         ];
 
-        do_action('tourivo/booking/created', $bookingId, $bookingData);
+        do_action('readscope/booking/created', $bookingId, $bookingData);
 
         $thankyouToken  = ThankYouShortcode::generateThankYouToken($bookingId);
         $thankyouPageId = (int) Config::get('thankyou_page_id', 0);
@@ -606,8 +606,8 @@ class BookingService
             return ['success' => false, 'message' => __('Database connection not available.', 'the-readscope-tour-and-accommodation-booking')];
         }
 
-        $bookingsTable = $this->db->prefix . 'tourivo_bookings';
-        $itemsTable    = $this->db->prefix . 'tourivo_booking_items';
+        $bookingsTable = $this->db->prefix . 'readscope_bookings';
+        $itemsTable    = $this->db->prefix . 'readscope_booking_items';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $booking = $this->db->get_row($this->db->prepare("SELECT * FROM {$bookingsTable} WHERE id = %d", $bookingId));
@@ -633,7 +633,7 @@ class BookingService
         ];
         $transitionAllowed = in_array($newStatus, $allowedNext[$oldStatus] ?? [], true);
         if (function_exists('apply_filters')) {
-            $transitionAllowed = (bool) apply_filters('tourivo/booking/status_transition_allowed', $transitionAllowed, $bookingId, $oldStatus, $newStatus, $booking);
+            $transitionAllowed = (bool) apply_filters('readscope/booking/status_transition_allowed', $transitionAllowed, $bookingId, $oldStatus, $newStatus, $booking);
         }
         if (!$transitionAllowed) {
             return [
@@ -736,9 +736,9 @@ class BookingService
         }
 
         // Invalidate cache
-        wp_cache_delete('booking_' . $bookingId, 'tourivo');
+        wp_cache_delete('booking_' . $bookingId, 'readscope');
         if (!empty($booking->booking_code)) {
-            wp_cache_delete('booking_code_' . $booking->booking_code, 'tourivo');
+            wp_cache_delete('booking_code_' . $booking->booking_code, 'readscope');
         }
 
         $sourceNote = match ((string) ($context['source'] ?? '')) {
@@ -764,7 +764,7 @@ class BookingService
             $context['changed_at'] = sprintf('%.6F', microtime(true));
         }
 
-        do_action('tourivo/booking/status_changed', $bookingId, $oldStatus, $newStatus, $context);
+        do_action('readscope/booking/status_changed', $bookingId, $oldStatus, $newStatus, $context);
 
         return [
             'success' => true,
@@ -782,7 +782,7 @@ class BookingService
             return false;
         }
 
-        $table = $this->db->prefix . 'tourivo_bookings';
+        $table = $this->db->prefix . 'readscope_bookings';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $updated = $this->db->update(
@@ -798,8 +798,8 @@ class BookingService
             return false;
         }
 
-        wp_cache_delete('booking_' . $bookingId, 'tourivo');
-        wp_cache_delete('tourivo_booking_' . $bookingId, 'tourivo');
+        wp_cache_delete('booking_' . $bookingId, 'readscope');
+        wp_cache_delete('readscope_booking_' . $bookingId, 'readscope');
         LogService::log($bookingId, 'links_revoked', __('Voucher and calendar links were revoked by staff.', 'the-readscope-tour-and-accommodation-booking'));
 
         return true;
@@ -811,8 +811,8 @@ class BookingService
     protected function allowsFreeBooking(int $itemId): bool
     {
         return (bool) apply_filters(
-            'tourivo/allow_free_booking',
-            get_post_meta($itemId, '_tourivo_allow_free_booking', true) === '1',
+            'readscope/allow_free_booking',
+            get_post_meta($itemId, '_readscope_allow_free_booking', true) === '1',
             $itemId
         );
     }
@@ -845,7 +845,7 @@ class BookingService
             $configured = 'pending';
         }
 
-        return (string) apply_filters('tourivo/default_booking_status', $configured);
+        return (string) apply_filters('readscope/default_booking_status', $configured);
     }
 
     /**
@@ -869,7 +869,7 @@ class BookingService
             $tour = new Tour($itemId);
             $itemTitle = $tour->getTitle();
             $maxGuests = $tour->getMaxGuests();
-            $infantsUseCapacity = (bool) apply_filters('tourivo/infants_use_capacity', false, $itemId, $itemType, $data);
+            $infantsUseCapacity = (bool) apply_filters('readscope/infants_use_capacity', false, $itemId, $itemType, $data);
             $capacityGuests = $adultsCount + $childrenCount + ($infantsUseCapacity ? $infantsCount : 0);
 
             if ($maxGuests > 0 && $capacityGuests > $maxGuests) {
@@ -940,8 +940,8 @@ class BookingService
     private function extraItemSpecs(array $data, bool $trusted): array
     {
         // A public request may not add items on its own; an add-on that builds the list on the server (e.g. a
-        // package) allows it for its own call with the tourivo/accept_extra_items filter.
-        if (empty($data['extra_items']) || (!$trusted && !apply_filters('tourivo/accept_extra_items', false, $data))) {
+        // package) allows it for its own call with the readscope/accept_extra_items filter.
+        if (empty($data['extra_items']) || (!$trusted && !apply_filters('readscope/accept_extra_items', false, $data))) {
             return [];
         }
         $specs = [];
@@ -978,7 +978,7 @@ class BookingService
     {
         $itemId = (int) $spec['item_id'];
         $postType = $itemId > 0 && get_post_status($itemId) === 'publish' ? get_post_type($itemId) : '';
-        $itemType = $postType === 'tourivo_tour' ? 'tour' : ($postType === 'tourivo_room' ? 'room' : '');
+        $itemType = $postType === 'readscope_tour' ? 'tour' : ($postType === 'readscope_room' ? 'room' : '');
         if ($itemType === '') {
             return ['success' => false, 'message' => __('One of the items in this booking is no longer available.', 'the-readscope-tour-and-accommodation-booking')];
         }
@@ -1060,7 +1060,7 @@ class BookingService
         $infants  = (int) ($item->infants_count ?? 0);
         if (($adults + $children + $infants) > 0) {
             $useInfants = (bool) apply_filters(
-                'tourivo/infants_use_capacity',
+                'readscope/infants_use_capacity',
                 false,
                 (int) ($item->item_id ?? 0),
                 'tour',
@@ -1105,7 +1105,7 @@ class BookingService
      */
     public static function generateVerificationToken(int $bookingId, string $email, ?int $expiresAt = null): string
     {
-        $payload = 'tourivo_verify_' . $bookingId . '_' . strtolower($email);
+        $payload = 'readscope_verify_' . $bookingId . '_' . strtolower($email);
         if ($expiresAt !== null && $expiresAt > 0) {
             $payload .= '_' . $expiresAt;
         }
@@ -1121,7 +1121,7 @@ class BookingService
         $expiresAt = time() + self::VERIFICATION_TTL;
 
         return add_query_arg([
-            'action' => 'tourivo_verify_email',
+            'action' => 'readscope_verify_email',
             'code'   => $bookingCode,
             'token'  => self::generateVerificationToken($bookingId, $email, $expiresAt),
             'exp'    => $expiresAt,
@@ -1141,7 +1141,7 @@ class BookingService
             return $invalid;
         }
 
-        $bookingsTable = $this->db->prefix . 'tourivo_bookings';
+        $bookingsTable = $this->db->prefix . 'readscope_bookings';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $booking = $this->db->get_row($this->db->prepare("SELECT * FROM {$bookingsTable} WHERE booking_code = %s LIMIT 1", $bookingCode));
@@ -1172,13 +1172,13 @@ class BookingService
         ));
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
-        wp_cache_delete('booking_' . $bookingId, 'tourivo');
-        wp_cache_delete('booking_code_' . $bookingCode, 'tourivo');
+        wp_cache_delete('booking_' . $bookingId, 'readscope');
+        wp_cache_delete('booking_code_' . $bookingCode, 'readscope');
 
         // Another request verified it first: still a success for this visitor, but only one run of the follow-up mail.
         if ($updated === 1) {
             LogService::log($bookingId, 'email_verified', __('Customer confirmed their email address.', 'the-readscope-tour-and-accommodation-booking'), 0);
-            do_action('tourivo/booking/email_verified', $bookingId);
+            do_action('readscope/booking/email_verified', $bookingId);
         }
 
         return ['success' => true, 'booking_id' => $bookingId, 'message' => __('Thank you! Your email address is confirmed and your booking is secured.', 'the-readscope-tour-and-accommodation-booking')];
@@ -1199,7 +1199,7 @@ class BookingService
             return $result;
         }
 
-        $bookingsTable     = $this->db->prefix . 'tourivo_bookings';
+        $bookingsTable     = $this->db->prefix . 'readscope_bookings';
         $unverifiedMinutes = max(5, (int) Config::get('unverified_expiry_minutes', 60));
         $pendingHours      = max(0, (int) Config::get('pending_expiry_hours', 0));
 
@@ -1235,7 +1235,7 @@ class BookingService
                 if ($source === 'pending_expired' && (string) $row->payment_status === 'paid') {
                     continue;
                 }
-                if (!(bool) apply_filters('tourivo/expire_booking', true, $row, $source)) {
+                if (!(bool) apply_filters('readscope/expire_booking', true, $row, $source)) {
                     continue;
                 }
 

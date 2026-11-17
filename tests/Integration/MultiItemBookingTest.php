@@ -5,14 +5,14 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\InventoryService;
-use Tourivo\Services\PricingService;
-use Tourivo\Tests\TestCase;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\InventoryService;
+use Readscope\Services\PricingService;
+use Readscope\Tests\TestCase;
 
 class MultiItemBookingTest extends TestCase
 {
@@ -96,14 +96,14 @@ class MultiItemBookingTest extends TestCase
         $roomId = $this->createHotelWithRooms(2, 80.0)['room_id'];
         $in = $this->date(30);
         $filter = static fn (array $adjustments): array => array_merge($adjustments, [['title' => 'Package discount', 'total' => -36.0]]);
-        add_filter('tourivo/booking/adjustments', $filter);
+        add_filter('readscope/booking/adjustments', $filter);
         try {
             $result = $this->bookingService->createBooking($this->createBookingPayload([
                 'item_id' => $tourId, 'check_in' => $in, 'adults' => 2,
                 'extra_items' => [['item_id' => $roomId, 'check_in' => $in, 'check_out' => $this->date(32)]],
             ]), true);
         } finally {
-            remove_filter('tourivo/booking/adjustments', $filter);
+            remove_filter('readscope/booking/adjustments', $filter);
         }
 
         $this->assertTrue($result['success'], (string) ($result['message'] ?? ''));
@@ -147,21 +147,21 @@ class MultiItemBookingTest extends TestCase
 
         global $wpdb;
         $rows = array_map(static fn (array $r): object => (object) $r, $this->itemsOf($id));
-        $summary = \Tourivo\Support\BookingItems::summaryRow($rows, $id);
+        $summary = \Readscope\Support\BookingItems::summaryRow($rows, $id);
         $this->assertStringContainsString(' + ', $summary->item_title);
         $this->assertSame($this->date(30), substr($summary->check_in, 0, 10));
         $this->assertSame($this->date(33), substr($summary->check_out, 0, 10));
 
         $name = static fn (string $title, int $bookingId): string => $bookingId > 0 ? 'Cox\'s Bazar 3 Days' : $title;
-        add_filter('tourivo/booking/title', $name, 10, 2);
+        add_filter('readscope/booking/title', $name, 10, 2);
         try {
-            $this->assertSame('Cox\'s Bazar 3 Days', \Tourivo\Support\BookingItems::title($rows, $id), 'Add-ons can name the booking.');
+            $this->assertSame('Cox\'s Bazar 3 Days', \Readscope\Support\BookingItems::title($rows, $id), 'Add-ons can name the booking.');
         } finally {
-            remove_filter('tourivo/booking/title', $name, 10);
+            remove_filter('readscope/booking/title', $name, 10);
         }
 
-        $this->assertSame('Only', \Tourivo\Support\BookingItems::title([(object) ['item_title' => 'Only']]));
-        $this->assertNull(\Tourivo\Support\BookingItems::summaryRow([]));
+        $this->assertSame('Only', \Readscope\Support\BookingItems::title([(object) ['item_title' => 'Only']]));
+        $this->assertNull(\Readscope\Support\BookingItems::summaryRow([]));
     }
 
     public function test_public_request_cannot_add_items_on_its_own(): void
@@ -178,11 +178,11 @@ class MultiItemBookingTest extends TestCase
         $this->assertCount(1, $this->itemsOf((int) $public['booking_id']), 'The posted extra item is ignored.');
 
         $allow = static fn (): bool => true;
-        add_filter('tourivo/accept_extra_items', $allow);
+        add_filter('readscope/accept_extra_items', $allow);
         try {
             $allowed = $this->bookingService->createBooking(array_merge($payload, ['customer_email' => 'second@example.com']), false);
         } finally {
-            remove_filter('tourivo/accept_extra_items', $allow);
+            remove_filter('readscope/accept_extra_items', $allow);
         }
         $this->assertTrue($allowed['success'], (string) ($allowed['message'] ?? ''));
         $this->assertCount(2, $this->itemsOf((int) $allowed['booking_id']));

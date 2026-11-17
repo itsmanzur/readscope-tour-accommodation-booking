@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Services;
+namespace Readscope\Services;
 
-use Tourivo\Common\Container;
-use Tourivo\Config\Config;
-use Tourivo\Shortcodes\BookingLookupShortcode;
-use Tourivo\Shortcodes\ThankYouShortcode;
-use Tourivo\Support\Money;
+use Readscope\Common\Container;
+use Readscope\Config\Config;
+use Readscope\Shortcodes\BookingLookupShortcode;
+use Readscope\Shortcodes\ThankYouShortcode;
+use Readscope\Support\Money;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
  * Manages offline payment methods (Structured Bank Transfer, Cash on Arrival),
  * customer transaction reference submissions, and admin payment status updates.
  *
- * @package Tourivo\Services
+ * @package Readscope\Services
  */
 class PaymentService
 {
@@ -107,16 +107,16 @@ class PaymentService
 
         if (empty($b['bank_name']) && empty($b['account_number'])) {
             $generic = (string) Config::get('offline_payment_instructions', '');
-            return !empty($generic) ? '<div class="tourivo-offline-text">' . nl2br(esc_html($generic)) . '</div>' : '';
+            return !empty($generic) ? '<div class="readscope-offline-text">' . nl2br(esc_html($generic)) . '</div>' : '';
         }
 
         ob_start();
         ?>
-        <div class="tourivo-bank-details-card">
+        <div class="readscope-bank-details-card">
             <div class="bank-card-header">
                 <h4>🏦 <?php esc_html_e('Bank Account Details', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
             </div>
-            <table class="tourivo-bank-table">
+            <table class="readscope-bank-table">
                 <tbody>
                     <?php if (!empty($b['bank_name'])) : ?>
                         <tr>
@@ -197,7 +197,7 @@ class PaymentService
             ];
         }
 
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $booking = $wpdb->get_row($wpdb->prepare(
@@ -243,7 +243,7 @@ class PaymentService
         }
 
         // 4. Admin check
-        if (!$isAuthorized && current_user_can('manage_tourivo_bookings')) {
+        if (!$isAuthorized && current_user_can('manage_readscope_bookings')) {
             $isAuthorized = true;
         }
 
@@ -287,7 +287,7 @@ class PaymentService
             sprintf(/* translators: 1: transaction reference, 2: booking code */ __('Customer submitted transaction reference %1$s for booking #%2$s', 'the-readscope-tour-and-accommodation-booking'), $cleanTxn, $cleanCode)
         );
 
-        do_action('tourivo/payment_reference_submitted', (int) $booking->id, $cleanTxn);
+        do_action('readscope/payment_reference_submitted', (int) $booking->id, $cleanTxn);
 
         return [
             'success' => true,
@@ -304,7 +304,7 @@ class PaymentService
      */
     public function recordPayment(int $bookingId, array $data): array
     {
-        if (!current_user_can('manage_tourivo_bookings')) {
+        if (!current_user_can('manage_readscope_bookings')) {
             return [
                 'success' => false,
                 'message' => __('Unauthorized access. You do not have permission to record payments.', 'the-readscope-tour-and-accommodation-booking'),
@@ -319,7 +319,7 @@ class PaymentService
         }
 
         global $wpdb;
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $booking = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$bookingsTable} WHERE id = %d LIMIT 1", $bookingId));
@@ -411,7 +411,7 @@ class PaymentService
             $bookingService->changeStatus($bookingId, 'confirmed', ['source' => 'admin_payment']);
         }
 
-        do_action('tourivo/payment_recorded', $bookingId, [
+        do_action('readscope/payment_recorded', $bookingId, [
             'amount'         => $incoming,
             'payment_status' => $paymentStatus,
             'payment_method' => $paymentMethod,

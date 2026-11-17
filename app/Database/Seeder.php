@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Database;
+namespace Readscope\Database;
 
-use Tourivo\PostTypes\HotelPostType;
-use Tourivo\PostTypes\RoomPostType;
-use Tourivo\PostTypes\TourPostType;
+use Readscope\PostTypes\HotelPostType;
+use Readscope\PostTypes\RoomPostType;
+use Readscope\PostTypes\TourPostType;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
  *
  * Populates sample demo tours, hotels, rooms, and taxonomies for 1-click test setups.
  *
- * @package Tourivo\Database
+ * @package Readscope\Database
  */
 class Seeder
 {
@@ -41,30 +41,30 @@ class Seeder
                     TourPostType::TAX_ACTIVITY    => 'Beach & Island',
                 ],
                 'key_meta'     => [
-                    '_tourivo_duration'   => '5 Days / 4 Nights',
-                    '_tourivo_base_price' => '349.00',
+                    '_readscope_duration'   => '5 Days / 4 Nights',
+                    '_readscope_base_price' => '349.00',
                 ],
                 'meta'         => [
-                    '_tourivo_tour_type'        => 'multi_day',
-                    '_tourivo_base_price'       => '349.00',
-                    '_tourivo_sale_price'       => '299.00',
-                    '_tourivo_duration'         => '5 Days / 4 Nights',
-                    '_tourivo_duration_days'    => 5,
-                    '_tourivo_min_guests'       => 1,
-                    '_tourivo_max_guests'       => 16,
-                    '_tourivo_badge'            => 'Bestseller',
-                    '_tourivo_pickup_location'  => 'Ngurah Rai International Airport (DPS)',
-                    '_tourivo_dropoff_location' => 'Kuta / Seminyak Central Hub',
-                    '_tourivo_itinerary'        => [
+                    '_readscope_tour_type'        => 'multi_day',
+                    '_readscope_base_price'       => '349.00',
+                    '_readscope_sale_price'       => '299.00',
+                    '_readscope_duration'         => '5 Days / 4 Nights',
+                    '_readscope_duration_days'    => 5,
+                    '_readscope_min_guests'       => 1,
+                    '_readscope_max_guests'       => 16,
+                    '_readscope_badge'            => 'Bestseller',
+                    '_readscope_pickup_location'  => 'Ngurah Rai International Airport (DPS)',
+                    '_readscope_dropoff_location' => 'Kuta / Seminyak Central Hub',
+                    '_readscope_itinerary'        => [
                         ['day' => '1', 'title' => 'Arrival & Welcome Dinner', 'desc' => 'Airport pickup, hotel check-in in Seminyak, followed by a beachfront welcome seafood dinner with live acoustic music.', 'meals' => 'Dinner'],
                         ['day' => '2', 'title' => 'Ubud Waterfalls & Rice Terraces', 'desc' => 'Explore the scenic Tegallalang rice paddies, Tegenungan Waterfall, and Ubud Traditional Art Market.', 'meals' => 'Breakfast, Lunch'],
                         ['day' => '3', 'title' => 'Sacred Temples & Mount Batur View', 'desc' => 'Visit Ulun Danu Beratan temple on Lake Beratan, followed by lunch overlooking the Batur volcano.', 'meals' => 'Breakfast, Lunch'],
                         ['day' => '4', 'title' => 'Nusa Penida Island Day Cruise', 'desc' => 'Speedboat transfer to Nusa Penida, visiting Kelingking Secret Point Cliff, Angel’s Billabong, and Broken Beach.', 'meals' => 'Breakfast, Lunch'],
                         ['day' => '5', 'title' => 'Souvenir Shopping & Airport Departure', 'desc' => 'Morning leisure time, local artisan souvenir shopping, and airport drop-off.', 'meals' => 'Breakfast'],
                     ],
-                    '_tourivo_inclusions'       => ['4 Nights in 4-Star Hotel Accommodation', 'Daily Breakfast and 3 Lunches', 'Private AC Vehicle Transportation', 'English Speaking Professional Guide', 'All Temple and Park Entrance Fees'],
-                    '_tourivo_exclusions'       => ['International Flights', 'Travel Insurance', 'Personal Expenses and Tips'],
-                    '_tourivo_faqs'             => [
+                    '_readscope_inclusions'       => ['4 Nights in 4-Star Hotel Accommodation', 'Daily Breakfast and 3 Lunches', 'Private AC Vehicle Transportation', 'English Speaking Professional Guide', 'All Temple and Park Entrance Fees'],
+                    '_readscope_exclusions'       => ['International Flights', 'Travel Insurance', 'Personal Expenses and Tips'],
+                    '_readscope_faqs'             => [
                         ['question' => 'Is pickup included from all hotels in Bali?', 'answer' => 'Yes, free pickup is provided from Kuta, Seminyak, Sanur, Nusa Dua, and Ubud central zones.'],
                         ['question' => 'What is the cancellation policy?', 'answer' => 'Full refund if cancelled up to 7 days before departure date.'],
                     ],
@@ -80,26 +80,26 @@ class Seeder
                     TourPostType::TAX_ACTIVITY    => 'Mountain Adventure',
                 ],
                 'key_meta'     => [
-                    '_tourivo_duration'   => '4 Days / 3 Nights',
-                    '_tourivo_base_price' => '599.00',
+                    '_readscope_duration'   => '4 Days / 3 Nights',
+                    '_readscope_base_price' => '599.00',
                 ],
                 'meta'         => [
-                    '_tourivo_tour_type'     => 'multi_day',
-                    '_tourivo_base_price'    => '599.00',
-                    '_tourivo_sale_price'    => '549.00',
-                    '_tourivo_duration'      => '4 Days / 3 Nights',
-                    '_tourivo_duration_days' => 4,
-                    '_tourivo_min_guests'    => 2,
-                    '_tourivo_max_guests'    => 12,
-                    '_tourivo_badge'         => 'Alpine Top Pick',
-                    '_tourivo_itinerary'     => [
+                    '_readscope_tour_type'     => 'multi_day',
+                    '_readscope_base_price'    => '599.00',
+                    '_readscope_sale_price'    => '549.00',
+                    '_readscope_duration'      => '4 Days / 3 Nights',
+                    '_readscope_duration_days' => 4,
+                    '_readscope_min_guests'    => 2,
+                    '_readscope_max_guests'    => 12,
+                    '_readscope_badge'         => 'Alpine Top Pick',
+                    '_readscope_itinerary'     => [
                         ['day' => '1', 'title' => 'Zurich to Interlaken & Lake Brienz', 'desc' => 'Scenic train ride to Interlaken, turquoise boat cruise on Lake Brienz, and traditional Swiss cheese fondue dinner.', 'meals' => 'Dinner'],
                         ['day' => '2', 'title' => 'Jungfraujoch – Top of Europe', 'desc' => 'Ascend to the highest railway station in Europe at 3,454m. Explore the Ice Palace and Sphinx Observatory.', 'meals' => 'Breakfast, Lunch'],
                         ['day' => '3', 'title' => 'Zermatt & Matterhorn Glacier Trail', 'desc' => 'Travel to car-free Zermatt. Ride the Gornergrat cogwheel train with direct vistas of the iconic Matterhorn.', 'meals' => 'Breakfast'],
                         ['day' => '4', 'title' => 'Alpine Village Walk & Return to Zurich', 'desc' => 'Explore charming wooden chalets, chocolate tasting, and return express train to Zurich HB.', 'meals' => 'Breakfast'],
                     ],
-                    '_tourivo_inclusions'    => ['Swiss Travel Pass 4-Day Pass', '3 Nights Alpine Hotel Stay', 'Jungfraujoch Summit Pass', 'Certified Mountain Guide'],
-                    '_tourivo_exclusions'    => ['Ski gear rental', 'Personal meals outside itinerary'],
+                    '_readscope_inclusions'    => ['Swiss Travel Pass 4-Day Pass', '3 Nights Alpine Hotel Stay', 'Jungfraujoch Summit Pass', 'Certified Mountain Guide'],
+                    '_readscope_exclusions'    => ['Ski gear rental', 'Personal meals outside itinerary'],
                 ],
             ],
 
@@ -112,20 +112,20 @@ class Seeder
                     TourPostType::TAX_ACTIVITY    => 'City Sightseeing',
                 ],
                 'key_meta'     => [
-                    '_tourivo_duration'   => '8 Hours',
-                    '_tourivo_base_price' => '140.00',
+                    '_readscope_duration'   => '8 Hours',
+                    '_readscope_base_price' => '140.00',
                 ],
                 'meta'         => [
-                    '_tourivo_tour_type'        => 'single_day',
-                    '_tourivo_base_price'       => '140.00',
-                    '_tourivo_sale_price'       => '119.00',
-                    '_tourivo_duration'         => '8 Hours',
-                    '_tourivo_duration_days'    => 1,
-                    '_tourivo_min_guests'       => 1,
-                    '_tourivo_max_guests'       => 30,
-                    '_tourivo_badge'            => 'Popular Day Trip',
-                    '_tourivo_pickup_location'  => 'Hotel Lobby anywhere in Dubai or Sharjah',
-                    '_tourivo_inclusions'       => ['Hotel Pickup & Drop-off in 4x4 Land Cruiser', 'Dune Bashing (30-45 mins)', 'Sunset Photo Stop', 'Camel Riding & Sandboarding', 'Lavish Buffet BBQ Dinner (Veg & Non-Veg)', 'Live Belly Dance & Fire Show'],
+                    '_readscope_tour_type'        => 'single_day',
+                    '_readscope_base_price'       => '140.00',
+                    '_readscope_sale_price'       => '119.00',
+                    '_readscope_duration'         => '8 Hours',
+                    '_readscope_duration_days'    => 1,
+                    '_readscope_min_guests'       => 1,
+                    '_readscope_max_guests'       => 30,
+                    '_readscope_badge'            => 'Popular Day Trip',
+                    '_readscope_pickup_location'  => 'Hotel Lobby anywhere in Dubai or Sharjah',
+                    '_readscope_inclusions'       => ['Hotel Pickup & Drop-off in 4x4 Land Cruiser', 'Dune Bashing (30-45 mins)', 'Sunset Photo Stop', 'Camel Riding & Sandboarding', 'Lavish Buffet BBQ Dinner (Veg & Non-Veg)', 'Live Belly Dance & Fire Show'],
                 ],
             ],
 
@@ -138,28 +138,28 @@ class Seeder
                     TourPostType::TAX_ACTIVITY    => 'Beach & Island',
                 ],
                 'key_meta'     => [
-                    '_tourivo_duration'   => '৩ দিন / ২ রাত',
-                    '_tourivo_base_price' => '9500.00',
+                    '_readscope_duration'   => '৩ দিন / ২ রাত',
+                    '_readscope_base_price' => '9500.00',
                 ],
                 'meta'         => [
-                    '_tourivo_tour_type'        => 'multi_day',
-                    '_tourivo_base_price'       => '9500.00',
-                    '_tourivo_sale_price'       => '8200.00',
-                    '_tourivo_duration'         => '৩ দিন / ২ রাত',
-                    '_tourivo_duration_days'    => 3,
-                    '_tourivo_min_guests'       => 1,
-                    '_tourivo_max_guests'       => 20,
-                    '_tourivo_badge'            => 'হট ডিল',
-                    '_tourivo_pickup_location'  => 'কক্সবাজার বিমানবন্দর বা বাস টার্মিনাল',
-                    '_tourivo_dropoff_location' => 'কলাতলী মোড় / বিমানবন্দর',
-                    '_tourivo_itinerary'        => [
+                    '_readscope_tour_type'        => 'multi_day',
+                    '_readscope_base_price'       => '9500.00',
+                    '_readscope_sale_price'       => '8200.00',
+                    '_readscope_duration'         => '৩ দিন / ২ রাত',
+                    '_readscope_duration_days'    => 3,
+                    '_readscope_min_guests'       => 1,
+                    '_readscope_max_guests'       => 20,
+                    '_readscope_badge'            => 'হট ডিল',
+                    '_readscope_pickup_location'  => 'কক্সবাজার বিমানবন্দর বা বাস টার্মিনাল',
+                    '_readscope_dropoff_location' => 'কলাতলী মোড় / বিমানবন্দর',
+                    '_readscope_itinerary'        => [
                         ['day' => '১', 'title' => 'কক্সবাজার আগমন ও সুগন্ধা বিচ সূর্যাস্ত', 'desc' => 'বিমানবন্দর/বাস টার্মিনাল থেকে পিকআপ ও রিসোর্টে চেক-ইন। বিকেলে লাবণী ও সুগন্ধা বিচে সময় কাটানো এবং সন্ধ্যায় বিখ্যাত রুপচাঁদা ফ্রাই সহ ওয়েলকাম ডিনার।', 'meals' => 'ডিনার'],
                         ['day' => '২', 'title' => 'মেরিন ড্রাইভ, হিমছড়ি ঝরনা ও ইনানী বিচ ড্রাইভ', 'desc' => 'খোলা জিপে মেরিন ড্রাইভ রোড ভ্রমণ, হিমছড়ি পাহাড়ের চূড়া থেকে সমুদ্র দর্শন এবং ইনানী প্রবাল দ্বীপে স্নান।', 'meals' => 'ব্রেকফাস্ট, লাঞ্চ'],
                         ['day' => '৩', 'title' => 'বার্মিজ মার্কেট শপিং ও ঢাকা প্রস্থান', 'desc' => 'সকালে বিচে মুক্ত সময় ও ছবি তোলা। দুপুরের পর ঐতিহ্যবাহী বার্মিজ মার্কেটে শুঁটকি ও আচার শপিং শেষে বিমানবন্দরে ড্রপ।', 'meals' => 'ব্রেকফাস্ট'],
                     ],
-                    '_tourivo_inclusions'       => ['২ রাত প্রিমিয়াম বিচ রিসোর্টে থাকার ব্যবস্থা', 'প্রতিদিন সকালের নাস্তা এবং একটি স্পেশাল সি-ফুড ডিনার', 'মেরিন ড্রাইভ ও ইনানী সাইটসিয়িং প্রাইভেট গাড়ি', 'অভিজ্ঞ বাংলা ও ইংরেজি গাইড সার্ভিস'],
-                    '_tourivo_exclusions'       => ['ঢাকা-কক্সবাজার এয়ার বা বাস টিকিট', 'ব্যক্তিগত কেনাকাটা ও রাইড খরচ'],
-                    '_tourivo_faqs'             => [
+                    '_readscope_inclusions'       => ['২ রাত প্রিমিয়াম বিচ রিসোর্টে থাকার ব্যবস্থা', 'প্রতিদিন সকালের নাস্তা এবং একটি স্পেশাল সি-ফুড ডিনার', 'মেরিন ড্রাইভ ও ইনানী সাইটসিয়িং প্রাইভেট গাড়ি', 'অভিজ্ঞ বাংলা ও ইংরেজি গাইড সার্ভিস'],
+                    '_readscope_exclusions'       => ['ঢাকা-কক্সবাজার এয়ার বা বাস টিকিট', 'ব্যক্তিগত কেনাকাটা ও রাইড খরচ'],
+                    '_readscope_faqs'             => [
                         ['question' => 'ফ্যামিলি বা কাপলদের জন্য কি নিরাপদ?', 'answer' => 'সম্পূর্ণ নিরাপদ এবং পারিবারিক পরিবেশের মানসম্মত রিসোর্টে ব্যবস্থা করা হয়।'],
                         ['question' => 'বুকিং ক্যান্সেল করলে রিফান্ড পাওয়া যাবে?', 'answer' => 'যাত্রার ৩ দিন আগে জানালে শতভাগ রিফান্ড প্রদান করা হয়।'],
                     ],
@@ -175,28 +175,28 @@ class Seeder
                     TourPostType::TAX_ACTIVITY    => 'Mountain Adventure',
                 ],
                 'key_meta'     => [
-                    '_tourivo_duration'   => '৩ দিন / ২ রাত',
-                    '_tourivo_base_price' => '7500.00',
+                    '_readscope_duration'   => '৩ দিন / ২ রাত',
+                    '_readscope_base_price' => '7500.00',
                 ],
                 'meta'         => [
-                    '_tourivo_tour_type'        => 'multi_day',
-                    '_tourivo_base_price'       => '7500.00',
-                    '_tourivo_sale_price'       => '6500.00',
-                    '_tourivo_duration'         => '৩ দিন / ২ রাত',
-                    '_tourivo_duration_days'    => 3,
-                    '_tourivo_min_guests'       => 1,
-                    '_tourivo_max_guests'       => 24,
-                    '_tourivo_badge'            => 'ক্লাউড ট্যুর',
-                    '_tourivo_pickup_location'  => 'খাগড়াছড়ি বাসস্ট্যান্ড বা দীঘিনালা',
-                    '_tourivo_dropoff_location' => 'খাগড়াছড়ি বাসস্ট্যান্ড',
-                    '_tourivo_itinerary'        => [
+                    '_readscope_tour_type'        => 'multi_day',
+                    '_readscope_base_price'       => '7500.00',
+                    '_readscope_sale_price'       => '6500.00',
+                    '_readscope_duration'         => '৩ দিন / ২ রাত',
+                    '_readscope_duration_days'    => 3,
+                    '_readscope_min_guests'       => 1,
+                    '_readscope_max_guests'       => 24,
+                    '_readscope_badge'            => 'ক্লাউড ট্যুর',
+                    '_readscope_pickup_location'  => 'খাগড়াছড়ি বাসস্ট্যান্ড বা দীঘিনালা',
+                    '_readscope_dropoff_location' => 'খাগড়াছড়ি বাসস্ট্যান্ড',
+                    '_readscope_itinerary'        => [
                         ['day' => '১', 'title' => 'চাঁদের গাড়িতে মেঘের দেশে যাত্রা ও রুইলুই সূর্যাস্ত', 'desc' => 'দীঘিনালা আর্মি এস্কর্টের সাথে পাহাড়ি মেঘের মধ্য দিয়ে সাজেক পৌঁছানো। বিকেলে রুইলুই পাড়ায় মুক্ত বিচরণ ও হেলিপ্যাডে সূর্যাস্ত উপভোগ। রাতে স্পেশাল ব্যাম্বু চিকেন বারবিকিউ।', 'meals' => 'লাঞ্চ, ডিনার'],
                         ['day' => '২', 'title' => 'হেলিপ্যাডে মেঘের সমুদ্র দর্শন ও কংলাক পাহাড় অভিযান', 'desc' => 'ভোরে কটেজের ব্যালকনি থেকে মেঘের ভেলা অবলোকন। সকালে সাজেকের সর্বোচ্চ চূড়া কংলাক পাহাড়ে ট্র্যাকিং ও স্থানীয় আদিবাসী সংস্কৃতির অভিজ্ঞতা।', 'meals' => 'ব্রেকফাস্ট, লাঞ্চ, ডিনার'],
                         ['day' => '৩', 'title' => 'আলুটিলা গুহা ও তারাতারেং ঝরনা ভ্রমণ শেষে প্রস্থান', 'desc' => 'সকালে সাজেক থেকে খাগড়াছড়ি ফিরে আলুটিলা রহস্যময় গুহা ও রিছাং ঝরনায় স্নান। ঐতিহ্যবাহী পাহাড়ি রেস্তোরাঁয় লাঞ্চ শেষে ঢাকার গাড়িতে উঠা।', 'meals' => 'ব্রেকফাস্ট, লাঞ্চ'],
                     ],
-                    '_tourivo_inclusions'       => ['২ রাত সাজেকের সেরা প্রিমিয়াম রিসোর্টে থাকার ব্যবস্থা', 'খাগড়াছড়ি-সাজেক আপ-ডাউন রিজার্ভ চাঁদের গাড়ি', 'প্রতিদিনের সকল খাবার (৬ বেলা)', 'সকল এন্ট্রি ফি ও অভিজ্ঞ গাইড ফি'],
-                    '_tourivo_exclusions'       => ['ঢাকা-খাগড়াছড়ি দূরপাল্লার বাস টিকিট', 'ব্যক্তিগত ওষুধ ও শপিং খরচ'],
-                    '_tourivo_faqs'             => [
+                    '_readscope_inclusions'       => ['২ রাত সাজেকের সেরা প্রিমিয়াম রিসোর্টে থাকার ব্যবস্থা', 'খাগড়াছড়ি-সাজেক আপ-ডাউন রিজার্ভ চাঁদের গাড়ি', 'প্রতিদিনের সকল খাবার (৬ বেলা)', 'সকল এন্ট্রি ফি ও অভিজ্ঞ গাইড ফি'],
+                    '_readscope_exclusions'       => ['ঢাকা-খাগড়াছড়ি দূরপাল্লার বাস টিকিট', 'ব্যক্তিগত ওষুধ ও শপিং খরচ'],
+                    '_readscope_faqs'             => [
                         ['question' => 'চাঁদের গাড়িতে কি অন্যান্য যাত্রীদের সাথে শেয়ার করতে হবে?', 'answer' => 'না, আমাদের প্রতিটি ট্রিপেই নির্ধারিত গ্রুপের জন্য সম্পূর্ণ প্রাইভেট রিজার্ভ গাড়ি দেওয়া হয়।'],
                         ['question' => 'সাজেকে বিদ্যুৎ ও ওয়াইফাই সুবিধা কেমন?', 'answer' => 'আমাদের নির্বাচিত প্রিমিয়াম রিসোর্টে সার্বক্ষণিক সোলার/জেনারেটর ব্যাকআপ ও ওয়াইফাই সুবিধা রয়েছে।'],
                     ],
@@ -215,18 +215,18 @@ class Seeder
                     HotelPostType::TAX_AMENITY    => ['Free High-Speed WiFi', 'Infinity Swimming Pool', 'Air Conditioning', 'Complimentary Breakfast', 'Luxury Spa & Wellness'],
                 ],
                 'key_meta'     => [
-                    '_tourivo_star_rating' => 5,
+                    '_readscope_star_rating' => 5,
                 ],
                 'meta'         => [
-                    '_tourivo_star_rating'    => 5,
-                    '_tourivo_city'           => 'Bali / Seminyak',
-                    '_tourivo_address'        => 'Jl. Pantai Seminyak No. 88, Badung',
-                    '_tourivo_postal_code'    => '80361',
-                    '_tourivo_check_in_time'  => '14:00',
-                    '_tourivo_check_out_time' => '11:00',
-                    '_tourivo_phone'          => '+62 361 889900',
-                    '_tourivo_email'          => 'reservations@oceanparadisebali.com',
-                    '_tourivo_policy'         => 'Children of all ages welcome. Valid passport or national ID required at check-in.',
+                    '_readscope_star_rating'    => 5,
+                    '_readscope_city'           => 'Bali / Seminyak',
+                    '_readscope_address'        => 'Jl. Pantai Seminyak No. 88, Badung',
+                    '_readscope_postal_code'    => '80361',
+                    '_readscope_check_in_time'  => '14:00',
+                    '_readscope_check_out_time' => '11:00',
+                    '_readscope_phone'          => '+62 361 889900',
+                    '_readscope_email'          => 'reservations@oceanparadisebali.com',
+                    '_readscope_policy'         => 'Children of all ages welcome. Valid passport or national ID required at check-in.',
                 ],
             ],
 
@@ -239,14 +239,14 @@ class Seeder
                     HotelPostType::TAX_AMENITY    => ['Free High-Speed WiFi', 'Air Conditioning', 'Complimentary Breakfast'],
                 ],
                 'key_meta'     => [
-                    '_tourivo_star_rating' => 4,
+                    '_readscope_star_rating' => 4,
                 ],
                 'meta'         => [
-                    '_tourivo_star_rating'    => 4,
-                    '_tourivo_city'           => 'Interlaken',
-                    '_tourivo_address'        => 'Höheweg 42, 3800 Interlaken',
-                    '_tourivo_check_in_time'  => '15:00',
-                    '_tourivo_check_out_time' => '11:00',
+                    '_readscope_star_rating'    => 4,
+                    '_readscope_city'           => 'Interlaken',
+                    '_readscope_address'        => 'Höheweg 42, 3800 Interlaken',
+                    '_readscope_check_in_time'  => '15:00',
+                    '_readscope_check_out_time' => '11:00',
                 ],
             ],
 
@@ -259,14 +259,14 @@ class Seeder
                     HotelPostType::TAX_AMENITY    => ['Free High-Speed WiFi', 'Infinity Swimming Pool', 'Air Conditioning', 'Complimentary Breakfast', 'Luxury Spa & Wellness'],
                 ],
                 'key_meta'     => [
-                    '_tourivo_star_rating' => 5,
+                    '_readscope_star_rating' => 5,
                 ],
                 'meta'         => [
-                    '_tourivo_star_rating'    => 5,
-                    '_tourivo_city'           => "Cox's Bazar",
-                    '_tourivo_address'        => 'মেরিন ড্রাইভ রোড, কলাতলী, কক্সবাজার',
-                    '_tourivo_check_in_time'  => '14:00',
-                    '_tourivo_check_out_time' => '12:00',
+                    '_readscope_star_rating'    => 5,
+                    '_readscope_city'           => "Cox's Bazar",
+                    '_readscope_address'        => 'মেরিন ড্রাইভ রোড, কলাতলী, কক্সবাজার',
+                    '_readscope_check_in_time'  => '14:00',
+                    '_readscope_check_out_time' => '12:00',
                 ],
             ],
 
@@ -279,14 +279,14 @@ class Seeder
                     HotelPostType::TAX_AMENITY    => ['Free High-Speed WiFi', 'Complimentary Breakfast'],
                 ],
                 'key_meta'     => [
-                    '_tourivo_star_rating' => 4,
+                    '_readscope_star_rating' => 4,
                 ],
                 'meta'         => [
-                    '_tourivo_star_rating'    => 4,
-                    '_tourivo_city'           => 'Sajek Valley',
-                    '_tourivo_address'        => 'রুইলুই পাড়া, সাজেক ভ্যালি, বাঘাইছড়ি',
-                    '_tourivo_check_in_time'  => '13:00',
-                    '_tourivo_check_out_time' => '11:00',
+                    '_readscope_star_rating'    => 4,
+                    '_readscope_city'           => 'Sajek Valley',
+                    '_readscope_address'        => 'রুইলুই পাড়া, সাজেক ভ্যালি, বাঘাইছড়ি',
+                    '_readscope_check_in_time'  => '13:00',
+                    '_readscope_check_out_time' => '11:00',
                 ],
             ],
 
@@ -299,16 +299,16 @@ class Seeder
                 'post_content'     => 'Spacious 45m² ocean-facing suite featuring a private balcony, king-size canopy bed, marble bathroom with deep soaking tub, and espresso machine.',
                 'parent_hotel_key' => 'hotel_1',
                 'key_meta'         => [
-                    '_tourivo_nightly_price' => '180.00',
+                    '_readscope_nightly_price' => '180.00',
                 ],
                 'meta'             => [
-                    '_tourivo_nightly_price' => '180.00',
-                    '_tourivo_max_adults'    => 2,
-                    '_tourivo_max_children'  => 1,
-                    '_tourivo_max_guests'    => 3,
-                    '_tourivo_room_quantity' => 10,
-                    '_tourivo_bed_type'      => '1 King Bed',
-                    '_tourivo_room_size'     => '45 m² / 484 ft²',
+                    '_readscope_nightly_price' => '180.00',
+                    '_readscope_max_adults'    => 2,
+                    '_readscope_max_children'  => 1,
+                    '_readscope_max_guests'    => 3,
+                    '_readscope_room_quantity' => 10,
+                    '_readscope_bed_type'      => '1 King Bed',
+                    '_readscope_room_size'     => '45 m² / 484 ft²',
                 ],
             ],
 
@@ -319,16 +319,16 @@ class Seeder
                 'parent_hotel_key' => 'hotel_1',
                 'hotel_min_price'  => 180.00,
                 'key_meta'         => [
-                    '_tourivo_nightly_price' => '320.00',
+                    '_readscope_nightly_price' => '320.00',
                 ],
                 'meta'             => [
-                    '_tourivo_nightly_price' => '320.00',
-                    '_tourivo_max_adults'    => 4,
-                    '_tourivo_max_children'  => 2,
-                    '_tourivo_max_guests'    => 6,
-                    '_tourivo_room_quantity' => 4,
-                    '_tourivo_bed_type'      => '2 King Beds',
-                    '_tourivo_room_size'     => '120 m² / 1,290 ft²',
+                    '_readscope_nightly_price' => '320.00',
+                    '_readscope_max_adults'    => 4,
+                    '_readscope_max_children'  => 2,
+                    '_readscope_max_guests'    => 6,
+                    '_readscope_room_quantity' => 4,
+                    '_readscope_bed_type'      => '2 King Beds',
+                    '_readscope_room_size'     => '120 m² / 1,290 ft²',
                 ],
             ],
 
@@ -338,16 +338,16 @@ class Seeder
                 'post_content'     => 'Cozy wooden-furnished room with private balcony offering direct views of the Swiss Alps.',
                 'parent_hotel_key' => 'hotel_2',
                 'key_meta'         => [
-                    '_tourivo_nightly_price' => '140.00',
+                    '_readscope_nightly_price' => '140.00',
                 ],
                 'meta'             => [
-                    '_tourivo_nightly_price' => '140.00',
-                    '_tourivo_max_adults'    => 2,
-                    '_tourivo_max_children'  => 0,
-                    '_tourivo_max_guests'    => 2,
-                    '_tourivo_room_quantity' => 8,
-                    '_tourivo_bed_type'      => '1 Double Bed or 2 Twins',
-                    '_tourivo_room_size'     => '28 m²',
+                    '_readscope_nightly_price' => '140.00',
+                    '_readscope_max_adults'    => 2,
+                    '_readscope_max_children'  => 0,
+                    '_readscope_max_guests'    => 2,
+                    '_readscope_room_quantity' => 8,
+                    '_readscope_bed_type'      => '1 Double Bed or 2 Twins',
+                    '_readscope_room_size'     => '28 m²',
                 ],
             ],
 
@@ -358,16 +358,16 @@ class Seeder
                 'parent_hotel_key' => 'hotel_2',
                 'hotel_min_price'  => 140.00,
                 'key_meta'         => [
-                    '_tourivo_nightly_price' => '210.00',
+                    '_readscope_nightly_price' => '210.00',
                 ],
                 'meta'             => [
-                    '_tourivo_nightly_price' => '210.00',
-                    '_tourivo_max_adults'    => 3,
-                    '_tourivo_max_children'  => 1,
-                    '_tourivo_max_guests'    => 4,
-                    '_tourivo_room_quantity' => 5,
-                    '_tourivo_bed_type'      => '1 King Bed + 1 Sofa Bed',
-                    '_tourivo_room_size'     => '52 m²',
+                    '_readscope_nightly_price' => '210.00',
+                    '_readscope_max_adults'    => 3,
+                    '_readscope_max_children'  => 1,
+                    '_readscope_max_guests'    => 4,
+                    '_readscope_room_quantity' => 5,
+                    '_readscope_bed_type'      => '1 King Bed + 1 Sofa Bed',
+                    '_readscope_room_size'     => '52 m²',
                 ],
             ],
 
@@ -377,16 +377,16 @@ class Seeder
                 'post_content'     => 'সরাসরি বঙ্গোপসাগরের ঢেউ দেখার মতো প্রাইভেট বারান্দা, এসি, বাথটাব এবং কিং বেড সমৃদ্ধ প্রিমিয়াম রুম।',
                 'parent_hotel_key' => 'hotel_3',
                 'key_meta'         => [
-                    '_tourivo_nightly_price' => '7500.00',
+                    '_readscope_nightly_price' => '7500.00',
                 ],
                 'meta'             => [
-                    '_tourivo_nightly_price' => '7500.00',
-                    '_tourivo_max_adults'    => 2,
-                    '_tourivo_max_children'  => 1,
-                    '_tourivo_max_guests'    => 3,
-                    '_tourivo_room_quantity' => 12,
-                    '_tourivo_bed_type'      => '১টি কিং সাইজ বেড',
-                    '_tourivo_room_size'     => '৩৫ বর্গমিটার',
+                    '_readscope_nightly_price' => '7500.00',
+                    '_readscope_max_adults'    => 2,
+                    '_readscope_max_children'  => 1,
+                    '_readscope_max_guests'    => 3,
+                    '_readscope_room_quantity' => 12,
+                    '_readscope_bed_type'      => '১টি কিং সাইজ বেড',
+                    '_readscope_room_size'     => '৩৫ বর্গমিটার',
                 ],
             ],
 
@@ -397,16 +397,16 @@ class Seeder
                 'parent_hotel_key' => 'hotel_3',
                 'hotel_min_price'  => 7500.00,
                 'key_meta'         => [
-                    '_tourivo_nightly_price' => '14500.00',
+                    '_readscope_nightly_price' => '14500.00',
                 ],
                 'meta'             => [
-                    '_tourivo_nightly_price' => '14500.00',
-                    '_tourivo_max_adults'    => 4,
-                    '_tourivo_max_children'  => 2,
-                    '_tourivo_max_guests'    => 5,
-                    '_tourivo_room_quantity' => 4,
-                    '_tourivo_bed_type'      => '২টি কিং বেড + ১টি সোফা বেড',
-                    '_tourivo_room_size'     => '৮৫ বর্গমিটার',
+                    '_readscope_nightly_price' => '14500.00',
+                    '_readscope_max_adults'    => 4,
+                    '_readscope_max_children'  => 2,
+                    '_readscope_max_guests'    => 5,
+                    '_readscope_room_quantity' => 4,
+                    '_readscope_bed_type'      => '২টি কিং বেড + ১টি সোফা বেড',
+                    '_readscope_room_size'     => '৮৫ বর্গমিটার',
                 ],
             ],
 
@@ -416,16 +416,16 @@ class Seeder
                 'post_content'     => 'সেগুন ও বাঁশের প্রাকৃতিক নকশায় নির্মিত প্রিমিয়াম কাপল কটেজ। সাথে রয়েছে মেঘের প্যানোরামিক ভিউ সহ প্রাইভেট বারান্দা।',
                 'parent_hotel_key' => 'hotel_4',
                 'key_meta'         => [
-                    '_tourivo_nightly_price' => '4500.00',
+                    '_readscope_nightly_price' => '4500.00',
                 ],
                 'meta'             => [
-                    '_tourivo_nightly_price' => '4500.00',
-                    '_tourivo_max_adults'    => 2,
-                    '_tourivo_max_children'  => 1,
-                    '_tourivo_max_guests'    => 3,
-                    '_tourivo_room_quantity' => 8,
-                    '_tourivo_bed_type'      => '১টি কুইন বেড',
-                    '_tourivo_room_size'     => '২৮ বর্গমিটার',
+                    '_readscope_nightly_price' => '4500.00',
+                    '_readscope_max_adults'    => 2,
+                    '_readscope_max_children'  => 1,
+                    '_readscope_max_guests'    => 3,
+                    '_readscope_room_quantity' => 8,
+                    '_readscope_bed_type'      => '১টি কুইন বেড',
+                    '_readscope_room_size'     => '২৮ বর্গমিটার',
                 ],
             ],
 
@@ -436,23 +436,23 @@ class Seeder
                 'parent_hotel_key' => 'hotel_4',
                 'hotel_min_price'  => 4500.00,
                 'key_meta'         => [
-                    '_tourivo_nightly_price' => '7500.00',
+                    '_readscope_nightly_price' => '7500.00',
                 ],
                 'meta'             => [
-                    '_tourivo_nightly_price' => '7500.00',
-                    '_tourivo_max_adults'    => 4,
-                    '_tourivo_max_children'  => 2,
-                    '_tourivo_max_guests'    => 5,
-                    '_tourivo_room_quantity' => 4,
-                    '_tourivo_bed_type'      => '২টি ডাবল বেড',
-                    '_tourivo_room_size'     => '৫৫ বর্গমিটার',
+                    '_readscope_nightly_price' => '7500.00',
+                    '_readscope_max_adults'    => 4,
+                    '_readscope_max_children'  => 2,
+                    '_readscope_max_guests'    => 5,
+                    '_readscope_room_quantity' => 4,
+                    '_readscope_bed_type'      => '২টি ডাবল বেড',
+                    '_readscope_room_size'     => '৫৫ বর্গমিটার',
                 ],
             ],
         ];
     }
 
     /**
-     * Backfill _tourivo_demo=1 meta on legacy demo posts imported before meta tagging was introduced.
+     * Backfill _readscope_demo=1 meta on legacy demo posts imported before meta tagging was introduced.
      * Matches both post title and exact key metadata from getDemoDefinitions() to avoid tagging user posts.
      *
      * @return int Number of legacy posts backfilled.
@@ -478,7 +478,7 @@ class Seeder
             if (!empty($posts)) {
                 foreach ($posts as $postId) {
                     $intId = (int) $postId;
-                    if (get_post_meta($intId, '_tourivo_demo', true)) {
+                    if (get_post_meta($intId, '_readscope_demo', true)) {
                         continue;
                     }
 
@@ -493,7 +493,7 @@ class Seeder
                     }
 
                     if ($matchesSignature) {
-                        update_post_meta($intId, '_tourivo_demo', '1');
+                        update_post_meta($intId, '_readscope_demo', '1');
                         $updated++;
                     }
                 }
@@ -513,7 +513,7 @@ class Seeder
         $existing = get_posts([
             'post_type'      => [TourPostType::POST_TYPE, HotelPostType::POST_TYPE],
             // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Admin-only existence check, LIMIT 1.
-            'meta_key'       => '_tourivo_demo',
+            'meta_key'       => '_readscope_demo',
             // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- Admin-only existence check, LIMIT 1.
             'meta_value'     => '1',
             'posts_per_page' => 1,
@@ -624,9 +624,9 @@ class Seeder
                 $parentHotelKey = (string) $def['parent_hotel_key'];
                 $parentHotelId = $createdPostMap[$parentHotelKey] ?? 0;
                 if ($parentHotelId > 0) {
-                    update_post_meta($postId, '_tourivo_parent_hotel_id', $parentHotelId);
+                    update_post_meta($postId, '_readscope_parent_hotel_id', $parentHotelId);
                     if (isset($def['hotel_min_price'])) {
-                        update_post_meta($parentHotelId, '_tourivo_min_price', (float) $def['hotel_min_price']);
+                        update_post_meta($parentHotelId, '_readscope_min_price', (float) $def['hotel_min_price']);
                     }
                 }
             }
@@ -677,7 +677,7 @@ class Seeder
     }
 
     /**
-     * Insert a demo post and tag it with _tourivo_demo=1.
+     * Insert a demo post and tag it with _readscope_demo=1.
      *
      * @param array<string, mixed> $args
      * @return int Post ID or 0 on failure.
@@ -686,7 +686,7 @@ class Seeder
     {
         $postId = wp_insert_post($args);
         if ($postId > 0) {
-            update_post_meta((int) $postId, '_tourivo_demo', '1');
+            update_post_meta((int) $postId, '_readscope_demo', '1');
             return (int) $postId;
         }
         return 0;

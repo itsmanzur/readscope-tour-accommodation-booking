@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Admin\BookingsTable;
-use Tourivo\Common\Container;
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\ExportService;
-use Tourivo\Services\InventoryService;
-use Tourivo\Services\PricingService;
-use Tourivo\Tests\TestCase;
+use Readscope\Admin\BookingsTable;
+use Readscope\Common\Container;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\ExportService;
+use Readscope\Services\InventoryService;
+use Readscope\Services\PricingService;
+use Readscope\Tests\TestCase;
 use WP_User;
 
 /**
@@ -101,7 +101,7 @@ class ExportReportingTest extends TestCase
         ];
 
         $bData = array_merge($bookingDefaults, $bookingOverrides);
-        $wpdb->insert($wpdb->prefix . 'tourivo_bookings', $bData);
+        $wpdb->insert($wpdb->prefix . 'readscope_bookings', $bData);
         $bookingId = (int) $wpdb->insert_id;
 
         $itemDefaults = [
@@ -121,18 +121,18 @@ class ExportReportingTest extends TestCase
 
         $iData = array_merge($itemDefaults, $itemOverrides);
         $iData['booking_id'] = $bookingId;
-        $wpdb->insert($wpdb->prefix . 'tourivo_booking_items', $iData);
+        $wpdb->insert($wpdb->prefix . 'readscope_booking_items', $iData);
 
         return $bookingId;
     }
 
     /**
-     * 1. Test: Unauthorized users without 'manage_tourivo_bookings' are rejected.
+     * 1. Test: Unauthorized users without 'manage_readscope_bookings' are rejected.
      */
     public function test_export_unauthorized_user_is_rejected(): void
     {
         wp_set_current_user(0);
-        $_GET['_wpnonce'] = wp_create_nonce('tourivo_export_csv_action');
+        $_GET['_wpnonce'] = wp_create_nonce('readscope_export_csv_action');
 
         $rejected = false;
         try {
@@ -150,7 +150,7 @@ class ExportReportingTest extends TestCase
     public function test_export_invalid_nonce_is_rejected(): void
     {
         $adminUser = wp_set_current_user(1);
-        $adminUser->allcaps['manage_tourivo_bookings'] = true;
+        $adminUser->allcaps['manage_readscope_bookings'] = true;
 
         $_GET['_wpnonce'] = 'invalid_tampered_nonce';
 
@@ -349,17 +349,17 @@ class ExportReportingTest extends TestCase
     public function test_export_preview_ajax(): void
     {
         $adminUser = wp_set_current_user(1);
-        $adminUser->allcaps['manage_tourivo_bookings'] = true;
+        $adminUser->allcaps['manage_readscope_bookings'] = true;
 
         $this->insertMockBooking(['booking_status' => 'confirmed', 'total_amount' => 400.00]);
         $this->insertMockBooking(['booking_status' => 'pending', 'total_amount' => 150.00]);
 
-        $_GET['nonce']  = wp_create_nonce('tourivo_admin_nonce');
+        $_GET['nonce']  = wp_create_nonce('readscope_admin_nonce');
         $_GET['status'] = 'confirmed';
 
         $this->exportService->handlePreviewAjax();
 
-        $response = $GLOBALS['tourivo_last_ajax_response'] ?? null;
+        $response = $GLOBALS['readscope_last_ajax_response'] ?? null;
         $this->assertNotNull($response);
         $this->assertSame(200, $response['status']);
         $this->assertTrue($response['body']['success']);

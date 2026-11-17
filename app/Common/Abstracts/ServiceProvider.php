@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Common\Abstracts;
+namespace Readscope\Common\Abstracts;
 
-use Tourivo\Common\Container;
-use Tourivo\Common\Traits\Hookable;
+use Readscope\Common\Container;
+use Readscope\Common\Traits\Hookable;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
  *
  * Abstract base class for all Readscope Booking service providers.
  *
- * @package Tourivo\Common\Abstracts
+ * @package Readscope\Common\Abstracts
  */
 abstract class ServiceProvider
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Shortcodes;
+namespace Readscope\Shortcodes;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -11,15 +11,15 @@ if (!defined('ABSPATH')) {
 /**
  * Class BookingPanelShortcode
  *
- * Shortcode: [tourivo_booking_panel item_id="..." item_type="tour|hotel_room"]
+ * Shortcode: [readscope_booking_panel item_id="..." item_type="tour|hotel_room"]
  *
- * @package Tourivo\Shortcodes
+ * @package Readscope\Shortcodes
  */
 class BookingPanelShortcode
 {
     public static function register(): void
     {
-        add_shortcode('tourivo_booking_panel', [self::class, 'render']);
+        add_shortcode('readscope_booking_panel', [self::class, 'render']);
     }
 
     /**
@@ -33,7 +33,7 @@ class BookingPanelShortcode
         $attributes = shortcode_atts([
             'item_id'   => get_the_ID(),
             'item_type' => 'tour',
-        ], (array) $atts, 'tourivo_booking_panel');
+        ], (array) $atts, 'readscope_booking_panel');
 
         $itemId   = (int) $attributes['item_id'];
         $itemType = sanitize_text_field((string) $attributes['item_type']);
@@ -43,9 +43,9 @@ class BookingPanelShortcode
         }
 
         ob_start();
-        tourivo_get_template('booking-panel.php', [
-            'tourivoItemId'   => $itemId,
-            'tourivoItemType' => $itemType,
+        readscope_get_template('booking-panel.php', [
+            'readscopeItemId'   => $itemId,
+            'readscopeItemType' => $itemType,
         ]);
 
         return ob_get_clean() ?: '';

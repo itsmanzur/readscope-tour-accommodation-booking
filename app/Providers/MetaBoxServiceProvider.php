@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Providers;
+namespace Readscope\Providers;
 
-use Tourivo\Admin\MetaBoxes\AvailabilityMetaBox;
-use Tourivo\Admin\MetaBoxes\HotelMetaBox;
-use Tourivo\Admin\MetaBoxes\RoomMetaBox;
-use Tourivo\Admin\MetaBoxes\TourMetaBox;
-use Tourivo\Common\Abstracts\ServiceProvider;
-use Tourivo\Config\Config;
-use Tourivo\Models\Hotel;
-use Tourivo\Models\Room;
-use Tourivo\Models\Tour;
-use Tourivo\PostTypes\HotelPostType;
-use Tourivo\PostTypes\RoomPostType;
-use Tourivo\PostTypes\TourPostType;
+use Readscope\Admin\MetaBoxes\AvailabilityMetaBox;
+use Readscope\Admin\MetaBoxes\HotelMetaBox;
+use Readscope\Admin\MetaBoxes\RoomMetaBox;
+use Readscope\Admin\MetaBoxes\TourMetaBox;
+use Readscope\Common\Abstracts\ServiceProvider;
+use Readscope\Config\Config;
+use Readscope\Models\Hotel;
+use Readscope\Models\Room;
+use Readscope\Models\Tour;
+use Readscope\PostTypes\HotelPostType;
+use Readscope\PostTypes\RoomPostType;
+use Readscope\PostTypes\TourPostType;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -26,7 +26,7 @@ if (!defined('ABSPATH')) {
  *
  * Registers metaboxes, admin scripts/styles for metaboxes, and custom columns for post listings.
  *
- * @package Tourivo\Providers
+ * @package Readscope\Providers
  */
 class MetaBoxServiceProvider extends ServiceProvider
 {
@@ -84,26 +84,26 @@ class MetaBoxServiceProvider extends ServiceProvider
         }
 
         wp_enqueue_style(
-            'tourivo-admin-metabox',
-            TOURIVO_PLUGIN_URL . 'assets/css/admin-metabox.css',
+            'readscope-admin-metabox',
+            READSCOPE_PLUGIN_URL . 'assets/css/admin-metabox.css',
             ['dashicons'],
-            TOURIVO_VERSION
+            READSCOPE_VERSION
         );
 
-        \Tourivo\Support\Typography::enqueue();
+        \Readscope\Support\Typography::enqueue();
 
         wp_enqueue_script(
-            'tourivo-admin-metabox',
-            TOURIVO_PLUGIN_URL . 'assets/js/admin-metabox.js',
+            'readscope-admin-metabox',
+            READSCOPE_PLUGIN_URL . 'assets/js/admin-metabox.js',
             [],
-            TOURIVO_VERSION,
+            READSCOPE_VERSION,
             true
         );
 
-        wp_localize_script('tourivo-admin-metabox', 'tourivoAvailabilityConfig', [
+        wp_localize_script('readscope-admin-metabox', 'readscopeAvailabilityConfig', [
             'ajaxUrl'          => admin_url('admin-ajax.php'),
-            'nonce'            => wp_create_nonce('tourivo_admin_nonce'),
-            'isBengali'        => function_exists('tourivo_is_bengali') && tourivo_is_bengali(),
+            'nonce'            => wp_create_nonce('readscope_admin_nonce'),
+            'isBengali'        => function_exists('readscope_is_bengali') && readscope_is_bengali(),
             'useBengaliDigits' => (bool) Config::get('use_bangla_digits', false),
             'monthNames'       => [
                 __('January', 'the-readscope-tour-and-accommodation-booking'),

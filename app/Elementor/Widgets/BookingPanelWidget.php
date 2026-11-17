@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Elementor\Widgets;
+namespace Readscope\Elementor\Widgets;
 
-use Tourivo\Shortcodes\BookingPanelShortcode;
+use Readscope\Shortcodes\BookingPanelShortcode;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -19,13 +19,13 @@ if (!class_exists('\Elementor\Widget_Base')) {
  *
  * Elementor Widget for embedding the interactive booking panel.
  *
- * @package Tourivo\Elementor\Widgets
+ * @package Readscope\Elementor\Widgets
  */
 class BookingPanelWidget extends \Elementor\Widget_Base
 {
     public function get_name(): string
     {
-        return 'tourivo_booking_panel';
+        return 'readscope_booking_panel';
     }
 
     public function get_title(): string
@@ -40,7 +40,7 @@ class BookingPanelWidget extends \Elementor\Widget_Base
 
     public function get_categories(): array
     {
-        return ['tourivo-elements'];
+        return ['readscope-elements'];
     }
 
     public function get_keywords(): array
@@ -92,6 +92,6 @@ class BookingPanelWidget extends \Elementor\Widget_Base
             'item_type' => sanitize_key($settings['item_type'] ?? 'tour'),
         ]);
 
-        \Tourivo\Support\Html::print($content);
+        \Readscope\Support\Html::print($content);
     }
 }

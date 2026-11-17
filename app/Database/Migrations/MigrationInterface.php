@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Database\Migrations;
+namespace Readscope\Database\Migrations;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  *
  * Contract for database migration definitions.
  *
- * @package Tourivo\Database\Migrations
+ * @package Readscope\Database\Migrations
  */
 interface MigrationInterface
 {
@@ -34,7 +34,7 @@ interface MigrationInterface
     /**
      * Get the SQL statement to execute with dbDelta() or wpdb.
      *
-     * @param string $prefix Table prefix (e.g. wp_tourivo_)
+     * @param string $prefix Table prefix (e.g. wp_readscope_)
      * @param string $charsetCollate WordPress charset and collate string
      * @return string
      */

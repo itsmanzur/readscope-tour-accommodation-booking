@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Common\Container;
-use Tourivo\Core\Deactivator;
-use Tourivo\Core\Uninstaller;
-use Tourivo\Providers\AdminServiceProvider;
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\InventoryService;
-use Tourivo\Services\LogService;
-use Tourivo\Services\PricingService;
-use Tourivo\Services\PrivacyService;
-use Tourivo\Shortcodes\BookingLookupShortcode;
-use Tourivo\Support\Privacy;
-use Tourivo\Support\SiteTime;
-use Tourivo\Tests\TestCase;
+use Readscope\Common\Container;
+use Readscope\Core\Deactivator;
+use Readscope\Core\Uninstaller;
+use Readscope\Providers\AdminServiceProvider;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\InventoryService;
+use Readscope\Services\LogService;
+use Readscope\Services\PricingService;
+use Readscope\Services\PrivacyService;
+use Readscope\Shortcodes\BookingLookupShortcode;
+use Readscope\Support\Privacy;
+use Readscope\Support\SiteTime;
+use Readscope\Tests\TestCase;
 
 /**
  * Class ReviewFixesTest
@@ -44,12 +44,12 @@ class ReviewFixesTest extends TestCase
         parent::setUp();
         $this->cleanDatabaseTables();
 
-        $GLOBALS['tourivo_mock_sent_emails']      = [];
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
-        $GLOBALS['tourivo_mock_filters']          = [];
-        $GLOBALS['tourivo_mock_action_callbacks'] = [];
-        unset($GLOBALS['tourivo_mock_user_caps']);
-        update_option('tourivo_settings', []);
+        $GLOBALS['readscope_mock_sent_emails']      = [];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_filters']          = [];
+        $GLOBALS['readscope_mock_action_callbacks'] = [];
+        unset($GLOBALS['readscope_mock_user_caps']);
+        update_option('readscope_settings', []);
         update_option('timezone_string', '');
 
         $this->inventoryService = new InventoryService(new InventoryRepository());
@@ -68,7 +68,7 @@ class ReviewFixesTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['tourivo_mock_user_caps']);
+        unset($GLOBALS['readscope_mock_user_caps']);
         update_option('timezone_string', '');
         $_POST = [];
         parent::tearDown();
@@ -80,7 +80,7 @@ class ReviewFixesTest extends TestCase
     private function emailJobs(): array
     {
         return array_values(array_filter(
-            $GLOBALS['tourivo_mock_scheduled_events'] ?? [],
+            $GLOBALS['readscope_mock_scheduled_events'] ?? [],
             static fn ($e) => $e['hook'] === EmailService::QUEUE_HOOK
         ));
     }
@@ -91,7 +91,7 @@ class ReviewFixesTest extends TestCase
     private function runEmailJobs(): void
     {
         $jobs = $this->emailJobs();
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
         foreach ($jobs as $job) {
             $this->emailService->dispatch(...$job['args']);
         }
@@ -112,30 +112,30 @@ class ReviewFixesTest extends TestCase
 
     // ------------------------------------------------------------------ 1. Unscheduling
 
-    public function test_deactivation_removes_every_tourivo_event_whatever_its_args(): void
+    public function test_deactivation_removes_every_readscope_event_whatever_its_args(): void
     {
-        wp_schedule_event(time(), 'daily', 'tourivo_daily_reminders');
-        wp_schedule_single_event(time(), 'tourivo_process_email_delivery', ['customer_booking_received', 'hash', 5, 1]);
-        wp_schedule_single_event(time() + 120, 'tourivo_process_webhook_delivery', ['booking.created', ['id' => 5], 2]);
-        as_enqueue_async_action('tourivo_process_email_delivery', ['admin_new_booking', '', 5, 1], 'tourivo-emails');
-        as_schedule_single_action(time() + 300, 'tourivo_process_webhook_delivery', ['booking.created', [], 3], 'tourivo-webhooks');
+        wp_schedule_event(time(), 'daily', 'readscope_daily_reminders');
+        wp_schedule_single_event(time(), 'readscope_process_email_delivery', ['customer_booking_received', 'hash', 5, 1]);
+        wp_schedule_single_event(time() + 120, 'readscope_process_webhook_delivery', ['booking.created', ['id' => 5], 2]);
+        as_enqueue_async_action('readscope_process_email_delivery', ['admin_new_booking', '', 5, 1], 'readscope-emails');
+        as_schedule_single_action(time() + 300, 'readscope_process_webhook_delivery', ['booking.created', [], 3], 'readscope-webhooks');
         wp_schedule_single_event(time(), 'another_plugin_hook', ['keep']);
 
         Deactivator::unscheduleAll();
 
-        $left = array_column($GLOBALS['tourivo_mock_scheduled_events'], 'hook');
+        $left = array_column($GLOBALS['readscope_mock_scheduled_events'], 'hook');
         $this->assertEquals(['another_plugin_hook'], array_values($left), 'Only the foreign event may remain.');
     }
 
     public function test_uninstall_removes_queued_actions_too(): void
     {
-        wp_schedule_single_event(time(), 'tourivo_process_email_delivery', ['customer_booking_received', 'hash', 5, 1]);
-        as_enqueue_async_action('tourivo_process_email_delivery', ['admin_new_booking', '', 5, 1], 'tourivo-emails');
-        wp_schedule_event(time(), 'daily', 'tourivo_daily_privacy_retention');
+        wp_schedule_single_event(time(), 'readscope_process_email_delivery', ['customer_booking_received', 'hash', 5, 1]);
+        as_enqueue_async_action('readscope_process_email_delivery', ['admin_new_booking', '', 5, 1], 'readscope-emails');
+        wp_schedule_event(time(), 'daily', 'readscope_daily_privacy_retention');
 
         Uninstaller::uninstall();
 
-        $this->assertEmpty($GLOBALS['tourivo_mock_scheduled_events'], 'Uninstall must leave no Readscope Booking event behind.');
+        $this->assertEmpty($GLOBALS['readscope_mock_scheduled_events'], 'Uninstall must leave no Readscope Booking event behind.');
     }
 
     // ------------------------------------------------------------------ 2. No PII in jobs
@@ -168,9 +168,9 @@ class ReviewFixesTest extends TestCase
         $this->book('ayesha@example.com');
         $this->runEmailJobs();
 
-        $to = array_column($GLOBALS['tourivo_mock_sent_emails'], 'to');
+        $to = array_column($GLOBALS['readscope_mock_sent_emails'], 'to');
         $this->assertTrue(in_array('ayesha@example.com', $to, true), 'Customer mail goes to the stored address.');
-        $customerMail = $GLOBALS['tourivo_mock_sent_emails'][array_search('ayesha@example.com', $to, true)];
+        $customerMail = $GLOBALS['readscope_mock_sent_emails'][array_search('ayesha@example.com', $to, true)];
         $this->assertStringContainsString('Ayesha Rahman', (string) $customerMail['message'], 'Body is built from the reloaded booking.');
     }
 
@@ -183,13 +183,13 @@ class ReviewFixesTest extends TestCase
         $customerJobs = array_filter($this->emailJobs(), static fn ($e) => !str_starts_with($e['args'][0], 'admin_'));
         $job = reset($customerJobs);
         $this->assertFalse($this->emailService->dispatch(...$job['args']), 'Erased or changed address must not be mailed.');
-        $this->assertEmpty($GLOBALS['tourivo_mock_sent_emails']);
+        $this->assertEmpty($GLOBALS['readscope_mock_sent_emails']);
     }
 
     public function test_retry_job_is_also_free_of_personal_data(): void
     {
         $res = $this->book('ayesha@example.com');
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
         add_filter('pre_wp_mail', fn () => false);
 
         $this->emailService->dispatch('customer_booking_received', $this->emailService->recipientHash('ayesha@example.com'), (int) $res['booking_id'], 1);
@@ -203,7 +203,7 @@ class ReviewFixesTest extends TestCase
     {
         global $wpdb;
         $tourId = $this->createTour(100.0, 10);
-        $wpdb->insert($wpdb->prefix . 'tourivo_inquiries', [
+        $wpdb->insert($wpdb->prefix . 'readscope_inquiries', [
             'item_id'        => $tourId,
             'item_type'      => 'tour',
             'customer_name'  => 'Karim Uddin',
@@ -222,8 +222,8 @@ class ReviewFixesTest extends TestCase
         $this->assertEquals(['admin_new_inquiry', '', $inquiryId, 1], $jobs[0]['args']);
 
         $this->runEmailJobs();
-        $this->assertCount(1, $GLOBALS['tourivo_mock_sent_emails']);
-        $mail = $GLOBALS['tourivo_mock_sent_emails'][0];
+        $this->assertCount(1, $GLOBALS['readscope_mock_sent_emails']);
+        $mail = $GLOBALS['readscope_mock_sent_emails'][0];
         $this->assertStringContainsString('Is the boat ride included?', (string) $mail['message']);
         $this->assertStringContainsString('Reply-To: Karim Uddin <karim@example.com>', implode("\n", (array) $mail['headers']));
     }
@@ -231,7 +231,7 @@ class ReviewFixesTest extends TestCase
     public function test_job_queued_by_an_older_version_still_sends_from_fresh_data(): void
     {
         $res = $this->book('ayesha@example.com');
-        $GLOBALS['tourivo_mock_sent_emails'] = [];
+        $GLOBALS['readscope_mock_sent_emails'] = [];
 
         $sent = $this->emailService->dispatch('customer_booking_received', 'ayesha@example.com', [
             'id'             => (int) $res['booking_id'],
@@ -240,23 +240,23 @@ class ReviewFixesTest extends TestCase
         ], 1);
 
         $this->assertTrue($sent);
-        $this->assertStringNotContainsString('Stale Name', (string) $GLOBALS['tourivo_mock_sent_emails'][0]['message']);
+        $this->assertStringNotContainsString('Stale Name', (string) $GLOBALS['readscope_mock_sent_emails'][0]['message']);
     }
 
     // ------------------------------------------------------------------ 3. Test email
 
     public function test_test_email_is_sent_directly_without_logs_transients_or_queue(): void
     {
-        global $wpdb, $tourivo_mock_transients;
+        global $wpdb, $readscope_mock_transients;
         $logsBefore       = count($wpdb->logs);
-        $transientsBefore = $tourivo_mock_transients;
+        $transientsBefore = $readscope_mock_transients;
 
         $this->assertTrue($this->emailService->sendTestEmail('qa@example.com'));
 
-        $this->assertCount(1, $GLOBALS['tourivo_mock_sent_emails']);
-        $this->assertEquals('qa@example.com', $GLOBALS['tourivo_mock_sent_emails'][0]['to']);
+        $this->assertCount(1, $GLOBALS['readscope_mock_sent_emails']);
+        $this->assertEquals('qa@example.com', $GLOBALS['readscope_mock_sent_emails'][0]['to']);
         $this->assertCount($logsBefore, $wpdb->logs, 'No booking log for a test email.');
-        $this->assertEquals($transientsBefore, $tourivo_mock_transients, 'No dedup or other transient.');
+        $this->assertEquals($transientsBefore, $readscope_mock_transients, 'No dedup or other transient.');
         $this->assertEmpty($this->emailJobs(), 'Nothing is queued.');
         $this->assertEmpty(LogService::getTimeline(999), 'The old mock booking ID 999 is gone.');
     }
@@ -267,7 +267,7 @@ class ReviewFixesTest extends TestCase
     {
         $res = $this->book('ayesha@example.com');
         $id  = (int) $res['booking_id'];
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
 
         $this->assertTrue($this->bookingService->changeStatus($id, 'confirmed')['success']);
         $this->assertTrue($this->bookingService->changeStatus($id, 'cancelled')['success']);
@@ -280,7 +280,7 @@ class ReviewFixesTest extends TestCase
     public function test_same_transition_without_context_falls_back_to_updated_at(): void
     {
         $res = $this->book('ayesha@example.com');
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
 
         $this->emailService->onBookingStatusChanged((int) $res['booking_id'], 'pending', 'confirmed');
         $this->emailService->onBookingStatusChanged((int) $res['booking_id'], 'pending', 'confirmed');
@@ -292,14 +292,14 @@ class ReviewFixesTest extends TestCase
 
     public function test_customer_mail_replies_go_to_the_site_address(): void
     {
-        update_option('tourivo_settings', ['email_notification_address' => 'support@tourivo.test']);
+        update_option('readscope_settings', ['email_notification_address' => 'support@readscope.test']);
         $this->book('ayesha@example.com');
         $this->runEmailJobs();
 
-        foreach ($GLOBALS['tourivo_mock_sent_emails'] as $mail) {
+        foreach ($GLOBALS['readscope_mock_sent_emails'] as $mail) {
             $headers = implode("\n", (array) $mail['headers']);
             if ($mail['to'] === 'ayesha@example.com') {
-                $this->assertStringContainsString('<support@tourivo.test>', $headers);
+                $this->assertStringContainsString('<support@readscope.test>', $headers);
                 $this->assertStringNotContainsString('Reply-To: Ayesha', $headers);
             } else {
                 $this->assertStringContainsString('Reply-To: Ayesha Rahman <ayesha@example.com>', $headers, 'Staff can reply straight to the customer.');
@@ -309,7 +309,7 @@ class ReviewFixesTest extends TestCase
 
     public function test_staff_reply_to_is_sanitized_and_falls_back_without_a_valid_address(): void
     {
-        update_option('tourivo_settings', ['email_notification_address' => 'support@tourivo.test']);
+        update_option('readscope_settings', ['email_notification_address' => 'support@readscope.test']);
 
         $value = $this->emailService->replyTo('admin_new_booking', [
             'customer_email' => 'eve@example.com',
@@ -320,7 +320,7 @@ class ReviewFixesTest extends TestCase
         $this->assertStringContainsString('<eve@example.com>', $value);
 
         $fallback = $this->emailService->replyTo('admin_new_booking', ['customer_email' => 'not-an-address'], 'Readscope Booking');
-        $this->assertEquals('Readscope Booking <support@tourivo.test>', $fallback);
+        $this->assertEquals('Readscope Booking <support@readscope.test>', $fallback);
     }
 
     // ------------------------------------------------------------------ 6. Availability auth + capacity guard
@@ -328,21 +328,21 @@ class ReviewFixesTest extends TestCase
     private function postAvailability(int $itemId, string $itemType): array
     {
         $_POST = [
-            'nonce'      => wp_create_nonce('tourivo_admin_nonce'),
+            'nonce'      => wp_create_nonce('readscope_admin_nonce'),
             'item_id'    => $itemId,
             'item_type'  => $itemType,
             'start_date' => gmdate('Y-m-d', strtotime('+20 days')),
             'capacity'   => '8',
         ];
-        $GLOBALS['tourivo_last_ajax_response'] = null;
+        $GLOBALS['readscope_last_ajax_response'] = null;
         (new AdminServiceProvider(Container::getInstance()))->handleUpdateAvailability();
-        return (array) $GLOBALS['tourivo_last_ajax_response'];
+        return (array) $GLOBALS['readscope_last_ajax_response'];
     }
 
     public function test_availability_rejects_an_id_of_another_post_type(): void
     {
         $tourId = $this->createTour(100.0, 10);
-        $GLOBALS['tourivo_mock_user_caps'] = ['edit_post' => true];
+        $GLOBALS['readscope_mock_user_caps'] = ['edit_post' => true];
 
         $this->assertEquals(403, $this->postAvailability($tourId, 'room')['status'] ?? 0, 'A tour ID sent as a room is refused.');
         $this->assertEquals(403, $this->postAvailability($tourId, 'gadget')['status'] ?? 0, 'Unknown item types are refused.');
@@ -353,10 +353,10 @@ class ReviewFixesTest extends TestCase
     {
         $tourId = $this->createTour(100.0, 10);
 
-        $GLOBALS['tourivo_mock_user_caps'] = ['manage_tourivo' => true, 'manage_tourivo_tours' => true, 'manage_tourivo_hotels' => true];
+        $GLOBALS['readscope_mock_user_caps'] = ['manage_readscope' => true, 'manage_readscope_tours' => true, 'manage_readscope_hotels' => true];
         $this->assertEquals(403, $this->postAvailability($tourId, 'tour')['status'] ?? 0, 'Plugin caps alone no longer pass.');
 
-        $GLOBALS['tourivo_mock_user_caps'] = ['edit_post' => true];
+        $GLOBALS['readscope_mock_user_caps'] = ['edit_post' => true];
         $this->assertEquals(200, $this->postAvailability($tourId, 'tour')['status'] ?? 0);
     }
 
@@ -405,7 +405,7 @@ class ReviewFixesTest extends TestCase
         $midnight = new \DateTimeImmutable($checkIn . ' 00:00:00', wp_timezone());
         $hours    = (int) ceil(($midnight->getTimestamp() - $now->getTimestamp()) / 3600) + 3;
 
-        update_option('tourivo_settings', ['allow_cancel_requests' => 1, 'customer_self_cancel_hours' => $hours]);
+        update_option('readscope_settings', ['allow_cancel_requests' => 1, 'customer_self_cancel_hours' => $hours]);
         $res = $this->book('late@example.com', $checkIn);
 
         $out = BookingLookupShortcode::processCancellationRequest((string) $res['booking_code'], 'late@example.com', 'Too late');
@@ -474,7 +474,7 @@ class ReviewFixesTest extends TestCase
     public function test_retention_counts_from_trip_end_and_honours_statuses(): void
     {
         global $wpdb;
-        update_option('tourivo_settings', ['anonymize_after_days' => 30, 'retention_statuses' => ['completed']]);
+        update_option('readscope_settings', ['anonymize_after_days' => 30, 'retention_statuses' => ['completed']]);
 
         $old = $this->book('old@example.com', gmdate('Y-m-d', strtotime('-40 days')), ['booking_status' => 'completed']);
         // Created long ago, but travelled 10 days ago: not due yet.
@@ -508,11 +508,11 @@ class ReviewFixesTest extends TestCase
 
     public function test_legacy_month_setting_still_applies_as_days(): void
     {
-        update_option('tourivo_settings', ['anonymize_after_months' => 2]);
+        update_option('readscope_settings', ['anonymize_after_months' => 2]);
         $this->assertEquals(60, PrivacyService::retentionDays());
         $this->assertEquals(['completed', 'cancelled'], PrivacyService::retentionStatuses());
 
-        update_option('tourivo_settings', ['anonymize_after_months' => 2, 'anonymize_after_days' => 14]);
+        update_option('readscope_settings', ['anonymize_after_months' => 2, 'anonymize_after_days' => 14]);
         $this->assertEquals(14, PrivacyService::retentionDays(), 'A saved day value wins.');
     }
 }

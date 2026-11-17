@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Providers;
+namespace Readscope\Providers;
 
-use Tourivo\Common\Abstracts\ServiceProvider;
-use Tourivo\PostTypes\HotelPostType;
-use Tourivo\PostTypes\TourPostType;
+use Readscope\Common\Abstracts\ServiceProvider;
+use Readscope\PostTypes\HotelPostType;
+use Readscope\PostTypes\TourPostType;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
  *
  * Handles template overrides for single Tour & Hotel posts, and enqueues frontend styles & scripts.
  *
- * @package Tourivo\Providers
+ * @package Readscope\Providers
  */
 class TemplateServiceProvider extends ServiceProvider
 {
@@ -34,10 +34,10 @@ class TemplateServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Initialize SEO Service (Schema.org JSON-LD and OpenGraph)
-        new \Tourivo\Services\SeoService();
+        new \Readscope\Services\SeoService();
 
         // Public search filters (date, guests, destination) are WordPress query vars read from the parsed request.
-        \Tourivo\Support\PublicSearch::register();
+        \Readscope\Support\PublicSearch::register();
 
         // Template loader hooks
         $this->addFilter('template_include', [$this, 'loadPostTemplates']);
@@ -46,17 +46,17 @@ class TemplateServiceProvider extends ServiceProvider
 
         // Frontend assets and Readscope Booking's own listing pages
         $this->addAction('wp_enqueue_scripts', [$this, 'enqueueFrontendAssets']);
-        \Tourivo\Support\PortalAssets::boot();
-        \Tourivo\Support\Typography::registerThemeFontScript();
+        \Readscope\Support\PortalAssets::boot();
+        \Readscope\Support\Typography::registerThemeFontScript();
         $this->addAction('pre_get_posts', [$this, 'filterTourSearch']);
         $this->addFilter('render_block', [$this, 'prependSearchSummary'], 10, 2);
         $this->addFilter('render_block', [$this, 'appendDestinationChips'], 10, 2);
-        $this->addAction('tourivo/place_search', [$this, 'printListingSearch']);
-        $this->addAction('tourivo/related_place', [$this, 'printRelatedPlace']);
+        $this->addAction('readscope/place_search', [$this, 'printListingSearch']);
+        $this->addAction('readscope/related_place', [$this, 'printRelatedPlace']);
         $this->addAction('loop_start', [$this, 'renderTourSearchSummary']);
 
         // The site's homepage, footer and menus belong to the owner: change them only when they opt in.
-        if ((bool) apply_filters('tourivo/travel_homepage', (bool) \Tourivo\Config\Config::get('travel_homepage', false))) {
+        if ((bool) apply_filters('readscope/travel_homepage', (bool) \Readscope\Config\Config::get('travel_homepage', false))) {
             $this->addFilter('block_core_navigation_render_fallback', [$this, 'guestNavigationFallback']);
             $this->addFilter('block_core_navigation_render_inner_blocks', [$this, 'guestFooterNavigation']);
             $this->addFilter('pre_render_block', [$this, 'watchFooterScope'], 20, 2);
@@ -70,14 +70,14 @@ class TemplateServiceProvider extends ServiceProvider
         }
 
         // Live Filter AJAX
-        $this->addAction('wp_ajax_tourivo_filter_items', [$this, 'handleFilterItems']);
-        $this->addAction('wp_ajax_nopriv_tourivo_filter_items', [$this, 'handleFilterItems']);
+        $this->addAction('wp_ajax_readscope_filter_items', [$this, 'handleFilterItems']);
+        $this->addAction('wp_ajax_nopriv_readscope_filter_items', [$this, 'handleFilterItems']);
 
         // Wishlist AJAX
-        $this->addAction('wp_ajax_tourivo_get_wishlist_items', [$this, 'handleGetWishlistItems']);
-        $this->addAction('wp_ajax_nopriv_tourivo_get_wishlist_items', [$this, 'handleGetWishlistItems']);
-        $this->addAction('wp_ajax_tourivo_sync_wishlist', [$this, 'handleSyncWishlist']);
-        $this->addAction('wp_ajax_nopriv_tourivo_sync_wishlist', [$this, 'handleSyncWishlist']);
+        $this->addAction('wp_ajax_readscope_get_wishlist_items', [$this, 'handleGetWishlistItems']);
+        $this->addAction('wp_ajax_nopriv_readscope_get_wishlist_items', [$this, 'handleGetWishlistItems']);
+        $this->addAction('wp_ajax_readscope_sync_wishlist', [$this, 'handleSyncWishlist']);
+        $this->addAction('wp_ajax_nopriv_readscope_sync_wishlist', [$this, 'handleSyncWishlist']);
     }
 
     /**
@@ -118,18 +118,18 @@ class TemplateServiceProvider extends ServiceProvider
         if (is_admin()) {
             return null;
         }
-        if (is_tax('tourivo_destination')) {
+        if (is_tax('readscope_destination')) {
             $name = single_term_title('', false);
 
             return is_string($name) && $name !== '' ? $name : null;
         }
-        if (!is_post_type_archive(['tourivo_tour', 'tourivo_hotel'])) {
+        if (!is_post_type_archive(['readscope_tour', 'readscope_hotel'])) {
             return null;
         }
-        if (function_exists('tourivo_load_plugin_textdomain')) {
-            tourivo_load_plugin_textdomain();
+        if (function_exists('readscope_load_plugin_textdomain')) {
+            readscope_load_plugin_textdomain();
         }
-        if (is_post_type_archive('tourivo_tour')) {
+        if (is_post_type_archive('readscope_tour')) {
             return _x('Tours', 'public archive title', 'the-readscope-tour-and-accommodation-booking');
         }
 
@@ -177,12 +177,12 @@ class TemplateServiceProvider extends ServiceProvider
      */
     private function guestNavigationLinks(): array
     {
-        if (function_exists('tourivo_load_plugin_textdomain')) {
-            tourivo_load_plugin_textdomain();
+        if (function_exists('readscope_load_plugin_textdomain')) {
+            readscope_load_plugin_textdomain();
         }
 
-        $tours = get_post_type_archive_link('tourivo_tour');
-        $hotels = get_post_type_archive_link('tourivo_hotel');
+        $tours = get_post_type_archive_link('readscope_tour');
+        $hotels = get_post_type_archive_link('readscope_hotel');
         $track = get_page_by_path('track-booking');
         $trackUrl = $track instanceof \WP_Post ? get_permalink($track) : home_url('/track-booking/');
         $items = [
@@ -359,8 +359,8 @@ class TemplateServiceProvider extends ServiceProvider
 
     private function footerIntroMarkup(): string
     {
-        if (function_exists('tourivo_load_plugin_textdomain')) {
-            tourivo_load_plugin_textdomain();
+        if (function_exists('readscope_load_plugin_textdomain')) {
+            readscope_load_plugin_textdomain();
         }
 
         return '<p class="wp-block-site-tagline has-small-font-size">'
@@ -400,10 +400,10 @@ class TemplateServiceProvider extends ServiceProvider
         }
 
         $year = function_exists('wp_date') ? wp_date('Y') : gmdate('Y');
-        $banglaDigits = (function_exists('tourivo_is_bengali') && tourivo_is_bengali())
-            || (bool) \Tourivo\Config\Config::get('use_bangla_digits', false);
-        if ($banglaDigits && function_exists('tourivo_bn_number')) {
-            $year = tourivo_bn_number($year);
+        $banglaDigits = (function_exists('readscope_is_bengali') && readscope_is_bengali())
+            || (bool) \Readscope\Config\Config::get('use_bangla_digits', false);
+        if ($banglaDigits && function_exists('readscope_bn_number')) {
+            $year = readscope_bn_number($year);
         }
 
         $credit = '<p class="has-small-font-size">© ' . esc_html($year)
@@ -479,7 +479,7 @@ class TemplateServiceProvider extends ServiceProvider
      */
     public function handleFilterItems(): void
     {
-        check_ajax_referer('tourivo_frontend_nonce', 'nonce');
+        check_ajax_referer('readscope_frontend_nonce', 'nonce');
 
         $params = [
             'type'        => isset($_GET['type']) ? sanitize_text_field(wp_unslash($_GET['type'])) : 'tour',
@@ -494,7 +494,7 @@ class TemplateServiceProvider extends ServiceProvider
             'columns'     => isset($_GET['columns']) ? max(1, min(4, absint(wp_unslash($_GET['columns'])))) : 3,
         ];
 
-        $html = \Tourivo\Shortcodes\FilterSearchShortcode::queryAndRender($params);
+        $html = \Readscope\Shortcodes\FilterSearchShortcode::queryAndRender($params);
 
         wp_send_json_success([
             'html' => $html,
@@ -508,7 +508,7 @@ class TemplateServiceProvider extends ServiceProvider
      */
     public function handleGetWishlistItems(): void
     {
-        check_ajax_referer('tourivo_frontend_nonce', 'nonce');
+        check_ajax_referer('readscope_frontend_nonce', 'nonce');
 
         $rawIds = isset($_POST['ids']) && is_array($_POST['ids']) ? array_map('absint', wp_unslash($_POST['ids'])) : [];
         $ids = array_values(array_filter($rawIds, fn($id) => $id > 0));
@@ -520,7 +520,7 @@ class TemplateServiceProvider extends ServiceProvider
             ]);
         }
 
-        $html = \Tourivo\Shortcodes\WishlistShortcode::renderCardsHtml($ids);
+        $html = \Readscope\Shortcodes\WishlistShortcode::renderCardsHtml($ids);
 
         wp_send_json_success([
             'html'  => $html,
@@ -535,7 +535,7 @@ class TemplateServiceProvider extends ServiceProvider
      */
     public function handleSyncWishlist(): void
     {
-        check_ajax_referer('tourivo_frontend_nonce', 'nonce');
+        check_ajax_referer('readscope_frontend_nonce', 'nonce');
 
         if (!is_user_logged_in()) {
             wp_send_json_success(['synced' => false]);
@@ -545,7 +545,7 @@ class TemplateServiceProvider extends ServiceProvider
         $rawIds = isset($_POST['ids']) && is_array($_POST['ids']) ? array_map('absint', wp_unslash($_POST['ids'])) : [];
         $ids = array_values(array_unique(array_filter($rawIds, fn($id) => $id > 0)));
 
-        update_user_meta($userId, '_tourivo_wishlist', $ids);
+        update_user_meta($userId, '_readscope_wishlist', $ids);
 
         wp_send_json_success(['synced' => true, 'ids' => $ids]);
     }
@@ -560,22 +560,22 @@ class TemplateServiceProvider extends ServiceProvider
     public function loadPostTemplates(string $template): string
     {
         if (is_singular(TourPostType::POST_TYPE)) {
-            $themeTemplate = locate_template(['tourivo/single-tour.php']);
+            $themeTemplate = locate_template(['readscope/single-tour.php', 'tourivo/single-tour.php']);
             if (!empty($themeTemplate)) {
                 return $themeTemplate;
             }
-            $pluginTemplate = untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/single-tour.php';
+            $pluginTemplate = untrailingslashit(READSCOPE_PLUGIN_DIR) . '/templates/single-tour.php';
             if (file_exists($pluginTemplate)) {
                 return $pluginTemplate;
             }
         }
 
         if (is_singular(HotelPostType::POST_TYPE)) {
-            $themeTemplate = locate_template(['tourivo/single-hotel.php']);
+            $themeTemplate = locate_template(['readscope/single-hotel.php', 'tourivo/single-hotel.php']);
             if (!empty($themeTemplate)) {
                 return $themeTemplate;
             }
-            $pluginTemplate = untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/single-hotel.php';
+            $pluginTemplate = untrailingslashit(READSCOPE_PLUGIN_DIR) . '/templates/single-hotel.php';
             if (file_exists($pluginTemplate)) {
                 return $pluginTemplate;
             }
@@ -591,33 +591,33 @@ class TemplateServiceProvider extends ServiceProvider
      */
     public function enqueueFrontendAssets(): void
     {
-        if (function_exists('tourivo_load_plugin_textdomain')) {
-            tourivo_load_plugin_textdomain();
+        if (function_exists('readscope_load_plugin_textdomain')) {
+            readscope_load_plugin_textdomain();
         }
 
         wp_enqueue_style(
             'dashicons'
         );
 
-        $frontCss = TOURIVO_PLUGIN_DIR . 'assets/css/frontend.css';
-        $frontJs  = TOURIVO_PLUGIN_DIR . 'assets/js/frontend-booking.js';
-        $cssVer   = file_exists($frontCss) ? (string) filemtime($frontCss) : TOURIVO_VERSION;
-        $jsVer    = file_exists($frontJs) ? (string) filemtime($frontJs) : TOURIVO_VERSION;
+        $frontCss = READSCOPE_PLUGIN_DIR . 'assets/css/frontend.css';
+        $frontJs  = READSCOPE_PLUGIN_DIR . 'assets/js/frontend-booking.js';
+        $cssVer   = file_exists($frontCss) ? (string) filemtime($frontCss) : READSCOPE_VERSION;
+        $jsVer    = file_exists($frontJs) ? (string) filemtime($frontJs) : READSCOPE_VERSION;
 
         wp_enqueue_style(
-            'tourivo-frontend',
-            TOURIVO_PLUGIN_URL . 'assets/css/frontend.css',
+            'readscope-frontend',
+            READSCOPE_PLUGIN_URL . 'assets/css/frontend.css',
             ['dashicons'],
             $cssVer
         );
 
-        \Tourivo\Support\Typography::enqueue();
+        \Readscope\Support\Typography::enqueue();
 
-        $primaryColor = (string) \Tourivo\Config\Config::get('primary_color', '#0d9488');
-        $primaryHover = (string) \Tourivo\Config\Config::get('primary_hover', '#0f766e');
-        $accentColor  = (string) \Tourivo\Config\Config::get('accent_color', '#f59e0b');
-        $borderRadius = (string) \Tourivo\Config\Config::get('border_radius', '8px');
-        $btnTextColor = (string) \Tourivo\Config\Config::get('button_text_color', '#ffffff');
+        $primaryColor = (string) \Readscope\Config\Config::get('primary_color', '#0d9488');
+        $primaryHover = (string) \Readscope\Config\Config::get('primary_hover', '#0f766e');
+        $accentColor  = (string) \Readscope\Config\Config::get('accent_color', '#f59e0b');
+        $borderRadius = (string) \Readscope\Config\Config::get('border_radius', '8px');
+        $btnTextColor = (string) \Readscope\Config\Config::get('button_text_color', '#ffffff');
 
         $customCss = ":root {
             --trv-primary: {$primaryColor};
@@ -626,37 +626,37 @@ class TemplateServiceProvider extends ServiceProvider
             --trv-radius: {$borderRadius};
             --trv-btn-color: {$btnTextColor};
         }";
-        wp_add_inline_style('tourivo-frontend', $customCss);
+        wp_add_inline_style('readscope-frontend', $customCss);
 
         wp_enqueue_script(
-            'tourivo-frontend',
-            TOURIVO_PLUGIN_URL . 'assets/js/frontend-booking.js',
+            'readscope-frontend',
+            READSCOPE_PLUGIN_URL . 'assets/js/frontend-booking.js',
             [],
             $jsVer,
             true
         );
 
-        if (function_exists('tourivo_load_plugin_textdomain')) {
-            tourivo_load_plugin_textdomain();
+        if (function_exists('readscope_load_plugin_textdomain')) {
+            readscope_load_plugin_textdomain();
         }
 
-        wp_localize_script('tourivo-frontend', 'tourivoData', [
+        wp_localize_script('readscope-frontend', 'readscopeData', [
             'restUrl'         => esc_url_raw(rest_url()),
             'ajaxUrl'         => esc_url_raw(admin_url('admin-ajax.php')),
             'nonce'           => wp_create_nonce('wp_rest'),
-            'frontendNonce'   => wp_create_nonce('tourivo_frontend_nonce'),
-            'currencySymbol'  => (string) apply_filters('tourivo/currency_symbol', (string) \Tourivo\Config\Config::get('currency_symbol', '$')),
+            'frontendNonce'   => wp_create_nonce('readscope_frontend_nonce'),
+            'currencySymbol'  => (string) apply_filters('readscope/currency_symbol', (string) \Readscope\Config\Config::get('currency_symbol', '$')),
             'money'           => [
-                'symbol'   => (string) apply_filters('tourivo/currency_symbol', (string) \Tourivo\Config\Config::get('currency_symbol', '$')),
-                'position' => (string) apply_filters('tourivo/currency_position', (string) \Tourivo\Config\Config::get('currency_position', 'left')),
-                'decimals' => (int) apply_filters('tourivo/number_of_decimals', (int) \Tourivo\Config\Config::get('number_of_decimals', 2)),
-                'decimal'  => (string) apply_filters('tourivo/decimal_separator', (string) \Tourivo\Config\Config::get('decimal_separator', '.')),
-                'thousand' => (string) apply_filters('tourivo/thousand_separator', (string) \Tourivo\Config\Config::get('thousand_separator', ',')),
-                'bangla'   => (bool) apply_filters('tourivo/use_bangla_digits', (bool) \Tourivo\Config\Config::get('use_bangla_digits', false)),
+                'symbol'   => (string) apply_filters('readscope/currency_symbol', (string) \Readscope\Config\Config::get('currency_symbol', '$')),
+                'position' => (string) apply_filters('readscope/currency_position', (string) \Readscope\Config\Config::get('currency_position', 'left')),
+                'decimals' => (int) apply_filters('readscope/number_of_decimals', (int) \Readscope\Config\Config::get('number_of_decimals', 2)),
+                'decimal'  => (string) apply_filters('readscope/decimal_separator', (string) \Readscope\Config\Config::get('decimal_separator', '.')),
+                'thousand' => (string) apply_filters('readscope/thousand_separator', (string) \Readscope\Config\Config::get('thousand_separator', ',')),
+                'bangla'   => (bool) apply_filters('readscope/use_bangla_digits', (bool) \Readscope\Config\Config::get('use_bangla_digits', false)),
             ],
-            'currencies'      => \Tourivo\Shortcodes\CurrencySwitcherShortcode::getCurrencies(),
-            'isBengali'       => function_exists('tourivo_is_bengali') && tourivo_is_bengali(),
-            'useBanglaDigits' => (bool) \Tourivo\Config\Config::get('use_bangla_digits', false),
+            'currencies'      => \Readscope\Shortcodes\CurrencySwitcherShortcode::getCurrencies(),
+            'isBengali'       => function_exists('readscope_is_bengali') && readscope_is_bengali(),
+            'useBanglaDigits' => (bool) \Readscope\Config\Config::get('use_bangla_digits', false),
             'i18n'            => [
                 'processing'      => __('Processing...', 'the-readscope-tour-and-accommodation-booking'),
                 'success'         => __('Booking successful!', 'the-readscope-tour-and-accommodation-booking'),
@@ -721,26 +721,26 @@ class TemplateServiceProvider extends ServiceProvider
         }
 
         $postType = $query->get('post_type');
-        $isTourArchive = $postType === 'tourivo_tour'
-            || (is_array($postType) && in_array('tourivo_tour', $postType, true))
-            || $query->is_post_type_archive('tourivo_tour');
+        $isTourArchive = $postType === 'readscope_tour'
+            || (is_array($postType) && in_array('readscope_tour', $postType, true))
+            || $query->is_post_type_archive('readscope_tour');
         if (!$isTourArchive) {
             return;
         }
 
         // The destination is the taxonomy's query var on this query; date and guests come from the parsed request.
-        $destination = $query->get(\Tourivo\Support\PublicSearch::VAR_DESTINATION);
+        $destination = $query->get(\Readscope\Support\PublicSearch::VAR_DESTINATION);
         $destination = is_string($destination) && $destination !== ''
             ? sanitize_title($destination)
-            : \Tourivo\Support\PublicSearch::destination();
-        $date   = \Tourivo\Support\PublicSearch::date();
-        $guests = \Tourivo\Support\PublicSearch::guests();
+            : \Readscope\Support\PublicSearch::destination();
+        $date   = \Readscope\Support\PublicSearch::date();
+        $guests = \Readscope\Support\PublicSearch::guests();
 
         if ($destination !== '') {
             $tax = $query->get('tax_query');
             $tax = is_array($tax) ? $tax : [];
             $tax[] = [
-                'taxonomy' => 'tourivo_destination',
+                'taxonomy' => 'readscope_destination',
                 'field'    => 'slug',
                 'terms'    => $destination,
             ];
@@ -757,8 +757,8 @@ class TemplateServiceProvider extends ServiceProvider
             return;
         }
 
-        $service = \Tourivo\Common\Container::getInstance()->get(\Tourivo\Services\InventoryService::class);
-        if (!$service instanceof \Tourivo\Services\InventoryService) {
+        $service = \Readscope\Common\Container::getInstance()->get(\Readscope\Services\InventoryService::class);
+        if (!$service instanceof \Readscope\Services\InventoryService) {
             return;
         }
 
@@ -775,10 +775,10 @@ class TemplateServiceProvider extends ServiceProvider
             return;
         }
 
-        if (is_tax('tourivo_destination') || is_post_type_archive(['tourivo_tour', 'tourivo_hotel'])) {
-            \Tourivo\Support\Html::print($this->destinationSearchMarkup());
+        if (is_tax('readscope_destination') || is_post_type_archive(['readscope_tour', 'readscope_hotel'])) {
+            \Readscope\Support\Html::print($this->destinationSearchMarkup());
         }
-        \Tourivo\Support\Html::print($this->searchSummaryMarkup());
+        \Readscope\Support\Html::print($this->searchSummaryMarkup());
     }
 
     /**
@@ -916,7 +916,7 @@ class TemplateServiceProvider extends ServiceProvider
             return;
         }
 
-        \Tourivo\Support\Html::print($this->homeSearchMarkup());
+        \Readscope\Support\Html::print($this->homeSearchMarkup());
     }
 
     /**
@@ -932,21 +932,21 @@ class TemplateServiceProvider extends ServiceProvider
         if (is_singular()) {
             $post = get_post();
             $content = $post instanceof \WP_Post ? (string) $post->post_content : '';
-            if (str_contains($content, 'tourivo_search_bar') || str_contains($content, 'tourivo/search-bar')) {
+            if (str_contains($content, 'readscope_search_bar') || str_contains($content, 'readscope/search-bar')) {
                 return '';
             }
         }
 
         $done = true;
-        if (function_exists('tourivo_load_plugin_textdomain')) {
-            tourivo_load_plugin_textdomain();
+        if (function_exists('readscope_load_plugin_textdomain')) {
+            readscope_load_plugin_textdomain();
         }
 
-        $html = \Tourivo\Shortcodes\SearchBarShortcode::render();
+        $html = \Readscope\Shortcodes\SearchBarShortcode::render();
         $tours = $this->homeOpenToursMarkup();
         $hotels = $this->homeHotelsMarkup();
-        $welcome = '<p class="tourivo-home-welcome">' . esc_html(__('Find your next tour or hotel.', 'the-readscope-tour-and-accommodation-booking')) . '</p>';
-        $markup = '<div class="tourivo-home-search">' . $welcome . $html . $this->homeDestinationMarkup() . '</div>' . $tours . $hotels;
+        $welcome = '<p class="readscope-home-welcome">' . esc_html(__('Find your next tour or hotel.', 'the-readscope-tour-and-accommodation-booking')) . '</p>';
+        $markup = '<div class="readscope-home-search">' . $welcome . $html . $this->homeDestinationMarkup() . '</div>' . $tours . $hotels;
 
         return $markup;
     }
@@ -957,7 +957,7 @@ class TemplateServiceProvider extends ServiceProvider
     private function homeDestinationMarkup(): string
     {
         $terms = get_terms([
-            'taxonomy'   => 'tourivo_destination',
+            'taxonomy'   => 'readscope_destination',
             'hide_empty' => true,
             'number'     => 8,
             'orderby'    => 'count',
@@ -970,25 +970,25 @@ class TemplateServiceProvider extends ServiceProvider
         $links = '';
         $currentId = 0;
         $queried = get_queried_object();
-        if ($queried instanceof \WP_Term && $queried->taxonomy === 'tourivo_destination') {
+        if ($queried instanceof \WP_Term && $queried->taxonomy === 'readscope_destination') {
             $currentId = (int) $queried->term_id;
         } elseif (
             $queried instanceof \WP_Post
-            && in_array($queried->post_type, ['tourivo_tour', 'tourivo_hotel'], true)
+            && in_array($queried->post_type, ['readscope_tour', 'readscope_hotel'], true)
         ) {
-            $placeTerms = get_the_terms($queried, 'tourivo_destination');
+            $placeTerms = get_the_terms($queried, 'readscope_destination');
             if (is_array($placeTerms) && isset($placeTerms[0]) && $placeTerms[0] instanceof \WP_Term) {
                 $currentId = (int) $placeTerms[0]->term_id;
             }
         }
-        $kept = ['post_type' => 'tourivo_tour'];
+        $kept = ['post_type' => 'readscope_tour'];
         // Carry the visitor's day and party size over to the destination links.
-        $date = \Tourivo\Support\PublicSearch::date();
+        $date = \Readscope\Support\PublicSearch::date();
         if ($date !== '') {
-            $kept['tourivo_date'] = $date;
+            $kept['readscope_date'] = $date;
         }
-        if (\Tourivo\Support\PublicSearch::hasGuests()) {
-            $kept['tourivo_guests'] = (string) \Tourivo\Support\PublicSearch::guests();
+        if (\Readscope\Support\PublicSearch::hasGuests()) {
+            $kept['readscope_guests'] = (string) \Readscope\Support\PublicSearch::guests();
         }
         foreach ($terms as $term) {
             if (!$term instanceof \WP_Term || $term->name === '') {
@@ -1008,7 +1008,7 @@ class TemplateServiceProvider extends ServiceProvider
             return '';
         }
 
-        return '<nav class="tourivo-home-places" aria-label="' . esc_attr__('Destinations', 'the-readscope-tour-and-accommodation-booking') . '">' . $links . '</nav>';
+        return '<nav class="readscope-home-places" aria-label="' . esc_attr__('Destinations', 'the-readscope-tour-and-accommodation-booking') . '">' . $links . '</nav>';
     }
 
     /**
@@ -1018,8 +1018,8 @@ class TemplateServiceProvider extends ServiceProvider
      */
     private function homeOpenToursMarkup(): string
     {
-        $service = \Tourivo\Common\Container::getInstance()->get(\Tourivo\Services\InventoryService::class);
-        if (!$service instanceof \Tourivo\Services\InventoryService) {
+        $service = \Readscope\Common\Container::getInstance()->get(\Readscope\Services\InventoryService::class);
+        if (!$service instanceof \Readscope\Services\InventoryService) {
             return '';
         }
 
@@ -1029,7 +1029,7 @@ class TemplateServiceProvider extends ServiceProvider
         }
 
         $ids = get_posts([
-            'post_type'      => 'tourivo_tour',
+            'post_type'      => 'readscope_tour',
             'post_status'    => 'publish',
             'post__in'       => $ids,
             'posts_per_page' => 6,
@@ -1042,24 +1042,24 @@ class TemplateServiceProvider extends ServiceProvider
             return '';
         }
 
-        $archive = get_post_type_archive_link('tourivo_tour');
+        $archive = get_post_type_archive_link('readscope_tour');
         if (!is_string($archive) || $archive === '') {
-            $archive = home_url('/?post_type=tourivo_tour');
+            $archive = home_url('/?post_type=readscope_tour');
         }
 
         ob_start();
-        echo '<section class="tourivo-home-tours">';
-        echo '<div class="tourivo-home-tours-head">';
+        echo '<section class="readscope-home-tours">';
+        echo '<div class="readscope-home-tours-head">';
         echo '<h2>' . esc_html__('Tours you can book', 'the-readscope-tour-and-accommodation-booking') . '</h2>';
         echo '<a href="' . esc_url($archive) . '">' . esc_html__('See all tours', 'the-readscope-tour-and-accommodation-booking') . '</a>';
         echo '</div>';
-        echo '<div class="tourivo-grid" style="--trv-grid-cols: 3;">';
+        echo '<div class="readscope-grid" style="--trv-grid-cols: 3;">';
         foreach ($ids as $id) {
-            $tour = new \Tourivo\Models\Tour((int) $id);
+            $tour = new \Readscope\Models\Tour((int) $id);
             if ($tour->getPost() === null) {
                 continue;
             }
-            tourivo_get_template('cards/tour-card.php', ['tour' => $tour]);
+            readscope_get_template('cards/tour-card.php', ['tour' => $tour]);
         }
         echo '</div></section>';
 
@@ -1074,7 +1074,7 @@ class TemplateServiceProvider extends ServiceProvider
     private function homeHotelsMarkup(): string
     {
         $ids = get_posts([
-            'post_type'      => 'tourivo_hotel',
+            'post_type'      => 'readscope_hotel',
             'post_status'    => 'publish',
             'posts_per_page' => 6,
             'orderby'        => 'date',
@@ -1086,24 +1086,24 @@ class TemplateServiceProvider extends ServiceProvider
             return '';
         }
 
-        $archive = get_post_type_archive_link('tourivo_hotel');
+        $archive = get_post_type_archive_link('readscope_hotel');
         if (!is_string($archive) || $archive === '') {
-            $archive = home_url('/?post_type=tourivo_hotel');
+            $archive = home_url('/?post_type=readscope_hotel');
         }
 
         ob_start();
-        echo '<section class="tourivo-home-hotels">';
-        echo '<div class="tourivo-home-tours-head">';
+        echo '<section class="readscope-home-hotels">';
+        echo '<div class="readscope-home-tours-head">';
         echo '<h2>' . esc_html__('Places to stay', 'the-readscope-tour-and-accommodation-booking') . '</h2>';
         echo '<a href="' . esc_url($archive) . '">' . esc_html__('See all hotels', 'the-readscope-tour-and-accommodation-booking') . '</a>';
         echo '</div>';
-        echo '<div class="tourivo-grid" style="--trv-grid-cols: 3;">';
+        echo '<div class="readscope-grid" style="--trv-grid-cols: 3;">';
         foreach ($ids as $id) {
-            $hotel = new \Tourivo\Models\Hotel((int) $id);
+            $hotel = new \Readscope\Models\Hotel((int) $id);
             if ($hotel->getPost() === null) {
                 continue;
             }
-            tourivo_get_template('cards/hotel-card.php', ['hotel' => $hotel]);
+            readscope_get_template('cards/hotel-card.php', ['hotel' => $hotel]);
         }
         echo '</div></section>';
 
@@ -1120,7 +1120,7 @@ class TemplateServiceProvider extends ServiceProvider
         if (is_admin() || ($block['blockName'] ?? '') !== 'core/query-title') {
             return $content;
         }
-        if (!is_tax('tourivo_destination') && !is_post_type_archive(['tourivo_tour', 'tourivo_hotel'])) {
+        if (!is_tax('readscope_destination') && !is_post_type_archive(['readscope_tour', 'readscope_hotel'])) {
             return $content;
         }
         $type = 'archive';
@@ -1139,13 +1139,13 @@ class TemplateServiceProvider extends ServiceProvider
      */
     private function destinationSearchMarkup(): string
     {
-        $search = \Tourivo\Shortcodes\SearchBarShortcode::render();
+        $search = \Readscope\Shortcodes\SearchBarShortcode::render();
         $chips = $this->homeDestinationMarkup();
         if ($search === '' && $chips === '') {
             return '';
         }
 
-        return '<div class="tourivo-destination-search">' . $search . $chips . '</div>';
+        return '<div class="readscope-destination-search">' . $search . $chips . '</div>';
     }
 
     /**
@@ -1153,7 +1153,7 @@ class TemplateServiceProvider extends ServiceProvider
      */
     public function printListingSearch(): void
     {
-        \Tourivo\Support\Html::print($this->destinationSearchMarkup());
+        \Readscope\Support\Html::print($this->destinationSearchMarkup());
     }
 
     /**
@@ -1161,7 +1161,7 @@ class TemplateServiceProvider extends ServiceProvider
      */
     public function printRelatedPlace(): void
     {
-        if (is_admin() || !is_singular(['tourivo_tour', 'tourivo_hotel'])) {
+        if (is_admin() || !is_singular(['readscope_tour', 'readscope_hotel'])) {
             return;
         }
 
@@ -1170,12 +1170,12 @@ class TemplateServiceProvider extends ServiceProvider
             return;
         }
 
-        $terms = get_the_terms($post, 'tourivo_destination');
+        $terms = get_the_terms($post, 'readscope_destination');
         if (!is_array($terms) || !isset($terms[0]) || !$terms[0] instanceof \WP_Term) {
             return;
         }
 
-        \Tourivo\Support\Html::print($this->relatedPlaceCards($post, $terms[0]));
+        \Readscope\Support\Html::print($this->relatedPlaceCards($post, $terms[0]));
     }
 
     /**
@@ -1183,8 +1183,8 @@ class TemplateServiceProvider extends ServiceProvider
      */
     private function relatedPlaceCards(\WP_Post $post, \WP_Term $term): string
     {
-        $tourIds = $this->relatedIds('tourivo_tour', (int) $post->ID, (int) $term->term_id);
-        $hotelIds = $this->relatedIds('tourivo_hotel', (int) $post->ID, (int) $term->term_id);
+        $tourIds = $this->relatedIds('readscope_tour', (int) $post->ID, (int) $term->term_id);
+        $hotelIds = $this->relatedIds('readscope_hotel', (int) $post->ID, (int) $term->term_id);
         if ($tourIds === [] && $hotelIds === []) {
             return '';
         }
@@ -1193,14 +1193,14 @@ class TemplateServiceProvider extends ServiceProvider
         if (!is_string($url) || $url === '') {
             $url = home_url('/');
         }
-        $url = add_query_arg('post_type', 'tourivo_tour', $url);
+        $url = add_query_arg('post_type', 'readscope_tour', $url);
 
-        $sections = $post->post_type === 'tourivo_hotel'
+        $sections = $post->post_type === 'readscope_hotel'
             ? ['hotel' => $hotelIds, 'tour' => $tourIds]
             : ['tour' => $tourIds, 'hotel' => $hotelIds];
 
         ob_start();
-        echo '<div class="tourivo-related-place">';
+        echo '<div class="readscope-related-place">';
         foreach ($sections as $kind => $ids) {
             if ($ids === []) {
                 continue;
@@ -1220,26 +1220,26 @@ class TemplateServiceProvider extends ServiceProvider
             $seeAll = $isTour
                 ? __('See all tours', 'the-readscope-tour-and-accommodation-booking')
                 : __('See all hotels', 'the-readscope-tour-and-accommodation-booking');
-            $sectionClass = $isTour ? 'tourivo-home-tours' : 'tourivo-home-hotels';
+            $sectionClass = $isTour ? 'readscope-home-tours' : 'readscope-home-hotels';
             echo '<section class="' . esc_attr($sectionClass) . '">';
-            echo '<div class="tourivo-home-tours-head">';
+            echo '<div class="readscope-home-tours-head">';
             echo '<h2>' . esc_html($heading) . '</h2>';
             echo '<a href="' . esc_url($url) . '">' . esc_html($seeAll) . '</a>';
             echo '</div>';
-            echo '<div class="tourivo-grid" style="--trv-grid-cols: 3;">';
+            echo '<div class="readscope-grid" style="--trv-grid-cols: 3;">';
             foreach ($ids as $id) {
                 if ($isTour) {
-                    $item = new \Tourivo\Models\Tour((int) $id);
+                    $item = new \Readscope\Models\Tour((int) $id);
                     if ($item->getPost() === null) {
                         continue;
                     }
-                    tourivo_get_template('cards/tour-card.php', ['tour' => $item]);
+                    readscope_get_template('cards/tour-card.php', ['tour' => $item]);
                 } else {
-                    $item = new \Tourivo\Models\Hotel((int) $id);
+                    $item = new \Readscope\Models\Hotel((int) $id);
                     if ($item->getPost() === null) {
                         continue;
                     }
-                    tourivo_get_template('cards/hotel-card.php', ['hotel' => $item]);
+                    readscope_get_template('cards/hotel-card.php', ['hotel' => $item]);
                 }
             }
             echo '</div></section>';
@@ -1269,7 +1269,7 @@ class TemplateServiceProvider extends ServiceProvider
             // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- One destination term, 6 ids, no_found_rows.
             'tax_query'        => [
                 [
-                    'taxonomy' => 'tourivo_destination',
+                    'taxonomy' => 'readscope_destination',
                     'field'    => 'term_id',
                     'terms'    => [$termId],
                 ],
@@ -1362,24 +1362,24 @@ class TemplateServiceProvider extends ServiceProvider
         }
 
         $postType = get_query_var('post_type');
-        $isTour = $postType === 'tourivo_tour'
-            || (is_array($postType) && in_array('tourivo_tour', $postType, true))
-            || is_post_type_archive('tourivo_tour');
+        $isTour = $postType === 'readscope_tour'
+            || (is_array($postType) && in_array('readscope_tour', $postType, true))
+            || is_post_type_archive('readscope_tour');
         if (!$isTour) {
             return '';
         }
 
         $destination = $this->searchedDestination();
-        $date     = \Tourivo\Support\PublicSearch::date();
-        $guests   = \Tourivo\Support\PublicSearch::guests();
-        $searched = $destination !== '' || \Tourivo\Support\PublicSearch::hasDate() || \Tourivo\Support\PublicSearch::hasGuests();
+        $date     = \Readscope\Support\PublicSearch::date();
+        $guests   = \Readscope\Support\PublicSearch::guests();
+        $searched = $destination !== '' || \Readscope\Support\PublicSearch::hasDate() || \Readscope\Support\PublicSearch::hasGuests();
         if ($date === '' && $destination === '' && !$searched) {
             return '';
         }
 
         $done = true;
-        if (function_exists('tourivo_load_plugin_textdomain')) {
-            tourivo_load_plugin_textdomain();
+        if (function_exists('readscope_load_plugin_textdomain')) {
+            readscope_load_plugin_textdomain();
         }
 
         $count = isset($GLOBALS['wp_query']) && $GLOBALS['wp_query'] instanceof \WP_Query
@@ -1387,13 +1387,13 @@ class TemplateServiceProvider extends ServiceProvider
             : 0;
         $place = '';
         if ($destination !== '') {
-            $term = get_term_by('slug', $destination, 'tourivo_destination');
+            $term = get_term_by('slug', $destination, 'readscope_destination');
             $place = ($term instanceof \WP_Term) ? $term->name : '';
         }
 
         $hotelIds = [];
-        $service = \Tourivo\Common\Container::getInstance()->get(\Tourivo\Services\InventoryService::class);
-        if ($service instanceof \Tourivo\Services\InventoryService) {
+        $service = \Readscope\Common\Container::getInstance()->get(\Readscope\Services\InventoryService::class);
+        if ($service instanceof \Readscope\Services\InventoryService) {
             $hotelIds = $service->matchingHotelIds($date, $guests, $destination);
         }
         $hotelCount = count($hotelIds);
@@ -1435,15 +1435,15 @@ class TemplateServiceProvider extends ServiceProvider
             $message = '';
         }
 
-        if ($message !== '' && function_exists('tourivo_bn_number')) {
-            $banglaDigits = (function_exists('tourivo_is_bengali') && tourivo_is_bengali())
-                || (bool) \Tourivo\Config\Config::get('use_bangla_digits', false);
+        if ($message !== '' && function_exists('readscope_bn_number')) {
+            $banglaDigits = (function_exists('readscope_is_bengali') && readscope_is_bengali())
+                || (bool) \Readscope\Config\Config::get('use_bangla_digits', false);
             if ($banglaDigits) {
-                $message = tourivo_bn_number($message);
+                $message = readscope_bn_number($message);
             }
         }
 
-        $summary = $message === '' ? '' : '<div class="tourivo-search-summary">' . esc_html($message) . '</div>';
+        $summary = $message === '' ? '' : '<div class="readscope-search-summary">' . esc_html($message) . '</div>';
 
         return $summary . $this->searchHotelCardsMarkup($hotelIds);
     }
@@ -1459,9 +1459,9 @@ class TemplateServiceProvider extends ServiceProvider
 
         $postType = get_query_var('post_type');
 
-        return $postType === 'tourivo_tour'
-            || (is_array($postType) && in_array('tourivo_tour', $postType, true))
-            || is_post_type_archive('tourivo_tour')
+        return $postType === 'readscope_tour'
+            || (is_array($postType) && in_array('readscope_tour', $postType, true))
+            || is_post_type_archive('readscope_tour')
             || $this->searchedDestination() !== '';
     }
 
@@ -1480,10 +1480,10 @@ class TemplateServiceProvider extends ServiceProvider
 
         $postType = $query['postType'] ?? '';
         if (is_array($postType)) {
-            return in_array('tourivo_tour', $postType, true) || in_array('tourivo_hotel', $postType, true);
+            return in_array('readscope_tour', $postType, true) || in_array('readscope_hotel', $postType, true);
         }
 
-        return $postType === 'tourivo_tour' || $postType === 'tourivo_hotel';
+        return $postType === 'readscope_tour' || $postType === 'readscope_hotel';
     }
 
     /**
@@ -1497,9 +1497,9 @@ class TemplateServiceProvider extends ServiceProvider
 
         $postType = get_query_var('post_type');
 
-        return $postType === 'tourivo_hotel'
-            || (is_array($postType) && in_array('tourivo_hotel', $postType, true))
-            || is_post_type_archive('tourivo_hotel');
+        return $postType === 'readscope_hotel'
+            || (is_array($postType) && in_array('readscope_hotel', $postType, true))
+            || is_post_type_archive('readscope_hotel');
     }
 
     /**
@@ -1512,16 +1512,16 @@ class TemplateServiceProvider extends ServiceProvider
         }
 
         $postType = get_query_var('post_type');
-        $isTour = $postType === 'tourivo_tour'
-            || (is_array($postType) && in_array('tourivo_tour', $postType, true))
-            || is_post_type_archive('tourivo_tour');
+        $isTour = $postType === 'readscope_tour'
+            || (is_array($postType) && in_array('readscope_tour', $postType, true))
+            || is_post_type_archive('readscope_tour');
         if (!$isTour) {
             return false;
         }
 
         return $this->searchedDestination() !== ''
-            || \Tourivo\Support\PublicSearch::hasDate()
-            || \Tourivo\Support\PublicSearch::hasGuests();
+            || \Readscope\Support\PublicSearch::hasDate()
+            || \Readscope\Support\PublicSearch::hasGuests();
     }
 
     /**
@@ -1536,27 +1536,27 @@ class TemplateServiceProvider extends ServiceProvider
             return '';
         }
 
-        $archive = get_post_type_archive_link('tourivo_tour');
+        $archive = get_post_type_archive_link('readscope_tour');
         if (!is_string($archive) || $archive === '') {
-            $archive = home_url('/?post_type=tourivo_tour');
+            $archive = home_url('/?post_type=readscope_tour');
         }
 
         ob_start();
-        $sectionClass = $withHeading ? 'tourivo-home-tours tourivo-search-tours' : 'tourivo-home-tours tourivo-archive-tours';
+        $sectionClass = $withHeading ? 'readscope-home-tours readscope-search-tours' : 'readscope-home-tours readscope-archive-tours';
         echo '<section class="' . esc_attr($sectionClass) . '">';
         if ($withHeading) {
-            echo '<div class="tourivo-home-tours-head">';
+            echo '<div class="readscope-home-tours-head">';
             echo '<h2>' . esc_html__('Tours you can book', 'the-readscope-tour-and-accommodation-booking') . '</h2>';
             echo '<a href="' . esc_url($archive) . '">' . esc_html__('See all tours', 'the-readscope-tour-and-accommodation-booking') . '</a>';
             echo '</div>';
         }
-        echo '<div class="tourivo-grid" style="--trv-grid-cols: 3;">';
+        echo '<div class="readscope-grid" style="--trv-grid-cols: 3;">';
         foreach ($query->posts as $post) {
-            if (!$post instanceof \WP_Post || $post->post_type !== 'tourivo_tour') {
+            if (!$post instanceof \WP_Post || $post->post_type !== 'readscope_tour') {
                 continue;
             }
-            $tour = new \Tourivo\Models\Tour($post);
-            tourivo_get_template('cards/tour-card.php', ['tour' => $tour]);
+            $tour = new \Readscope\Models\Tour($post);
+            readscope_get_template('cards/tour-card.php', ['tour' => $tour]);
         }
         echo '</div></section>';
 
@@ -1574,15 +1574,15 @@ class TemplateServiceProvider extends ServiceProvider
         }
 
         ob_start();
-        echo '<section class="tourivo-home-hotels tourivo-archive-hotels">';
-        echo '<div class="tourivo-grid" style="--trv-grid-cols: 3;">';
+        echo '<section class="readscope-home-hotels readscope-archive-hotels">';
+        echo '<div class="readscope-grid" style="--trv-grid-cols: 3;">';
         $shown = 0;
         foreach ($query->posts as $post) {
-            if (!$post instanceof \WP_Post || $post->post_type !== 'tourivo_hotel') {
+            if (!$post instanceof \WP_Post || $post->post_type !== 'readscope_hotel') {
                 continue;
             }
-            $hotel = new \Tourivo\Models\Hotel($post);
-            tourivo_get_template('cards/hotel-card.php', ['hotel' => $hotel]);
+            $hotel = new \Readscope\Models\Hotel($post);
+            readscope_get_template('cards/hotel-card.php', ['hotel' => $hotel]);
             $shown++;
         }
         echo '</div></section>';
@@ -1597,11 +1597,11 @@ class TemplateServiceProvider extends ServiceProvider
     private function searchedDestination(): string
     {
         $term = get_queried_object();
-        if ($term instanceof \WP_Term && $term->taxonomy === 'tourivo_destination') {
+        if ($term instanceof \WP_Term && $term->taxonomy === 'readscope_destination') {
             return (string) $term->slug;
         }
 
-        $fromQuery = get_query_var('tourivo_destination');
+        $fromQuery = get_query_var('readscope_destination');
         if (is_array($fromQuery)) {
             $fromQuery = reset($fromQuery);
         }
@@ -1609,7 +1609,7 @@ class TemplateServiceProvider extends ServiceProvider
             return $fromQuery;
         }
 
-        return \Tourivo\Support\PublicSearch::destination();
+        return \Readscope\Support\PublicSearch::destination();
     }
 
     /**
@@ -1624,24 +1624,24 @@ class TemplateServiceProvider extends ServiceProvider
             return '';
         }
 
-        $archive = get_post_type_archive_link('tourivo_hotel');
+        $archive = get_post_type_archive_link('readscope_hotel');
         if (!is_string($archive) || $archive === '') {
-            $archive = home_url('/?post_type=tourivo_hotel');
+            $archive = home_url('/?post_type=readscope_hotel');
         }
 
         ob_start();
-        echo '<section class="tourivo-home-hotels tourivo-search-hotels">';
-        echo '<div class="tourivo-home-tours-head">';
+        echo '<section class="readscope-home-hotels readscope-search-hotels">';
+        echo '<div class="readscope-home-tours-head">';
         echo '<h2>' . esc_html__('Places to stay', 'the-readscope-tour-and-accommodation-booking') . '</h2>';
         echo '<a href="' . esc_url($archive) . '">' . esc_html__('See all hotels', 'the-readscope-tour-and-accommodation-booking') . '</a>';
         echo '</div>';
-        echo '<div class="tourivo-grid" style="--trv-grid-cols: 3;">';
+        echo '<div class="readscope-grid" style="--trv-grid-cols: 3;">';
         foreach ($ids as $id) {
-            $hotel = new \Tourivo\Models\Hotel((int) $id);
+            $hotel = new \Readscope\Models\Hotel((int) $id);
             if ($hotel->getPost() === null) {
                 continue;
             }
-            tourivo_get_template('cards/hotel-card.php', ['hotel' => $hotel]);
+            readscope_get_template('cards/hotel-card.php', ['hotel' => $hotel]);
         }
         echo '</div></section>';
 

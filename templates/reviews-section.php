@@ -10,38 +10,38 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$tourivoPostId = isset($tourivoPostId) ? (int) $tourivoPostId : (isset($postId) ? (int) $postId : (int) get_the_ID());
-if (!$tourivoPostId) {
+$readscopePostId = isset($readscopePostId) ? (int) $readscopePostId : (isset($postId) ? (int) $postId : (int) get_the_ID());
+if (!$readscopePostId) {
     return;
 }
 
-$tourivoReviewService = new \Tourivo\Services\ReviewService();
-$tourivoBreakdown     = $tourivoReviewService->getRatingBreakdown($tourivoPostId);
-$tourivoComments      = get_comments([
-    'post_id' => $tourivoPostId,
+$readscopeReviewService = new \Readscope\Services\ReviewService();
+$readscopeBreakdown     = $readscopeReviewService->getRatingBreakdown($readscopePostId);
+$readscopeComments      = get_comments([
+    'post_id' => $readscopePostId,
     'status'  => 'approve',
     'type'    => 'comment',
     'order'   => 'DESC',
 ]);
 ?>
 
-<div class="tourivo-block-section tourivo-reviews-block" id="tourivo-reviews">
+<div class="readscope-block-section readscope-reviews-block" id="readscope-reviews">
     <h2 class="section-heading">
         ⭐ <?php esc_html_e('Traveler Reviews & Ratings', 'the-readscope-tour-and-accommodation-booking'); ?>
-        <?php if ($tourivoBreakdown['total'] > 0) : ?>
-            <span class="reviews-total-badge">(<?php echo esc_html((string) $tourivoBreakdown['total']); ?>)</span>
+        <?php if ($readscopeBreakdown['total'] > 0) : ?>
+            <span class="reviews-total-badge">(<?php echo esc_html((string) $readscopeBreakdown['total']); ?>)</span>
         <?php endif; ?>
     </h2>
 
     <!-- Rating Summary Header -->
-    <div class="tourivo-rating-overview">
+    <div class="readscope-rating-overview">
         <div class="rating-score-box">
-            <span class="score-number"><?php echo esc_html(number_format($tourivoBreakdown['average'], 1)); ?></span>
+            <span class="score-number"><?php echo esc_html(number_format($readscopeBreakdown['average'], 1)); ?></span>
             <div class="score-stars">
                 <?php
-                $tourivoFilledStars = (int) round($tourivoBreakdown['average']);
-                for ($tourivoStarIdx = 1; $tourivoStarIdx <= 5; $tourivoStarIdx++) {
-                    echo $tourivoStarIdx <= $tourivoFilledStars ? '<span class="star filled">★</span>' : '<span class="star">☆</span>';
+                $readscopeFilledStars = (int) round($readscopeBreakdown['average']);
+                for ($readscopeStarIdx = 1; $readscopeStarIdx <= 5; $readscopeStarIdx++) {
+                    echo $readscopeStarIdx <= $readscopeFilledStars ? '<span class="star filled">★</span>' : '<span class="star">☆</span>';
                 }
                 ?>
             </div>
@@ -50,8 +50,8 @@ $tourivoComments      = get_comments([
                 echo esc_html(
                     sprintf(
                         /* translators: %d: Number of reviews */
-                        _n('Based on %d review', 'Based on %d reviews', $tourivoBreakdown['total'], 'the-readscope-tour-and-accommodation-booking'),
-                        $tourivoBreakdown['total']
+                        _n('Based on %d review', 'Based on %d reviews', $readscopeBreakdown['total'], 'the-readscope-tour-and-accommodation-booking'),
+                        $readscopeBreakdown['total']
                     )
                 );
                 ?>
@@ -59,56 +59,56 @@ $tourivoComments      = get_comments([
         </div>
 
         <div class="rating-bars-box">
-            <?php for ($tourivoStarRating = 5; $tourivoStarRating >= 1; $tourivoStarRating--) : 
-                $tourivoPct   = $tourivoBreakdown['percentages'][$tourivoStarRating] ?? 0;
-                $tourivoCount = $tourivoBreakdown['stars'][$tourivoStarRating] ?? 0;
+            <?php for ($readscopeStarRating = 5; $readscopeStarRating >= 1; $readscopeStarRating--) : 
+                $readscopePct   = $readscopeBreakdown['percentages'][$readscopeStarRating] ?? 0;
+                $readscopeCount = $readscopeBreakdown['stars'][$readscopeStarRating] ?? 0;
             ?>
                 <div class="rating-bar-row">
-                    <span class="bar-star-label"><?php echo esc_html((string) $tourivoStarRating); ?> ★</span>
+                    <span class="bar-star-label"><?php echo esc_html((string) $readscopeStarRating); ?> ★</span>
                     <div class="bar-track">
-                        <div class="bar-fill" style="width: <?php echo esc_attr((string) $tourivoPct); ?>%;"></div>
+                        <div class="bar-fill" style="width: <?php echo esc_attr((string) $readscopePct); ?>%;"></div>
                     </div>
-                    <span class="bar-count-label"><?php echo esc_html((string) $tourivoCount); ?></span>
+                    <span class="bar-count-label"><?php echo esc_html((string) $readscopeCount); ?></span>
                 </div>
             <?php endfor; ?>
         </div>
     </div>
 
     <!-- Reviews List -->
-    <div class="tourivo-reviews-list">
-        <?php if (!empty($tourivoComments)) : ?>
-            <?php foreach ($tourivoComments as $tourivoComment) : 
-                $tourivoCommentRating   = (int) get_comment_meta((int) $tourivoComment->comment_ID, \Tourivo\Services\ReviewService::META_RATING, true);
-                $tourivoIsVerifiedUser = $tourivoReviewService->isVerifiedTraveler($tourivoComment->comment_author_email, $tourivoPostId);
+    <div class="readscope-reviews-list">
+        <?php if (!empty($readscopeComments)) : ?>
+            <?php foreach ($readscopeComments as $readscopeComment) : 
+                $readscopeCommentRating   = (int) get_comment_meta((int) $readscopeComment->comment_ID, \Readscope\Services\ReviewService::META_RATING, true);
+                $readscopeIsVerifiedUser = $readscopeReviewService->isVerifiedTraveler($readscopeComment->comment_author_email, $readscopePostId);
             ?>
-                <div class="tourivo-review-card" id="comment-<?php echo esc_attr((string) $tourivoComment->comment_ID); ?>">
+                <div class="readscope-review-card" id="comment-<?php echo esc_attr((string) $readscopeComment->comment_ID); ?>">
                     <div class="review-header">
                         <div class="review-author-avatar">
-                            <?php echo get_avatar($tourivoComment, 48); ?>
+                            <?php echo get_avatar($readscopeComment, 48); ?>
                         </div>
                         <div class="review-author-info">
                             <h4 class="author-name">
-                                <?php echo esc_html($tourivoComment->comment_author); ?>
-                                <?php if ($tourivoIsVerifiedUser) : ?>
+                                <?php echo esc_html($readscopeComment->comment_author); ?>
+                                <?php if ($readscopeIsVerifiedUser) : ?>
                                     <span class="verified-badge" title="<?php esc_attr_e('Verified Booking Traveler', 'the-readscope-tour-and-accommodation-booking'); ?>">
                                         ✓ <?php esc_html_e('Verified Traveler', 'the-readscope-tour-and-accommodation-booking'); ?>
                                     </span>
                                 <?php endif; ?>
                             </h4>
-                            <span class="review-date"><?php echo esc_html(get_comment_date('F j, Y', $tourivoComment)); ?></span>
+                            <span class="review-date"><?php echo esc_html(get_comment_date('F j, Y', $readscopeComment)); ?></span>
                         </div>
-                        <?php if ($tourivoCommentRating > 0) : ?>
+                        <?php if ($readscopeCommentRating > 0) : ?>
                             <div class="review-stars">
                                 <?php 
-                                for ($tourivoRatingIdx = 1; $tourivoRatingIdx <= 5; $tourivoRatingIdx++) {
-                                    echo $tourivoRatingIdx <= $tourivoCommentRating ? '<span class="star filled">★</span>' : '<span class="star">☆</span>';
+                                for ($readscopeRatingIdx = 1; $readscopeRatingIdx <= 5; $readscopeRatingIdx++) {
+                                    echo $readscopeRatingIdx <= $readscopeCommentRating ? '<span class="star filled">★</span>' : '<span class="star">☆</span>';
                                 }
                                 ?>
                             </div>
                         <?php endif; ?>
                     </div>
                     <div class="review-content">
-                        <?php echo wp_kses_post(wpautop($tourivoComment->comment_content)); ?>
+                        <?php echo wp_kses_post(wpautop($readscopeComment->comment_content)); ?>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -120,22 +120,22 @@ $tourivoComments      = get_comments([
     </div>
 
     <!-- Leave a Review Form -->
-    <div class="tourivo-leave-review-form-wrap">
+    <div class="readscope-leave-review-form-wrap">
         <h3>✍️ <?php esc_html_e('Write a Review', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
         
-        <?php if (comments_open($tourivoPostId)) : ?>
-            <form action="<?php echo esc_url(site_url('/wp-comments-post.php')); ?>" method="post" class="tourivo-review-form">
+        <?php if (comments_open($readscopePostId)) : ?>
+            <form action="<?php echo esc_url(site_url('/wp-comments-post.php')); ?>" method="post" class="readscope-review-form">
                 <!-- Interactive Star Selector -->
                 <div class="form-row rating-picker-row">
                     <label><strong><?php esc_html_e('Your Rating *', 'the-readscope-tour-and-accommodation-booking'); ?></strong></label>
-                    <div class="tourivo-star-picker" id="tourivo-star-picker">
+                    <div class="readscope-star-picker" id="readscope-star-picker">
                         <span class="picker-star" data-val="1">★</span>
                         <span class="picker-star" data-val="2">★</span>
                         <span class="picker-star" data-val="3">★</span>
                         <span class="picker-star" data-val="4">★</span>
                         <span class="picker-star" data-val="5">★</span>
                     </div>
-                    <input type="hidden" name="tourivo_rating" id="tourivo_rating_input" value="5" required>
+                    <input type="hidden" name="readscope_rating" id="readscope_rating_input" value="5" required>
                 </div>
 
                 <div class="form-row-group" style="display: flex; gap: 14px;">
@@ -154,11 +154,11 @@ $tourivoComments      = get_comments([
                     <textarea name="comment" id="comment" rows="4" required placeholder="<?php esc_attr_e('What did you love about this trip? How was the guide, accommodation, and itinerary?', 'the-readscope-tour-and-accommodation-booking'); ?>"></textarea>
                 </div>
 
-                <input type="hidden" name="comment_post_ID" value="<?php echo esc_attr((string) $tourivoPostId); ?>">
+                <input type="hidden" name="comment_post_ID" value="<?php echo esc_attr((string) $readscopePostId); ?>">
                 <input type="hidden" name="comment_parent" id="comment_parent" value="0">
 
                 <div class="form-row form-submit-row" style="margin-top: 14px;">
-                    <button type="submit" class="tourivo-btn tourivo-btn-primary">
+                    <button type="submit" class="readscope-btn readscope-btn-primary">
                         🚀 <?php esc_html_e('Submit Review', 'the-readscope-tour-and-accommodation-booking'); ?>
                     </button>
                 </div>

@@ -5,15 +5,15 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Common\Container;
-use Tourivo\Controllers\Api\AvailabilityController;
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\InventoryService;
-use Tourivo\Tests\TestCase;
+use Readscope\Common\Container;
+use Readscope\Controllers\Api\AvailabilityController;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\InventoryService;
+use Readscope\Tests\TestCase;
 use WP_REST_Request;
 
 class InventoryHoldTest extends TestCase
@@ -25,8 +25,8 @@ class InventoryHoldTest extends TestCase
     {
         parent::setUp();
         $this->cleanDatabaseTables();
-        $GLOBALS['tourivo_mock_options'] = [];
-        $GLOBALS['tourivo_mock_fail_next_inventory_insert'] = false;
+        $GLOBALS['readscope_mock_options'] = [];
+        $GLOBALS['readscope_mock_fail_next_inventory_insert'] = false;
 
         $this->inventory = new InventoryService(new InventoryRepository());
         $this->bookings  = new BookingService($this->inventory, new EmailService());
@@ -140,9 +140,9 @@ class InventoryHoldTest extends TestCase
 
         // Age the first hold past its expiry.
         $opt = InventoryService::HOLD_OPTION_PREFIX . $expired;
-        $data = $GLOBALS['tourivo_mock_options'][$opt];
+        $data = $GLOBALS['readscope_mock_options'][$opt];
         $data['expires_at'] = time() - 5;
-        $GLOBALS['tourivo_mock_options'][$opt] = $data;
+        $GLOBALS['readscope_mock_options'][$opt] = $data;
 
         $this->assertNull($this->inventory->getHold($expired));
         $released = $this->inventory->releaseExpiredHolds();
@@ -169,7 +169,7 @@ class InventoryHoldTest extends TestCase
         $date = $this->date();
 
         // A concurrent request creates the date row first (booked=1); our INSERT then fails and must retry as UPDATE.
-        $GLOBALS['tourivo_mock_fail_next_inventory_insert'] = true;
+        $GLOBALS['readscope_mock_fail_next_inventory_insert'] = true;
         $res = $this->bookings->createBooking($this->createBookingPayload(['item_id' => $tour, 'check_in' => $date, 'adults' => 1]));
 
         $this->assertTrue($res['success'], $res['message'] ?? '');
@@ -203,7 +203,7 @@ class InventoryHoldTest extends TestCase
 
         $codes = [];
         for ($i = 0; $i < AvailabilityController::MAX_ACTIVE_HOLDS_PER_CLIENT + 1; $i++) {
-            $request = new WP_REST_Request('POST', '/tourivo/v1/availability/hold');
+            $request = new WP_REST_Request('POST', '/readscope/v1/availability/hold');
             $request->set_param('item_id', $tour);
             $request->set_param('item_type', 'tour');
             $request->set_param('start_date', $this->date(50 + $i));

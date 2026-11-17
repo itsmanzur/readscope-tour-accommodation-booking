@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Core;
+namespace Readscope\Core;
 
-use Tourivo\Database\Schema;
+use Readscope\Database\Schema;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  *
  * Runs when the plugin is deleted via WordPress admin, if erase on uninstall is enabled.
  *
- * @package Tourivo\Core
+ * @package Readscope\Core
  */
 class Uninstaller
 {
@@ -32,12 +32,12 @@ class Uninstaller
         $adminRole = get_role('administrator');
         if ($adminRole) {
             $capabilities = [
-                'manage_tourivo',
-                'manage_tourivo_bookings',
-                'manage_tourivo_tours',
-                'manage_tourivo_hotels',
-                'manage_tourivo_settings',
-                'manage_tourivo_checkin',
+                'manage_readscope',
+                'manage_readscope_bookings',
+                'manage_readscope_tours',
+                'manage_readscope_hotels',
+                'manage_readscope_settings',
+                'manage_readscope_checkin',
             ];
             foreach ($capabilities as $cap) {
                 $adminRole->remove_cap($cap);
@@ -47,32 +47,32 @@ class Uninstaller
         // 2. Clear scheduled hooks (all args) and queued Action Scheduler actions
         Deactivator::unscheduleAll();
 
-        $settings = get_option('tourivo_settings', []);
+        $settings = get_option('readscope_settings', []);
         $eraseDataOnDelete = !empty($settings['erase_data_on_uninstall']);
 
         // Only purge tables and options if user explicitly requested full cleanup
         if ($eraseDataOnDelete) {
             Schema::dropTables();
-            delete_option('tourivo_settings');
-            delete_option('tourivo_installed_at');
-            delete_option('tourivo_version');
-            delete_option('tourivo_db_version');
-            delete_option('tourivo_flush_rewrite');
-            delete_option('tourivo_notification_email');
+            delete_option('readscope_settings');
+            delete_option('readscope_installed_at');
+            delete_option('readscope_version');
+            delete_option('readscope_db_version');
+            delete_option('readscope_flush_rewrite');
+            delete_option('readscope_notification_email');
 
             // Purge rate-limiting, hold sessions, and cached transients
             // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query(
                 "DELETE FROM {$wpdb->options} 
-                 WHERE option_name LIKE '_transient_tourivo_%' 
-                    OR option_name LIKE '_transient_timeout_tourivo_%'"
+                 WHERE option_name LIKE '_transient_readscope_%' 
+                    OR option_name LIKE '_transient_timeout_readscope_%'"
             );
 
             // Purge rate-limit counter rows
             $wpdb->query(
                 $wpdb->prepare(
                     "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-                    $wpdb->esc_like('tourivo_rl_') . '%'
+                    $wpdb->esc_like('readscope_rl_') . '%'
                 )
             );
 
@@ -80,18 +80,18 @@ class Uninstaller
             $wpdb->query(
                 $wpdb->prepare(
                     "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
-                    $wpdb->esc_like('tourivo_hold_') . '%'
+                    $wpdb->esc_like('readscope_hold_') . '%'
                 )
             );
 
             // Purge Readscope Booking user meta
             $wpdb->query(
                 "DELETE FROM {$wpdb->usermeta} 
-                 WHERE meta_key IN ('_tourivo_wishlist', 'tourivo_dismiss_welcome_notice')"
+                 WHERE meta_key IN ('_readscope_wishlist', 'readscope_dismiss_welcome_notice')"
             );
             // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         }
 
-        do_action('tourivo/uninstalled');
+        do_action('readscope/uninstalled');
     }
 }

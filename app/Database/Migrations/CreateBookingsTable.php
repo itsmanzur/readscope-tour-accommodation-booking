@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Database\Migrations;
+namespace Readscope\Database\Migrations;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -11,15 +11,15 @@ if (!defined('ABSPATH')) {
 /**
  * Class CreateBookingsTable
  *
- * Migration for creating the central bookings table: wp_tourivo_bookings.
+ * Migration for creating the central bookings table: wp_readscope_bookings.
  *
- * @package Tourivo\Database\Migrations
+ * @package Readscope\Database\Migrations
  */
 class CreateBookingsTable implements MigrationInterface
 {
     public function getName(): string
     {
-        return 'create_tourivo_bookings_table';
+        return 'create_readscope_bookings_table';
     }
 
     public function getVersion(): string

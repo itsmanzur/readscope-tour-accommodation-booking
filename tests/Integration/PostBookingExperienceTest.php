@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Common\Container;
-use Tourivo\Config\Config;
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\InventoryService;
-use Tourivo\Services\LogService;
-use Tourivo\Services\PricingService;
-use Tourivo\Shortcodes\BookingLookupShortcode;
-use Tourivo\Shortcodes\ThankYouShortcode;
-use Tourivo\Tests\TestCase;
+use Readscope\Common\Container;
+use Readscope\Config\Config;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\InventoryService;
+use Readscope\Services\LogService;
+use Readscope\Services\PricingService;
+use Readscope\Shortcodes\BookingLookupShortcode;
+use Readscope\Shortcodes\ThankYouShortcode;
+use Readscope\Tests\TestCase;
 
 /**
  * Class PostBookingExperienceTest
@@ -41,12 +41,12 @@ class PostBookingExperienceTest extends TestCase
         $this->cleanDatabaseTables();
         $this->cleanTransients();
 
-        $GLOBALS['tourivo_mock_sent_emails'] = [];
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
-        $GLOBALS['tourivo_mock_filters'] = [];
-        $GLOBALS['tourivo_mock_action_callbacks'] = [];
-        $GLOBALS['tourivo_mock_options']['admin_email'] = 'admin@example.com';
-        $GLOBALS['tourivo_mock_options']['blogname'] = 'Readscope Test Site';
+        $GLOBALS['readscope_mock_sent_emails'] = [];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_filters'] = [];
+        $GLOBALS['readscope_mock_action_callbacks'] = [];
+        $GLOBALS['readscope_mock_options']['admin_email'] = 'admin@example.com';
+        $GLOBALS['readscope_mock_options']['blogname'] = 'Readscope Test Site';
 
         $invRepo = new InventoryRepository();
         $this->inventoryService = new InventoryService($invRepo);
@@ -71,7 +71,7 @@ class PostBookingExperienceTest extends TestCase
     public function test_booking_response_contains_redirect_url_and_token_without_pii(): void
     {
         // Configure settings for thankyou redirect
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'redirect_after_booking' => 'thankyou',
             'thankyou_page_id'       => 99,
         ]);
@@ -137,7 +137,7 @@ class PostBookingExperienceTest extends TestCase
         $_GET['token'] = $validToken;
 
         $viewedActionFired = false;
-        add_action('tourivo/thankyou_viewed', function ($id) use (&$viewedActionFired, $bookingId) {
+        add_action('readscope/thankyou_viewed', function ($id) use (&$viewedActionFired, $bookingId) {
             if ($id === $bookingId) {
                 $viewedActionFired = true;
             }
@@ -145,7 +145,7 @@ class PostBookingExperienceTest extends TestCase
 
         $html = ThankYouShortcode::render();
 
-        $this->assertTrue($viewedActionFired, 'tourivo/thankyou_viewed action hook should fire on valid token view.');
+        $this->assertTrue($viewedActionFired, 'readscope/thankyou_viewed action hook should fire on valid token view.');
         $this->assertStringContainsString('#' . $bookingCode, $html, 'Thank You page must show booking code.');
         $this->assertStringContainsString('Anisul Huq', $html, 'Thank You page must show customer name.');
         $this->assertStringContainsString('Print Booking Voucher', $html, 'Thank You page must have voucher button.');
@@ -196,7 +196,7 @@ class PostBookingExperienceTest extends TestCase
         $this->assertStringContainsString('BEGIN:VCALENDAR', $ics, 'Must have BEGIN:VCALENDAR');
         $this->assertStringContainsString('VERSION:2.0', $ics, 'Must declare VERSION:2.0');
         $this->assertStringContainsString('BEGIN:VEVENT', $ics, 'Must have BEGIN:VEVENT');
-        $this->assertStringContainsString('UID:tourivo-booking-' . $bookingId, $ics, 'Must have unique UID.');
+        $this->assertStringContainsString('UID:readscope-booking-' . $bookingId, $ics, 'Must have unique UID.');
         $this->assertStringContainsString('SUMMARY:', $ics, 'Must contain SUMMARY.');
         $this->assertStringContainsString('END:VEVENT', $ics, 'Must have END:VEVENT');
         $this->assertStringContainsString('END:VCALENDAR', $ics, 'Must have END:VCALENDAR');
@@ -237,7 +237,7 @@ class PostBookingExperienceTest extends TestCase
      */
     public function test_cancellation_request_mode_records_log_meta_and_email(): void
     {
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'allow_cancel_requests'      => 1,
             'customer_self_cancel_hours' => 0, // Request-only mode
         ]);
@@ -254,7 +254,7 @@ class PostBookingExperienceTest extends TestCase
         $bookingId   = $res['booking_id'];
         $bookingCode = $res['booking_code'];
 
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
 
         $cancelRes = BookingLookupShortcode::processCancellationRequest($bookingCode, 'traveler1@example.com', 'Emergency family issue');
         $this->assertTrue($cancelRes['success'], 'Cancellation request submission should succeed.');
@@ -269,7 +269,7 @@ class PostBookingExperienceTest extends TestCase
 
         // 2. Verify booking status remained pending/confirmed (not directly cancelled)
         global $wpdb;
-        $bookingRow = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tourivo_bookings WHERE id = %d", $bookingId));
+        $bookingRow = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}readscope_bookings WHERE id = %d", $bookingId));
         $this->assertNotEquals('cancelled', $bookingRow->booking_status, 'Booking status should NOT be cancelled in request mode.');
         $this->assertNotEmpty($bookingRow->cancel_requested_at ?? '', 'cancel_requested_at should be populated.');
     }
@@ -279,7 +279,7 @@ class PostBookingExperienceTest extends TestCase
      */
     public function test_self_cancellation_within_window_and_paid_fallback(): void
     {
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'allow_cancel_requests'      => 1,
             'customer_self_cancel_hours' => 48, // Up to 48 hours before check-in
         ]);
@@ -305,7 +305,7 @@ class PostBookingExperienceTest extends TestCase
 
         // Verify booking status is now cancelled
         global $wpdb;
-        $bookingRow1 = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tourivo_bookings WHERE id = %d", $bookingId1));
+        $bookingRow1 = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}readscope_bookings WHERE id = %d", $bookingId1));
         $this->assertEquals('cancelled', $bookingRow1->booking_status);
 
         // Case 2: Paid booking within window -> must fallback to request mode so staff can handle refund
@@ -325,7 +325,7 @@ class PostBookingExperienceTest extends TestCase
         $this->assertTrue($cancelRes2['success']);
         $this->assertEquals('requested', $cancelRes2['mode'], 'Paid booking must convert to requested mode.');
 
-        $bookingRow2 = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tourivo_bookings WHERE id = %d", $bookingId2));
+        $bookingRow2 = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}readscope_bookings WHERE id = %d", $bookingId2));
         $this->assertNotEquals('cancelled', $bookingRow2->booking_status);
 
         // Case 3: Booking too close to check-in (e.g. 24 hours away when window is 48 hours)
@@ -348,7 +348,7 @@ class PostBookingExperienceTest extends TestCase
      */
     public function test_datalayer_output_without_pii(): void
     {
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'enable_datalayer' => 1,
         ]);
 
@@ -369,22 +369,22 @@ class PostBookingExperienceTest extends TestCase
         $_GET['code']  = $bookingCode;
         $_GET['token'] = $validToken;
 
-        $GLOBALS['tourivo_test_assets'] = ['registered' => [], 'enqueued' => [], 'inline' => []];
+        $GLOBALS['readscope_test_assets'] = ['registered' => [], 'enqueued' => [], 'inline' => []];
 
         $html = ThankYouShortcode::render();
 
         $this->assertStringNotContainsString('<script', $html, 'The page must not print inline scripts.');
-        $this->assertTrue(wp_script_is('tourivo-thank-you'), 'The thank-you script must be enqueued.');
+        $this->assertTrue(wp_script_is('readscope-thank-you'), 'The thank-you script must be enqueued.');
 
         // The booking data reaches the script as one JSON object.
-        $inline = implode("\n", $GLOBALS['tourivo_test_assets']['inline']['tourivo-thank-you'] ?? []);
-        $this->assertStringContainsString('tourivoThankYouConfig', $inline);
+        $inline = implode("\n", $GLOBALS['readscope_test_assets']['inline']['readscope-thank-you'] ?? []);
+        $this->assertStringContainsString('readscopeThankYouConfig', $inline);
         $this->assertStringContainsString($bookingCode, $inline, 'Must include booking_id / code in dataLayer data.');
 
         // The tracking script itself pushes the event once per session.
-        $script = (string) file_get_contents(TOURIVO_PLUGIN_DIR . 'assets/js/tourivo-thank-you.js');
+        $script = (string) file_get_contents(READSCOPE_PLUGIN_DIR . 'assets/js/readscope-thank-you.js');
         $this->assertStringContainsString('dataLayer.push', $script, 'dataLayer.push must be in the thank-you script.');
-        $this->assertStringContainsString('tourivo_booking', $script, 'dataLayer event name must be tourivo_booking.');
+        $this->assertStringContainsString('readscope_booking', $script, 'dataLayer event name must be readscope_booking.');
         $this->assertStringContainsString('sessionStorage', $script, 'Must use sessionStorage guard.');
 
         // Verify NO PII is handed to the page.

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Services;
+namespace Readscope\Services;
 
-use Tourivo\Config\Config;
+use Readscope\Config\Config;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
  * Handles scheduled data retention routines, automatic booking anonymization,
  * and expired inquiry purges.
  *
- * @package Tourivo\Services
+ * @package Readscope\Services
  */
 class PrivacyService
 {
@@ -79,8 +79,8 @@ class PrivacyService
     protected static function retentionCandidates(int $days, int $limit = PHP_INT_MAX): array
     {
         global $wpdb;
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
+        $itemsTable    = $wpdb->prefix . 'readscope_booking_items';
 
         $statuses = self::retentionStatuses();
         $cutoff   = current_datetime()->modify(sprintf('-%d days', $days))->format('Y-m-d');
@@ -116,7 +116,7 @@ class PrivacyService
         $bookingsCount  = 0;
         $inquiriesCount = 0;
 
-        $inquiriesTable = $wpdb->prefix . 'tourivo_inquiries';
+        $inquiriesTable = $wpdb->prefix . 'readscope_inquiries';
 
         if ($anonymizeDays > 0) {
             $bookingsCount = count(self::retentionCandidates($anonymizeDays));
@@ -153,8 +153,8 @@ class PrivacyService
         $anonymizedBookings = 0;
         $deletedInquiries   = 0;
 
-        $bookingsTable  = $wpdb->prefix . 'tourivo_bookings';
-        $inquiriesTable = $wpdb->prefix . 'tourivo_inquiries';
+        $bookingsTable  = $wpdb->prefix . 'readscope_bookings';
+        $inquiriesTable = $wpdb->prefix . 'readscope_inquiries';
 
         // 1. Process Bookings Anonymization (Batch limit 200)
         if ($anonymizeDays > 0) {

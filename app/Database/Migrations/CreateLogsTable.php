@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Database\Migrations;
+namespace Readscope\Database\Migrations;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -11,15 +11,15 @@ if (!defined('ABSPATH')) {
 /**
  * Class CreateLogsTable
  *
- * Migration for creating audit and activity log table: wp_tourivo_logs.
+ * Migration for creating audit and activity log table: wp_readscope_logs.
  *
- * @package Tourivo\Database\Migrations
+ * @package Readscope\Database\Migrations
  */
 class CreateLogsTable implements MigrationInterface
 {
     public function getName(): string
     {
-        return 'create_tourivo_logs_table';
+        return 'create_readscope_logs_table';
     }
 
     public function getVersion(): string

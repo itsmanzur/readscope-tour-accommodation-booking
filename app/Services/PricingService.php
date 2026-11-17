@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Services;
+namespace Readscope\Services;
 
-use Tourivo\Config\Config;
-use Tourivo\Models\Room;
-use Tourivo\Models\Tour;
-use Tourivo\Support\Money;
+use Readscope\Config\Config;
+use Readscope\Models\Room;
+use Readscope\Models\Tour;
+use Readscope\Support\Money;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
  * Central pricing engine for Readscope Booking. Calculates date-based prices, child/infant rates,
  * Pro discounts/filters, taxes (inclusive/exclusive), and formatted quote breakdowns.
  *
- * @package Tourivo\Services
+ * @package Readscope\Services
  */
 class PricingService
 {
@@ -86,8 +86,8 @@ class PricingService
         }
 
         $decimals       = (int) Config::get('number_of_decimals', 2);
-        $currency       = (string) apply_filters('tourivo/currency_code', Config::get('currency', 'USD'));
-        $currencySymbol = (string) apply_filters('tourivo/currency_symbol', Config::get('currency_symbol', '$'));
+        $currency       = (string) apply_filters('readscope/currency_code', Config::get('currency', 'USD'));
+        $currencySymbol = (string) apply_filters('readscope/currency_symbol', Config::get('currency_symbol', '$'));
 
         $rawSubtotal = 0.0;
         $nights      = 1;
@@ -117,7 +117,7 @@ class PricingService
 
             // Validate max guests
             $maxGuests = $tour->getMaxGuests();
-            $infantsUseCapacity = (bool) apply_filters('tourivo/infants_use_capacity', false, $itemId, $itemType, $input);
+            $infantsUseCapacity = (bool) apply_filters('readscope/infants_use_capacity', false, $itemId, $itemType, $input);
             $capacityGuests = $payingGuests + ($infantsUseCapacity ? $infants : 0);
 
             if ($maxGuests > 0 && $capacityGuests > $maxGuests) {
@@ -233,7 +233,7 @@ class PricingService
         // Apply Pro / 3rd-party Pricing Pipeline Filter.
         // A filter that changes total_price should also list each change in 'adjustments'
         // ([['title' => string, 'total' => float], ...], negative for discounts) so the customer sees it itemised.
-        $pricingData = apply_filters('tourivo/booking/price', [
+        $pricingData = apply_filters('readscope/booking/price', [
             'unit_price'  => $avgUnitPrice,
             'total_price' => $rawSubtotal,
             'base_price'  => $rawSubtotal,

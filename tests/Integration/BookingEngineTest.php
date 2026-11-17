@@ -5,14 +5,14 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Common\Container;
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\InventoryService;
-use Tourivo\Tests\TestCase;
+use Readscope\Common\Container;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\InventoryService;
+use Readscope\Tests\TestCase;
 
 class BookingEngineTest extends TestCase
 {
@@ -50,7 +50,7 @@ class BookingEngineTest extends TestCase
         global $wpdb;
         if ($wpdb) {
             $booking = $wpdb->get_row($wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}tourivo_bookings WHERE id = %d",
+                "SELECT * FROM {$wpdb->prefix}readscope_bookings WHERE id = %d",
                 $res['booking_id']
             ));
 
@@ -80,7 +80,7 @@ class BookingEngineTest extends TestCase
         global $wpdb;
         if ($wpdb) {
             $booking = $wpdb->get_row($wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}tourivo_bookings WHERE id = %d",
+                "SELECT * FROM {$wpdb->prefix}readscope_bookings WHERE id = %d",
                 $res['booking_id']
             ));
 
@@ -132,7 +132,7 @@ class BookingEngineTest extends TestCase
         global $wpdb;
         if ($wpdb) {
             $invRecord = $wpdb->get_row($wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}tourivo_inventories WHERE item_id = %d AND item_type = 'room' LIMIT 1",
+                "SELECT * FROM {$wpdb->prefix}readscope_inventories WHERE item_id = %d AND item_type = 'room' LIMIT 1",
                 $roomId
             ));
             $this->assertNotNull($invRecord);
@@ -178,14 +178,14 @@ class BookingEngineTest extends TestCase
         global $wpdb;
         if ($wpdb) {
             $booking = $wpdb->get_row($wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}tourivo_bookings WHERE id = %d",
+                "SELECT * FROM {$wpdb->prefix}readscope_bookings WHERE id = %d",
                 $res['booking_id']
             ));
             // 3 rooms * $100 * 2 nights = $600
             $this->assertEquals(600.00, (float) $booking->total_amount);
 
             $inv = $wpdb->get_row($wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}tourivo_inventories WHERE item_id = %d AND event_date = %s",
+                "SELECT * FROM {$wpdb->prefix}readscope_inventories WHERE item_id = %d AND event_date = %s",
                 $roomId,
                 $checkIn
             ));
@@ -238,7 +238,7 @@ class BookingEngineTest extends TestCase
         global $wpdb;
         $countBefore = 0;
         if ($wpdb) {
-            $countBefore = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}tourivo_bookings");
+            $countBefore = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}readscope_bookings");
         }
 
         // Try to overbook
@@ -250,7 +250,7 @@ class BookingEngineTest extends TestCase
         $this->assertFalse($failedRes['success']);
 
         if ($wpdb) {
-            $countAfter = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}tourivo_bookings");
+            $countAfter = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}readscope_bookings");
             $this->assertEquals($countBefore, $countAfter);
         }
     }

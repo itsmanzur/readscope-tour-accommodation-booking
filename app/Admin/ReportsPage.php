@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Admin;
+namespace Readscope\Admin;
 
-use Tourivo\Common\Container;
-use Tourivo\Services\ReportingService;
-use Tourivo\Support\Money;
+use Readscope\Common\Container;
+use Readscope\Services\ReportingService;
+use Readscope\Support\Money;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
  *
  * Renders the Admin Business Analytics, Sales, Tax, Occupancy, and Performance Reports hub.
  *
- * @package Tourivo\Admin
+ * @package Readscope\Admin
  */
 class ReportsPage
 {
@@ -28,7 +28,7 @@ class ReportsPage
      */
     public static function render(): void
     {
-        if (!current_user_can('manage_tourivo_bookings')) {
+        if (!current_user_can('manage_readscope_bookings')) {
             wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'the-readscope-tour-and-accommodation-booking'), 403);
         }
 
@@ -47,8 +47,8 @@ class ReportsPage
         $topItems = $reporting->getTopPerformingItems($range['start'], $range['end'], 5);
         $timeline = $reporting->getTimelineData($range['start'], $range['end']);
 
-        $currency = (string) apply_filters('tourivo/currency_symbol', '$');
-        $adminUrl = admin_url('admin.php?page=tourivo-reports');
+        $currency = (string) apply_filters('readscope/currency_symbol', '$');
+        $adminUrl = admin_url('admin.php?page=readscope-reports');
 
         $presets = [
             'today'       => __('Today', 'the-readscope-tour-and-accommodation-booking'),
@@ -58,12 +58,12 @@ class ReportsPage
             'this_year'   => __('This Year', 'the-readscope-tour-and-accommodation-booking'),
         ];
         ?>
-        <div class="wrap tourivo-admin-wrap tourivo-reports-wrap">
+        <div class="wrap readscope-admin-wrap readscope-reports-wrap">
             <!-- Header & Filter Bar -->
-            <div class="tourivo-page-header tourivo-reports-header">
-                <div class="tourivo-page-header__text">
+            <div class="readscope-page-header readscope-reports-header">
+                <div class="readscope-page-header__text">
                     <h1><?php esc_html_e('Analytics & Business Reports', 'the-readscope-tour-and-accommodation-booking'); ?></h1>
-                    <p class="tourivo-subtitle">
+                    <p class="readscope-subtitle">
                         <?php
                         printf(
                             /* translators: 1: Filter date range label */
@@ -74,12 +74,12 @@ class ReportsPage
                     </p>
                 </div>
                 <div class="header-actions">
-                    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="tourivo-inline-form">
-                        <input type="hidden" name="action" value="tourivo_export_accounting_csv">
+                    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="readscope-inline-form">
+                        <input type="hidden" name="action" value="readscope_export_accounting_csv">
                         <input type="hidden" name="period" value="<?php echo esc_attr($range['period']); ?>">
                         <input type="hidden" name="start_date" value="<?php echo esc_attr(substr($range['start'], 0, 10)); ?>">
                         <input type="hidden" name="end_date" value="<?php echo esc_attr(substr($range['end'], 0, 10)); ?>">
-                        <?php wp_nonce_field('tourivo_reports_action', 'tourivo_reports_nonce'); ?>
+                        <?php wp_nonce_field('readscope_reports_action', 'readscope_reports_nonce'); ?>
                         <button type="submit" class="button button-primary">
                             <span class="dashicons dashicons-media-spreadsheet" aria-hidden="true"></span>
                             <?php esc_html_e('Export Accounting & Tax CSV', 'the-readscope-tour-and-accommodation-booking'); ?>
@@ -90,19 +90,19 @@ class ReportsPage
             <hr class="wp-header-end">
 
             <!-- Date Range Filter Toolbar -->
-            <div class="tourivo-card-box tourivo-reports-filter-box">
-                <div class="tourivo-filter-row">
-                    <div class="tourivo-preset-pills">
+            <div class="readscope-card-box readscope-reports-filter-box">
+                <div class="readscope-filter-row">
+                    <div class="readscope-preset-pills">
                         <?php foreach ($presets as $pKey => $pLabel) : ?>
                             <a href="<?php echo esc_url(add_query_arg('period', $pKey, $adminUrl)); ?>"
-                               class="tourivo-preset-pill <?php echo ($range['period'] === $pKey) ? 'active' : ''; ?>">
+                               class="readscope-preset-pill <?php echo ($range['period'] === $pKey) ? 'active' : ''; ?>">
                                 <?php echo esc_html($pLabel); ?>
                             </a>
                         <?php endforeach; ?>
                     </div>
 
-                    <form method="get" action="<?php echo esc_url(admin_url('admin.php')); ?>" class="tourivo-custom-date-form">
-                        <input type="hidden" name="page" value="tourivo-reports">
+                    <form method="get" action="<?php echo esc_url(admin_url('admin.php')); ?>" class="readscope-custom-date-form">
+                        <input type="hidden" name="page" value="readscope-reports">
                         <input type="hidden" name="period" value="custom">
                         <div class="date-inputs-wrap">
                             <label for="reports-start-date"><?php esc_html_e('From:', 'the-readscope-tour-and-accommodation-booking'); ?></label>
@@ -116,7 +116,7 @@ class ReportsPage
             </div>
 
             <!-- Summary KPI Grid -->
-            <div class="tourivo-kpi-grid tourivo-reports-kpi-grid">
+            <div class="readscope-kpi-grid readscope-reports-kpi-grid">
                 <!-- Total Bookings -->
                 <div class="kpi-card">
                     <div class="kpi-icon icon-bookings"><span class="dashicons dashicons-calendar-alt"></span></div>
@@ -178,8 +178,8 @@ class ReportsPage
                     <div class="kpi-info">
                         <span class="kpi-title"><?php esc_html_e('Occupancy Rate', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                         <span class="kpi-number"><?php echo esc_html(number_format($occupancy['rate'], 1)); ?>%</span>
-                        <div class="tourivo-progress-bar-wrap" title="<?php echo esc_attr(sprintf('%d booked / %d total capacity', $occupancy['total_booked'], $occupancy['total_capacity'])); ?>">
-                            <div class="tourivo-progress-bar" style="width: <?php echo esc_attr((string) min(100.0, $occupancy['rate'])); ?>%;"></div>
+                        <div class="readscope-progress-bar-wrap" title="<?php echo esc_attr(sprintf('%d booked / %d total capacity', $occupancy['total_booked'], $occupancy['total_capacity'])); ?>">
+                            <div class="readscope-progress-bar" style="width: <?php echo esc_attr((string) min(100.0, $occupancy['rate'])); ?>%;"></div>
                         </div>
                     </div>
                 </div>
@@ -214,16 +214,16 @@ class ReportsPage
             </div>
 
             <!-- Sales & Bookings Timeline Visualizer -->
-            <div class="tourivo-card-box tourivo-chart-card">
+            <div class="readscope-card-box readscope-chart-card">
                 <div class="box-header">
                     <h2><?php esc_html_e('Sales & Booking Volume Timeline', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
-                    <span class="tourivo-chart-legend">
+                    <span class="readscope-chart-legend">
                         <span class="legend-dot"></span> <?php esc_html_e('Daily Revenue', 'the-readscope-tour-and-accommodation-booking'); ?>
                     </span>
                 </div>
-                <div class="tourivo-timeline-chart-container">
+                <div class="readscope-timeline-chart-container">
                     <?php if (empty($timeline)) : ?>
-                        <div class="tourivo-no-data-notice">
+                        <div class="readscope-no-data-notice">
                             <p><?php esc_html_e('No booking transactions recorded during this selected date range.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                         </div>
                     <?php else :
@@ -234,7 +234,7 @@ class ReportsPage
                             }
                         }
                     ?>
-                        <div class="tourivo-bar-chart">
+                        <div class="readscope-bar-chart">
                             <?php foreach ($timeline as $dayData) :
                                 $heightPct = min(100.0, max(8.0, ($dayData['revenue'] / $maxRev) * 100.0));
                             ?>
@@ -253,9 +253,9 @@ class ReportsPage
             </div>
 
             <!-- Top Performing Products Layout -->
-            <div class="tourivo-dashboard-layout tourivo-top-items-grid">
+            <div class="readscope-dashboard-layout readscope-top-items-grid">
                 <!-- Top Tour Packages -->
-                <div class="tourivo-card-box">
+                <div class="readscope-card-box">
                     <div class="box-header">
                         <h2>
                             <span class="dashicons dashicons-palmtree"></span>
@@ -263,11 +263,11 @@ class ReportsPage
                         </h2>
                     </div>
                     <?php if (empty($topItems['tours'])) : ?>
-                        <p class="tourivo-empty-text"><?php esc_html_e('No tour bookings found in this period.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
+                        <p class="readscope-empty-text"><?php esc_html_e('No tour bookings found in this period.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                     <?php else :
                         $maxTourSales = max(1.0, (float) ($topItems['tours'][0]['total_sales'] ?? 1.0));
                     ?>
-                        <div class="tourivo-ranked-list">
+                        <div class="readscope-ranked-list">
                             <?php foreach ($topItems['tours'] as $idx => $tour) :
                                 $share = min(100.0, round(($tour['total_sales'] / $maxTourSales) * 100.0));
                             ?>
@@ -298,7 +298,7 @@ class ReportsPage
                 </div>
 
                 <!-- Top Hotel Stays / Rooms -->
-                <div class="tourivo-card-box">
+                <div class="readscope-card-box">
                     <div class="box-header">
                         <h2>
                             <span class="dashicons dashicons-admin-home"></span>
@@ -306,11 +306,11 @@ class ReportsPage
                         </h2>
                     </div>
                     <?php if (empty($topItems['rooms'])) : ?>
-                        <p class="tourivo-empty-text"><?php esc_html_e('No hotel room bookings found in this period.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
+                        <p class="readscope-empty-text"><?php esc_html_e('No hotel room bookings found in this period.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                     <?php else :
                         $maxRoomSales = max(1.0, (float) ($topItems['rooms'][0]['total_sales'] ?? 1.0));
                     ?>
-                        <div class="tourivo-ranked-list">
+                        <div class="readscope-ranked-list">
                             <?php foreach ($topItems['rooms'] as $idx => $room) :
                                 $share = min(100.0, round(($room['total_sales'] / $maxRoomSales) * 100.0));
                             ?>

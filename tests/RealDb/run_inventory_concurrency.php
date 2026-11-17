@@ -11,7 +11,7 @@
  *
  * Environment:
  *   DB_HOST=127.0.0.1  DB_PORT=3306  DB_USER=root  DB_PASSWORD=root
- *   DB_NAME=tourivo_test     database to use (must exist unless DB_CREATE=1)
+ *   DB_NAME=readscope_test     database to use (must exist unless DB_CREATE=1)
  *   DB_CREATE=1              create DB_NAME first and drop it afterwards
  *   TABLE_PREFIX=trvct_      prefix for the scratch table (default: trvct_)
  *   RUNS=5                   repetitions of every scenario (default 5)
@@ -34,7 +34,7 @@ $host   = getenv('DB_HOST') ?: '127.0.0.1';
 $port   = (int) (getenv('DB_PORT') ?: 3306);
 $user   = getenv('DB_USER') ?: 'root';
 $pass   = getenv('DB_PASSWORD') !== false ? (string) getenv('DB_PASSWORD') : 'root';
-$dbName = getenv('DB_NAME') ?: 'tourivo_test';
+$dbName = getenv('DB_NAME') ?: 'readscope_test';
 $prefix = getenv('TABLE_PREFIX') ?: 'trvct_';
 $runs   = max(1, (int) (getenv('RUNS') ?: 5));
 $nWork  = max(4, (int) (getenv('WORKERS') ?: 12));
@@ -58,15 +58,15 @@ if ($create) {
 }
 
 $db = new wpdb($host, $port, $user, $pass, $dbName, $prefix);
-$table = $prefix . 'tourivo_inventories';
+$table = $prefix . 'readscope_inventories';
 $engine = (string) $db->get_var("SELECT ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '{$table}'");
 
-$migration = new \Tourivo\Database\Migrations\CreateInventoriesTable();
+$migration = new \Readscope\Database\Migrations\CreateInventoriesTable();
 
-function resetTable(wpdb $db, \Tourivo\Database\Migrations\CreateInventoriesTable $m, string $prefix): void
+function resetTable(wpdb $db, \Readscope\Database\Migrations\CreateInventoriesTable $m, string $prefix): void
 {
-    $db->query("DROP TABLE IF EXISTS `{$prefix}tourivo_inventories`");
-    $db->query($m->up($prefix . 'tourivo_', 'DEFAULT CHARACTER SET utf8mb4'));
+    $db->query("DROP TABLE IF EXISTS `{$prefix}readscope_inventories`");
+    $db->query($m->up($prefix . 'readscope_', 'DEFAULT CHARACTER SET utf8mb4'));
 }
 
 /**
@@ -76,7 +76,7 @@ function resetTable(wpdb $db, \Tourivo\Database\Migrations\CreateInventoriesTabl
  */
 function fire(array $workers, int $itemId, string $date, int $defaultCapacity, array $flags, string $dbName, string $prefix, string $host, int $port, string $user, string $pass, wpdb $db): array
 {
-    $runDir = (getenv('TRV_TMP_DIR') ?: sys_get_temp_dir()) . '/tourivo_inv_' . bin2hex(random_bytes(6));
+    $runDir = (getenv('TRV_TMP_DIR') ?: sys_get_temp_dir()) . '/readscope_inv_' . bin2hex(random_bytes(6));
     mkdir($runDir);
 
     $env = array_merge(getenv(), [
@@ -133,7 +133,7 @@ function fire(array $workers, int $itemId, string $date, int $defaultCapacity, a
     rmdir($runDir);
 
     $rows = $db->get_results($db->prepare(
-        "SELECT * FROM `{$prefix}tourivo_inventories` WHERE item_id = %d AND event_date = %s",
+        "SELECT * FROM `{$prefix}readscope_inventories` WHERE item_id = %d AND event_date = %s",
         $itemId,
         $date
     ));

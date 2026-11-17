@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Core;
+namespace Readscope\Core;
 
-use Tourivo\Common\Abstracts\ServiceProvider;
-use Tourivo\Common\Container;
-use Tourivo\Common\Traits\Hookable;
-use Tourivo\Common\Traits\Singleton;
-use Tourivo\Providers\AdminServiceProvider;
-use Tourivo\Providers\AppServiceProvider;
-use Tourivo\Providers\BlockServiceProvider;
-use Tourivo\Providers\DatabaseServiceProvider;
-use Tourivo\Providers\ElementorServiceProvider;
-use Tourivo\Providers\MetaBoxServiceProvider;
-use Tourivo\Providers\PostTypeServiceProvider;
-use Tourivo\Providers\RouteServiceProvider;
-use Tourivo\Providers\TemplateServiceProvider;
+use Readscope\Common\Abstracts\ServiceProvider;
+use Readscope\Common\Container;
+use Readscope\Common\Traits\Hookable;
+use Readscope\Common\Traits\Singleton;
+use Readscope\Providers\AdminServiceProvider;
+use Readscope\Providers\AppServiceProvider;
+use Readscope\Providers\BlockServiceProvider;
+use Readscope\Providers\DatabaseServiceProvider;
+use Readscope\Providers\ElementorServiceProvider;
+use Readscope\Providers\MetaBoxServiceProvider;
+use Readscope\Providers\PostTypeServiceProvider;
+use Readscope\Providers\RouteServiceProvider;
+use Readscope\Providers\TemplateServiceProvider;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -27,7 +27,7 @@ if (!defined('ABSPATH')) {
  *
  * Central orchestrator and bootstrap class for Readscope Booking.
  *
- * @package Tourivo\Core
+ * @package Readscope\Core
  */
 final class Plugin
 {
@@ -94,13 +94,13 @@ final class Plugin
     public function boot(): void
     {
         // 1. Fire early hook
-        do_action('tourivo/before_boot', $this);
+        do_action('readscope/before_boot', $this);
 
         // Existing installs pick up capabilities added after the plugin was activated.
         Installer::addCapabilities();
 
         // 2. Allow third-parties / Pro add-on to register additional providers
-        $providers = apply_filters('tourivo/service_providers', $this->defaultProviders);
+        $providers = apply_filters('readscope/service_providers', $this->defaultProviders);
 
         // 3. Register all providers
         foreach ($providers as $providerClass) {
@@ -113,7 +113,7 @@ final class Plugin
         }
 
         // 5. Fire main ready hook
-        do_action('tourivo/loaded', $this);
+        do_action('readscope/loaded', $this);
     }
 
     /**

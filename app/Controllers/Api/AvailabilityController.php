@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Controllers\Api;
+namespace Readscope\Controllers\Api;
 
-use Tourivo\Common\Abstracts\Controller;
-use Tourivo\Common\Container;
-use Tourivo\Services\InventoryService;
-use Tourivo\Support\ClientIp;
-use Tourivo\Support\RateLimiter;
+use Readscope\Common\Abstracts\Controller;
+use Readscope\Common\Container;
+use Readscope\Services\InventoryService;
+use Readscope\Support\ClientIp;
+use Readscope\Support\RateLimiter;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
  *
  * REST API controller for real-time item availability checks, calendar grids and temporary checkout holds.
  *
- * @package Tourivo\Controllers\Api
+ * @package Readscope\Controllers\Api
  */
 class AvailabilityController extends Controller
 {
@@ -58,8 +58,8 @@ class AvailabilityController extends Controller
      */
     public function check(WP_REST_Request $request): WP_REST_Response|WP_Error
     {
-        if (function_exists('tourivo_load_plugin_textdomain')) {
-            tourivo_load_plugin_textdomain();
+        if (function_exists('readscope_load_plugin_textdomain')) {
+            readscope_load_plugin_textdomain();
         }
 
         $itemId    = (int) $request->get_param('item_id');
@@ -147,7 +147,7 @@ class AvailabilityController extends Controller
     {
         // Rate Limiting (Max 10 holds per 10 minutes per IP)
         $ip = ClientIp::get();
-        if (!RateLimiter::hit('tourivo_rl_hold_' . md5($ip), 10, 600)) {
+        if (!RateLimiter::hit('readscope_rl_hold_' . md5($ip), 10, 600)) {
             return new WP_Error(
                 'too_many_holds',
                 __('Too many hold requests initiated. Please complete your existing reservation.', 'the-readscope-tour-and-accommodation-booking'),
@@ -157,7 +157,7 @@ class AvailabilityController extends Controller
 
         // Cap concurrently active holds per client so one visitor cannot lock the whole calendar.
         $ownerKey  = md5($ip);
-        $activeKey = 'tourivo_hold_active_' . $ownerKey;
+        $activeKey = 'readscope_hold_active_' . $ownerKey;
         $stored    = get_transient($activeKey);
         $active    = array_values(array_filter(
             is_array($stored) ? $stored : [],

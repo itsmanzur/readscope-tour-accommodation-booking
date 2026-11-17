@@ -5,8 +5,8 @@
  */
 
 define('ABSPATH', __DIR__ . '/');
-define('TOURIVO_VERSION', '0.0.0');
-define('TOURIVO_MIN_PHP_VER', '8.0');
-define('TOURIVO_PLUGIN_FILE', dirname(__DIR__) . '/the-readscope-tour-and-accommodation-booking.php');
-define('TOURIVO_PLUGIN_DIR', dirname(__DIR__) . '/');
-define('TOURIVO_PLUGIN_URL', 'https://example.test/wp-content/plugins/tourivo/');
+define('READSCOPE_VERSION', '0.0.0');
+define('READSCOPE_MIN_PHP_VER', '8.0');
+define('READSCOPE_PLUGIN_FILE', dirname(__DIR__) . '/the-readscope-tour-and-accommodation-booking.php');
+define('READSCOPE_PLUGIN_DIR', dirname(__DIR__) . '/');
+define('READSCOPE_PLUGIN_URL', 'https://example.test/wp-content/plugins/the-readscope-tour-and-accommodation-booking/');

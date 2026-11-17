@@ -44,61 +44,61 @@
 
 /* Every Readscope Booking element uses the Readscope Booking font stack (theme font + Anek Bangla for Bengali by default).
    :where() keeps this at zero specificity, so any font-family set below still wins. */
-:where([class^="tourivo-"]:not(html, body), [class*=" tourivo-"]:not(html, body)) {
+:where([class^="readscope-"]:not(html, body), [class*=" readscope-"]:not(html, body)) {
     font-family: var(--trv-font, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif);
 }
 
-:where([class^="tourivo-"], [class*=" tourivo-"]) :where(input, select, textarea, button) {
+:where([class^="readscope-"], [class*=" readscope-"]) :where(input, select, textarea, button) {
     font-family: inherit;
 }
 
 /* Headings follow the theme's heading font (Bengali in Anek Bangla). This needs to beat a theme's own
    h1-h6 rule, hence the (0,1,1) selectors. */
-:is([class^="tourivo-"], [class*=" tourivo-"]) :is(h1, h2, h3, h4, h5, h6),
-:is(h1, h2, h3, h4, h5, h6):is([class^="tourivo-"], [class*=" tourivo-"]) {
+:is([class^="readscope-"], [class*=" readscope-"]) :is(h1, h2, h3, h4, h5, h6),
+:is(h1, h2, h3, h4, h5, h6):is([class^="readscope-"], [class*=" readscope-"]) {
     font-family: var(--trv-font-heading, inherit);
 }
 
 /* Not every theme sets border-box; without it width:100% fields spill out of their boxes. */
-:where([class^="tourivo-"], [class*=" tourivo-"]),
-:where([class^="tourivo-"], [class*=" tourivo-"]) *,
-:where([class^="tourivo-"], [class*=" tourivo-"]) *::before,
-:where([class^="tourivo-"], [class*=" tourivo-"]) *::after {
+:where([class^="readscope-"], [class*=" readscope-"]),
+:where([class^="readscope-"], [class*=" readscope-"]) *,
+:where([class^="readscope-"], [class*=" readscope-"]) *::before,
+:where([class^="readscope-"], [class*=" readscope-"]) *::after {
     box-sizing: border-box;
 }
 
 /* Bengali needs more room for vowel signs above and below the line, and no extra letter spacing
    (it breaks conjuncts in some browsers). */
-:where([class^="tourivo-"], [class*=" tourivo-"]):lang(bn) {
+:where([class^="readscope-"], [class*=" readscope-"]):lang(bn) {
     --trv-leading: 1.7;
     --trv-leading-tight: 1.45;
     letter-spacing: normal;
 }
 
 /* Headings sit tighter than running text. */
-.tourivo-title,
+.readscope-title,
 .section-heading,
-.tourivo-home-tours-head h2,
-.tourivo-wishlist-header h2,
-.tourivo-modal-content .modal-header h3,
-.tourivo-leave-review-form-wrap h3 {
+.readscope-home-tours-head h2,
+.readscope-wishlist-header h2,
+.readscope-modal-content .modal-header h3,
+.readscope-leave-review-form-wrap h3 {
     line-height: var(--trv-leading-tight);
 }
 
 /* Prices, dates and counts line up in columns. */
 .panel-price-box .price-amount,
-.tourivo-price-box .price-val,
-.tourivo-price-box .price-original,
+.readscope-price-box .price-val,
+.readscope-price-box .price-original,
 .total-amount-val,
 .breakdown-row,
-.tourivo-cal-num,
+.readscope-cal-num,
 .counter-controls input,
-.tourivo-price-display,
+.readscope-price-display,
 .score-number {
     font-variant-numeric: tabular-nums;
 }
 
-.tourivo-container {
+.readscope-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px 15px;
@@ -108,31 +108,31 @@
     line-height: var(--trv-leading);
 }
 
-.tourivo-block-main {
+.readscope-block-main {
     margin-top: var(--wp--preset--spacing--60, 40px);
 }
 
 /* Header & Meta */
-.tourivo-top-meta {
+.readscope-top-meta {
     margin-bottom: 15px;
     display: flex;
     align-items: center;
     gap: 12px;
 }
 
-.tourivo-top-meta .back-link {
+.readscope-top-meta .back-link {
     color: var(--trv-text-muted);
     text-decoration: none;
     font-size: var(--trv-text-sm);
     font-weight: var(--trv-weight-medium);
 }
 
-.tourivo-top-meta .back-link:hover {
+.readscope-top-meta .back-link:hover {
     color: var(--trv-primary);
 }
 
 /* The tour's badge (e.g. "Bestseller") next to the back link, styled like the card ribbon. */
-.tourivo-ribbon-inline {
+.readscope-ribbon-inline {
     display: inline-block;
     padding: 2px 8px;
     border-radius: 4px;
@@ -144,18 +144,18 @@
     text-transform: uppercase;
 }
 
-.tourivo-ribbon-inline:lang(bn) {
+.readscope-ribbon-inline:lang(bn) {
     letter-spacing: normal;
 }
 
-.tourivo-title {
+.readscope-title {
     font-size: var(--trv-text-3xl);
     font-weight: var(--trv-weight-semibold);
     margin: 0 0 12px 0;
     color: var(--trv-text-main);
 }
 
-.tourivo-sub-meta {
+.readscope-sub-meta {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
@@ -164,13 +164,13 @@
     color: var(--trv-text-muted);
 }
 
-.tourivo-sub-meta .meta-tag {
+.readscope-sub-meta .meta-tag {
     display: inline-flex;
     align-items: center;
     gap: 4px;
 }
 
-.tourivo-sub-meta .dashicons {
+.readscope-sub-meta .dashicons {
     font-size: 16px;
     width: 16px;
     height: 16px;
@@ -178,44 +178,44 @@
 }
 
 /* Layout Grid */
-.tourivo-layout-grid {
+.readscope-layout-grid {
     display: flex;
     gap: 30px;
     align-items: flex-start;
 }
 
-.tourivo-main-content {
+.readscope-main-content {
     flex: 1;
     min-width: 0;
 }
 
-.tourivo-sidebar {
+.readscope-sidebar {
     width: 380px;
     flex-shrink: 0;
 }
 
-.tourivo-sticky-box {
+.readscope-sticky-box {
     position: sticky;
     top: 30px;
 }
 
 @media (max-width: 900px) {
-    .tourivo-layout-grid {
+    .readscope-layout-grid {
         flex-direction: column;
     }
-    .tourivo-sidebar {
+    .readscope-sidebar {
         width: 100%;
     }
 }
 
 /* Featured Hero Banner */
-.tourivo-featured-banner {
+.readscope-featured-banner {
     margin-bottom: 25px;
     border-radius: var(--trv-radius);
     overflow: hidden;
 }
 
-.tourivo-hero-img {
+.readscope-hero-img {
     width: 100%;
     height: 420px;
     object-fit: cover;
@@ -223,7 +223,7 @@
 }
 
 /* Block Sections */
-.tourivo-block-section {
+.readscope-block-section {
     background: #fff;
     border: 1px solid var(--trv-border);
     border-radius: var(--trv-radius);
@@ -240,7 +240,7 @@
 }
 
 /* Timeline Itinerary */
-.tourivo-itinerary-timeline {
+.readscope-itinerary-timeline {
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -287,14 +287,14 @@
 }
 
 /* Inclusions & Exclusions */
-.tourivo-inc-exc-grid {
+.readscope-inc-exc-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
 }
 
 @media (max-width: 600px) {
-    .tourivo-inc-exc-grid {
+    .readscope-inc-exc-grid {
         grid-template-columns: 1fr;
     }
 }
@@ -317,7 +317,7 @@
 .exc-box li .dashicons { color: var(--trv-danger); }
 
 /* FAQs */
-.tourivo-faqs-accordion {
+.readscope-faqs-accordion {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -343,7 +343,7 @@
 }
 
 /* Interactive Booking Panel */
-.tourivo-booking-panel {
+.readscope-booking-panel {
     background: #fff;
     border: 1px solid var(--trv-border);
     border-radius: var(--trv-radius);
@@ -411,24 +411,24 @@
     font-size: var(--trv-text-input);
 }
 
-.tourivo-cal-summary {
+.readscope-cal-summary {
     font-size: var(--trv-text-sm);
     font-weight: var(--trv-weight-semibold);
     margin: 0 0 8px;
 }
 
-.tourivo-cal-summary:empty {
+.readscope-cal-summary:empty {
     display: none;
 }
 
-.tourivo-cal {
+.readscope-cal {
     border: 1px solid var(--trv-border);
     border-radius: 10px;
     padding: 10px;
     background: #fff;
 }
 
-.tourivo-cal-nav {
+.readscope-cal-nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -436,13 +436,13 @@
     margin-bottom: 8px;
 }
 
-.tourivo-cal-title {
+.readscope-cal-title {
     font-weight: var(--trv-weight-semibold);
     font-size: var(--trv-text-sm);
 }
 
-.tourivo-cal-prev,
-.tourivo-cal-next {
+.readscope-cal-prev,
+.readscope-cal-next {
     width: 32px;
     height: 32px;
     border: 1px solid var(--trv-border);
@@ -454,20 +454,20 @@
     color: var(--trv-text-main);
 }
 
-.tourivo-cal-prev:disabled,
-.tourivo-cal-next:disabled {
+.readscope-cal-prev:disabled,
+.readscope-cal-next:disabled {
     opacity: 0.35;
     cursor: default;
 }
 
-.tourivo-cal-weekdays,
-.tourivo-cal-grid {
+.readscope-cal-weekdays,
+.readscope-cal-grid {
     display: grid;
     grid-template-columns: repeat(7, minmax(0, 1fr));
     gap: 4px;
 }
 
-.tourivo-cal-weekdays span {
+.readscope-cal-weekdays span {
     text-align: center;
     font-size: var(--trv-text-xs);
     font-weight: var(--trv-weight-semibold);
@@ -478,12 +478,12 @@
     white-space: nowrap;
 }
 
-.tourivo-cal-day,
-.tourivo-cal-pad {
+.readscope-cal-day,
+.readscope-cal-pad {
     min-height: 46px;
 }
 
-.tourivo-cal-day {
+.readscope-cal-day {
     border: 1px solid transparent;
     background: var(--trv-bg-light);
     border-radius: 8px;
@@ -497,13 +497,13 @@
     color: var(--trv-text-main);
 }
 
-.tourivo-cal-num {
+.readscope-cal-num {
     font-size: var(--trv-text-sm);
     font-weight: var(--trv-weight-semibold);
     line-height: 1.1;
 }
 
-.tourivo-cal-spots {
+.readscope-cal-spots {
     font-size: var(--trv-text-xs);
     line-height: 1.1;
     color: var(--trv-text-muted);
@@ -513,70 +513,70 @@
     white-space: nowrap;
 }
 
-.tourivo-cal-day.is-limited .tourivo-cal-spots {
+.readscope-cal-day.is-limited .readscope-cal-spots {
     color: #b45309;
     font-weight: var(--trv-weight-semibold);
 }
 
-.tourivo-cal-day.is-soldout,
-.tourivo-cal-day:disabled {
+.readscope-cal-day.is-soldout,
+.readscope-cal-day:disabled {
     background: #f1f5f9;
     color: #94a3b8;
     cursor: default;
 }
 
-.tourivo-cal-day.is-soldout .tourivo-cal-num {
+.readscope-cal-day.is-soldout .readscope-cal-num {
     text-decoration: line-through;
 }
 
-.tourivo-cal-day.is-soldout:not(:disabled) {
+.readscope-cal-day.is-soldout:not(:disabled) {
     cursor: pointer;
     border-color: #cbd5e1;
     border-style: dashed;
 }
 
-.tourivo-cal-day.is-in-range {
+.readscope-cal-day.is-in-range {
     background: color-mix(in srgb, var(--trv-primary) 18%, #fff);
     border-radius: 4px;
 }
 
-.tourivo-cal-day.is-checkin,
-.tourivo-cal-day.is-checkout {
+.readscope-cal-day.is-checkin,
+.readscope-cal-day.is-checkout {
     background: var(--trv-primary);
     color: #fff;
     border-color: transparent;
 }
 
-.tourivo-cal-day.is-checkin .tourivo-cal-spots,
-.tourivo-cal-day.is-checkout .tourivo-cal-spots {
+.readscope-cal-day.is-checkin .readscope-cal-spots,
+.readscope-cal-day.is-checkout .readscope-cal-spots {
     color: rgba(255, 255, 255, 0.88);
 }
 
-.tourivo-cal-day:not(:disabled):hover {
+.readscope-cal-day:not(:disabled):hover {
     border-color: var(--trv-primary);
 }
 
-.tourivo-cal-day:focus-visible {
+.readscope-cal-day:focus-visible {
     outline: 2px solid var(--trv-primary);
     outline-offset: 1px;
 }
 
-.tourivo-cal-note {
+.readscope-cal-note {
     margin: 8px 0 0;
     font-size: var(--trv-text-xs);
     line-height: var(--trv-leading-tight);
     color: var(--trv-text-muted);
 }
 
-.tourivo-cal-note:empty {
+.readscope-cal-note:empty {
     display: none;
 }
 
-.tourivo-cal-note.is-warn {
+.readscope-cal-note.is-warn {
     color: #b45309;
 }
 
-.tourivo-cal-loading {
+.readscope-cal-loading {
     grid-column: 1 / -1;
     text-align: center;
     color: var(--trv-text-muted);
@@ -584,7 +584,7 @@
     margin: 12px 0;
 }
 
-.tourivo-date-fields {
+.readscope-date-fields {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -592,7 +592,7 @@
     clip: rect(0, 0, 0, 0);
 }
 
-.tourivo-date-fields.is-native {
+.readscope-date-fields.is-native {
     position: static;
     width: auto;
     height: auto;
@@ -600,7 +600,7 @@
     clip: auto;
 }
 
-.tourivo-date-fields.is-native input {
+.readscope-date-fields.is-native input {
     display: block;
     width: 100%;
     margin-top: 8px;
@@ -682,7 +682,7 @@
     opacity: 0.4;
 }
 
-.tourivo-calculating {
+.readscope-calculating {
     margin: 8px 0 0;
     font-size: var(--trv-text-xs);
     font-weight: var(--trv-weight-semibold);
@@ -718,7 +718,7 @@
 }
 
 /* Buttons */
-.tourivo-btn {
+.readscope-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -735,17 +735,17 @@
     transition: background 0.2s ease, transform 0.15s ease;
 }
 
-.tourivo-btn:hover {
+.readscope-btn:hover {
     background: var(--trv-primary-hover);
     color: #fff;
 }
 
-.tourivo-btn-sm {
+.readscope-btn-sm {
     padding: 6px 12px;
     font-size: var(--trv-text-sm);
 }
 
-.tourivo-btn-block {
+.readscope-btn-block {
     width: 100%;
     padding: 12px;
     font-size: var(--trv-text-base);
@@ -762,20 +762,20 @@
 .panel-alert.alert-error { background: #fee2e2; color: #991b1b; }
 
 /* Cards & Grid */
-.tourivo-grid {
+.readscope-grid {
     display: grid;
     grid-template-columns: repeat(var(--trv-grid-cols, 3), 1fr);
     gap: 24px;
 }
 
 @media (max-width: 900px) {
-    .tourivo-grid { grid-template-columns: repeat(2, 1fr); }
+    .readscope-grid { grid-template-columns: repeat(2, 1fr); }
 }
 @media (max-width: 600px) {
-    .tourivo-grid { grid-template-columns: 1fr; }
+    .readscope-grid { grid-template-columns: 1fr; }
 }
 
-.tourivo-card {
+.readscope-card {
     background: #fff;
     border: 1px solid var(--trv-border);
     border-radius: var(--trv-radius);
@@ -785,25 +785,25 @@
     flex-direction: column;
 }
 
-.tourivo-card-thumb {
+.readscope-card-thumb {
     position: relative;
     height: 200px;
     overflow: hidden;
     background: #f1f5f9;
 }
 
-.tourivo-card-thumb img {
+.readscope-card-thumb img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
 }
 
-.tourivo-card:hover .tourivo-card-thumb img {
+.readscope-card:hover .readscope-card-thumb img {
     transform: scale(1.05);
 }
 
-.tourivo-ribbon {
+.readscope-ribbon {
     position: absolute;
     top: 12px;
     left: 12px;
@@ -816,7 +816,7 @@
     text-transform: uppercase;
 }
 
-.tourivo-dest-tag {
+.readscope-dest-tag {
     position: absolute;
     bottom: 12px;
     left: 12px;
@@ -827,7 +827,7 @@
     border-radius: 4px;
 }
 
-.tourivo-stars-badge {
+.readscope-stars-badge {
     position: absolute;
     top: 12px;
     left: 12px;
@@ -839,14 +839,14 @@
     font-weight: var(--trv-weight-semibold);
 }
 
-.tourivo-card-body {
+.readscope-card-body {
     padding: 16px;
     flex: 1;
     display: flex;
     flex-direction: column;
 }
 
-.tourivo-card-meta {
+.readscope-card-meta {
     display: flex;
     gap: 12px;
     font-size: var(--trv-text-xs);
@@ -854,7 +854,7 @@
     margin-bottom: 8px;
 }
 
-.tourivo-card-title {
+.readscope-card-title {
     font-size: var(--trv-text-base);
     font-weight: var(--trv-weight-semibold);
     margin: 0 0 12px 0;
@@ -862,12 +862,12 @@
     flex: 1;
 }
 
-.tourivo-card-title a {
+.readscope-card-title a {
     color: var(--trv-text-main);
     text-decoration: none;
 }
 
-.tourivo-card-footer {
+.readscope-card-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -876,17 +876,17 @@
     padding-top: 12px;
 }
 
-.tourivo-card-footer .tourivo-price-box {
+.readscope-card-footer .readscope-price-box {
     min-width: 0;
 }
 
-.tourivo-card-footer .tourivo-btn {
+.readscope-card-footer .readscope-btn {
     flex: 0 0 auto;
     white-space: nowrap;
 }
 
 /* Shown when a tour, hotel or room has no image. */
-.tourivo-placeholder-img {
+.readscope-placeholder-img {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -897,22 +897,22 @@
     color: #94a3b8;
 }
 
-.tourivo-placeholder-img .dashicons {
+.readscope-placeholder-img .dashicons {
     font-size: 44px;
     width: 44px;
     height: 44px;
 }
 
-.tourivo-price-box .price-from { font-size: var(--trv-text-xs); color: var(--trv-text-muted); display: block; }
-.tourivo-price-box .price-val { font-size: var(--trv-text-lg); font-weight: var(--trv-weight-bold); color: var(--trv-primary); }
-.tourivo-price-box .price-original {
+.readscope-price-box .price-from { font-size: var(--trv-text-xs); color: var(--trv-text-muted); display: block; }
+.readscope-price-box .price-val { font-size: var(--trv-text-lg); font-weight: var(--trv-weight-bold); color: var(--trv-primary); }
+.readscope-price-box .price-original {
     display: block;
     font-size: var(--trv-text-xs);
     color: var(--trv-text-muted);
 }
 
 /* Search Bar */
-.tourivo-search-bar-wrap {
+.readscope-search-bar-wrap {
     background: #fff;
     padding: 16px;
     border-radius: var(--trv-radius);
@@ -920,26 +920,26 @@
     border: 1px solid var(--trv-border);
 }
 
-.tourivo-home-search {
+.readscope-home-search {
     max-width: 1100px;
     margin: 8px auto 32px;
 }
 
-.tourivo-home-welcome {
+.readscope-home-welcome {
     margin: 4px 0 16px;
     font-size: clamp(var(--trv-text-xl), 2.6vw, var(--trv-text-3xl));
     font-weight: var(--trv-weight-semibold);
     line-height: var(--trv-leading-tight);
 }
 
-.tourivo-home-places {
+.readscope-home-places {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
     margin: 14px 0 20px;
 }
 
-.tourivo-home-places a {
+.readscope-home-places a {
     display: inline-block;
     padding: 6px 12px;
     border: 1px solid var(--trv-border);
@@ -952,55 +952,55 @@
     text-decoration: none;
 }
 
-.tourivo-home-places a:hover,
-.tourivo-home-places a:focus {
+.readscope-home-places a:hover,
+.readscope-home-places a:focus {
     border-color: var(--trv-primary);
     color: var(--trv-primary);
 }
 
-.tourivo-home-places a.is-current,
-.tourivo-home-places a.is-current:hover,
-.tourivo-home-places a.is-current:focus {
+.readscope-home-places a.is-current,
+.readscope-home-places a.is-current:hover,
+.readscope-home-places a.is-current:focus {
     background: var(--trv-primary);
     border-color: var(--trv-primary);
     color: #fff;
 }
 
-.tourivo-destination-search {
+.readscope-destination-search {
     margin: 16px 0 4px;
 }
 
-.tourivo-single-wrapper .tourivo-destination-search {
+.readscope-single-wrapper .readscope-destination-search {
     margin: 0 0 8px;
 }
 
-.tourivo-related-place {
+.readscope-related-place {
     margin-top: 40px;
 }
 
-.tourivo-related-place .tourivo-home-tours,
-.tourivo-related-place .tourivo-home-hotels {
+.readscope-related-place .readscope-home-tours,
+.readscope-related-place .readscope-home-hotels {
     max-width: none;
     margin: 0 0 28px;
 }
 
-.tourivo-related-place .tourivo-home-tours-head h2 {
+.readscope-related-place .readscope-home-tours-head h2 {
     font-size: var(--trv-text-xl);
 }
 
-.tourivo-home-tours,
-.tourivo-home-hotels {
+.readscope-home-tours,
+.readscope-home-hotels {
     max-width: 1100px;
     margin: 0 auto 40px;
 }
 
-.tourivo-archive-tours,
-.tourivo-archive-hotels {
+.readscope-archive-tours,
+.readscope-archive-hotels {
     margin-top: 28px;
     padding: 0 20px;
 }
 
-.tourivo-home-tours-head {
+.readscope-home-tours-head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
@@ -1008,36 +1008,36 @@
     margin: 0 0 16px;
 }
 
-.tourivo-home-tours-head h2 {
+.readscope-home-tours-head h2 {
     margin: 0;
     font-size: var(--trv-text-3xl);
 }
 
-.tourivo-home-tours-head a {
+.readscope-home-tours-head a {
     font-weight: var(--trv-weight-semibold);
     text-decoration: none;
 }
 
-.tourivo-search-form {
+.readscope-search-form {
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
     align-items: flex-end;
 }
 
-.tourivo-search-form .search-field {
+.readscope-search-form .search-field {
     flex: 1;
     min-width: 160px;
 }
 
-.tourivo-search-form label {
+.readscope-search-form label {
     display: block;
     font-weight: var(--trv-weight-semibold);
     font-size: var(--trv-text-sm);
     margin-bottom: 4px;
 }
 
-.tourivo-search-form select, .tourivo-search-form input {
+.readscope-search-form select, .readscope-search-form input {
     width: 100%;
     padding: 8px 10px;
     border: 1px solid var(--trv-border);
@@ -1045,17 +1045,17 @@
     font-size: var(--trv-text-input);
 }
 
-.tourivo-guest-stepper {
+.readscope-guest-stepper {
     display: flex;
     align-items: stretch;
 }
 
-.tourivo-guest-stepper input {
+.readscope-guest-stepper input {
     text-align: center;
     border-radius: 0;
 }
 
-.tourivo-guest-stepper button {
+.readscope-guest-stepper button {
     flex: 0 0 36px;
     border: 1px solid var(--trv-border);
     background: #fff;
@@ -1065,35 +1065,35 @@
     cursor: pointer;
 }
 
-.tourivo-guest-minus {
+.readscope-guest-minus {
     border-radius: 6px 0 0 6px;
 }
 
-.tourivo-guest-plus {
+.readscope-guest-plus {
     border-radius: 0 6px 6px 0;
 }
 
-.tourivo-guest-stepper button:disabled {
+.readscope-guest-stepper button:disabled {
     opacity: 0.4;
     cursor: default;
 }
 
-.tourivo-guest-stepper input[type="number"] {
+.readscope-guest-stepper input[type="number"] {
     -moz-appearance: textfield;
     appearance: textfield;
 }
 
-.tourivo-guest-stepper input[type="number"]::-webkit-outer-spin-button,
-.tourivo-guest-stepper input[type="number"]::-webkit-inner-spin-button {
+.readscope-guest-stepper input[type="number"]::-webkit-outer-spin-button,
+.readscope-guest-stepper input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
-.tourivo-search-date {
+.readscope-search-date {
     position: relative;
 }
 
-.tourivo-search-date-btn {
+.readscope-search-date-btn {
     width: 100%;
     padding: 8px 10px;
     border: 1px solid var(--trv-border);
@@ -1104,7 +1104,7 @@
     cursor: pointer;
 }
 
-.tourivo-search-native {
+.readscope-search-native {
     position: absolute;
     width: 1px;
     height: 1px;
@@ -1112,12 +1112,12 @@
     clip: rect(0, 0, 0, 0);
 }
 
-.tourivo-search-date.is-native .tourivo-search-date-btn,
-.tourivo-search-date.is-native .tourivo-search-cal {
+.readscope-search-date.is-native .readscope-search-date-btn,
+.readscope-search-date.is-native .readscope-search-cal {
     display: none;
 }
 
-.tourivo-search-date.is-native .tourivo-search-native {
+.readscope-search-date.is-native .readscope-search-native {
     position: static;
     width: 100%;
     height: auto;
@@ -1125,7 +1125,7 @@
     overflow: visible;
 }
 
-.tourivo-search-cal {
+.readscope-search-cal {
     position: absolute;
     z-index: 40;
     top: calc(100% + 6px);
@@ -1134,7 +1134,7 @@
     max-width: 90vw;
 }
 
-.tourivo-search-cal .tourivo-cal {
+.readscope-search-cal .readscope-cal {
     background: #fff;
     border: 1px solid var(--trv-border);
     border-radius: 12px;
@@ -1142,35 +1142,35 @@
     padding: 12px;
 }
 
-.tourivo-search-cal .tourivo-cal-day {
+.readscope-search-cal .readscope-cal-day {
     min-height: 52px;
 }
 
-.tourivo-search-cal .tourivo-cal-spots {
+.readscope-search-cal .readscope-cal-spots {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 2px;
 }
 
-.tourivo-cal-tours::after {
+.readscope-cal-tours::after {
     content: '·';
     margin-left: 2px;
     color: #94a3b8;
 }
 
-.tourivo-cal-hotels {
+.readscope-cal-hotels {
     color: #0369a1;
     font-weight: var(--trv-weight-semibold);
 }
 
-.tourivo-search-cal-hint {
+.readscope-search-cal-hint {
     margin: 8px 0 0;
     font-size: var(--trv-text-xs);
     color: #64748b;
 }
 
-.tourivo-search-summary {
+.readscope-search-summary {
     max-width: 1100px;
     margin: 16px auto;
     padding: 12px 16px;
@@ -1181,12 +1181,12 @@
 }
 
 /* Inquiry CTA & Modal */
-.tourivo-inquiry-cta {
+.readscope-inquiry-cta {
     margin-top: 12px;
     text-align: center;
 }
 
-.tourivo-btn-inquiry {
+.readscope-btn-inquiry {
     background: transparent;
     border: none;
     color: var(--trv-primary, #0284c7);
@@ -1198,11 +1198,11 @@
     padding: 6px 0;
 }
 
-.tourivo-btn-inquiry:hover {
+.readscope-btn-inquiry:hover {
     color: var(--trv-primary-hover, #0369a1);
 }
 
-.tourivo-modal-wrap {
+.readscope-modal-wrap {
     position: fixed;
     top: 0;
     left: 0;
@@ -1215,7 +1215,7 @@
     padding: 20px;
 }
 
-.tourivo-modal-overlay {
+.readscope-modal-overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -1225,7 +1225,7 @@
     backdrop-filter: blur(4px);
 }
 
-.tourivo-modal-content {
+.readscope-modal-content {
     position: relative;
     background: #ffffff;
     width: 100%;
@@ -1234,15 +1234,15 @@
     overflow: hidden;
     box-shadow: 0 20px 30px rgba(0,0,0,0.25);
     z-index: 10;
-    animation: tourivoModalFadeIn 0.25s ease-out;
+    animation: readscopeModalFadeIn 0.25s ease-out;
 }
 
-@keyframes tourivoModalFadeIn {
+@keyframes readscopeModalFadeIn {
     from { opacity: 0; transform: translateY(12px) scale(0.97); }
     to { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-.tourivo-modal-content .modal-header {
+.readscope-modal-content .modal-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1251,14 +1251,14 @@
     border-bottom: 1px solid #e2e8f0;
 }
 
-.tourivo-modal-content .modal-header h3 {
+.readscope-modal-content .modal-header h3 {
     margin: 0;
     font-size: var(--trv-text-lg);
     font-weight: var(--trv-weight-semibold);
     color: #0f172a;
 }
 
-.tourivo-modal-content .close-inquiry-modal {
+.readscope-modal-content .close-inquiry-modal {
     background: transparent;
     border: none;
     font-size: 24px;
@@ -1267,11 +1267,11 @@
     cursor: pointer;
 }
 
-.tourivo-modal-content .close-inquiry-modal:hover {
+.readscope-modal-content .close-inquiry-modal:hover {
     color: #0f172a;
 }
 
-.tourivo-modal-content .modal-body {
+.readscope-modal-content .modal-body {
     padding: 20px 24px;
 }
 
@@ -1338,14 +1338,14 @@
     border: 1px solid #fca5a5;
 }
 
-.tourivo-modal-content .modal-footer {
+.readscope-modal-content .modal-footer {
     padding: 14px 24px 20px;
 }
 
 /* =======================================================
    STEP 2: WISHLIST HEART BUTTONS & BADGES
    ======================================================= */
-.tourivo-wishlist-toggle {
+.readscope-wishlist-toggle {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -1365,29 +1365,29 @@
     color: #94a3b8;
 }
 
-.tourivo-wishlist-toggle:hover {
+.readscope-wishlist-toggle:hover {
     transform: scale(1.12);
     background: #ffffff;
     color: #ef4444;
 }
 
-.tourivo-wishlist-toggle.is-active {
+.readscope-wishlist-toggle.is-active {
     color: #ef4444;
     background: #ffffff;
 }
 
-.tourivo-wishlist-toggle .dashicons {
+.readscope-wishlist-toggle .dashicons {
     font-size: 18px;
     width: 18px;
     height: 18px;
 }
 
-.tourivo-wishlist-toggle.is-active .dashicons {
+.readscope-wishlist-toggle.is-active .dashicons {
     color: #ef4444;
 }
 
 /* Single Page Wishlist Toggle Button */
-.tourivo-wishlist-toggle-single {
+.readscope-wishlist-toggle-single {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -1402,14 +1402,14 @@
     transition: all 0.2s ease;
 }
 
-.tourivo-wishlist-toggle-single:hover,
-.tourivo-wishlist-toggle-single.is-active {
+.readscope-wishlist-toggle-single:hover,
+.readscope-wishlist-toggle-single.is-active {
     background: #fee2e2;
     border-color: #fca5a5;
     color: #ef4444;
 }
 
-.tourivo-wishlist-toggle-single .dashicons {
+.readscope-wishlist-toggle-single .dashicons {
     font-size: 16px;
     width: 16px;
     height: 16px;
@@ -1435,11 +1435,11 @@
 /* =======================================================
    STEP 2: LIVE AJAX FILTER & SEARCH ENGINE
    ======================================================= */
-.tourivo-live-filter-wrapper {
+.readscope-live-filter-wrapper {
     margin: 24px 0 36px;
 }
 
-.tourivo-filter-form {
+.readscope-filter-form {
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
@@ -1448,14 +1448,14 @@
     margin-bottom: 20px;
 }
 
-.tourivo-filter-grid {
+.readscope-filter-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 16px;
     align-items: flex-end;
 }
 
-.tourivo-filter-col label {
+.readscope-filter-col label {
     display: block;
     margin-bottom: 6px;
     font-size: var(--trv-text-xs);
@@ -1465,12 +1465,12 @@
     letter-spacing: 0.3px;
 }
 
-.tourivo-filter-col label:lang(bn) {
+.readscope-filter-col label:lang(bn) {
     letter-spacing: normal;
 }
 
-.tourivo-filter-input,
-.tourivo-filter-select {
+.readscope-filter-input,
+.readscope-filter-select {
     width: 100%;
     padding: 8px 12px;
     border: 1px solid #cbd5e1;
@@ -1481,8 +1481,8 @@
     transition: all 0.2s;
 }
 
-.tourivo-filter-input:focus,
-.tourivo-filter-select:focus {
+.readscope-filter-input:focus,
+.readscope-filter-select:focus {
     border-color: var(--trv-primary);
     background: #ffffff;
     outline: none;
@@ -1496,18 +1496,18 @@
     margin-bottom: 6px;
 }
 
-.tourivo-price-display {
+.readscope-price-display {
     font-size: var(--trv-text-sm);
     color: var(--trv-primary);
 }
 
-.tourivo-filter-range {
+.readscope-filter-range {
     width: 100%;
     cursor: pointer;
     accent-color: var(--trv-primary);
 }
 
-.tourivo-btn-reset-filters {
+.readscope-btn-reset-filters {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1524,19 +1524,19 @@
     transition: all 0.2s;
 }
 
-.tourivo-btn-reset-filters:hover {
+.readscope-btn-reset-filters:hover {
     background: #e2e8f0;
     color: #0f172a;
 }
 
-.tourivo-filter-results-bar {
+.readscope-filter-results-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 16px;
 }
 
-.tourivo-results-counter {
+.readscope-results-counter {
     margin: 0;
     font-size: var(--trv-text-sm);
     color: #64748b;
@@ -1546,7 +1546,7 @@
     gap: 6px;
 }
 
-.tourivo-filter-loader {
+.readscope-filter-loader {
     position: absolute;
     top: 0;
     left: 0;
@@ -1560,7 +1560,7 @@
     border-radius: 8px;
 }
 
-.tourivo-filter-loader .dashicons {
+.readscope-filter-loader .dashicons {
     font-size: 32px;
     width: 32px;
     height: 32px;
@@ -1570,13 +1570,13 @@
 /* =======================================================
    STEP 2: WISHLIST PAGE & SHORTCODE STYLING
    ======================================================= */
-.tourivo-wishlist-wrap {
+.readscope-wishlist-wrap {
     max-width: 1200px;
     margin: 30px auto;
     padding: 0 15px;
 }
 
-.tourivo-wishlist-header {
+.readscope-wishlist-header {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
@@ -1585,13 +1585,13 @@
     border-bottom: 2px solid #e2e8f0;
 }
 
-.tourivo-wishlist-header h2 {
+.readscope-wishlist-header h2 {
     margin: 0;
     font-size: var(--trv-text-2xl);
     font-weight: var(--trv-weight-semibold);
 }
 
-.tourivo-wishlist-count-label {
+.readscope-wishlist-count-label {
     margin: 0;
     color: #64748b;
     font-size: var(--trv-text-sm);
@@ -1600,7 +1600,7 @@
 /* =======================================================
    STEP 2: REVIEWS & 5-STAR RATING SECTION
    ======================================================= */
-.tourivo-reviews-block {
+.readscope-reviews-block {
     margin-top: 40px;
     padding-top: 30px;
     border-top: 1px solid #e2e8f0;
@@ -1612,7 +1612,7 @@
     color: #64748b;
 }
 
-.tourivo-rating-overview {
+.readscope-rating-overview {
     display: grid;
     grid-template-columns: 220px 1fr;
     gap: 32px;
@@ -1625,7 +1625,7 @@
 }
 
 @media (max-width: 768px) {
-    .tourivo-rating-overview {
+    .readscope-rating-overview {
         grid-template-columns: 1fr;
         gap: 20px;
     }
@@ -1709,11 +1709,11 @@
 }
 
 /* Reviews List */
-.tourivo-reviews-list {
+.readscope-reviews-list {
     margin-bottom: 36px;
 }
 
-.tourivo-review-card {
+.readscope-review-card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 10px;
@@ -1722,7 +1722,7 @@
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
-.tourivo-review-card .review-header {
+.readscope-review-card .review-header {
     display: flex;
     align-items: center;
     gap: 14px;
@@ -1784,7 +1784,7 @@
 }
 
 /* Star Rating Picker Form */
-.tourivo-leave-review-form-wrap {
+.readscope-leave-review-form-wrap {
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
@@ -1792,13 +1792,13 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
-.tourivo-leave-review-form-wrap h3 {
+.readscope-leave-review-form-wrap h3 {
     margin: 0 0 16px 0;
     font-size: var(--trv-text-lg);
     font-weight: var(--trv-weight-semibold);
 }
 
-.tourivo-star-picker {
+.readscope-star-picker {
     display: inline-flex;
     gap: 4px;
     font-size: 28px;
@@ -1806,23 +1806,23 @@
     user-select: none;
 }
 
-.tourivo-star-picker .picker-star {
+.readscope-star-picker .picker-star {
     color: #cbd5e1;
     transition: transform 0.15s ease, color 0.15s ease;
 }
 
-.tourivo-star-picker .picker-star:hover {
+.readscope-star-picker .picker-star:hover {
     transform: scale(1.2);
 }
 
-.tourivo-star-picker .picker-star.selected,
-.tourivo-star-picker .picker-star.hover {
+.readscope-star-picker .picker-star.selected,
+.readscope-star-picker .picker-star.hover {
     color: #f59e0b;
 }
 
-.tourivo-review-form input[type="text"],
-.tourivo-review-form input[type="email"],
-.tourivo-review-form textarea {
+.readscope-review-form input[type="text"],
+.readscope-review-form input[type="email"],
+.readscope-review-form textarea {
     width: 100%;
     padding: 9px 12px;
     border: 1px solid #cbd5e1;
@@ -1832,8 +1832,8 @@
     font-family: inherit;
 }
 
-.tourivo-review-form input:focus,
-.tourivo-review-form textarea:focus {
+.readscope-review-form input:focus,
+.readscope-review-form textarea:focus {
     border-color: var(--trv-primary);
     outline: none;
     box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
@@ -1842,7 +1842,7 @@
 /* =======================================================
    STEP 3: MULTI-CURRENCY SWITCHER WIDGET
    ======================================================= */
-.tourivo-currency-switcher-wrap {
+.readscope-currency-switcher-wrap {
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -1853,19 +1853,19 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
-.tourivo-currency-switcher-wrap .currency-label {
+.readscope-currency-switcher-wrap .currency-label {
     display: flex;
     align-items: center;
     color: var(--trv-primary);
 }
 
-.tourivo-currency-switcher-wrap .currency-label .dashicons {
+.readscope-currency-switcher-wrap .currency-label .dashicons {
     font-size: 18px;
     width: 18px;
     height: 18px;
 }
 
-.tourivo-currency-select {
+.readscope-currency-select {
     border: none;
     background: transparent;
     font-size: var(--trv-text-input);
@@ -1876,14 +1876,14 @@
     padding-right: 4px;
 }
 
-.tourivo-currency-select:focus {
+.readscope-currency-select:focus {
     outline: none;
 }
 
 /* =======================================================
    STEP 4: ZERO-DEPENDENCY PHOTO LIGHTBOX & GALLERY
    ======================================================= */
-.tourivo-lightbox-overlay {
+.readscope-lightbox-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -1899,12 +1899,12 @@
     transition: opacity 0.25s ease, visibility 0.25s ease;
 }
 
-.tourivo-lightbox-overlay.is-active {
+.readscope-lightbox-overlay.is-active {
     opacity: 1;
     visibility: visible;
 }
 
-.tourivo-lightbox-container {
+.readscope-lightbox-container {
     position: relative;
     max-width: 90vw;
     max-height: 88vh;
@@ -1913,7 +1913,7 @@
     align-items: center;
 }
 
-.tourivo-lightbox-img {
+.readscope-lightbox-img {
     max-width: 100%;
     max-height: 80vh;
     object-fit: contain;
@@ -1922,7 +1922,7 @@
     user-select: none;
 }
 
-.tourivo-lightbox-caption {
+.readscope-lightbox-caption {
     color: #f1f5f9;
     font-size: var(--trv-text-sm);
     margin-top: 12px;
@@ -1930,7 +1930,7 @@
     max-width: 600px;
 }
 
-.tourivo-lightbox-close {
+.readscope-lightbox-close {
     position: absolute;
     top: -45px;
     right: 0;
@@ -1948,12 +1948,12 @@
     transition: background 0.2s;
 }
 
-.tourivo-lightbox-close:hover {
+.readscope-lightbox-close:hover {
     background: rgba(255, 255, 255, 0.4);
 }
 
-.tourivo-lightbox-prev,
-.tourivo-lightbox-next {
+.readscope-lightbox-prev,
+.readscope-lightbox-next {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
@@ -1972,43 +1972,43 @@
     user-select: none;
 }
 
-.tourivo-lightbox-prev:hover,
-.tourivo-lightbox-next:hover {
+.readscope-lightbox-prev:hover,
+.readscope-lightbox-next:hover {
     background: rgba(255, 255, 255, 0.4);
 }
 
-.tourivo-lightbox-prev {
+.readscope-lightbox-prev {
     left: -55px;
 }
 
-.tourivo-lightbox-next {
+.readscope-lightbox-next {
     right: -55px;
 }
 
 @media (max-width: 640px) {
-    .tourivo-lightbox-prev {
+    .readscope-lightbox-prev {
         left: 10px;
     }
-    .tourivo-lightbox-next {
+    .readscope-lightbox-next {
         right: 10px;
     }
-    .tourivo-lightbox-close {
+    .readscope-lightbox-close {
         top: 10px;
         right: 10px;
     }
 }
 
 /* Gallery image zoom cursor */
-.tourivo-hero-img img,
-.tourivo-featured-banner img,
-.tourivo-gallery-item img,
-.tourivo-gallery-grid img {
+.readscope-hero-img img,
+.readscope-featured-banner img,
+.readscope-gallery-item img,
+.readscope-gallery-grid img {
     cursor: zoom-in;
     transition: transform 0.2s ease;
 }
 
-.tourivo-hero-img img:hover,
-.tourivo-gallery-item img:hover {
+.readscope-hero-img img:hover,
+.readscope-gallery-item img:hover {
     transform: scale(1.01);
 }
 
@@ -2016,13 +2016,13 @@
 
 
 /* Hotel rooms (single hotel page) */
-.tourivo-rooms-list {
+.readscope-rooms-list {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
-.tourivo-room-card {
+.readscope-room-card {
     display: grid;
     grid-template-columns: 180px minmax(0, 1fr) auto;
     gap: 16px;
@@ -2047,11 +2047,11 @@
     object-fit: cover;
 }
 
-.room-thumb-col .tourivo-placeholder-img {
+.room-thumb-col .readscope-placeholder-img {
     min-height: 0;
 }
 
-.tourivo-room-card .room-title {
+.readscope-room-card .room-title {
     margin: 0 0 6px;
     font-size: var(--trv-text-lg);
     line-height: var(--trv-leading-tight);
@@ -2118,14 +2118,14 @@
 }
 
 /* An open reservation form gets the full width of the card. */
-.tourivo-room-card:has(.room-reserve-dropdown[open]) .room-price-col {
+.readscope-room-card:has(.room-reserve-dropdown[open]) .room-price-col {
     grid-column: 1 / -1;
     align-items: stretch;
     text-align: left;
 }
 
-.tourivo-room-card:has(.room-reserve-dropdown[open]) .price-tag,
-.tourivo-room-card:has(.room-reserve-dropdown[open]) .room-reserve-dropdown > summary {
+.readscope-room-card:has(.room-reserve-dropdown[open]) .price-tag,
+.readscope-room-card:has(.room-reserve-dropdown[open]) .room-reserve-dropdown > summary {
     align-self: flex-end;
 }
 
@@ -2135,7 +2135,7 @@
 }
 
 @media (max-width: 640px) {
-    .tourivo-room-card {
+    .readscope-room-card {
         grid-template-columns: 1fr;
     }
 
@@ -2149,7 +2149,7 @@
 }
 
 /* Booking panel: payment choice (offline methods plus any online ones an add-on registers) */
-.tourivo-payment-options {
+.readscope-payment-options {
     margin: 14px 0 0;
     padding: 12px 0 0;
     border: 0;
@@ -2157,7 +2157,7 @@
     min-width: 0;
 }
 
-.tourivo-payment-title {
+.readscope-payment-title {
     margin-bottom: 8px;
     padding: 0;
     font-size: var(--trv-text-sm);
@@ -2165,7 +2165,7 @@
     color: var(--trv-text-main);
 }
 
-.tourivo-payment-option {
+.readscope-payment-option {
     display: flex;
     align-items: flex-start;
     gap: 10px;
@@ -2178,17 +2178,17 @@
     transition: border-color 0.15s ease, background 0.15s ease;
 }
 
-.tourivo-payment-option:hover {
+.readscope-payment-option:hover {
     border-color: var(--trv-primary);
 }
 
-.tourivo-payment-option:has(input:checked) {
+.readscope-payment-option:has(input:checked) {
     border-color: var(--trv-primary);
     background: #fff;
     box-shadow: 0 0 0 1px var(--trv-primary);
 }
 
-.tourivo-payment-option input[type="radio"] {
+.readscope-payment-option input[type="radio"] {
     flex: 0 0 auto;
     width: 16px;
     height: 16px;
@@ -2196,42 +2196,42 @@
     accent-color: var(--trv-primary);
 }
 
-.tourivo-payment-text {
+.readscope-payment-text {
     display: flex;
     flex-direction: column;
     gap: 2px;
     min-width: 0;
 }
 
-.tourivo-payment-text strong {
+.readscope-payment-text strong {
     font-size: var(--trv-text-sm);
     font-weight: var(--trv-weight-semibold);
     line-height: var(--trv-leading-tight);
 }
 
-.tourivo-payment-text small {
+.readscope-payment-text small {
     font-size: var(--trv-text-xs);
     color: var(--trv-text-muted);
     line-height: 1.45;
 }
 
-.tourivo-consent-row {
+.readscope-consent-row {
     display: flex;
     align-items: flex-start;
     gap: 8px;
     margin-top: 10px;
 }
 
-.tourivo-consent-row input[type="checkbox"] {
+.readscope-consent-row input[type="checkbox"] {
     flex: 0 0 auto;
     margin-top: 3px;
 }
 
-.tourivo-consent-row label {
+.readscope-consent-row label {
     font-size: var(--trv-text-sm);
     line-height: 1.45;
 }
 
-.tourivo-consent-row .required {
+.readscope-consent-row .required {
     color: var(--trv-danger);
 }

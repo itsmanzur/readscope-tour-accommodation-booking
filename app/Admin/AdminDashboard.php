@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Admin;
+namespace Readscope\Admin;
 
-use Tourivo\PostTypes\HotelPostType;
-use Tourivo\PostTypes\RoomPostType;
-use Tourivo\PostTypes\TourPostType;
+use Readscope\PostTypes\HotelPostType;
+use Readscope\PostTypes\RoomPostType;
+use Readscope\PostTypes\TourPostType;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
  *
  * Renders the main Readscope Booking admin dashboard with KPI stats, recent bookings, and seeder.
  *
- * @package Tourivo\Admin
+ * @package Readscope\Admin
  */
 class AdminDashboard
 {
@@ -35,7 +35,7 @@ class AdminDashboard
         $hotelsCount = (int) (wp_count_posts(HotelPostType::POST_TYPE)->publish ?? 0);
         $roomsCount  = (int) (wp_count_posts(RoomPostType::POST_TYPE)->publish ?? 0);
 
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
         $bookingsCount = 0;
         $totalRevenue  = 0.0;
         $recentBookings = [];
@@ -48,25 +48,25 @@ class AdminDashboard
         }
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
-        $currencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
+        $currencySymbol = (string) apply_filters('readscope/currency_symbol', '$');
         ?>
-        <div class="wrap tourivo-admin-wrap">
-            <div class="tourivo-page-header">
-                <div class="tourivo-page-header__text">
+        <div class="wrap readscope-admin-wrap">
+            <div class="readscope-page-header">
+                <div class="readscope-page-header__text">
                     <h1><?php esc_html_e('Readscope Booking Dashboard', 'the-readscope-tour-and-accommodation-booking'); ?></h1>
-                    <p class="tourivo-subtitle"><?php esc_html_e('Welcome back! Overview of your travel packages, hotel rooms, and live booking activity.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
+                    <p class="readscope-subtitle"><?php esc_html_e('Welcome back! Overview of your travel packages, hotel rooms, and live booking activity.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                 </div>
                 <div class="header-actions">
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-reports')); ?>" class="button"><span class="dashicons dashicons-chart-bar" aria-hidden="true"></span><?php esc_html_e('Reports', 'the-readscope-tour-and-accommodation-booking'); ?></a>
-                    <button type="button" class="button tourivo-open-export-modal-btn"><span class="dashicons dashicons-download" aria-hidden="true"></span><?php esc_html_e('Export Bookings', 'the-readscope-tour-and-accommodation-booking'); ?></button>
-                    <a href="<?php echo esc_url(admin_url('post-new.php?post_type=tourivo_hotel')); ?>" class="button"><span class="dashicons dashicons-plus-alt2" aria-hidden="true"></span><?php esc_html_e('New Hotel', 'the-readscope-tour-and-accommodation-booking'); ?></a>
-                    <a href="<?php echo esc_url(admin_url('post-new.php?post_type=tourivo_tour')); ?>" class="button button-primary"><span class="dashicons dashicons-plus-alt2" aria-hidden="true"></span><?php esc_html_e('New Tour', 'the-readscope-tour-and-accommodation-booking'); ?></a>
+                    <a href="<?php echo esc_url(admin_url('admin.php?page=readscope-reports')); ?>" class="button"><span class="dashicons dashicons-chart-bar" aria-hidden="true"></span><?php esc_html_e('Reports', 'the-readscope-tour-and-accommodation-booking'); ?></a>
+                    <button type="button" class="button readscope-open-export-modal-btn"><span class="dashicons dashicons-download" aria-hidden="true"></span><?php esc_html_e('Export Bookings', 'the-readscope-tour-and-accommodation-booking'); ?></button>
+                    <a href="<?php echo esc_url(admin_url('post-new.php?post_type=readscope_hotel')); ?>" class="button"><span class="dashicons dashicons-plus-alt2" aria-hidden="true"></span><?php esc_html_e('New Hotel', 'the-readscope-tour-and-accommodation-booking'); ?></a>
+                    <a href="<?php echo esc_url(admin_url('post-new.php?post_type=readscope_tour')); ?>" class="button button-primary"><span class="dashicons dashicons-plus-alt2" aria-hidden="true"></span><?php esc_html_e('New Tour', 'the-readscope-tour-and-accommodation-booking'); ?></a>
                 </div>
             </div>
             <hr class="wp-header-end">
 
             <!-- KPI Metric Tiles -->
-            <div class="tourivo-kpi-grid">
+            <div class="readscope-kpi-grid">
                 <div class="kpi-card">
                     <div class="kpi-icon icon-tours"><span class="dashicons dashicons-palmtree"></span></div>
                     <div class="kpi-info">
@@ -103,19 +103,19 @@ class AdminDashboard
                     <div class="kpi-icon icon-revenue"><span class="dashicons dashicons-money-alt"></span></div>
                     <div class="kpi-info">
                         <span class="kpi-title"><?php esc_html_e('Total Revenue', 'the-readscope-tour-and-accommodation-booking'); ?></span>
-                        <span class="kpi-number"><?php echo esc_html(\Tourivo\Support\Money::format($totalRevenue)); ?></span>
+                        <span class="kpi-number"><?php echo esc_html(\Readscope\Support\Money::format($totalRevenue)); ?></span>
                     </div>
                 </div>
             </div>
 
             <!-- Main Dashboard Split: Recent Bookings & Quick Actions / Seeder -->
-            <div class="tourivo-dashboard-layout">
+            <div class="readscope-dashboard-layout">
                 <!-- Recent Bookings Table -->
                 <div class="dashboard-main-col">
-                    <div class="tourivo-card-box">
+                    <div class="readscope-card-box">
                         <div class="box-header">
                             <h2><?php esc_html_e('Recent Bookings', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
-                            <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings')); ?>" class="view-all-link"><?php esc_html_e('View All Bookings &rarr;', 'the-readscope-tour-and-accommodation-booking'); ?></a>
+                            <a href="<?php echo esc_url(admin_url('admin.php?page=readscope-bookings')); ?>" class="view-all-link"><?php esc_html_e('View All Bookings &rarr;', 'the-readscope-tour-and-accommodation-booking'); ?></a>
                         </div>
                         <?php if (!empty($recentBookings)) : ?>
                             <table class="wp-list-table widefat fixed striped">
@@ -132,10 +132,10 @@ class AdminDashboard
                                     <?php foreach ($recentBookings as $bk) : ?>
                                         <tr>
                                             <td><strong>#<?php echo esc_html($bk->booking_code); ?></strong></td>
-                                            <td><?php echo esc_html($bk->customer_name); ?><br><small class="tourivo-muted"><?php echo esc_html($bk->customer_email); ?></small></td>
-                                            <td><strong><?php echo esc_html(\Tourivo\Support\Money::format((float)$bk->total_amount)); ?></strong></td>
+                                            <td><?php echo esc_html($bk->customer_name); ?><br><small class="readscope-muted"><?php echo esc_html($bk->customer_email); ?></small></td>
+                                            <td><strong><?php echo esc_html(\Readscope\Support\Money::format((float)$bk->total_amount)); ?></strong></td>
                                             <td>
-                                                <span class="tourivo-badge tourivo-badge-<?php echo esc_attr($bk->booking_status); ?>">
+                                                <span class="readscope-badge readscope-badge-<?php echo esc_attr($bk->booking_status); ?>">
                                                     <?php echo esc_html(ucfirst($bk->booking_status)); ?>
                                                 </span>
                                             </td>
@@ -145,13 +145,13 @@ class AdminDashboard
                                 </tbody>
                             </table>
                         <?php else : ?>
-                            <div class="tourivo-empty">
+                            <div class="readscope-empty">
                                 <span class="dashicons dashicons-calendar-alt" aria-hidden="true"></span>
                                 <h3><?php esc_html_e('No bookings yet', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
                                 <p><?php esc_html_e('No bookings recorded yet. Start sharing your tours and hotels with travelers!', 'the-readscope-tour-and-accommodation-booking'); ?></p>
-                                <div class="tourivo-empty__actions">
-                                    <a href="<?php echo esc_url(admin_url('edit.php?post_type=tourivo_tour')); ?>" class="button"><?php esc_html_e('View tours', 'the-readscope-tour-and-accommodation-booking'); ?></a>
-                                    <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-setup-wizard')); ?>" class="button"><?php esc_html_e('Setup Wizard', 'the-readscope-tour-and-accommodation-booking'); ?></a>
+                                <div class="readscope-empty__actions">
+                                    <a href="<?php echo esc_url(admin_url('edit.php?post_type=readscope_tour')); ?>" class="button"><?php esc_html_e('View tours', 'the-readscope-tour-and-accommodation-booking'); ?></a>
+                                    <a href="<?php echo esc_url(admin_url('admin.php?page=readscope-setup-wizard')); ?>" class="button"><?php esc_html_e('Setup Wizard', 'the-readscope-tour-and-accommodation-booking'); ?></a>
                                 </div>
                             </div>
                         <?php endif; ?>
@@ -160,29 +160,29 @@ class AdminDashboard
 
                 <!-- Right Side: 1-Click Demo Data & Shortcodes Helper -->
                 <div class="dashboard-side-col">
-                    <div class="tourivo-card-box seeder-card">
+                    <div class="readscope-card-box seeder-card">
                         <h3><span class="dashicons dashicons-database-import" aria-hidden="true"></span> <?php esc_html_e('1-Click Demo Travel & Hotel Data', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
                         <p><?php esc_html_e('Quickly test Readscope Booking by importing ready-made tours (Bali, Swiss Alps, Dubai) and boutique hotels with rooms.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
-                        <button type="button" id="tourivo-import-sample-btn" class="button tourivo-import-sample-btn" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_admin_nonce')); ?>">
+                        <button type="button" id="readscope-import-sample-btn" class="button readscope-import-sample-btn" data-nonce="<?php echo esc_attr(wp_create_nonce('readscope_admin_nonce')); ?>">
                             <span class="dashicons dashicons-cloud-upload"></span> <?php esc_html_e('Import Demo Data', 'the-readscope-tour-and-accommodation-booking'); ?>
                         </button>
-                        <div id="tourivo-seeder-notice" class="tourivo-seeder-notice" style="display:none; margin-top:10px;"></div>
+                        <div id="readscope-seeder-notice" class="readscope-seeder-notice" style="display:none; margin-top:10px;"></div>
                     </div>
 
-                    <div class="tourivo-card-box tourivo-shortcodes-card">
+                    <div class="readscope-card-box readscope-shortcodes-card">
                         <h3><span class="dashicons dashicons-shortcode" aria-hidden="true"></span> <?php esc_html_e('Useful Shortcodes', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
                         <ul class="shortcode-tips">
-                            <li><code>[tourivo_search_bar]</code> – <?php esc_html_e('Search filter bar', 'the-readscope-tour-and-accommodation-booking'); ?></li>
-                            <li><code>[tourivo_tours columns="3"]</code> – <?php esc_html_e('Tours grid', 'the-readscope-tour-and-accommodation-booking'); ?></li>
-                            <li><code>[tourivo_hotels columns="3"]</code> – <?php esc_html_e('Hotels grid', 'the-readscope-tour-and-accommodation-booking'); ?></li>
+                            <li><code>[readscope_search_bar]</code> – <?php esc_html_e('Search filter bar', 'the-readscope-tour-and-accommodation-booking'); ?></li>
+                            <li><code>[readscope_tours columns="3"]</code> – <?php esc_html_e('Tours grid', 'the-readscope-tour-and-accommodation-booking'); ?></li>
+                            <li><code>[readscope_hotels columns="3"]</code> – <?php esc_html_e('Hotels grid', 'the-readscope-tour-and-accommodation-booking'); ?></li>
                         </ul>
                     </div>
                 </div>
             </div>
 
             <?php
-            $tours = get_posts(['post_type' => 'tourivo_tour', 'post_status' => 'publish', 'posts_per_page' => -1]);
-            $rooms = get_posts(['post_type' => 'tourivo_room', 'post_status' => 'publish', 'posts_per_page' => -1]);
+            $tours = get_posts(['post_type' => 'readscope_tour', 'post_status' => 'publish', 'posts_per_page' => -1]);
+            $rooms = get_posts(['post_type' => 'readscope_room', 'post_status' => 'publish', 'posts_per_page' => -1]);
             BookingsTable::renderExportModal($tours, $rooms);
             ?>
         </div>

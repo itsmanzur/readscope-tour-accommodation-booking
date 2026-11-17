@@ -113,7 +113,7 @@ jobs:
         image: ${{ matrix.db }}
         env:
           MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: tourivo_test
+          MYSQL_DATABASE: readscope_test
         ports:
           - 3306:3306
         options: >-
@@ -136,7 +136,7 @@ jobs:
         env:
           DB_HOST: 127.0.0.1
           DB_PORT: '3306'
-          DB_NAME: tourivo_test
+          DB_NAME: readscope_test
           DB_USER: root
           DB_PASSWORD: root
           RUNS: '5'
@@ -154,7 +154,7 @@ jobs:
         env:
           DB_HOST: 127.0.0.1
           DB_PORT: '3306'
-          DB_NAME: tourivo_test
+          DB_NAME: readscope_test
           DB_USER: root
           DB_PASSWORD: root
           RUNS: '5'

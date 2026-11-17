@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Elementor;
+namespace Readscope\Elementor;
 
-use Tourivo\Elementor\Widgets\BookingPanelWidget;
-use Tourivo\Elementor\Widgets\HotelGridWidget;
-use Tourivo\Elementor\Widgets\SearchBarWidget;
-use Tourivo\Elementor\Widgets\TourGridWidget;
+use Readscope\Elementor\Widgets\BookingPanelWidget;
+use Readscope\Elementor\Widgets\HotelGridWidget;
+use Readscope\Elementor\Widgets\SearchBarWidget;
+use Readscope\Elementor\Widgets\TourGridWidget;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
  *
  * Integrates Readscope Booking with Elementor Page Builder.
  *
- * @package Tourivo\Elementor
+ * @package Readscope\Elementor
  */
 class ElementorManager
 {
@@ -41,7 +41,7 @@ class ElementorManager
     public static function registerCategories($elementsManager): void
     {
         $elementsManager->add_category(
-            'tourivo-elements',
+            'readscope-elements',
             [
                 'title' => esc_html__('Readscope Booking Elements', 'the-readscope-tour-and-accommodation-booking'),
                 'icon'  => 'fa fa-plug',

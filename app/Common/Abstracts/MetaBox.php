@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Common\Abstracts;
+namespace Readscope\Common\Abstracts;
 
-use Tourivo\Common\Traits\Hookable;
+use Readscope\Common\Traits\Hookable;
 use WP_Post;
 
 if (!defined('ABSPATH')) {
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
  *
  * Base abstract class for all custom post type metaboxes.
  *
- * @package Tourivo\Common\Abstracts
+ * @package Readscope\Common\Abstracts
  */
 abstract class MetaBox
 {
@@ -186,7 +186,7 @@ abstract class MetaBox
      */
     protected function loadView(string $viewPath, array $data = []): void
     {
-        $file = untrailingslashit(TOURIVO_PLUGIN_DIR) . '/views/' . ltrim($viewPath, '/');
+        $file = untrailingslashit(READSCOPE_PLUGIN_DIR) . '/views/' . ltrim($viewPath, '/');
         if (file_exists($file)) {
             extract($data, EXTR_SKIP); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract -- template scope, EXTR_SKIP
             include $file;

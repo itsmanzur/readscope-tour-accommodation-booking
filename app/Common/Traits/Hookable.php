@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Common\Traits;
+namespace Readscope\Common\Traits;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  *
  * Provides expressive syntax for registering WordPress action and filter hooks.
  *
- * @package Tourivo\Common\Traits
+ * @package Readscope\Common\Traits
  */
 trait Hookable
 {

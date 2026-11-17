@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Providers;
+namespace Readscope\Providers;
 
-use Tourivo\Common\Abstracts\ServiceProvider;
-use Tourivo\Database\Schema;
+use Readscope\Common\Abstracts\ServiceProvider;
+use Readscope\Database\Schema;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
  *
  * Registers database services and manages automatic schema migrations on updates.
  *
- * @package Tourivo\Providers
+ * @package Readscope\Providers
  */
 class DatabaseServiceProvider extends ServiceProvider
 {
@@ -63,7 +63,7 @@ class DatabaseServiceProvider extends ServiceProvider
             $options['type'] === 'plugin'
         ) {
             $plugins = isset($options['plugins']) && is_array($options['plugins']) ? $options['plugins'] : [];
-            if (in_array(plugin_basename(TOURIVO_PLUGIN_FILE), $plugins, true)) {
+            if (in_array(plugin_basename(READSCOPE_PLUGIN_FILE), $plugins, true)) {
                 Schema::migrate();
             }
         }

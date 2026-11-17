@@ -33,6 +33,6 @@ README.md
 *.tmp
 *.log
 *.sql
-tourivo_project_roadmap.md
+readscope_project_roadmap.md
 .DS_Store
 Thumbs.db

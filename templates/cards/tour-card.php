@@ -3,46 +3,46 @@
  * Tour Card Template
  *
  * @package Readscope Booking
- * @var \Tourivo\Models\Tour $tour
+ * @var \Readscope\Models\Tour $tour
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-if (!isset($tour) || !($tour instanceof \Tourivo\Models\Tour)) {
+if (!isset($tour) || !($tour instanceof \Readscope\Models\Tour)) {
     return;
 }
 ?>
-<div class="tourivo-card tourivo-tour-card">
-    <div class="tourivo-card-thumb">
+<div class="readscope-card readscope-tour-card">
+    <div class="readscope-card-thumb">
         <a href="<?php echo esc_url($tour->getPermalink()); ?>">
             <?php if ($tour->getThumbnailUrl()) : ?>
-                <img src="<?php echo esc_url($tour->getThumbnailUrl('tourivo-card')); ?>" alt="<?php echo esc_attr($tour->getTitle()); ?>" loading="lazy">
+                <img src="<?php echo esc_url($tour->getThumbnailUrl('readscope-card')); ?>" alt="<?php echo esc_attr($tour->getTitle()); ?>" loading="lazy">
             <?php else : ?>
-                <div class="tourivo-placeholder-img"><span class="dashicons dashicons-palmtree"></span></div>
+                <div class="readscope-placeholder-img"><span class="dashicons dashicons-palmtree"></span></div>
             <?php endif; ?>
         </a>
 
         <!-- Wishlist Button -->
-        <button type="button" class="tourivo-wishlist-toggle" data-id="<?php echo esc_attr((string)$tour->getId()); ?>" data-type="tour" title="<?php esc_attr_e('Save to Wishlist', 'the-readscope-tour-and-accommodation-booking'); ?>" aria-label="<?php esc_attr_e('Save to Wishlist', 'the-readscope-tour-and-accommodation-booking'); ?>">
+        <button type="button" class="readscope-wishlist-toggle" data-id="<?php echo esc_attr((string)$tour->getId()); ?>" data-type="tour" title="<?php esc_attr_e('Save to Wishlist', 'the-readscope-tour-and-accommodation-booking'); ?>" aria-label="<?php esc_attr_e('Save to Wishlist', 'the-readscope-tour-and-accommodation-booking'); ?>">
             <span class="dashicons dashicons-heart"></span>
         </button>
 
         <?php if ($tour->getBadge()) : ?>
-            <span class="tourivo-ribbon"><?php echo esc_html($tour->getBadge()); ?></span>
+            <span class="readscope-ribbon"><?php echo esc_html($tour->getBadge()); ?></span>
         <?php endif; ?>
 
         <?php 
-        $tourivoDestinations = $tour->getDestinations();
-        if (!empty($tourivoDestinations)) : 
+        $readscopeDestinations = $tour->getDestinations();
+        if (!empty($readscopeDestinations)) : 
         ?>
-            <span class="tourivo-dest-tag"><span class="dashicons dashicons-location"></span> <?php echo esc_html($tourivoDestinations[0]->name); ?></span>
+            <span class="readscope-dest-tag"><span class="dashicons dashicons-location"></span> <?php echo esc_html($readscopeDestinations[0]->name); ?></span>
         <?php endif; ?>
     </div>
 
-    <div class="tourivo-card-body">
-        <div class="tourivo-card-meta">
+    <div class="readscope-card-body">
+        <div class="readscope-card-meta">
             <?php if ($tour->getDuration()) : ?>
                 <span class="meta-item"><span class="dashicons dashicons-clock"></span> <?php echo esc_html($tour->getDuration()); ?></span>
             <?php endif; ?>
@@ -70,19 +70,19 @@ if (!isset($tour) || !($tour instanceof \Tourivo\Models\Tour)) {
             <?php endif; ?>
         </div>
 
-        <h3 class="tourivo-card-title">
+        <h3 class="readscope-card-title">
             <a href="<?php echo esc_url($tour->getPermalink()); ?>"><?php echo esc_html($tour->getTitle()); ?></a>
         </h3>
 
-        <div class="tourivo-card-footer">
-            <div class="tourivo-price-box">
+        <div class="readscope-card-footer">
+            <div class="readscope-price-box">
                 <span class="price-from"><?php esc_html_e('From', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                 <span class="price-val"><?php echo esc_html($tour->getFormattedPrice()); ?></span>
                 <?php if ($tour->isOnSale()) : ?>
                     <del class="price-original"><?php echo esc_html($tour->getFormattedRegularPrice()); ?></del>
                 <?php endif; ?>
             </div>
-            <a href="<?php echo esc_url($tour->getPermalink()); ?>" class="tourivo-btn tourivo-btn-sm"><?php esc_html_e('Explore', 'the-readscope-tour-and-accommodation-booking'); ?> &rarr;</a>
+            <a href="<?php echo esc_url($tour->getPermalink()); ?>" class="readscope-btn readscope-btn-sm"><?php esc_html_e('Explore', 'the-readscope-tour-and-accommodation-booking'); ?> &rarr;</a>
         </div>
     </div>
 </div>

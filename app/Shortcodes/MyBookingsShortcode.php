@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Shortcodes;
+namespace Readscope\Shortcodes;
 
-use Tourivo\Config\Config;
-use Tourivo\Support\Money;
-use Tourivo\Support\SiteTime;
+use Readscope\Config\Config;
+use Readscope\Support\Money;
+use Readscope\Support\SiteTime;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -23,9 +23,9 @@ if (!defined('ABSPATH')) {
  * - Expandable itemized pricing and booking details drawer/modal.
  * - Welcoming authentication card with login/register links and Track Booking fallback for guests.
  *
- * Shortcode: [tourivo_my_bookings]
+ * Shortcode: [readscope_my_bookings]
  *
- * @package Tourivo\Shortcodes
+ * @package Readscope\Shortcodes
  */
 class MyBookingsShortcode
 {
@@ -36,17 +36,17 @@ class MyBookingsShortcode
      */
     public static function register(): void
     {
-        add_shortcode('tourivo_my_bookings', [self::class, 'render']);
+        add_shortcode('readscope_my_bookings', [self::class, 'render']);
 
         // Authenticated AJAX handlers
-        add_action('wp_ajax_tourivo_my_bookings_cancel', [self::class, 'handleCancelBookingAjax']);
-        add_action('wp_ajax_tourivo_my_bookings_details', [self::class, 'handleBookingDetailsAjax']);
-        add_action('wp_ajax_tourivo_get_my_bookings_nonce', [self::class, 'handleGetNonceAjax']);
+        add_action('wp_ajax_readscope_my_bookings_cancel', [self::class, 'handleCancelBookingAjax']);
+        add_action('wp_ajax_readscope_my_bookings_details', [self::class, 'handleBookingDetailsAjax']);
+        add_action('wp_ajax_readscope_get_my_bookings_nonce', [self::class, 'handleGetNonceAjax']);
 
         // Unauthenticated AJAX fallback handlers
-        add_action('wp_ajax_nopriv_tourivo_my_bookings_cancel', [self::class, 'handleUnauthorizedAjax']);
-        add_action('wp_ajax_nopriv_tourivo_my_bookings_details', [self::class, 'handleUnauthorizedAjax']);
-        add_action('wp_ajax_nopriv_tourivo_get_my_bookings_nonce', [self::class, 'handleGetNonceAjax']);
+        add_action('wp_ajax_nopriv_readscope_my_bookings_cancel', [self::class, 'handleUnauthorizedAjax']);
+        add_action('wp_ajax_nopriv_readscope_my_bookings_details', [self::class, 'handleUnauthorizedAjax']);
+        add_action('wp_ajax_nopriv_readscope_get_my_bookings_nonce', [self::class, 'handleGetNonceAjax']);
     }
 
     /**
@@ -62,7 +62,7 @@ class MyBookingsShortcode
             'per_page'    => 10,
             'show_stats'  => 'yes',
             'default_tab' => 'all',
-        ], (array) $atts, 'tourivo_my_bookings');
+        ], (array) $atts, 'readscope_my_bookings');
 
         $perPage    = max(1, min(50, (int) $attributes['per_page']));
         $showStats  = strtolower((string) $attributes['show_stats']) !== 'no';
@@ -76,7 +76,7 @@ class MyBookingsShortcode
         // 1. Guest visitor state: Render welcoming login/register card with Track Booking fallback
         if (!is_user_logged_in()) {
             ob_start();
-            tourivo_get_template('my-bookings.php', [
+            readscope_get_template('my-bookings.php', [
                 'isGuest'      => true,
                 'title'        => sanitize_text_field((string) $attributes['title']),
                 'loginUrl'     => wp_login_url(get_permalink()),
@@ -94,8 +94,8 @@ class MyBookingsShortcode
         $userEmail   = (string) $currentUser->user_email;
 
         global $wpdb;
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
+        $itemsTable    = $wpdb->prefix . 'readscope_booking_items';
 
         $stats = self::getUserBookingStats($userId, $userEmail);
 
@@ -131,7 +131,7 @@ class MyBookingsShortcode
             }
         }
 
-        $currencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
+        $currencySymbol = (string) apply_filters('readscope/currency_symbol', '$');
         $today          = SiteTime::today();
         $formattedList  = [];
 
@@ -143,7 +143,7 @@ class MyBookingsShortcode
 
             // Determine if trip is upcoming or completed
             // Several items (a package) show as one card with the combined title and dates.
-            $firstItem = \Tourivo\Support\BookingItems::summaryRow($items, $bookingId);
+            $firstItem = \Readscope\Support\BookingItems::summaryRow($items, $bookingId);
             $checkInDate = $firstItem && !empty($firstItem->check_in)
                 ? SiteTime::tripDate((string) $firstItem->check_in)
                 : SiteTime::formatGmt((string) $booking->created_at, 'Y-m-d');
@@ -158,13 +158,13 @@ class MyBookingsShortcode
             // Secure HMAC voucher & calendar sync tokens
             $voucherToken = BookingLookupShortcode::generateVoucherToken($bookingId, (string) $booking->customer_email, $booking->access_key ?? null);
             $voucherUrl   = add_query_arg([
-                'action' => 'tourivo_print_voucher',
+                'action' => 'readscope_print_voucher',
                 'code'   => $booking->booking_code,
                 'token'  => $voucherToken,
             ], admin_url('admin-post.php'));
 
             $calendarUrl = add_query_arg([
-                'action' => 'tourivo_download_ics',
+                'action' => 'readscope_download_ics',
                 'code'   => $booking->booking_code,
                 'token'  => $voucherToken,
             ], admin_url('admin-post.php'));
@@ -192,7 +192,7 @@ class MyBookingsShortcode
         }
 
         ob_start();
-        tourivo_get_template('my-bookings.php', [
+        readscope_get_template('my-bookings.php', [
             'isGuest'       => false,
             'title'         => sanitize_text_field((string) $attributes['title']),
             'currentUser'   => $currentUser,
@@ -201,7 +201,7 @@ class MyBookingsShortcode
             'defaultTab'    => $defaultTab,
             'bookings'      => $formattedList,
             'lookupUrl'     => esc_url_raw($lookupUrl),
-            'nonce'         => wp_create_nonce('tourivo_my_bookings_nonce'),
+            'nonce'         => wp_create_nonce('readscope_my_bookings_nonce'),
             'primaryColor'  => (string) Config::get('primary_color', '#0d9488'),
         ]);
 
@@ -218,8 +218,8 @@ class MyBookingsShortcode
     public static function getUserBookingStats(int $userId, string $userEmail): array
     {
         global $wpdb;
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
+        $itemsTable    = $wpdb->prefix . 'readscope_booking_items';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $bookings = (array) $wpdb->get_results($wpdb->prepare(
@@ -283,7 +283,7 @@ class MyBookingsShortcode
             }
         }
 
-        $currencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
+        $currencySymbol = (string) apply_filters('readscope/currency_symbol', '$');
 
         return [
             'total'       => $total,
@@ -312,7 +312,7 @@ class MyBookingsShortcode
         }
 
         global $wpdb;
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $booking = $wpdb->get_row($wpdb->prepare(
@@ -333,7 +333,7 @@ class MyBookingsShortcode
         $userId        = (int) $currentUser->ID;
         $userEmail     = (string) $currentUser->user_email;
         $isOwner       = self::userOwnsBooking($booking, $userId, $userEmail);
-        $isAdmin       = current_user_can('manage_tourivo_bookings');
+        $isAdmin       = current_user_can('manage_readscope_bookings');
 
         if (!$isOwner && !$isAdmin) {
             return [
@@ -367,8 +367,8 @@ class MyBookingsShortcode
         }
 
         global $wpdb;
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
+        $itemsTable    = $wpdb->prefix . 'readscope_booking_items';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $booking = $wpdb->get_row($wpdb->prepare(
@@ -388,7 +388,7 @@ class MyBookingsShortcode
         $userId      = (int) $currentUser->ID;
         $userEmail   = (string) $currentUser->user_email;
         $isOwner     = self::userOwnsBooking($booking, $userId, $userEmail);
-        $isAdmin     = current_user_can('manage_tourivo_bookings');
+        $isAdmin     = current_user_can('manage_readscope_bookings');
 
         if (!$isOwner && !$isAdmin) {
             return [
@@ -404,7 +404,7 @@ class MyBookingsShortcode
         ));
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
-        $currencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
+        $currencySymbol = (string) apply_filters('readscope/currency_symbol', '$');
 
         $formattedItems = [];
         foreach ($items as $item) {
@@ -469,7 +469,7 @@ class MyBookingsShortcode
      */
     public static function handleCancelBookingAjax(): void
     {
-        check_ajax_referer('tourivo_my_bookings_nonce', 'nonce');
+        check_ajax_referer('readscope_my_bookings_nonce', 'nonce');
 
         $bookingId = isset($_POST['booking_id']) ? absint($_POST['booking_id']) : 0;
         $reason    = isset($_POST['reason']) ? sanitize_textarea_field(wp_unslash((string) $_POST['reason'])) : '';
@@ -494,7 +494,7 @@ class MyBookingsShortcode
      */
     public static function handleBookingDetailsAjax(): void
     {
-        check_ajax_referer('tourivo_my_bookings_nonce', 'nonce');
+        check_ajax_referer('readscope_my_bookings_nonce', 'nonce');
 
         $bookingId = isset($_POST['booking_id']) ? absint($_POST['booking_id']) : 0;
         if ($bookingId <= 0) {
@@ -529,7 +529,7 @@ class MyBookingsShortcode
     {
         nocache_headers();
         wp_send_json_success([
-            'nonce' => wp_create_nonce('tourivo_my_bookings_nonce'),
+            'nonce' => wp_create_nonce('readscope_my_bookings_nonce'),
         ]);
     }
 }

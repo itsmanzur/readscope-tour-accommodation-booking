@@ -5,10 +5,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Support\Html;
-use Tourivo\Tests\TestCase;
+use Readscope\Support\Html;
+use Readscope\Tests\TestCase;
 
 class HtmlAllowListTest extends TestCase
 {

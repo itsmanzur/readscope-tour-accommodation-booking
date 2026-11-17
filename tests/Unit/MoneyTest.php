@@ -5,10 +5,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Unit;
+namespace Readscope\Tests\Unit;
 
-use Tourivo\Support\Money;
-use Tourivo\Tests\TestCase;
+use Readscope\Support\Money;
+use Readscope\Tests\TestCase;
 
 class MoneyTest extends TestCase
 {
@@ -18,7 +18,7 @@ class MoneyTest extends TestCase
     public function test_money_format_all_currency_positions(): void
     {
         // 1. left: $100.00
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'currency_symbol'   => '$',
             'currency_position' => 'left',
             'number_of_decimals'=> 2,
@@ -26,7 +26,7 @@ class MoneyTest extends TestCase
         $this->assertEquals('$100.00', Money::format(100.0));
 
         // 2. right: 100.00$
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'currency_symbol'   => '$',
             'currency_position' => 'right',
             'number_of_decimals'=> 2,
@@ -34,7 +34,7 @@ class MoneyTest extends TestCase
         $this->assertEquals('100.00$', Money::format(100.0));
 
         // 3. left_space: $ 100.00
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'currency_symbol'   => '$',
             'currency_position' => 'left_space',
             'number_of_decimals'=> 2,
@@ -42,7 +42,7 @@ class MoneyTest extends TestCase
         $this->assertEquals('$ 100.00', Money::format(100.0));
 
         // 4. right_space: 100.00 $
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'currency_symbol'   => '$',
             'currency_position' => 'right_space',
             'number_of_decimals'=> 2,
@@ -55,7 +55,7 @@ class MoneyTest extends TestCase
      */
     public function test_money_format_bengali_numerals(): void
     {
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'currency_symbol'   => '৳',
             'currency_position' => 'left_space',
             'use_bangla_digits' => true,
@@ -72,7 +72,7 @@ class MoneyTest extends TestCase
      */
     public function test_money_format_zero_and_negative(): void
     {
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'currency_symbol'   => '$',
             'currency_position' => 'left',
             'use_bangla_digits' => false,

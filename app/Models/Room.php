@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Models;
+namespace Readscope\Models;
 
-use Tourivo\Common\Abstracts\Model;
-use Tourivo\PostTypes\HotelPostType;
+use Readscope\Common\Abstracts\Model;
+use Readscope\PostTypes\HotelPostType;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
  *
  * Object model for Hotel Room entities.
  *
- * @package Tourivo\Models
+ * @package Readscope\Models
  */
 class Room extends Model
 {
@@ -27,7 +27,7 @@ class Room extends Model
      */
     public function getHotelId(): int
     {
-        return (int) ($this->getMeta('_tourivo_parent_hotel_id') ?: 0);
+        return (int) ($this->getMeta('_readscope_parent_hotel_id') ?: 0);
     }
 
     /**
@@ -48,7 +48,7 @@ class Room extends Model
      */
     public function getNightlyPrice(): float
     {
-        return (float) ($this->getMeta('_tourivo_nightly_price') ?: 0.0);
+        return (float) ($this->getMeta('_readscope_nightly_price') ?: 0.0);
     }
 
     /**
@@ -58,7 +58,7 @@ class Room extends Model
      */
     public function getFormattedPrice(): string
     {
-        return \Tourivo\Support\Money::format($this->getNightlyPrice());
+        return \Readscope\Support\Money::format($this->getNightlyPrice());
     }
 
     /**
@@ -68,7 +68,7 @@ class Room extends Model
      */
     public function getMaxAdults(): int
     {
-        return (int) ($this->getMeta('_tourivo_max_adults') ?: 2);
+        return (int) ($this->getMeta('_readscope_max_adults') ?: 2);
     }
 
     /**
@@ -78,7 +78,7 @@ class Room extends Model
      */
     public function getMaxChildren(): int
     {
-        return (int) ($this->getMeta('_tourivo_max_children') ?: 0);
+        return (int) ($this->getMeta('_readscope_max_children') ?: 0);
     }
 
     /**
@@ -88,7 +88,7 @@ class Room extends Model
      */
     public function getMaxGuests(): int
     {
-        return (int) ($this->getMeta('_tourivo_max_guests') ?: ($this->getMaxAdults() + $this->getMaxChildren()));
+        return (int) ($this->getMeta('_readscope_max_guests') ?: ($this->getMaxAdults() + $this->getMaxChildren()));
     }
 
     /**
@@ -98,7 +98,7 @@ class Room extends Model
      */
     public function getQuantity(): int
     {
-        return (int) ($this->getMeta('_tourivo_room_quantity') ?: 1);
+        return (int) ($this->getMeta('_readscope_room_quantity') ?: 1);
     }
 
     /**
@@ -108,7 +108,7 @@ class Room extends Model
      */
     public function getRoomSize(): string
     {
-        return (string) ($this->getMeta('_tourivo_room_size') ?: '');
+        return (string) ($this->getMeta('_readscope_room_size') ?: '');
     }
 
     /**
@@ -118,7 +118,7 @@ class Room extends Model
      */
     public function getBedType(): string
     {
-        return (string) ($this->getMeta('_tourivo_bed_type') ?: '');
+        return (string) ($this->getMeta('_readscope_bed_type') ?: '');
     }
 
     /**

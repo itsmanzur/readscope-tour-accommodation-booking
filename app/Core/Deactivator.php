@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Core;
+namespace Readscope\Core;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  *
  * Runs upon plugin deactivation: clears scheduled cron jobs, flushes rewrite rules.
  *
- * @package Tourivo\Core
+ * @package Readscope\Core
  */
 class Deactivator
 {
@@ -23,14 +23,14 @@ class Deactivator
      * @var string[]
      */
     public const SCHEDULED_HOOKS = [
-        'tourivo_cleanup_expired_holds',
-        'tourivo_expire_stale_bookings',
-        'tourivo_daily_reminders',
-        'tourivo_process_email_delivery',
-        'tourivo_process_webhook_delivery',
-        'tourivo_daily_privacy_retention',
-        'tourivo_daily_cleanup',
-        'tourivo_sync_ical_feeds',
+        'readscope_cleanup_expired_holds',
+        'readscope_expire_stale_bookings',
+        'readscope_daily_reminders',
+        'readscope_process_email_delivery',
+        'readscope_process_webhook_delivery',
+        'readscope_daily_privacy_retention',
+        'readscope_daily_cleanup',
+        'readscope_sync_ical_feeds',
     ];
 
     /**
@@ -43,7 +43,7 @@ class Deactivator
         self::unscheduleAll();
 
         // Fire deactivation action hook
-        do_action('tourivo/deactivated');
+        do_action('readscope/deactivated');
 
         // Flush rewrite rules
         flush_rewrite_rules();

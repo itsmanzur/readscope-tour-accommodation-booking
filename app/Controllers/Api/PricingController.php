@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Controllers\Api;
+namespace Readscope\Controllers\Api;
 
-use Tourivo\Common\Abstracts\Controller;
-use Tourivo\Common\Container;
-use Tourivo\Services\PricingService;
+use Readscope\Common\Abstracts\Controller;
+use Readscope\Common\Container;
+use Readscope\Services\PricingService;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
  *
  * REST API controller for dynamic quote calculations, child pricing and tax computations.
  *
- * @package Tourivo\Controllers\Api
+ * @package Readscope\Controllers\Api
  */
 class PricingController extends Controller
 {

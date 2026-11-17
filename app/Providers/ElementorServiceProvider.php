@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Providers;
+namespace Readscope\Providers;
 
-use Tourivo\Common\Abstracts\ServiceProvider;
-use Tourivo\Elementor\ElementorManager;
+use Readscope\Common\Abstracts\ServiceProvider;
+use Readscope\Elementor\ElementorManager;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
  *
  * Hooks Readscope Booking into Elementor categories and widgets initialization.
  *
- * @package Tourivo\Providers
+ * @package Readscope\Providers
  */
 class ElementorServiceProvider extends ServiceProvider
 {

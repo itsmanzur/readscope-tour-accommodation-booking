@@ -3,46 +3,46 @@
  * Hotel Card Template
  *
  * @package Readscope Booking
- * @var \Tourivo\Models\Hotel $hotel
+ * @var \Readscope\Models\Hotel $hotel
  */
 
 if (!defined('ABSPATH')) {
     exit;
 }
 
-if (!isset($hotel) || !($hotel instanceof \Tourivo\Models\Hotel)) {
+if (!isset($hotel) || !($hotel instanceof \Readscope\Models\Hotel)) {
     return;
 }
 
-$tourivoMinPrice = $hotel->getMinPrice();
-$tourivoSymbol = (string) apply_filters('tourivo/currency_symbol', '$');
+$readscopeMinPrice = $hotel->getMinPrice();
+$readscopeSymbol = (string) apply_filters('readscope/currency_symbol', '$');
 ?>
-<div class="tourivo-card tourivo-hotel-card">
-    <div class="tourivo-card-thumb">
+<div class="readscope-card readscope-hotel-card">
+    <div class="readscope-card-thumb">
         <a href="<?php echo esc_url($hotel->getPermalink()); ?>">
             <?php if ($hotel->getThumbnailUrl()) : ?>
-                <img src="<?php echo esc_url($hotel->getThumbnailUrl('tourivo-card')); ?>" alt="<?php echo esc_attr($hotel->getTitle()); ?>" loading="lazy">
+                <img src="<?php echo esc_url($hotel->getThumbnailUrl('readscope-card')); ?>" alt="<?php echo esc_attr($hotel->getTitle()); ?>" loading="lazy">
             <?php else : ?>
-                <div class="tourivo-placeholder-img"><span class="dashicons dashicons-building"></span></div>
+                <div class="readscope-placeholder-img"><span class="dashicons dashicons-building"></span></div>
             <?php endif; ?>
         </a>
 
         <!-- Wishlist Button -->
-        <button type="button" class="tourivo-wishlist-toggle" data-id="<?php echo esc_attr((string)$hotel->getId()); ?>" data-type="hotel" title="<?php esc_attr_e('Save to Wishlist', 'the-readscope-tour-and-accommodation-booking'); ?>" aria-label="<?php esc_attr_e('Save to Wishlist', 'the-readscope-tour-and-accommodation-booking'); ?>">
+        <button type="button" class="readscope-wishlist-toggle" data-id="<?php echo esc_attr((string)$hotel->getId()); ?>" data-type="hotel" title="<?php esc_attr_e('Save to Wishlist', 'the-readscope-tour-and-accommodation-booking'); ?>" aria-label="<?php esc_attr_e('Save to Wishlist', 'the-readscope-tour-and-accommodation-booking'); ?>">
             <span class="dashicons dashicons-heart"></span>
         </button>
 
-        <div class="tourivo-stars-badge">
+        <div class="readscope-stars-badge">
             <?php echo esc_html(str_repeat('★', $hotel->getStarRating())); ?>
         </div>
 
         <?php if ($hotel->getCity()) : ?>
-            <span class="tourivo-dest-tag"><span class="dashicons dashicons-location"></span> <?php echo esc_html($hotel->getCity()); ?></span>
+            <span class="readscope-dest-tag"><span class="dashicons dashicons-location"></span> <?php echo esc_html($hotel->getCity()); ?></span>
         <?php endif; ?>
     </div>
 
-    <div class="tourivo-card-body">
-        <div class="tourivo-card-meta">
+    <div class="readscope-card-body">
+        <div class="readscope-card-meta">
             <span class="meta-item"><span class="dashicons dashicons-admin-home"></span> <?php
             echo esc_html(
                 sprintf(
@@ -70,17 +70,17 @@ $tourivoSymbol = (string) apply_filters('tourivo/currency_symbol', '$');
             <?php endif; ?>
         </div>
 
-        <h3 class="tourivo-card-title">
+        <h3 class="readscope-card-title">
             <a href="<?php echo esc_url($hotel->getPermalink()); ?>"><?php echo esc_html($hotel->getTitle()); ?></a>
         </h3>
 
-        <div class="tourivo-card-footer">
-            <div class="tourivo-price-box">
+        <div class="readscope-card-footer">
+            <div class="readscope-price-box">
                 <span class="price-from"><?php esc_html_e('Starts from', 'the-readscope-tour-and-accommodation-booking'); ?></span>
-                <span class="price-val"><?php echo esc_html(\Tourivo\Support\Money::format($tourivoMinPrice)); ?></span>
+                <span class="price-val"><?php echo esc_html(\Readscope\Support\Money::format($readscopeMinPrice)); ?></span>
                 <span class="price-unit">/ <?php esc_html_e('night', 'the-readscope-tour-and-accommodation-booking'); ?></span>
             </div>
-            <a href="<?php echo esc_url($hotel->getPermalink()); ?>" class="tourivo-btn tourivo-btn-sm"><?php esc_html_e('View Rooms', 'the-readscope-tour-and-accommodation-booking'); ?> &rarr;</a>
+            <a href="<?php echo esc_url($hotel->getPermalink()); ?>" class="readscope-btn readscope-btn-sm"><?php esc_html_e('View Rooms', 'the-readscope-tour-and-accommodation-booking'); ?> &rarr;</a>
         </div>
     </div>
 </div>

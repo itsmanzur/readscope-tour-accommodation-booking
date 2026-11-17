@@ -2,30 +2,30 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Providers;
+namespace Readscope\Providers;
 
-use Tourivo\Admin\AdminDashboard;
-use Tourivo\Admin\BookingsTable;
-use Tourivo\Admin\DocumentationPage;
-use Tourivo\Admin\InquiriesTable;
-use Tourivo\Admin\SettingsPage;
-use Tourivo\Admin\SetupWizard;
-use Tourivo\Common\Abstracts\ServiceProvider;
-use Tourivo\Common\Container;
-use Tourivo\Database\Seeder;
-use Tourivo\PostTypes\HotelPostType;
-use Tourivo\PostTypes\TourPostType;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\ExportService;
-use Tourivo\Services\InquiryService;
-use Tourivo\Services\InventoryService;
-use Tourivo\Services\LogService;
-use Tourivo\Services\PaymentService;
-use Tourivo\Admin\ReportsPage;
-use Tourivo\Services\ReportingService;
-use Tourivo\Shortcodes\BookingLookupShortcode;
-use Tourivo\Shortcodes\ThankYouShortcode;
+use Readscope\Admin\AdminDashboard;
+use Readscope\Admin\BookingsTable;
+use Readscope\Admin\DocumentationPage;
+use Readscope\Admin\InquiriesTable;
+use Readscope\Admin\SettingsPage;
+use Readscope\Admin\SetupWizard;
+use Readscope\Common\Abstracts\ServiceProvider;
+use Readscope\Common\Container;
+use Readscope\Database\Seeder;
+use Readscope\PostTypes\HotelPostType;
+use Readscope\PostTypes\TourPostType;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\ExportService;
+use Readscope\Services\InquiryService;
+use Readscope\Services\InventoryService;
+use Readscope\Services\LogService;
+use Readscope\Services\PaymentService;
+use Readscope\Admin\ReportsPage;
+use Readscope\Services\ReportingService;
+use Readscope\Shortcodes\BookingLookupShortcode;
+use Readscope\Shortcodes\ThankYouShortcode;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -36,7 +36,7 @@ if (!defined('ABSPATH')) {
  *
  * Registers admin menus, admin scripts, and dashboard UI hooks.
  *
- * @package Tourivo\Providers
+ * @package Readscope\Providers
  */
 class AdminServiceProvider extends ServiceProvider
 {
@@ -50,20 +50,20 @@ class AdminServiceProvider extends ServiceProvider
     public function boot(): void
     {
         // Public & Admin AJAX for Inquiry submission
-        add_action('wp_ajax_tourivo_submit_inquiry', [$this, 'handleSubmitInquiry']);
-        add_action('wp_ajax_nopriv_tourivo_submit_inquiry', [$this, 'handleSubmitInquiry']);
+        add_action('wp_ajax_readscope_submit_inquiry', [$this, 'handleSubmitInquiry']);
+        add_action('wp_ajax_nopriv_readscope_submit_inquiry', [$this, 'handleSubmitInquiry']);
 
         // Public & Admin AJAX for Customer Transaction Reference Submission
-        add_action('wp_ajax_tourivo_submit_payment_reference', [$this, 'handleSubmitPaymentReference']);
-        add_action('wp_ajax_nopriv_tourivo_submit_payment_reference', [$this, 'handleSubmitPaymentReference']);
+        add_action('wp_ajax_readscope_submit_payment_reference', [$this, 'handleSubmitPaymentReference']);
+        add_action('wp_ajax_nopriv_readscope_submit_payment_reference', [$this, 'handleSubmitPaymentReference']);
 
         // Printable Voucher & Calendar .ics handlers (Admin & Public with token)
-        add_action('admin_post_tourivo_print_voucher', [$this, 'handlePrintVoucher']);
-        add_action('admin_post_nopriv_tourivo_print_voucher', [$this, 'handlePrintVoucher']);
-        add_action('admin_post_tourivo_verify_email', [$this, 'handleVerifyEmail']);
-        add_action('admin_post_nopriv_tourivo_verify_email', [$this, 'handleVerifyEmail']);
-        add_action('admin_post_tourivo_download_ics', [$this, 'handleDownloadIcs']);
-        add_action('admin_post_nopriv_tourivo_download_ics', [$this, 'handleDownloadIcs']);
+        add_action('admin_post_readscope_print_voucher', [$this, 'handlePrintVoucher']);
+        add_action('admin_post_nopriv_readscope_print_voucher', [$this, 'handlePrintVoucher']);
+        add_action('admin_post_readscope_verify_email', [$this, 'handleVerifyEmail']);
+        add_action('admin_post_nopriv_readscope_verify_email', [$this, 'handleVerifyEmail']);
+        add_action('admin_post_readscope_download_ics', [$this, 'handleDownloadIcs']);
+        add_action('admin_post_nopriv_readscope_download_ics', [$this, 'handleDownloadIcs']);
 
         if (!is_admin()) {
             return;
@@ -75,37 +75,37 @@ class AdminServiceProvider extends ServiceProvider
         $this->addAction('admin_enqueue_scripts', [$this, 'maybeSwitchUiLocale'], 1);
         $this->addAction('admin_enqueue_scripts', [$this, 'enqueueAdminAssets']);
         add_filter('admin_body_class', [$this, 'addAdminBodyClass']);
-        $this->addAction('admin_post_tourivo_export_bookings_csv', [ExportService::class, 'handleExportRequest']);
-        $this->addAction('admin_post_tourivo_export_accounting_csv', [$this, 'handleExportAccountingCsv']);
-        $this->addAction('admin_post_tourivo_save_settings', [SettingsPage::class, 'handleSave']);
-        $this->addAction('admin_post_tourivo_fix_proxy', [$this, 'handleFixProxy']);
+        $this->addAction('admin_post_readscope_export_bookings_csv', [ExportService::class, 'handleExportRequest']);
+        $this->addAction('admin_post_readscope_export_accounting_csv', [$this, 'handleExportAccountingCsv']);
+        $this->addAction('admin_post_readscope_save_settings', [SettingsPage::class, 'handleSave']);
+        $this->addAction('admin_post_readscope_fix_proxy', [$this, 'handleFixProxy']);
 
         // Admin Notices
         $this->addAction('admin_notices', [$this, 'renderWelcomeDemoNotice']);
         $this->addAction('admin_notices', [$this, 'renderProxyModeNotice']);
 
         // AJAX handlers
-        $this->addAction('wp_ajax_tourivo_import_sample_data', [$this, 'handleSampleDataImport']);
-        $this->addAction('wp_ajax_tourivo_dismiss_welcome_notice', [$this, 'handleDismissWelcomeNotice']);
-        $this->addAction('wp_ajax_tourivo_update_booking_status', [$this, 'handleUpdateBookingStatus']);
-        $this->addAction('wp_ajax_tourivo_revoke_booking_links', [$this, 'handleRevokeBookingLinks']);
-        $this->addAction('wp_ajax_tourivo_create_manual_booking', [$this, 'handleCreateManualBooking']);
-        $this->addAction('wp_ajax_tourivo_update_inquiry_status', [$this, 'handleUpdateInquiryStatus']);
-        $this->addAction('wp_ajax_tourivo_delete_inquiry', [$this, 'handleDeleteInquiry']);
-        $this->addAction('wp_ajax_tourivo_send_test_email', [$this, 'handleSendTestEmail']);
-        $this->addAction('wp_ajax_tourivo_send_test_webhook', [$this, 'handleSendTestWebhook']);
-        $this->addAction('wp_ajax_tourivo_get_booking_timeline', [$this, 'handleGetBookingTimeline']);
-        $this->addAction('wp_ajax_tourivo_add_booking_note', [$this, 'handleAddBookingNote']);
-        $this->addAction('wp_ajax_tourivo_get_admin_calendar', [$this, 'handleGetAdminCalendar']);
-        $this->addAction('wp_ajax_tourivo_update_availability', [$this, 'handleUpdateAvailability']);
-        $this->addAction('wp_ajax_tourivo_retention_dry_run', [$this, 'handleRetentionDryRun']);
-        $this->addAction('wp_ajax_tourivo_get_export_preview', [$this, 'handleExportPreview']);
-        $this->addAction('wp_ajax_tourivo_record_payment', [$this, 'handleRecordPayment']);
+        $this->addAction('wp_ajax_readscope_import_sample_data', [$this, 'handleSampleDataImport']);
+        $this->addAction('wp_ajax_readscope_dismiss_welcome_notice', [$this, 'handleDismissWelcomeNotice']);
+        $this->addAction('wp_ajax_readscope_update_booking_status', [$this, 'handleUpdateBookingStatus']);
+        $this->addAction('wp_ajax_readscope_revoke_booking_links', [$this, 'handleRevokeBookingLinks']);
+        $this->addAction('wp_ajax_readscope_create_manual_booking', [$this, 'handleCreateManualBooking']);
+        $this->addAction('wp_ajax_readscope_update_inquiry_status', [$this, 'handleUpdateInquiryStatus']);
+        $this->addAction('wp_ajax_readscope_delete_inquiry', [$this, 'handleDeleteInquiry']);
+        $this->addAction('wp_ajax_readscope_send_test_email', [$this, 'handleSendTestEmail']);
+        $this->addAction('wp_ajax_readscope_send_test_webhook', [$this, 'handleSendTestWebhook']);
+        $this->addAction('wp_ajax_readscope_get_booking_timeline', [$this, 'handleGetBookingTimeline']);
+        $this->addAction('wp_ajax_readscope_add_booking_note', [$this, 'handleAddBookingNote']);
+        $this->addAction('wp_ajax_readscope_get_admin_calendar', [$this, 'handleGetAdminCalendar']);
+        $this->addAction('wp_ajax_readscope_update_availability', [$this, 'handleUpdateAvailability']);
+        $this->addAction('wp_ajax_readscope_retention_dry_run', [$this, 'handleRetentionDryRun']);
+        $this->addAction('wp_ajax_readscope_get_export_preview', [$this, 'handleExportPreview']);
+        $this->addAction('wp_ajax_readscope_record_payment', [$this, 'handleRecordPayment']);
 
         // Setup Wizard AJAX Handlers
-        $this->addAction('wp_ajax_tourivo_wizard_save_step1', [SetupWizard::class, 'handleSaveStep1']);
-        $this->addAction('wp_ajax_tourivo_wizard_create_pages', [SetupWizard::class, 'handleCreatePages']);
-        $this->addAction('wp_ajax_tourivo_wizard_import_demo', [SetupWizard::class, 'handleImportDemo']);
+        $this->addAction('wp_ajax_readscope_wizard_save_step1', [SetupWizard::class, 'handleSaveStep1']);
+        $this->addAction('wp_ajax_readscope_wizard_create_pages', [SetupWizard::class, 'handleCreatePages']);
+        $this->addAction('wp_ajax_readscope_wizard_import_demo', [SetupWizard::class, 'handleImportDemo']);
     }
 
     /**
@@ -115,7 +115,7 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function maybeSwitchUiLocale(): void
     {
-        $lang = (string) \Tourivo\Config\Config::get('plugin_language', 'default');
+        $lang = (string) \Readscope\Config\Config::get('plugin_language', 'default');
         if ('default' === $lang) {
             return;
         }
@@ -125,15 +125,15 @@ class AdminServiceProvider extends ServiceProvider
             return;
         }
 
-        $isTourivo = str_contains((string) $screen->id, 'tourivo')
-            || in_array((string) $screen->post_type, ['tourivo_tour', 'tourivo_hotel', 'tourivo_room'], true);
+        $isReadscope = str_contains((string) $screen->id, 'readscope')
+            || in_array((string) $screen->post_type, ['readscope_tour', 'readscope_hotel', 'readscope_room'], true);
 
-        if (!$isTourivo) {
+        if (!$isReadscope) {
             return;
         }
 
         $locale = ('bn' === $lang) ? 'bn_BD' : 'en_US';
-        tourivo_load_plugin_textdomain($locale);
+        readscope_load_plugin_textdomain($locale);
     }
 
     /**
@@ -144,12 +144,12 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function loadAdminLocale(): void
     {
-        $lang = (string) \Tourivo\Config\Config::get('plugin_language', 'default');
+        $lang = (string) \Readscope\Config\Config::get('plugin_language', 'default');
         if ('default' === $lang) {
             return;
         }
 
-        tourivo_load_plugin_textdomain('bn' === $lang ? 'bn_BD' : 'en_US');
+        readscope_load_plugin_textdomain('bn' === $lang ? 'bn_BD' : 'en_US');
     }
 
     /**
@@ -163,73 +163,73 @@ class AdminServiceProvider extends ServiceProvider
         add_menu_page(
             __('The Readscope Tour and Accommodation Booking', 'the-readscope-tour-and-accommodation-booking'),
             esc_html__('Readscope', 'the-readscope-tour-and-accommodation-booking'),
-            'manage_tourivo',
-            'tourivo',
+            'manage_readscope',
+            'readscope',
             [$this, 'renderDashboardPage'],
             'dashicons-palmtree',
             85.5
         );
 
         add_submenu_page(
-            'tourivo',
+            'readscope',
             __('Dashboard', 'the-readscope-tour-and-accommodation-booking'),
             __('Dashboard', 'the-readscope-tour-and-accommodation-booking'),
-            'manage_tourivo',
-            'tourivo',
+            'manage_readscope',
+            'readscope',
             [$this, 'renderDashboardPage']
         );
 
         add_submenu_page(
-            'tourivo',
+            'readscope',
             __('Bookings', 'the-readscope-tour-and-accommodation-booking'),
             __('Bookings', 'the-readscope-tour-and-accommodation-booking'),
-            'manage_tourivo_bookings',
-            'tourivo-bookings',
+            'manage_readscope_bookings',
+            'readscope-bookings',
             [$this, 'renderBookingsPage']
         );
 
         add_submenu_page(
-            'tourivo',
+            'readscope',
             __('Inquiries', 'the-readscope-tour-and-accommodation-booking'),
             __('Inquiries', 'the-readscope-tour-and-accommodation-booking'),
-            'manage_tourivo_bookings',
-            'tourivo-inquiries',
+            'manage_readscope_bookings',
+            'readscope-inquiries',
             [$this, 'renderInquiriesPage']
         );
 
         add_submenu_page(
-            'tourivo',
+            'readscope',
             __('Reports & Analytics', 'the-readscope-tour-and-accommodation-booking'),
             __('Reports', 'the-readscope-tour-and-accommodation-booking'),
-            'manage_tourivo_bookings',
-            'tourivo-reports',
+            'manage_readscope_bookings',
+            'readscope-reports',
             [ReportsPage::class, 'render']
         );
 
         add_submenu_page(
-            'tourivo',
+            'readscope',
             __('Docs & Features', 'the-readscope-tour-and-accommodation-booking'),
             __('Docs & Features', 'the-readscope-tour-and-accommodation-booking'),
-            'manage_tourivo',
-            'tourivo-docs',
+            'manage_readscope',
+            'readscope-docs',
             [$this, 'renderDocumentationPage']
         );
 
         add_submenu_page(
-            'tourivo',
+            'readscope',
             __('Setup Wizard', 'the-readscope-tour-and-accommodation-booking'),
             __('Setup Wizard', 'the-readscope-tour-and-accommodation-booking'),
-            'manage_tourivo_settings',
-            'tourivo-setup-wizard',
+            'manage_readscope_settings',
+            'readscope-setup-wizard',
             [SetupWizard::class, 'render']
         );
 
         add_submenu_page(
-            'tourivo',
+            'readscope',
             __('Settings', 'the-readscope-tour-and-accommodation-booking'),
             __('Settings', 'the-readscope-tour-and-accommodation-booking'),
-            'manage_tourivo_settings',
-            'tourivo-settings',
+            'manage_readscope_settings',
+            'readscope-settings',
             [$this, 'renderSettingsPage']
         );
     }
@@ -244,38 +244,38 @@ class AdminServiceProvider extends ServiceProvider
     {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only screen check.
         $page = isset($_GET['page']) ? sanitize_key(wp_unslash((string) $_GET['page'])) : '';
-        if ('tourivo-setup-wizard' === $page) {
+        if ('readscope-setup-wizard' === $page) {
             SetupWizard::enqueueAssets();
         }
 
-        $isTourivoScreen = str_contains($hook, 'tourivo') || in_array($hook, ['index.php', 'plugins.php', 'edit.php'], true);
-        if (!$isTourivoScreen) {
+        $isReadscopeScreen = str_contains($hook, 'readscope') || in_array($hook, ['index.php', 'plugins.php', 'edit.php'], true);
+        if (!$isReadscopeScreen) {
             return;
         }
 
-        $cssVer = file_exists(TOURIVO_PLUGIN_DIR . 'assets/css/admin.css') ? (string) filemtime(TOURIVO_PLUGIN_DIR . 'assets/css/admin.css') : TOURIVO_VERSION;
-        $jsVer  = file_exists(TOURIVO_PLUGIN_DIR . 'assets/js/admin.js') ? (string) filemtime(TOURIVO_PLUGIN_DIR . 'assets/js/admin.js') : TOURIVO_VERSION;
+        $cssVer = file_exists(READSCOPE_PLUGIN_DIR . 'assets/css/admin.css') ? (string) filemtime(READSCOPE_PLUGIN_DIR . 'assets/css/admin.css') : READSCOPE_VERSION;
+        $jsVer  = file_exists(READSCOPE_PLUGIN_DIR . 'assets/js/admin.js') ? (string) filemtime(READSCOPE_PLUGIN_DIR . 'assets/js/admin.js') : READSCOPE_VERSION;
 
         wp_enqueue_style(
-            'tourivo-admin',
-            TOURIVO_PLUGIN_URL . 'assets/css/admin.css',
+            'readscope-admin',
+            READSCOPE_PLUGIN_URL . 'assets/css/admin.css',
             [],
             $cssVer
         );
 
-        \Tourivo\Support\Typography::enqueue();
+        \Readscope\Support\Typography::enqueue();
 
         wp_enqueue_script(
-            'tourivo-admin-js',
-            TOURIVO_PLUGIN_URL . 'assets/js/admin.js',
+            'readscope-admin-js',
+            READSCOPE_PLUGIN_URL . 'assets/js/admin.js',
             [],
             $jsVer,
             true
         );
 
-        wp_localize_script('tourivo-admin-js', 'tourivoAdminConfig', [
+        wp_localize_script('readscope-admin-js', 'readscopeAdminConfig', [
             'ajaxUrl' => admin_url('admin-ajax.php'),
-            'nonce'   => wp_create_nonce('tourivo_admin_nonce'),
+            'nonce'   => wp_create_nonce('readscope_admin_nonce'),
         ]);
     }
 
@@ -289,7 +289,7 @@ class AdminServiceProvider extends ServiceProvider
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only screen check.
         $page = isset($_GET['page']) ? sanitize_key(wp_unslash((string) $_GET['page'])) : '';
 
-        return str_starts_with($page, 'tourivo') ? $classes . ' tourivo-admin-screen' : $classes;
+        return str_starts_with($page, 'readscope') ? $classes . ' readscope-admin-screen' : $classes;
     }
 
     public function renderDashboardPage(): void
@@ -322,12 +322,12 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function renderWelcomeDemoNotice(): void
     {
-        if (!current_user_can('manage_tourivo')) {
+        if (!current_user_can('manage_readscope')) {
             return;
         }
 
         // Check if user dismissed notice
-        $dismissed = get_user_meta(get_current_user_id(), 'tourivo_dismiss_welcome_notice', true);
+        $dismissed = get_user_meta(get_current_user_id(), 'readscope_dismiss_welcome_notice', true);
         if ($dismissed) {
             return;
         }
@@ -340,9 +340,9 @@ class AdminServiceProvider extends ServiceProvider
             return;
         }
 
-        $nonce = wp_create_nonce('tourivo_admin_nonce');
+        $nonce = wp_create_nonce('readscope_admin_nonce');
         ?>
-        <div class="notice notice-info is-dismissible tourivo-welcome-notice" data-nonce="<?php echo esc_attr($nonce); ?>" style="border-left-color: #0284c7; background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%); border-radius: 8px; padding: 16px 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin: 20px 20px 15px 0;">
+        <div class="notice notice-info is-dismissible readscope-welcome-notice" data-nonce="<?php echo esc_attr($nonce); ?>" style="border-left-color: #0284c7; background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%); border-radius: 8px; padding: 16px 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin: 20px 20px 15px 0;">
             <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
                 <div style="display: flex; align-items: center; gap: 14px;">
                     <div style="background: #0284c7; color: #fff; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: var(--trv-admin-text-3xl); flex-shrink: 0; box-shadow: 0 2px 4px rgba(2,132,199,0.3);">
@@ -358,15 +358,15 @@ class AdminServiceProvider extends ServiceProvider
                     </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <button type="button" class="button button-primary tourivo-import-sample-btn" data-nonce="<?php echo esc_attr($nonce); ?>" style="background: #0284c7; border-color: #0284c7; padding: 6px 16px; height: auto; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(2,132,199,0.25);">
+                    <button type="button" class="button button-primary readscope-import-sample-btn" data-nonce="<?php echo esc_attr($nonce); ?>" style="background: #0284c7; border-color: #0284c7; padding: 6px 16px; height: auto; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 4px rgba(2,132,199,0.25);">
                         <span class="dashicons dashicons-cloud-upload"></span> <?php esc_html_e('⚡ Import Starter Demo Content', 'the-readscope-tour-and-accommodation-booking'); ?>
                     </button>
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-docs')); ?>" class="button button-secondary" style="height: auto; padding: 6px 14px;">
+                    <a href="<?php echo esc_url(admin_url('admin.php?page=readscope-docs')); ?>" class="button button-secondary" style="height: auto; padding: 6px 14px;">
                         <?php esc_html_e('Docs & Features Hub', 'the-readscope-tour-and-accommodation-booking'); ?>
                     </a>
                 </div>
             </div>
-            <div class="tourivo-seeder-notice" style="display:none; margin-top:12px;"></div>
+            <div class="readscope-seeder-notice" style="display:none; margin-top:12px;"></div>
         </div>
         <?php
     }
@@ -379,16 +379,16 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function renderProxyModeNotice(): void
     {
-        if (!current_user_can('manage_tourivo_settings')) {
+        if (!current_user_can('manage_readscope_settings')) {
             return;
         }
 
         $screen = function_exists('get_current_screen') ? get_current_screen() : null;
-        if (!$screen || !str_contains((string) $screen->id, 'tourivo')) {
+        if (!$screen || !str_contains((string) $screen->id, 'readscope')) {
             return;
         }
 
-        $mode = (string) \Tourivo\Config\Config::get('proxy_mode', 'disabled');
+        $mode = (string) \Readscope\Config\Config::get('proxy_mode', 'disabled');
         if (in_array($mode, ['cloudflare', 'reverse_proxy'], true)) {
             return;
         }
@@ -404,14 +404,14 @@ class AdminServiceProvider extends ServiceProvider
         }
 
         ?>
-        <div class="notice notice-info tourivo-proxy-notice">
+        <div class="notice notice-info readscope-proxy-notice">
             <p>
-                <span class="tourivo-proxy-notice__text">
+                <span class="readscope-proxy-notice__text">
                     <?php esc_html_e('Your site sits behind another server. Without a quick fix, real customers can get blocked after only a few bookings.', 'the-readscope-tour-and-accommodation-booking'); ?>
                 </span>
                 <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-                    <input type="hidden" name="action" value="tourivo_fix_proxy">
-                    <?php wp_nonce_field('tourivo_fix_proxy'); ?>
+                    <input type="hidden" name="action" value="readscope_fix_proxy">
+                    <?php wp_nonce_field('readscope_fix_proxy'); ?>
                     <button type="submit" class="button button-primary button-small"><?php esc_html_e('Fix this for me', 'the-readscope-tour-and-accommodation-booking'); ?></button>
                 </form>
             </p>
@@ -442,21 +442,21 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function handleFixProxy(): void
     {
-        if (!current_user_can('manage_tourivo_settings')) {
+        if (!current_user_can('manage_readscope_settings')) {
             wp_die(esc_html__('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking'));
         }
-        check_admin_referer('tourivo_fix_proxy');
+        check_admin_referer('readscope_fix_proxy');
 
         $mode = !empty($_SERVER['HTTP_CF_CONNECTING_IP']) ? 'cloudflare' : 'reverse_proxy';
-        $settings = get_option('tourivo_settings', []);
+        $settings = get_option('readscope_settings', []);
         if (!is_array($settings)) {
             $settings = [];
         }
         $settings['proxy_mode'] = $mode;
         $settings['trust_proxy_headers'] = 1;
-        update_option('tourivo_settings', $settings);
+        update_option('readscope_settings', $settings);
 
-        wp_safe_redirect(wp_get_referer() ?: admin_url('admin.php?page=tourivo'));
+        wp_safe_redirect(wp_get_referer() ?: admin_url('admin.php?page=readscope'));
         exit;
     }
 
@@ -472,7 +472,7 @@ class AdminServiceProvider extends ServiceProvider
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Capability URL from the verification email, authenticated by its HMAC token (BookingService::verifyEmail); a nonce cannot work in an emailed link.
         $expiresAt = isset($_GET['exp']) ? (int) $_GET['exp'] : 0;
 
-        if (!\Tourivo\Support\RateLimiter::hit('tourivo_verify_' . md5(\Tourivo\Support\ClientIp::get()), 20, 600)) {
+        if (!\Readscope\Support\RateLimiter::hit('readscope_verify_' . md5(\Readscope\Support\ClientIp::get()), 20, 600)) {
             wp_die(esc_html__('Too many attempts. Please try again later.', 'the-readscope-tour-and-accommodation-booking'), '', ['response' => 429]);
         }
 
@@ -487,7 +487,7 @@ class AdminServiceProvider extends ServiceProvider
             );
         }
 
-        $thankyouPageId = (int) \Tourivo\Config\Config::get('thankyou_page_id', 0);
+        $thankyouPageId = (int) \Readscope\Config\Config::get('thankyou_page_id', 0);
         $base = $thankyouPageId > 0 ? (string) get_permalink($thankyouPageId) : home_url('/');
 
         wp_safe_redirect(add_query_arg([
@@ -503,13 +503,13 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function handleDismissWelcomeNotice(): void
     {
-        check_ajax_referer('tourivo_admin_nonce', 'nonce');
+        check_ajax_referer('readscope_admin_nonce', 'nonce');
 
-        if (!current_user_can('manage_tourivo')) {
+        if (!current_user_can('manage_readscope')) {
             wp_send_json_error(['message' => __('Unauthorized permission.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
-        update_user_meta(get_current_user_id(), 'tourivo_dismiss_welcome_notice', 1);
+        update_user_meta(get_current_user_id(), 'readscope_dismiss_welcome_notice', 1);
 
         wp_send_json_success();
     }
@@ -519,9 +519,9 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function handleSampleDataImport(): void
     {
-        check_ajax_referer('tourivo_admin_nonce', 'nonce');
+        check_ajax_referer('readscope_admin_nonce', 'nonce');
 
-        if (!current_user_can('manage_tourivo')) {
+        if (!current_user_can('manage_readscope')) {
             wp_send_json_error(['message' => __('Unauthorized permission.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
@@ -541,7 +541,7 @@ class AdminServiceProvider extends ServiceProvider
         }
 
         // Mark welcome notice dismissed only on genuine new demo data import
-        update_user_meta(get_current_user_id(), 'tourivo_dismiss_welcome_notice', 1);
+        update_user_meta(get_current_user_id(), 'readscope_dismiss_welcome_notice', 1);
 
         wp_send_json_success([
             'message' => sprintf(
@@ -562,9 +562,9 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function handleUpdateBookingStatus(): void
     {
-        check_ajax_referer('tourivo_admin_nonce', 'nonce');
+        check_ajax_referer('readscope_admin_nonce', 'nonce');
 
-        if (!current_user_can('manage_tourivo_bookings')) {
+        if (!current_user_can('manage_readscope_bookings')) {
             wp_send_json_error(['message' => __('Unauthorized permission.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
@@ -575,7 +575,7 @@ class AdminServiceProvider extends ServiceProvider
             wp_send_json_error(['message' => __('Invalid booking ID or status.', 'the-readscope-tour-and-accommodation-booking')], 400);
         }
 
-        $bookingService = Container::getInstance()->get(\Tourivo\Services\BookingService::class);
+        $bookingService = Container::getInstance()->get(\Readscope\Services\BookingService::class);
         $result = $bookingService->changeStatus($bookingId, $status, ['source' => 'admin_ajax']);
 
         if (!$result['success']) {
@@ -590,9 +590,9 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function handleRevokeBookingLinks(): void
     {
-        check_ajax_referer('tourivo_admin_nonce', 'nonce');
+        check_ajax_referer('readscope_admin_nonce', 'nonce');
 
-        if (!current_user_can('manage_tourivo_bookings')) {
+        if (!current_user_can('manage_readscope_bookings')) {
             wp_send_json_error(['message' => __('Unauthorized permission.', 'the-readscope-tour-and-accommodation-booking')], 403);
             return;
         }
@@ -613,9 +613,9 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function handleCreateManualBooking(): void
     {
-        check_ajax_referer('tourivo_admin_nonce', 'nonce');
+        check_ajax_referer('readscope_admin_nonce', 'nonce');
 
-        if (!current_user_can('manage_tourivo_bookings')) {
+        if (!current_user_can('manage_readscope_bookings')) {
             wp_send_json_error(['message' => __('Unauthorized permission.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
@@ -681,11 +681,11 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function handleSubmitInquiry(): void
     {
-        check_ajax_referer('tourivo_frontend_nonce', 'nonce');
+        check_ajax_referer('readscope_frontend_nonce', 'nonce');
 
         // Only the inquiry form's own fields are read, each one sanitized for its type. The nonce was checked above.
         // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Every key is sanitized by RequestInput::pick().
-        $data = \Tourivo\Support\RequestInput::pick($_POST, [
+        $data = \Readscope\Support\RequestInput::pick($_POST, [
             'item_id'        => 'int',
             'item_type'      => 'key',
             'customer_name'  => 'text',
@@ -695,7 +695,7 @@ class AdminServiceProvider extends ServiceProvider
             'guests'         => 'int',
             'message'        => 'textarea',
             'consent'        => 'bool',
-            'tourivo_inq_hp' => 'text',
+            'readscope_inq_hp' => 'text',
         ]);
 
         $inquiryService = Container::getInstance()->get(InquiryService::class);
@@ -713,9 +713,9 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function handleUpdateInquiryStatus(): void
     {
-        check_ajax_referer('tourivo_inquiry_nonce', 'nonce');
+        check_ajax_referer('readscope_inquiry_nonce', 'nonce');
 
-        if (!current_user_can('manage_tourivo_bookings')) {
+        if (!current_user_can('manage_readscope_bookings')) {
             wp_send_json_error(['message' => __('Unauthorized permission.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
@@ -735,9 +735,9 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function handleDeleteInquiry(): void
     {
-        check_ajax_referer('tourivo_inquiry_nonce', 'nonce');
+        check_ajax_referer('readscope_inquiry_nonce', 'nonce');
 
-        if (!current_user_can('manage_tourivo_bookings')) {
+        if (!current_user_can('manage_readscope_bookings')) {
             wp_send_json_error(['message' => __('Unauthorized permission.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
@@ -756,9 +756,9 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function handleSendTestEmail(): void
     {
-        check_ajax_referer('tourivo_test_email_nonce', 'nonce');
+        check_ajax_referer('readscope_test_email_nonce', 'nonce');
 
-        if (!current_user_can('manage_tourivo_settings')) {
+        if (!current_user_can('manage_readscope_settings')) {
             wp_send_json_error(['message' => __('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
@@ -791,16 +791,16 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function handleSendTestWebhook(): void
     {
-        check_ajax_referer('tourivo_test_webhook_nonce', 'nonce');
+        check_ajax_referer('readscope_test_webhook_nonce', 'nonce');
 
-        if (!current_user_can('manage_tourivo_settings')) {
+        if (!current_user_can('manage_readscope_settings')) {
             wp_send_json_error(['message' => __('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
         $url    = isset($_POST['url']) ? esc_url_raw(wp_unslash($_POST['url'])) : '';
         $secret = isset($_POST['secret']) ? sanitize_text_field(wp_unslash($_POST['secret'])) : '';
 
-        $webhookService = Container::getInstance()->get(\Tourivo\Services\WebhookService::class);
+        $webhookService = Container::getInstance()->get(\Readscope\Services\WebhookService::class);
         $res = $webhookService->sendTestWebhook($url, $secret);
 
         if ($res['success']) {
@@ -815,9 +815,9 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function handleGetBookingTimeline(): void
     {
-        check_ajax_referer('tourivo_timeline_nonce', 'nonce');
+        check_ajax_referer('readscope_timeline_nonce', 'nonce');
 
-        if (!current_user_can('manage_tourivo_bookings')) {
+        if (!current_user_can('manage_readscope_bookings')) {
             wp_send_json_error(['message' => __('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
@@ -867,9 +867,9 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function handleAddBookingNote(): void
     {
-        check_ajax_referer('tourivo_timeline_nonce', 'nonce');
+        check_ajax_referer('readscope_timeline_nonce', 'nonce');
 
-        if (!current_user_can('manage_tourivo_bookings')) {
+        if (!current_user_can('manage_readscope_bookings')) {
             wp_send_json_error(['message' => __('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
@@ -895,8 +895,8 @@ class AdminServiceProvider extends ServiceProvider
      * Two ways in, checked in order:
      * 1. Customers (emailed or shared links, usually logged out): a capability URL authenticated by the
      *    HMAC token. A nonce cannot work here, it expires and is tied to a user session.
-     * 2. Staff with manage_tourivo_bookings: the link built in BookingsTable carries a nonce
-     *    (_tourivo_nonce, action tourivo_voucher_{code}). A capability alone is not enough.
+     * 2. Staff with manage_readscope_bookings: the link built in BookingsTable carries a nonce
+     *    (_readscope_nonce, action readscope_voucher_{code}). A capability alone is not enough.
      * A missing or wrong token never falls through to the staff path unless the nonce is valid.
      *
      * @return void
@@ -908,33 +908,33 @@ class AdminServiceProvider extends ServiceProvider
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- capability URL authenticated by HMAC token; staff path verifies nonce below.
         $token = isset($_GET['token']) ? sanitize_text_field(wp_unslash((string) $_GET['token'])) : '';
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- value is passed to wp_verify_nonce() below.
-        $nonce = isset($_GET['_tourivo_nonce']) ? sanitize_text_field(wp_unslash((string) $_GET['_tourivo_nonce'])) : '';
+        $nonce = isset($_GET['_readscope_nonce']) ? sanitize_text_field(wp_unslash((string) $_GET['_readscope_nonce'])) : '';
 
         if (empty($code)) {
             wp_die(esc_html__('Invalid or missing booking reference code.', 'the-readscope-tour-and-accommodation-booking'), 400);
         }
 
         global $wpdb;
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
+        $itemsTable    = $wpdb->prefix . 'readscope_booking_items';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-        $tourivoBooking = $wpdb->get_row($wpdb->prepare(
+        $readscopeBooking = $wpdb->get_row($wpdb->prepare(
             "SELECT * FROM {$bookingsTable} WHERE booking_code = %s LIMIT 1",
             $code
         ));
 
-        if (!$tourivoBooking) {
+        if (!$readscopeBooking) {
             wp_die(esc_html__('Booking not found.', 'the-readscope-tour-and-accommodation-booking'), 404);
         }
 
         // Authorization: valid HMAC token, or staff capability plus a valid nonce. Explicit sequential checks.
-        $expectedToken = BookingLookupShortcode::generateVoucherToken((int) $tourivoBooking->id, (string) $tourivoBooking->customer_email, $tourivoBooking->access_key ?? null);
+        $expectedToken = BookingLookupShortcode::generateVoucherToken((int) $readscopeBooking->id, (string) $readscopeBooking->customer_email, $readscopeBooking->access_key ?? null);
         $authorized    = false;
         if ($token !== '' && hash_equals($expectedToken, $token)) {
             $authorized = true;
-        } elseif (current_user_can('manage_tourivo_bookings')) {
-            if ($nonce !== '' && wp_verify_nonce($nonce, 'tourivo_voucher_' . $code)) {
+        } elseif (current_user_can('manage_readscope_bookings')) {
+            if ($nonce !== '' && wp_verify_nonce($nonce, 'readscope_voucher_' . $code)) {
                 $authorized = true;
             }
         }
@@ -943,16 +943,16 @@ class AdminServiceProvider extends ServiceProvider
             wp_die(esc_html__('Access denied. Invalid voucher security token.', 'the-readscope-tour-and-accommodation-booking'), 403);
         }
 
-        $tourivoItems = (array) $wpdb->get_results($wpdb->prepare(
+        $readscopeItems = (array) $wpdb->get_results($wpdb->prepare(
             "SELECT * FROM {$itemsTable} WHERE booking_id = %d",
-            $tourivoBooking->id
+            $readscopeBooking->id
         ));
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
-        $tourivoCurrencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
-        $tourivoSiteName       = get_bloginfo('name');
+        $readscopeCurrencySymbol = (string) apply_filters('readscope/currency_symbol', '$');
+        $readscopeSiteName       = get_bloginfo('name');
 
-        include untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/booking-voucher.php';
+        include untrailingslashit(READSCOPE_PLUGIN_DIR) . '/templates/booking-voucher.php';
         exit;
     }
 
@@ -961,7 +961,7 @@ class AdminServiceProvider extends ServiceProvider
      *
      * Customers use emailed or shared capability URLs authenticated by the HMAC token (thank-you or voucher
      * token); a nonce cannot work there, it expires and is tied to a user session. Staff with
-     * manage_tourivo_bookings must send a valid nonce (_tourivo_nonce, action tourivo_ics_{code}).
+     * manage_readscope_bookings must send a valid nonce (_readscope_nonce, action readscope_ics_{code}).
      *
      * @return void
      */
@@ -972,35 +972,35 @@ class AdminServiceProvider extends ServiceProvider
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- capability URL authenticated by HMAC token; staff path verifies nonce below.
         $token = isset($_GET['token']) ? sanitize_text_field(wp_unslash((string) $_GET['token'])) : '';
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- value is passed to wp_verify_nonce() below.
-        $nonce = isset($_GET['_tourivo_nonce']) ? sanitize_text_field(wp_unslash((string) $_GET['_tourivo_nonce'])) : '';
+        $nonce = isset($_GET['_readscope_nonce']) ? sanitize_text_field(wp_unslash((string) $_GET['_readscope_nonce'])) : '';
 
         if (empty($code)) {
             wp_die(esc_html__('Invalid or missing booking reference code.', 'the-readscope-tour-and-accommodation-booking'), 400);
         }
 
         global $wpdb;
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-        $tourivoBooking = $wpdb->get_row($wpdb->prepare(
+        $readscopeBooking = $wpdb->get_row($wpdb->prepare(
             "SELECT * FROM {$bookingsTable} WHERE booking_code = %s LIMIT 1",
             $code
         ));
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
-        if (!$tourivoBooking) {
+        if (!$readscopeBooking) {
             wp_die(esc_html__('Booking not found.', 'the-readscope-tour-and-accommodation-booking'), 404);
         }
 
-        $bookingId            = (int) $tourivoBooking->id;
-        $expectedVoucherToken = BookingLookupShortcode::generateVoucherToken($bookingId, (string) $tourivoBooking->customer_email, $tourivoBooking->access_key ?? null);
+        $bookingId            = (int) $readscopeBooking->id;
+        $expectedVoucherToken = BookingLookupShortcode::generateVoucherToken($bookingId, (string) $readscopeBooking->customer_email, $readscopeBooking->access_key ?? null);
         $authorized           = false;
         if ($token !== '' && ThankYouShortcode::verifyThankYouToken($bookingId, $token)) {
             $authorized = true;
         } elseif ($token !== '' && hash_equals($expectedVoucherToken, $token)) {
             $authorized = true;
-        } elseif (current_user_can('manage_tourivo_bookings')) {
-            if ($nonce !== '' && wp_verify_nonce($nonce, 'tourivo_ics_' . $code)) {
+        } elseif (current_user_can('manage_readscope_bookings')) {
+            if ($nonce !== '' && wp_verify_nonce($nonce, 'readscope_ics_' . $code)) {
                 $authorized = true;
             }
         }
@@ -1014,7 +1014,7 @@ class AdminServiceProvider extends ServiceProvider
             wp_die(esc_html__('Could not generate calendar file.', 'the-readscope-tour-and-accommodation-booking'), 500);
         }
 
-        $filename = 'booking-' . sanitize_file_name((string) $tourivoBooking->booking_code) . '.ics';
+        $filename = 'booking-' . sanitize_file_name((string) $readscopeBooking->booking_code) . '.ics';
 
         header('Content-Type: text/calendar; charset=utf-8');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
@@ -1039,10 +1039,10 @@ class AdminServiceProvider extends ServiceProvider
     private function authorizeInventoryItem(int $itemId, string $itemType): bool
     {
         $postTypes = [
-            'tour'       => 'tourivo_tour',
-            'room'       => 'tourivo_room',
-            'hotel_room' => 'tourivo_room',
-            'hotel'      => 'tourivo_hotel',
+            'tour'       => 'readscope_tour',
+            'room'       => 'readscope_room',
+            'hotel_room' => 'readscope_room',
+            'hotel'      => 'readscope_hotel',
         ];
 
         if (!isset($postTypes[$itemType]) || get_post_type($itemId) !== $postTypes[$itemType] || !current_user_can('edit_post', $itemId)) {
@@ -1060,7 +1060,7 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function handleGetAdminCalendar(): void
     {
-        check_ajax_referer('tourivo_admin_nonce', 'nonce');
+        check_ajax_referer('readscope_admin_nonce', 'nonce');
 
         $itemId   = isset($_POST['item_id']) ? absint($_POST['item_id']) : 0;
         $itemType = isset($_POST['item_type']) ? sanitize_text_field(wp_unslash($_POST['item_type'])) : 'tour';
@@ -1087,7 +1087,7 @@ class AdminServiceProvider extends ServiceProvider
             'days'             => $calendar,
             'default_capacity' => $defaultCap,
             'base_price'       => $unitPrice,
-            'currency_symbol'  => (string) apply_filters('tourivo/currency_symbol', '$'),
+            'currency_symbol'  => (string) apply_filters('readscope/currency_symbol', '$'),
         ]);
     }
 
@@ -1098,7 +1098,7 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function handleUpdateAvailability(): void
     {
-        check_ajax_referer('tourivo_admin_nonce', 'nonce');
+        check_ajax_referer('readscope_admin_nonce', 'nonce');
 
         $itemId    = isset($_POST['item_id']) ? absint($_POST['item_id']) : 0;
         $itemType  = isset($_POST['item_type']) ? sanitize_text_field(wp_unslash($_POST['item_type'])) : 'tour';
@@ -1152,13 +1152,13 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function handleRetentionDryRun(): void
     {
-        check_ajax_referer('tourivo_admin_nonce', 'nonce');
+        check_ajax_referer('readscope_admin_nonce', 'nonce');
 
-        if (!current_user_can('manage_tourivo_settings')) {
+        if (!current_user_can('manage_readscope_settings')) {
             wp_send_json_error(['message' => __('Unauthorized permission.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
-        $counts = \Tourivo\Services\PrivacyService::getRetentionDryRunCounts();
+        $counts = \Readscope\Services\PrivacyService::getRetentionDryRunCounts();
         wp_send_json_success($counts);
     }
 
@@ -1197,9 +1197,9 @@ class AdminServiceProvider extends ServiceProvider
      */
     public function handleRecordPayment(): void
     {
-        check_ajax_referer('tourivo_admin_nonce', 'nonce');
+        check_ajax_referer('readscope_admin_nonce', 'nonce');
 
-        if (!current_user_can('manage_tourivo_bookings')) {
+        if (!current_user_can('manage_readscope_bookings')) {
             wp_send_json_error(['message' => __('Unauthorized permission to record payments.', 'the-readscope-tour-and-accommodation-booking')], 403);
         }
 
@@ -1234,8 +1234,8 @@ class AdminServiceProvider extends ServiceProvider
     public function handleSubmitPaymentReference(): void
     {
         // Accepts frontend nonce OR admin nonce for CSRF
-        $verified = check_ajax_referer('tourivo_frontend_nonce', 'nonce', false)
-            || check_ajax_referer('tourivo_admin_nonce', 'nonce', false);
+        $verified = check_ajax_referer('readscope_frontend_nonce', 'nonce', false)
+            || check_ajax_referer('readscope_admin_nonce', 'nonce', false);
 
         if (!$verified) {
             wp_send_json_error(['message' => __('Security verification failed. Please refresh the page.', 'the-readscope-tour-and-accommodation-booking')], 403);

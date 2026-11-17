@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Admin;
+namespace Readscope\Admin;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  *
  * Displays, filters, exports (CSV), and manages manual customer bookings in WordPress Admin.
  *
- * @package Tourivo\Admin
+ * @package Readscope\Admin
  */
 class BookingsTable
 {
@@ -34,8 +34,8 @@ class BookingsTable
     {
         global $wpdb;
 
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
+        $itemsTable    = $wpdb->prefix . 'readscope_booking_items';
 
         $where  = ['1=1'];
         $params = [];
@@ -79,7 +79,7 @@ class BookingsTable
             }
             foreach ($grouped as $bookingId => $bookingItems) {
                 // One row per booking: several items (a package) show their combined title and dates.
-                $items[$bookingId] = \Tourivo\Support\BookingItems::summaryRow($bookingItems, $bookingId);
+                $items[$bookingId] = \Readscope\Support\BookingItems::summaryRow($bookingItems, $bookingId);
             }
         }
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
@@ -110,14 +110,14 @@ class BookingsTable
      */
     public static function render(): void
     {
-        if (!current_user_can('manage_tourivo_bookings')) {
+        if (!current_user_can('manage_readscope_bookings')) {
             wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'the-readscope-tour-and-accommodation-booking'), 403);
         }
 
         global $wpdb;
 
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
+        $itemsTable    = $wpdb->prefix . 'readscope_booking_items';
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only list filter; current_user_can() is checked at the top of render().
         $statusFilter  = isset($_GET['status']) ? sanitize_text_field(wp_unslash($_GET['status'])) : 'all';
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only list filter; current_user_can() is checked at the top of render().
@@ -134,28 +134,28 @@ class BookingsTable
         $bookings = $result['bookings'];
         $total    = $result['total'];
         $itemsByBooking = $result['items'];
-        $currencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
-        $nonce = wp_create_nonce('tourivo_admin_nonce');
+        $currencySymbol = (string) apply_filters('readscope/currency_symbol', '$');
+        $nonce = wp_create_nonce('readscope_admin_nonce');
 
         // Fetch available Tours and Rooms for the Manual Booking Modal
-        $tours = get_posts(['post_type' => 'tourivo_tour', 'post_status' => 'publish', 'posts_per_page' => -1]);
-        $rooms = get_posts(['post_type' => 'tourivo_room', 'post_status' => 'publish', 'posts_per_page' => -1]);
+        $tours = get_posts(['post_type' => 'readscope_tour', 'post_status' => 'publish', 'posts_per_page' => -1]);
+        $rooms = get_posts(['post_type' => 'readscope_room', 'post_status' => 'publish', 'posts_per_page' => -1]);
 
         $exportUrl = wp_nonce_url(
-            admin_url('admin-post.php?action=tourivo_export_bookings_csv&status=' . rawurlencode($statusFilter)),
-            'tourivo_export_csv_action'
+            admin_url('admin-post.php?action=readscope_export_bookings_csv&status=' . rawurlencode($statusFilter)),
+            'readscope_export_csv_action'
         );
         ?>
-        <div class="wrap tourivo-admin-wrap">
-            <div class="tourivo-page-header">
-                <div class="tourivo-page-header__text">
+        <div class="wrap readscope-admin-wrap">
+            <div class="readscope-page-header">
+                <div class="readscope-page-header__text">
                     <h1><?php esc_html_e('All Bookings', 'the-readscope-tour-and-accommodation-booking'); ?></h1>
                 </div>
                 <div class="header-actions">
-                    <button type="button" id="tourivo-open-export-modal-btn" class="button tourivo-open-export-modal-btn" data-status="<?php echo esc_attr($statusFilter); ?>" data-search="<?php echo esc_attr($searchQuery); ?>">
+                    <button type="button" id="readscope-open-export-modal-btn" class="button readscope-open-export-modal-btn" data-status="<?php echo esc_attr($statusFilter); ?>" data-search="<?php echo esc_attr($searchQuery); ?>">
                         <span class="dashicons dashicons-download" aria-hidden="true"></span><?php esc_html_e('Export Bookings', 'the-readscope-tour-and-accommodation-booking'); ?>
                     </button>
-                    <button type="button" id="tourivo-open-manual-booking-btn" class="button button-primary">
+                    <button type="button" id="readscope-open-manual-booking-btn" class="button button-primary">
                         <span class="dashicons dashicons-plus-alt2" aria-hidden="true"></span><?php esc_html_e('Add Manual Booking', 'the-readscope-tour-and-accommodation-booking'); ?>
                     </button>
                 </div>
@@ -164,18 +164,18 @@ class BookingsTable
 
             <!-- Filter Status Links -->
             <ul class="subsubsub">
-                <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=all')); ?>" class="<?php echo ($statusFilter === 'all') ? 'current' : ''; ?>"><?php esc_html_e('All', 'the-readscope-tour-and-accommodation-booking'); ?></a> |</li>
-                <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=pending')); ?>" class="<?php echo ($statusFilter === 'pending') ? 'current' : ''; ?>"><?php esc_html_e('Pending', 'the-readscope-tour-and-accommodation-booking'); ?></a> |</li>
-                <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=confirmed')); ?>" class="<?php echo ($statusFilter === 'confirmed') ? 'current' : ''; ?>"><?php esc_html_e('Confirmed', 'the-readscope-tour-and-accommodation-booking'); ?></a> |</li>
-                <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=cancel_requested')); ?>" class="<?php echo ($statusFilter === 'cancel_requested') ? 'current' : ''; ?>"><?php esc_html_e('Cancel Requested', 'the-readscope-tour-and-accommodation-booking'); ?></a> |</li>
-                <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=on_hold')); ?>" class="<?php echo ($statusFilter === 'on_hold') ? 'current' : ''; ?>"><?php esc_html_e('On Hold', 'the-readscope-tour-and-accommodation-booking'); ?></a> |</li>
-                <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=completed')); ?>" class="<?php echo ($statusFilter === 'completed') ? 'current' : ''; ?>"><?php esc_html_e('Completed', 'the-readscope-tour-and-accommodation-booking'); ?></a> |</li>
-                <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=cancelled')); ?>" class="<?php echo ($statusFilter === 'cancelled') ? 'current' : ''; ?>"><?php esc_html_e('Cancelled', 'the-readscope-tour-and-accommodation-booking'); ?></a></li>
+                <li><a href="<?php echo esc_url(admin_url('admin.php?page=readscope-bookings&status=all')); ?>" class="<?php echo ($statusFilter === 'all') ? 'current' : ''; ?>"><?php esc_html_e('All', 'the-readscope-tour-and-accommodation-booking'); ?></a> |</li>
+                <li><a href="<?php echo esc_url(admin_url('admin.php?page=readscope-bookings&status=pending')); ?>" class="<?php echo ($statusFilter === 'pending') ? 'current' : ''; ?>"><?php esc_html_e('Pending', 'the-readscope-tour-and-accommodation-booking'); ?></a> |</li>
+                <li><a href="<?php echo esc_url(admin_url('admin.php?page=readscope-bookings&status=confirmed')); ?>" class="<?php echo ($statusFilter === 'confirmed') ? 'current' : ''; ?>"><?php esc_html_e('Confirmed', 'the-readscope-tour-and-accommodation-booking'); ?></a> |</li>
+                <li><a href="<?php echo esc_url(admin_url('admin.php?page=readscope-bookings&status=cancel_requested')); ?>" class="<?php echo ($statusFilter === 'cancel_requested') ? 'current' : ''; ?>"><?php esc_html_e('Cancel Requested', 'the-readscope-tour-and-accommodation-booking'); ?></a> |</li>
+                <li><a href="<?php echo esc_url(admin_url('admin.php?page=readscope-bookings&status=on_hold')); ?>" class="<?php echo ($statusFilter === 'on_hold') ? 'current' : ''; ?>"><?php esc_html_e('On Hold', 'the-readscope-tour-and-accommodation-booking'); ?></a> |</li>
+                <li><a href="<?php echo esc_url(admin_url('admin.php?page=readscope-bookings&status=completed')); ?>" class="<?php echo ($statusFilter === 'completed') ? 'current' : ''; ?>"><?php esc_html_e('Completed', 'the-readscope-tour-and-accommodation-booking'); ?></a> |</li>
+                <li><a href="<?php echo esc_url(admin_url('admin.php?page=readscope-bookings&status=cancelled')); ?>" class="<?php echo ($statusFilter === 'cancelled') ? 'current' : ''; ?>"><?php esc_html_e('Cancelled', 'the-readscope-tour-and-accommodation-booking'); ?></a></li>
             </ul>
 
             <!-- Search Form -->
-            <form method="get" class="search-box tourivo-bookings-search">
-                <input type="hidden" name="page" value="tourivo-bookings">
+            <form method="get" class="search-box readscope-bookings-search">
+                <input type="hidden" name="page" value="readscope-bookings">
                 <?php if ($statusFilter !== 'all') : ?>
                     <input type="hidden" name="status" value="<?php echo esc_attr($statusFilter); ?>">
                 <?php endif; ?>
@@ -183,7 +183,7 @@ class BookingsTable
                 <input type="submit" class="button" value="<?php esc_attr_e('Search', 'the-readscope-tour-and-accommodation-booking'); ?>">
             </form>
 
-            <table class="wp-list-table widefat fixed striped tourivo-bookings-table">
+            <table class="wp-list-table widefat fixed striped readscope-bookings-table">
                 <thead>
                     <tr>
                         <th style="width: 130px;"><?php esc_html_e('Booking Code', 'the-readscope-tour-and-accommodation-booking'); ?></th>
@@ -245,32 +245,32 @@ class BookingsTable
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <strong><?php echo esc_html(\Tourivo\Support\Money::format((float)$b->total_amount)); ?></strong>
+                                <strong><?php echo esc_html(\Readscope\Support\Money::format((float)$b->total_amount)); ?></strong>
                             </td>
                             <td>
-                                <span class="tourivo-badge tourivo-badge-<?php echo esc_attr($b->payment_status); ?>">
+                                <span class="readscope-badge readscope-badge-<?php echo esc_attr($b->payment_status); ?>">
                                     <?php echo esc_html(ucfirst(str_replace('_', ' ', (string) $b->payment_status))); ?>
                                 </span>
-                                <br><small class="tourivo-muted"><?php echo esc_html(ucwords(str_replace(['_', '-'], ' ', (string) $b->payment_method))); ?></small>
+                                <br><small class="readscope-muted"><?php echo esc_html(ucwords(str_replace(['_', '-'], ' ', (string) $b->payment_method))); ?></small>
                             </td>
                             <td>
-                                <span class="tourivo-badge tourivo-badge-<?php echo esc_attr($b->booking_status); ?>" id="status-badge-<?php echo esc_attr((string)$b->id); ?>">
+                                <span class="readscope-badge readscope-badge-<?php echo esc_attr($b->booking_status); ?>" id="status-badge-<?php echo esc_attr((string)$b->id); ?>">
                                     <?php echo esc_html(self::statusLabel((string) $b->booking_status)); ?>
                                 </span>
                                 <?php if (!empty($b->cancel_requested_at) && $b->booking_status !== 'cancelled') : ?>
-                                    <br><span class="tourivo-badge tourivo-badge-alert tourivo-badge-stacked"><?php esc_html_e('Cancel Requested', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                    <br><span class="readscope-badge readscope-badge-alert readscope-badge-stacked"><?php esc_html_e('Cancel Requested', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 <?php endif; ?>
                             </td>
                             <td>
                                 <div class="action-buttons-group">
-                                    <button type="button" class="button button-small open-timeline-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-code="<?php echo esc_attr($b->booking_code); ?>" data-name="<?php echo esc_attr($b->customer_name); ?>" data-email="<?php echo esc_attr($b->customer_email); ?>" data-phone="<?php echo esc_attr($b->customer_phone); ?>" data-item="<?php echo esc_attr($b->item_title ?? ''); ?>" data-checkin="<?php echo esc_attr($b->check_in ?? ''); ?>" data-checkout="<?php echo esc_attr($b->check_out ?? ''); ?>" data-amount="<?php echo esc_attr(\Tourivo\Support\Money::format((float)$b->total_amount)); ?>" data-status="<?php echo esc_attr($b->booking_status); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_timeline_nonce')); ?>" title="<?php esc_attr_e('View Booking Details & Timeline Notes', 'the-readscope-tour-and-accommodation-booking'); ?>">
+                                    <button type="button" class="button button-small open-timeline-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-code="<?php echo esc_attr($b->booking_code); ?>" data-name="<?php echo esc_attr($b->customer_name); ?>" data-email="<?php echo esc_attr($b->customer_email); ?>" data-phone="<?php echo esc_attr($b->customer_phone); ?>" data-item="<?php echo esc_attr($b->item_title ?? ''); ?>" data-checkin="<?php echo esc_attr($b->check_in ?? ''); ?>" data-checkout="<?php echo esc_attr($b->check_out ?? ''); ?>" data-amount="<?php echo esc_attr(\Readscope\Support\Money::format((float)$b->total_amount)); ?>" data-status="<?php echo esc_attr($b->booking_status); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce('readscope_timeline_nonce')); ?>" title="<?php esc_attr_e('View Booking Details & Timeline Notes', 'the-readscope-tour-and-accommodation-booking'); ?>">
                                         <span class="dashicons dashicons-visibility" aria-hidden="true"></span><?php esc_html_e('Details', 'the-readscope-tour-and-accommodation-booking'); ?>
                                     </button>
-                                    <a href="<?php echo esc_url(wp_nonce_url(add_query_arg(['action' => 'tourivo_print_voucher', 'code' => $b->booking_code], admin_url('admin-post.php')), 'tourivo_voucher_' . strtoupper((string) $b->booking_code), '_tourivo_nonce')); ?>" target="_blank" rel="noopener" class="button button-small" title="<?php esc_attr_e('Print Booking Voucher', 'the-readscope-tour-and-accommodation-booking'); ?>">
+                                    <a href="<?php echo esc_url(wp_nonce_url(add_query_arg(['action' => 'readscope_print_voucher', 'code' => $b->booking_code], admin_url('admin-post.php')), 'readscope_voucher_' . strtoupper((string) $b->booking_code), '_readscope_nonce')); ?>" target="_blank" rel="noopener" class="button button-small" title="<?php esc_attr_e('Print Booking Voucher', 'the-readscope-tour-and-accommodation-booking'); ?>">
                                         <span class="dashicons dashicons-printer" aria-hidden="true"></span><?php esc_html_e('Voucher', 'the-readscope-tour-and-accommodation-booking'); ?>
                                     </a>
-                                    <?php do_action('tourivo_booking_row_actions', $b); ?>
-                                    <button type="button" class="button button-small tourivo-open-payment-modal-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-code="<?php echo esc_attr($b->booking_code); ?>" data-customer="<?php echo esc_attr($b->customer_name); ?>" data-total="<?php echo esc_attr((string)$b->total_amount); ?>" data-paid="<?php echo esc_attr((string)($b->paid_amount ?? 0)); ?>" data-due="<?php echo esc_attr((string)($b->due_amount ?? $b->total_amount)); ?>" data-payment-status="<?php echo esc_attr($b->payment_status); ?>" data-payment-method="<?php echo esc_attr($b->payment_method); ?>" data-transaction-id="<?php echo esc_attr($b->transaction_id ?? ''); ?>" data-booking-status="<?php echo esc_attr($b->booking_status); ?>" data-nonce="<?php echo esc_attr($nonce); ?>" title="<?php esc_attr_e('Record received offline payment or mark paid', 'the-readscope-tour-and-accommodation-booking'); ?>">
+                                    <?php do_action('readscope_booking_row_actions', $b); ?>
+                                    <button type="button" class="button button-small readscope-open-payment-modal-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-code="<?php echo esc_attr($b->booking_code); ?>" data-customer="<?php echo esc_attr($b->customer_name); ?>" data-total="<?php echo esc_attr((string)$b->total_amount); ?>" data-paid="<?php echo esc_attr((string)($b->paid_amount ?? 0)); ?>" data-due="<?php echo esc_attr((string)($b->due_amount ?? $b->total_amount)); ?>" data-payment-status="<?php echo esc_attr($b->payment_status); ?>" data-payment-method="<?php echo esc_attr($b->payment_method); ?>" data-transaction-id="<?php echo esc_attr($b->transaction_id ?? ''); ?>" data-booking-status="<?php echo esc_attr($b->booking_status); ?>" data-nonce="<?php echo esc_attr($nonce); ?>" title="<?php esc_attr_e('Record received offline payment or mark paid', 'the-readscope-tour-and-accommodation-booking'); ?>">
                                         <span class="dashicons dashicons-money-alt" aria-hidden="true"></span><?php esc_html_e('Payment', 'the-readscope-tour-and-accommodation-booking'); ?>
                                     </button>
                                     <button type="button" class="button button-small revoke-links-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-nonce="<?php echo esc_attr($nonce); ?>" title="<?php esc_attr_e('Invalidate previously shared voucher / calendar links', 'the-readscope-tour-and-accommodation-booking'); ?>"><span class="dashicons dashicons-lock" aria-hidden="true"></span><?php esc_html_e('Revoke Links', 'the-readscope-tour-and-accommodation-booking'); ?></button>
@@ -286,7 +286,7 @@ class BookingsTable
                     <?php endforeach; else : ?>
                         <tr>
                             <td colspan="7">
-                                <div class="tourivo-empty">
+                                <div class="readscope-empty">
                                     <span class="dashicons dashicons-calendar-alt" aria-hidden="true"></span>
                                     <p><?php esc_html_e('No bookings found matching criteria.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                                 </div>
@@ -321,16 +321,16 @@ class BookingsTable
             <?php endif; ?>
 
             <!-- Manual Booking Modal -->
-            <div id="tourivo-manual-booking-modal" class="tourivo-admin-modal" style="display: none;">
+            <div id="readscope-manual-booking-modal" class="readscope-admin-modal" style="display: none;">
                 <div class="modal-overlay"></div>
                 <div class="modal-dialog">
                     <div class="modal-header">
                         <h2><?php esc_html_e('Create Manual Booking (Phone / WhatsApp / Walk-in)', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <button type="button" class="close-modal-btn">&times;</button>
                     </div>
-                    <form id="tourivo-manual-booking-form">
+                    <form id="readscope-manual-booking-form">
                         <div class="modal-body">
-                            <div class="tourivo-form-group">
+                            <div class="readscope-form-group">
                                 <label for="manual_item_select"><strong><?php esc_html_e('Select Tour or Hotel Room *', 'the-readscope-tour-and-accommodation-booking'); ?></strong></label>
                                 <select name="item_id" id="manual_item_select" required style="width: 100%;">
                                     <option value=""><?php esc_html_e('-- Select Trip or Room --', 'the-readscope-tour-and-accommodation-booking'); ?></option>
@@ -352,27 +352,27 @@ class BookingsTable
                                 <input type="hidden" name="item_type" id="manual_item_type" value="tour">
                             </div>
 
-                            <div class="tourivo-row" style="display: flex; gap: 12px;">
-                                <div class="tourivo-col" style="flex: 1;">
+                            <div class="readscope-row" style="display: flex; gap: 12px;">
+                                <div class="readscope-col" style="flex: 1;">
                                     <label for="manual_check_in"><?php esc_html_e('Check-in Date *', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                                     <input type="date" name="check_in" id="manual_check_in" required value="<?php echo esc_attr(gmdate('Y-m-d')); ?>" style="width: 100%;">
                                 </div>
-                                <div class="tourivo-col" style="flex: 1;">
+                                <div class="readscope-col" style="flex: 1;">
                                     <label for="manual_check_out"><?php esc_html_e('Check-out Date (For Rooms)', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                                     <input type="date" name="check_out" id="manual_check_out" style="width: 100%;">
                                 </div>
                             </div>
 
-                            <div class="tourivo-row" style="display: flex; gap: 12px; margin-top: 10px;">
-                                <div class="tourivo-col" style="flex: 1;">
+                            <div class="readscope-row" style="display: flex; gap: 12px; margin-top: 10px;">
+                                <div class="readscope-col" style="flex: 1;">
                                     <label for="manual_adults"><?php esc_html_e('Adults *', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                                     <input type="number" name="adults" id="manual_adults" min="1" value="1" required style="width: 100%;">
                                 </div>
-                                <div class="tourivo-col" style="flex: 1;">
+                                <div class="readscope-col" style="flex: 1;">
                                     <label for="manual_children"><?php esc_html_e('Children', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                                     <input type="number" name="children" id="manual_children" min="0" value="0" style="width: 100%;">
                                 </div>
-                                <div class="tourivo-col" style="flex: 1;">
+                                <div class="readscope-col" style="flex: 1;">
                                     <label for="manual_total_amount"><?php esc_html_e('Total Price ($) *', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                                     <input type="number" step="0.01" min="0" name="total_amount" id="manual_total_amount" placeholder="0.00" required style="width: 100%;">
                                 </div>
@@ -380,23 +380,23 @@ class BookingsTable
 
                             <hr style="margin: 16px 0; border: 0; border-top: 1px solid #e2e8f0;">
 
-                            <div class="tourivo-row" style="display: flex; gap: 12px;">
-                                <div class="tourivo-col" style="flex: 1;">
+                            <div class="readscope-row" style="display: flex; gap: 12px;">
+                                <div class="readscope-col" style="flex: 1;">
                                     <label for="manual_customer_name"><?php esc_html_e('Customer Full Name *', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                                     <input type="text" name="customer_name" id="manual_customer_name" required placeholder="John Doe" style="width: 100%;">
                                 </div>
-                                <div class="tourivo-col" style="flex: 1;">
+                                <div class="readscope-col" style="flex: 1;">
                                     <label for="manual_customer_email"><?php esc_html_e('Customer Email *', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                                     <input type="email" name="customer_email" id="manual_customer_email" required placeholder="john@example.com" style="width: 100%;">
                                 </div>
                             </div>
 
-                            <div class="tourivo-row" style="display: flex; gap: 12px; margin-top: 10px;">
-                                <div class="tourivo-col" style="flex: 1;">
+                            <div class="readscope-row" style="display: flex; gap: 12px; margin-top: 10px;">
+                                <div class="readscope-col" style="flex: 1;">
                                     <label for="manual_customer_phone"><?php esc_html_e('Phone / WhatsApp', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                                     <input type="tel" name="customer_phone" id="manual_customer_phone" placeholder="+123456789" style="width: 100%;">
                                 </div>
-                                <div class="tourivo-col" style="flex: 1;">
+                                <div class="readscope-col" style="flex: 1;">
                                     <label for="manual_payment_status"><?php esc_html_e('Payment Status', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                                     <select name="payment_status" id="manual_payment_status" style="width: 100%;">
                                         <option value="paid"><?php esc_html_e('Paid (Full Cash / Online)', 'the-readscope-tour-and-accommodation-booking'); ?></option>
@@ -405,7 +405,7 @@ class BookingsTable
                                 </div>
                             </div>
 
-                            <div class="tourivo-form-group" style="margin-top: 10px;">
+                            <div class="readscope-form-group" style="margin-top: 10px;">
                                 <label for="manual_customer_notes"><?php esc_html_e('Internal Notes', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                                 <textarea name="customer_notes" id="manual_customer_notes" rows="2" placeholder="<?php esc_attr_e('e.g. Phone booking confirmed by agent.', 'the-readscope-tour-and-accommodation-booking'); ?>" style="width: 100%;"></textarea>
                             </div>
@@ -421,7 +421,7 @@ class BookingsTable
             </div>
 
             <!-- Booking Details & Timeline Notes Modal -->
-            <div id="tourivo-booking-timeline-modal" class="tourivo-admin-modal" style="display: none;">
+            <div id="readscope-booking-timeline-modal" class="readscope-admin-modal" style="display: none;">
                 <div class="modal-overlay"></div>
                 <div class="modal-dialog" style="max-width: 680px;">
                     <div class="modal-header">
@@ -445,9 +445,9 @@ class BookingsTable
                         </div>
 
                         <!-- Add Note Form -->
-                        <form id="tourivo-add-note-form">
+                        <form id="readscope-add-note-form">
                             <input type="hidden" name="booking_id" id="timeline-booking-id" value="">
-                            <div class="tourivo-form-group">
+                            <div class="readscope-form-group">
                                 <label for="internal-note-text"><strong><?php esc_html_e('Add Internal Staff Note', 'the-readscope-tour-and-accommodation-booking'); ?></strong></label>
                                 <div style="display: flex; gap: 8px;">
                                     <input type="text" name="note" id="internal-note-text" required placeholder="<?php esc_attr_e('e.g. Customer requested early check-in or confirmed passport.', 'the-readscope-tour-and-accommodation-booking'); ?>" style="flex: 1;">
@@ -481,22 +481,22 @@ class BookingsTable
      */
     public static function renderExportModal(array $tours = [], array $rooms = [], string $defaultStatus = 'all', string $defaultSearch = ''): void
     {
-        $nonce = wp_create_nonce('tourivo_export_csv_action');
+        $nonce = wp_create_nonce('readscope_export_csv_action');
         ?>
-        <div id="tourivo-export-modal" class="tourivo-admin-modal" style="display: none;">
+        <div id="readscope-export-modal" class="readscope-admin-modal" style="display: none;">
             <div class="modal-overlay"></div>
             <div class="modal-dialog" style="max-width: 650px;">
                 <div class="modal-header">
                     <h2><?php esc_html_e('Export Bookings & Generate Reports', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                     <button type="button" class="close-modal-btn">&times;</button>
                 </div>
-                <form id="tourivo-export-form" method="get" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-                    <input type="hidden" name="action" value="tourivo_export_bookings_csv">
+                <form id="readscope-export-form" method="get" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                    <input type="hidden" name="action" value="readscope_export_bookings_csv">
                     <input type="hidden" name="_wpnonce" value="<?php echo esc_attr($nonce); ?>">
 
                     <div class="modal-body">
                         <!-- Date Preset Quick Filters -->
-                        <div class="tourivo-form-group">
+                        <div class="readscope-form-group">
                             <label><strong><?php esc_html_e('Date Range Preset', 'the-readscope-tour-and-accommodation-booking'); ?></strong></label>
                             <div class="export-date-presets" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;">
                                 <button type="button" class="button button-small export-preset-btn active" data-range="all"><?php esc_html_e('All Time', 'the-readscope-tour-and-accommodation-booking'); ?></button>
@@ -509,27 +509,27 @@ class BookingsTable
                         </div>
 
                         <!-- Date Criteria & Custom Range -->
-                        <div class="tourivo-row" style="display: flex; gap: 12px; margin-top: 10px;">
-                            <div class="tourivo-col" style="flex: 1;">
+                        <div class="readscope-row" style="display: flex; gap: 12px; margin-top: 10px;">
+                            <div class="readscope-col" style="flex: 1;">
                                 <label for="export_date_type"><?php esc_html_e('Filter Dates By', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                                 <select name="date_type" id="export_date_type" style="width: 100%;">
                                     <option value="booking_date"><?php esc_html_e('Booking Date (Created)', 'the-readscope-tour-and-accommodation-booking'); ?></option>
                                     <option value="travel_date"><?php esc_html_e('Travel Date (Check-in)', 'the-readscope-tour-and-accommodation-booking'); ?></option>
                                 </select>
                             </div>
-                            <div class="tourivo-col" style="flex: 1;">
+                            <div class="readscope-col" style="flex: 1;">
                                 <label for="export_start_date"><?php esc_html_e('Start Date', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                                 <input type="date" name="start_date" id="export_start_date" style="width: 100%;">
                             </div>
-                            <div class="tourivo-col" style="flex: 1;">
+                            <div class="readscope-col" style="flex: 1;">
                                 <label for="export_end_date"><?php esc_html_e('End Date', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                                 <input type="date" name="end_date" id="export_end_date" style="width: 100%;">
                             </div>
                         </div>
 
                         <!-- Status & Payment Status -->
-                        <div class="tourivo-row" style="display: flex; gap: 12px; margin-top: 12px;">
-                            <div class="tourivo-col" style="flex: 1;">
+                        <div class="readscope-row" style="display: flex; gap: 12px; margin-top: 12px;">
+                            <div class="readscope-col" style="flex: 1;">
                                 <label for="export_status"><?php esc_html_e('Booking Status', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                                 <select name="status" id="export_status" style="width: 100%;">
                                     <option value="all" <?php selected($defaultStatus, 'all'); ?>><?php esc_html_e('All Statuses', 'the-readscope-tour-and-accommodation-booking'); ?></option>
@@ -541,7 +541,7 @@ class BookingsTable
                                     <option value="cancelled" <?php selected($defaultStatus, 'cancelled'); ?>><?php esc_html_e('Cancelled', 'the-readscope-tour-and-accommodation-booking'); ?></option>
                                 </select>
                             </div>
-                            <div class="tourivo-col" style="flex: 1;">
+                            <div class="readscope-col" style="flex: 1;">
                                 <label for="export_payment_status"><?php esc_html_e('Payment Status', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                                 <select name="payment_status" id="export_payment_status" style="width: 100%;">
                                     <option value="all"><?php esc_html_e('All Payment Statuses', 'the-readscope-tour-and-accommodation-booking'); ?></option>
@@ -554,8 +554,8 @@ class BookingsTable
                         </div>
 
                         <!-- Item / Tour & Search -->
-                        <div class="tourivo-row" style="display: flex; gap: 12px; margin-top: 12px;">
-                            <div class="tourivo-col" style="flex: 1;">
+                        <div class="readscope-row" style="display: flex; gap: 12px; margin-top: 12px;">
+                            <div class="readscope-col" style="flex: 1;">
                                 <label for="export_item_id"><?php esc_html_e('Specific Tour or Room', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                                 <select name="item_id" id="export_item_id" style="width: 100%;">
                                     <option value="0"><?php esc_html_e('-- All Tours & Rooms --', 'the-readscope-tour-and-accommodation-booking'); ?></option>
@@ -575,14 +575,14 @@ class BookingsTable
                                     <?php endif; ?>
                                 </select>
                             </div>
-                            <div class="tourivo-col" style="flex: 1;">
+                            <div class="readscope-col" style="flex: 1;">
                                 <label for="export_search"><?php esc_html_e('Search Keyword', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                                 <input type="text" name="s" id="export_search" value="<?php echo esc_attr($defaultSearch); ?>" placeholder="<?php esc_attr_e('Name, email, phone, code...', 'the-readscope-tour-and-accommodation-booking'); ?>" style="width: 100%;">
                             </div>
                         </div>
 
                         <!-- Report Format / Type -->
-                        <div class="tourivo-form-group" style="margin-top: 14px;">
+                        <div class="readscope-form-group" style="margin-top: 14px;">
                             <label><strong><?php esc_html_e('Report Format & Detail Level', 'the-readscope-tour-and-accommodation-booking'); ?></strong></label>
                             <div class="export-report-type-selector" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px;">
                                 <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer; background: #f8fafc; padding: 10px 14px; border-radius: 6px; border: 1px solid #cbd5e1; flex: 1; min-width: 180px;">
@@ -601,7 +601,7 @@ class BookingsTable
                         </div>
 
                         <!-- Live Match Preview Badge -->
-                        <div id="tourivo-export-preview-badge" style="margin-top: 14px; padding: 12px 14px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; font-size: var(--trv-admin-text-sm);">
+                        <div id="readscope-export-preview-badge" style="margin-top: 14px; padding: 12px 14px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; font-size: var(--trv-admin-text-sm);">
                             <span><strong id="export-preview-count">...</strong> <?php esc_html_e('matching bookings found', 'the-readscope-tour-and-accommodation-booking'); ?> (<span id="export-preview-revenue">...</span>)</span>
                             <span style="color: #166534; font-size: var(--trv-admin-text-xs); font-weight: 600;"><?php esc_html_e('UTF-8 Excel Ready', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                         </div>
@@ -609,7 +609,7 @@ class BookingsTable
 
                     <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; padding: 14px 20px; background: #f8fafc; border-top: 1px solid #e2e8f0;">
                         <button type="button" class="button close-modal-btn"><?php esc_html_e('Cancel', 'the-readscope-tour-and-accommodation-booking'); ?></button>
-                        <button type="submit" id="tourivo-submit-export-btn" class="button button-primary">
+                        <button type="submit" id="readscope-submit-export-btn" class="button button-primary">
                             <span class="dashicons dashicons-download" aria-hidden="true"></span><?php esc_html_e('Download CSV Report', 'the-readscope-tour-and-accommodation-booking'); ?>
                         </button>
                     </div>
@@ -618,14 +618,14 @@ class BookingsTable
         </div>
 
         <!-- 3. Record Offline Payment Modal -->
-        <div id="tourivo-record-payment-modal" class="tourivo-modal-wrap" style="display: none;">
-            <div class="tourivo-modal-overlay"></div>
-            <div class="tourivo-modal-content" style="max-width: 520px; padding: 0; overflow: hidden; border-radius: 8px;">
+        <div id="readscope-record-payment-modal" class="readscope-modal-wrap" style="display: none;">
+            <div class="readscope-modal-overlay"></div>
+            <div class="readscope-modal-content" style="max-width: 520px; padding: 0; overflow: hidden; border-radius: 8px;">
                 <div class="modal-header" style="background: #0f172a; color: #ffffff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;">
                     <h3 style="margin: 0; color: #ffffff; font-size: var(--trv-admin-text-lg);"><?php esc_html_e('Record Payment', 'the-readscope-tour-and-accommodation-booking'); ?> &mdash; <span id="payment-modal-booking-code">#...</span></h3>
                     <button type="button" class="close-modal-btn" style="background: none; border: none; color: #ffffff; font-size: 20px; cursor: pointer; line-height: 1;">&times;</button>
                 </div>
-                <form id="tourivo-record-payment-form">
+                <form id="readscope-record-payment-form">
                     <input type="hidden" name="booking_id" id="payment-modal-booking-id" value="0">
                     <input type="hidden" name="nonce" id="payment-modal-nonce" value="">
 
@@ -651,15 +651,15 @@ class BookingsTable
                         </div>
 
                         <!-- Amount to Record -->
-                        <div class="tourivo-form-group" style="margin-bottom: 14px;">
+                        <div class="readscope-form-group" style="margin-bottom: 14px;">
                             <label for="payment-amount" style="display: block; font-weight: 600; margin-bottom: 4px;"><?php esc_html_e('Payment Amount to Record', 'the-readscope-tour-and-accommodation-booking'); ?> *</label>
                             <input type="number" step="0.01" min="0" name="amount" id="payment-amount" class="widefat" required style="font-size: var(--trv-admin-text-lg); font-weight: 600;">
                             <p class="description" style="margin-top: 4px;"><?php esc_html_e('Defaults to the full or remaining due balance.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                         </div>
 
                         <!-- Payment Status -->
-                        <div class="tourivo-row" style="display: flex; gap: 12px; margin-bottom: 14px;">
-                            <div class="tourivo-col" style="flex: 1;">
+                        <div class="readscope-row" style="display: flex; gap: 12px; margin-bottom: 14px;">
+                            <div class="readscope-col" style="flex: 1;">
                                 <label for="payment-status-select" style="display: block; font-weight: 600; margin-bottom: 4px;"><?php esc_html_e('Payment Status', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                                 <select name="payment_status" id="payment-status-select" style="width: 100%;">
                                     <option value="paid"><?php esc_html_e('Paid (Settled)', 'the-readscope-tour-and-accommodation-booking'); ?></option>
@@ -668,7 +668,7 @@ class BookingsTable
                                     <option value="refunded"><?php esc_html_e('Refunded', 'the-readscope-tour-and-accommodation-booking'); ?></option>
                                 </select>
                             </div>
-                            <div class="tourivo-col" style="flex: 1;">
+                            <div class="readscope-col" style="flex: 1;">
                                 <label for="payment-method-select" style="display: block; font-weight: 600; margin-bottom: 4px;"><?php esc_html_e('Payment Method', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                                 <select name="payment_method" id="payment-method-select" style="width: 100%;">
                                     <option value="bank_transfer"><?php esc_html_e('Bank Transfer', 'the-readscope-tour-and-accommodation-booking'); ?></option>
@@ -680,13 +680,13 @@ class BookingsTable
                         </div>
 
                         <!-- Transaction Reference / ID -->
-                        <div class="tourivo-form-group" style="margin-bottom: 14px;">
+                        <div class="readscope-form-group" style="margin-bottom: 14px;">
                             <label for="payment-txn-id" style="display: block; font-weight: 600; margin-bottom: 4px;"><?php esc_html_e('Transaction / Deposit Reference', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                             <input type="text" name="transaction_id" id="payment-txn-id" class="widefat" placeholder="<?php esc_attr_e('e.g. BANK-TXN-882299, Slip #, bKash TrxID', 'the-readscope-tour-and-accommodation-booking'); ?>">
                         </div>
 
                         <!-- Auto-confirm pending booking checkbox -->
-                        <div class="tourivo-form-group" id="payment-auto-confirm-wrap" style="margin-bottom: 14px; background: #eff6ff; padding: 10px 12px; border-radius: 6px; border: 1px solid #bfdbfe;">
+                        <div class="readscope-form-group" id="payment-auto-confirm-wrap" style="margin-bottom: 14px; background: #eff6ff; padding: 10px 12px; border-radius: 6px; border: 1px solid #bfdbfe;">
                             <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: var(--trv-admin-text-sm); font-weight: 500;">
                                 <input type="checkbox" name="auto_confirm" id="payment-auto-confirm" value="1" checked>
                                 <span><?php esc_html_e('Automatically confirm reservation if currently in Pending status', 'the-readscope-tour-and-accommodation-booking'); ?></span>
@@ -694,7 +694,7 @@ class BookingsTable
                         </div>
 
                         <!-- Internal Audit Note -->
-                        <div class="tourivo-form-group">
+                        <div class="readscope-form-group">
                             <label for="payment-note" style="display: block; font-weight: 600; margin-bottom: 4px;"><?php esc_html_e('Internal Audit Note', 'the-readscope-tour-and-accommodation-booking'); ?></label>
                             <textarea name="note" id="payment-note" rows="2" class="widefat" placeholder="<?php esc_attr_e('Optional memo (e.g. Verified via City Bank Online portal)', 'the-readscope-tour-and-accommodation-booking'); ?>"></textarea>
                         </div>
@@ -704,7 +704,7 @@ class BookingsTable
 
                     <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; padding: 14px 20px; background: #f8fafc; border-top: 1px solid #e2e8f0;">
                         <button type="button" class="button close-modal-btn"><?php esc_html_e('Cancel', 'the-readscope-tour-and-accommodation-booking'); ?></button>
-                        <button type="submit" id="tourivo-submit-payment-btn" class="button button-primary">
+                        <button type="submit" id="readscope-submit-payment-btn" class="button button-primary">
                             ✓ <?php esc_html_e('Save Payment Record', 'the-readscope-tour-and-accommodation-booking'); ?>
                         </button>
                     </div>
@@ -719,6 +719,6 @@ class BookingsTable
      */
     public static function exportCsv(): void
     {
-        \Tourivo\Services\ExportService::handleExportRequest();
+        \Readscope\Services\ExportService::handleExportRequest();
     }
 }

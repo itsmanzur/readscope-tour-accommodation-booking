@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\PostTypes;
+namespace Readscope\PostTypes;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -11,14 +11,14 @@ if (!defined('ABSPATH')) {
 /**
  * Class HotelPostType
  *
- * Registers the 'tourivo_hotel' custom post type and its taxonomies.
+ * Registers the 'readscope_hotel' custom post type and its taxonomies.
  *
- * @package Tourivo\PostTypes
+ * @package Readscope\PostTypes
  */
 class HotelPostType
 {
-    public const POST_TYPE = 'tourivo_hotel';
-    public const TAX_AMENITY = 'tourivo_amenity';
+    public const POST_TYPE = 'readscope_hotel';
+    public const TAX_AMENITY = 'readscope_amenity';
 
     /**
      * Register post type and taxonomies.
@@ -63,7 +63,7 @@ class HotelPostType
             'public'             => true,
             'publicly_queryable' => true,
             'show_ui'            => true,
-            'show_in_menu'       => 'tourivo',
+            'show_in_menu'       => 'readscope',
             'query_var'          => true,
             'rewrite'            => ['slug' => 'hotels', 'with_front' => false],
             'capability_type'    => 'post',
@@ -97,7 +97,7 @@ class HotelPostType
                 'menu_name'     => __('Amenities', 'the-readscope-tour-and-accommodation-booking'),
             ],
             'show_ui'           => true,
-            'show_in_menu'      => 'tourivo',
+            'show_in_menu'      => 'readscope',
             'show_admin_column' => true,
             'query_var'         => true,
             'rewrite'           => ['slug' => 'amenity', 'with_front' => false],

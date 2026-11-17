@@ -824,7 +824,7 @@ msgid "Publish on Pages via Shortcode or Elementor"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:129
-msgid "Paste shortcodes like [tourivo_tours] or [tourivo_filter_search] on any page or drag Readscope Booking widgets into Elementor."
+msgid "Paste shortcodes like [readscope_tours] or [readscope_filter_search] on any page or drag Readscope Booking widgets into Elementor."
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:130
@@ -918,7 +918,7 @@ msgid "Live Search, Filter & Traveler Wishlist"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:188
-msgid "Live AJAX Filter & Search [tourivo_filter_search]"
+msgid "Live AJAX Filter & Search [readscope_filter_search]"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:189
@@ -926,7 +926,7 @@ msgid "Real-time, zero page-reload filtering by keyword, destination, budget ran
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:193
-msgid "Traveler Wishlist & Favorites [tourivo_wishlist]"
+msgid "Traveler Wishlist & Favorites [readscope_wishlist]"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:194
@@ -934,7 +934,7 @@ msgid "1-Click animated heart button on all cards. Snappy LocalStorage saving + 
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:198
-msgid "Multi-Currency Switcher [tourivo_currency_switcher]"
+msgid "Multi-Currency Switcher [readscope_currency_switcher]"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:199
@@ -1043,7 +1043,7 @@ msgid "Generate beautiful PDF boarding passes with secure HMAC-verified QR codes
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:268
-msgid "Customer Account Dashboard [tourivo_customer_dashboard]"
+msgid "Customer Account Dashboard [readscope_customer_dashboard]"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:269
@@ -1394,7 +1394,7 @@ msgid "Elementor Page Builder"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:483
-msgid "If you use Elementor, simply open the Elementor editor and search for \"Tourivo\" in the widget panel. You will find:"
+msgid "If you use Elementor, simply open the Elementor editor and search for \"Readscope\" in the widget panel. You will find:"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:485
@@ -1434,7 +1434,7 @@ msgid "Gutenberg Block Editor"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:494
-msgid "In the WordPress standard block editor, click (+) and search for \"Tourivo\" blocks:"
+msgid "In the WordPress standard block editor, click (+) and search for \"Readscope\" blocks:"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:496
@@ -1684,7 +1684,7 @@ msgid "6. Customer Frontend Dashboard & Guest Lookup"
 msgstr ""
 
 #: app/Admin/DocumentationPage.php:624
-msgid "Shortcode [tourivo_customer_dashboard] gives travelers a self-service portal to view upcoming trips, order history, and download PDF tickets."
+msgid "Shortcode [readscope_customer_dashboard] gives travelers a self-service portal to view upcoming trips, order history, and download PDF tickets."
 msgstr ""
 
 #: app/Admin/InquiriesTable.php:47
@@ -2184,7 +2184,7 @@ msgid "Supported Multi-Currencies for Frontend Switcher"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:486
-msgid "These exchange rates are used when travelers switch currencies with [tourivo_currency_switcher]:"
+msgid "These exchange rates are used when travelers switch currencies with [readscope_currency_switcher]:"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:491
@@ -2237,11 +2237,11 @@ msgid "Thank You / Confirmation Page"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:538
-msgid "— Select Page with [tourivo_thank_you] —"
+msgid "— Select Page with [readscope_thank_you] —"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:542
-msgid "Page containing the [tourivo_thank_you] shortcode where travelers are redirected."
+msgid "Page containing the [readscope_thank_you] shortcode where travelers are redirected."
 msgstr ""
 
 #: app/Admin/SettingsPage.php:549
@@ -2549,7 +2549,7 @@ msgid "Enable eCommerce conversion tracking dataLayer event on Thank You page."
 msgstr ""
 
 #: app/Admin/SettingsPage.php:822
-msgid "Pushes a privacy-friendly tourivo_booking event (booking_id, value, currency) to window.dataLayer without customer PII."
+msgid "Pushes a privacy-friendly readscope_booking event (booking_id, value, currency) to window.dataLayer without customer PII."
 msgstr ""
 
 #: app/Admin/SettingsPage.php:832
@@ -2597,7 +2597,7 @@ msgid "Customer Booking Lookup Page"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:877
-msgid "— Select Page with [tourivo_booking_lookup] —"
+msgid "— Select Page with [readscope_booking_lookup] —"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:881
@@ -2609,7 +2609,7 @@ msgid "Customer Account / My Bookings Page"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:892
-msgid "— Select Page with [tourivo_my_bookings] —"
+msgid "— Select Page with [readscope_my_bookings] —"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:896
@@ -2649,7 +2649,7 @@ msgid "Email Templates Configuration"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:920
-msgid "Customize the subject lines, headings, and additional notes for all automated emails. You can also override email layouts in your active WordPress theme under your-theme/tourivo/emails/."
+msgid "Customize the subject lines, headings, and additional notes for all automated emails. You can also override email layouts in your active WordPress theme under your-theme/readscope/emails/."
 msgstr ""
 
 #: app/Admin/SettingsPage.php:937
@@ -2721,7 +2721,7 @@ msgid "Generate Secret"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:1009
-msgid "Optional secret key used to compute the X-Tourivo-Signature HTTP header for payload verification."
+msgid "Optional secret key used to compute the X-Readscope-Signature HTTP header for payload verification."
 msgstr ""
 
 #: app/Admin/SettingsPage.php:1014
@@ -3292,62 +3292,62 @@ msgstr ""
 msgid "Display traveler dashboard with upcoming trips, completed itineraries, and self-management actions."
 msgstr ""
 
-#: app/Cli/TourivoCli.php:111
+#: app/Cli/ReadscopeCli.php:111
 msgid "No bookings found matching your criteria."
 msgstr ""
 
-#: app/Cli/TourivoCli.php:121
-msgid "Please provide a valid numeric booking ID. Example: wp tourivo booking get 12"
+#: app/Cli/ReadscopeCli.php:121
+msgid "Please provide a valid numeric booking ID. Example: wp readscope booking get 12"
 msgstr ""
 
 #. translators: %d: Numeric booking ID
-#: app/Cli/TourivoCli.php:128
+#: app/Cli/ReadscopeCli.php:128
 #, php-format
 msgid "Booking #%d not found."
 msgstr ""
 
-#: app/Cli/TourivoCli.php:148
-msgid "Usage: wp tourivo booking set-status <id> <status>"
+#: app/Cli/ReadscopeCli.php:148
+msgid "Usage: wp readscope booking set-status <id> <status>"
 msgstr ""
 
 #. translators: %s: Action name
-#: app/Cli/TourivoCli.php:163
+#: app/Cli/ReadscopeCli.php:163
 #, php-format
 msgid "Unknown booking action \"%s\". Use list, get, or set-status."
 msgstr ""
 
-#: app/Cli/TourivoCli.php:184
+#: app/Cli/ReadscopeCli.php:184
 msgid "Running Readscope Booking database migrations..."
 msgstr ""
 
-#: app/Cli/TourivoCli.php:186
+#: app/Cli/ReadscopeCli.php:186
 msgid "Readscope Booking database schema migrated successfully."
 msgstr ""
 
 #. translators: %s: Unknown command name
-#: app/Cli/TourivoCli.php:189
+#: app/Cli/ReadscopeCli.php:189
 #, php-format
-msgid "Unknown db command \"%s\". Use: wp tourivo db migrate"
+msgid "Unknown db command \"%s\". Use: wp readscope db migrate"
 msgstr ""
 
-#: app/Cli/TourivoCli.php:223
-msgid "Please specify a valid item ID. Example: wp tourivo inventory 15"
+#: app/Cli/ReadscopeCli.php:223
+msgid "Please specify a valid item ID. Example: wp readscope inventory 15"
 msgstr ""
 
 #. translators: 1: Item ID, 2: Item title, 3: Date string
-#: app/Cli/TourivoCli.php:238
+#: app/Cli/ReadscopeCli.php:238
 #, php-format
 msgid "Item: #%1$d (%2$s) | Date: %3$s"
 msgstr ""
 
 #. translators: %d: Remaining capacity count
-#: app/Cli/TourivoCli.php:241
+#: app/Cli/ReadscopeCli.php:241
 #, php-format
 msgid "Available! Remaining capacity: %d spots."
 msgstr ""
 
 #. translators: %s: Error message reason
-#: app/Cli/TourivoCli.php:244
+#: app/Cli/ReadscopeCli.php:244
 #, php-format
 msgid "Unavailable: %s"
 msgstr ""

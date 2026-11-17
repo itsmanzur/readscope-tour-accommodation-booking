@@ -32,7 +32,7 @@ $host   = getenv('DB_HOST') ?: '127.0.0.1';
 $port   = (int) (getenv('DB_PORT') ?: 3306);
 $user   = getenv('DB_USER') ?: 'root';
 $pass   = getenv('DB_PASSWORD') !== false ? (string) getenv('DB_PASSWORD') : 'root';
-$dbName = getenv('DB_NAME') ?: 'tourivo_test';
+$dbName = getenv('DB_NAME') ?: 'readscope_test';
 $prefix = getenv('TABLE_PREFIX') ?: 'trvug_';
 $runs   = max(1, (int) (getenv('RUNS') ?: 5));
 $create = getenv('DB_CREATE') === '1';
@@ -55,12 +55,12 @@ if ($create) {
 }
 
 $GLOBALS['wpdb'] = $db = new wpdb($host, $port, $user, $pass, $dbName, $prefix);
-$table     = $prefix . 'tourivo_inventories';
-$migration = new \Tourivo\Database\Migrations\CreateInventoriesTable();
+$table     = $prefix . 'readscope_inventories';
+$migration = new \Readscope\Database\Migrations\CreateInventoriesTable();
 
 $resetTable = static function () use ($db, $migration, $prefix): void {
-    $db->query("DROP TABLE IF EXISTS `{$prefix}tourivo_inventories`");
-    $db->query($migration->up($prefix . 'tourivo_', 'DEFAULT CHARACTER SET utf8mb4'));
+    $db->query("DROP TABLE IF EXISTS `{$prefix}readscope_inventories`");
+    $db->query($migration->up($prefix . 'readscope_', 'DEFAULT CHARACTER SET utf8mb4'));
 };
 
 $failures = [];
@@ -92,7 +92,7 @@ $db->query($db->prepare(
     $itemId,
     $date
 ));
-$repo   = new \Tourivo\Repositories\InventoryRepository();
+$repo   = new \Readscope\Repositories\InventoryRepository();
 $before = $row();
 
 $ok = $repo->upsert($itemId, 'tour', $date, 'all_day', 3, 0, 0, 50.0, 'blocked');
@@ -147,7 +147,7 @@ for ($run = 1; $run <= $runs; $run++) {
         $date
     ));
 
-    $runDir = (getenv('TRV_TMP_DIR') ?: sys_get_temp_dir()) . '/tourivo_ug_' . bin2hex(random_bytes(6));
+    $runDir = (getenv('TRV_TMP_DIR') ?: sys_get_temp_dir()) . '/readscope_ug_' . bin2hex(random_bytes(6));
     mkdir($runDir);
 
     // book_loop: default capacity 6. shrink_loop: random capacities 0..8.

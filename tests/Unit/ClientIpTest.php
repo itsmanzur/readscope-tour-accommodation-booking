@@ -5,10 +5,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Unit;
+namespace Readscope\Tests\Unit;
 
-use Tourivo\Support\ClientIp;
-use Tourivo\Tests\TestCase;
+use Readscope\Support\ClientIp;
+use Readscope\Tests\TestCase;
 
 class ClientIpTest extends TestCase
 {
@@ -21,7 +21,7 @@ class ClientIpTest extends TestCase
         $_SERVER['HTTP_CF_CONNECTING_IP'] = '198.51.100.22';
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '198.51.100.33';
 
-        update_option('tourivo_settings', ['proxy_mode' => 'disabled']);
+        update_option('readscope_settings', ['proxy_mode' => 'disabled']);
 
         $ip = ClientIp::get();
         $this->assertEquals('203.0.113.195', $ip);
@@ -35,7 +35,7 @@ class ClientIpTest extends TestCase
         $_SERVER['REMOTE_ADDR'] = '198.51.100.5'; // Not in CF edge range
         $_SERVER['HTTP_CF_CONNECTING_IP'] = '1.1.1.1';
 
-        update_option('tourivo_settings', ['proxy_mode' => 'cloudflare']);
+        update_option('readscope_settings', ['proxy_mode' => 'cloudflare']);
 
         $ip = ClientIp::get();
         $this->assertEquals('198.51.100.5', $ip);
@@ -49,7 +49,7 @@ class ClientIpTest extends TestCase
         $_SERVER['REMOTE_ADDR'] = '173.245.48.50'; // In Cloudflare CIDR 173.245.48.0/20
         $_SERVER['HTTP_CF_CONNECTING_IP'] = '203.0.113.88';
 
-        update_option('tourivo_settings', ['proxy_mode' => 'cloudflare']);
+        update_option('readscope_settings', ['proxy_mode' => 'cloudflare']);
 
         $ip = ClientIp::get();
         $this->assertEquals('203.0.113.88', $ip);
@@ -63,7 +63,7 @@ class ClientIpTest extends TestCase
         $_SERVER['REMOTE_ADDR'] = '10.0.0.1'; // Trusted proxy
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '203.0.113.99, 10.0.0.2';
 
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'proxy_mode'      => 'reverse_proxy',
             'trusted_proxies' => '10.0.0.0/8',
         ]);

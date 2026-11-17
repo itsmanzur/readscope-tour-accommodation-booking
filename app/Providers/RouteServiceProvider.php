@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Providers;
+namespace Readscope\Providers;
 
-use Tourivo\Common\Abstracts\ServiceProvider;
-use Tourivo\Controllers\Api\AvailabilityController;
-use Tourivo\Controllers\Api\BookingController;
-use Tourivo\Controllers\Api\PricingController;
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\InquiryService;
-use Tourivo\Services\InventoryService;
-use Tourivo\Services\PricingService;
+use Readscope\Common\Abstracts\ServiceProvider;
+use Readscope\Controllers\Api\AvailabilityController;
+use Readscope\Controllers\Api\BookingController;
+use Readscope\Controllers\Api\PricingController;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\InquiryService;
+use Readscope\Services\InventoryService;
+use Readscope\Services\PricingService;
 use WP_REST_Server;
 
 if (!defined('ABSPATH')) {
@@ -25,11 +25,11 @@ if (!defined('ABSPATH')) {
  *
  * Registers REST API endpoints and background cron handlers.
  *
- * @package Tourivo\Providers
+ * @package Readscope\Providers
  */
 class RouteServiceProvider extends ServiceProvider
 {
-    public const REST_NAMESPACE = 'tourivo/v1';
+    public const REST_NAMESPACE = 'readscope/v1';
 
     public function register(): void
     {
@@ -72,8 +72,8 @@ class RouteServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->addAction('rest_api_init', [$this, 'registerRestRoutes']);
-        $this->addAction('tourivo_cleanup_expired_holds', [$this, 'cleanupExpiredHolds']);
-        $this->addAction('tourivo_expire_stale_bookings', [$this, 'expireStaleBookings']);
+        $this->addAction('readscope_cleanup_expired_holds', [$this, 'cleanupExpiredHolds']);
+        $this->addAction('readscope_expire_stale_bookings', [$this, 'expireStaleBookings']);
 
         $this->addFilter('cron_schedules', [$this, 'registerCronSchedules']);
 
@@ -88,14 +88,14 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function scheduleCronEvents(): void
     {
-        if (function_exists('wp_get_schedule') && wp_get_schedule('tourivo_cleanup_expired_holds') === 'hourly') {
-            wp_clear_scheduled_hook('tourivo_cleanup_expired_holds');
+        if (function_exists('wp_get_schedule') && wp_get_schedule('readscope_cleanup_expired_holds') === 'hourly') {
+            wp_clear_scheduled_hook('readscope_cleanup_expired_holds');
         }
-        if (!wp_next_scheduled('tourivo_cleanup_expired_holds')) {
-            wp_schedule_event(time(), 'tourivo_five_minutes', 'tourivo_cleanup_expired_holds');
+        if (!wp_next_scheduled('readscope_cleanup_expired_holds')) {
+            wp_schedule_event(time(), 'readscope_five_minutes', 'readscope_cleanup_expired_holds');
         }
-        if (!wp_next_scheduled('tourivo_expire_stale_bookings')) {
-            wp_schedule_event(time(), 'tourivo_five_minutes', 'tourivo_expire_stale_bookings');
+        if (!wp_next_scheduled('readscope_expire_stale_bookings')) {
+            wp_schedule_event(time(), 'readscope_five_minutes', 'readscope_expire_stale_bookings');
         }
     }
 
@@ -107,7 +107,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function registerCronSchedules(array $schedules): array
     {
-        $schedules['tourivo_five_minutes'] = [
+        $schedules['readscope_five_minutes'] = [
             'interval' => 300,
             'display'  => __('Every 5 minutes (Readscope Booking)', 'the-readscope-tour-and-accommodation-booking'),
         ];
@@ -125,28 +125,28 @@ class RouteServiceProvider extends ServiceProvider
         /** @var AvailabilityController $controller */
         $controller = $this->container->get(AvailabilityController::class);
 
-        // GET /wp-json/tourivo/v1/availability/check
+        // GET /wp-json/readscope/v1/availability/check
         register_rest_route(self::REST_NAMESPACE, '/availability/check', [
             'methods'             => WP_REST_Server::READABLE,
             'callback'            => [$controller, 'check'],
             'permission_callback' => '__return_true',
         ]);
 
-        // GET /wp-json/tourivo/v1/availability/calendar
+        // GET /wp-json/readscope/v1/availability/calendar
         register_rest_route(self::REST_NAMESPACE, '/availability/calendar', [
             'methods'             => WP_REST_Server::READABLE,
             'callback'            => [$controller, 'calendar'],
             'permission_callback' => '__return_true',
         ]);
 
-        // GET /wp-json/tourivo/v1/availability/search
+        // GET /wp-json/readscope/v1/availability/search
         register_rest_route(self::REST_NAMESPACE, '/availability/search', [
             'methods'             => WP_REST_Server::READABLE,
             'callback'            => [$controller, 'searchCalendar'],
             'permission_callback' => '__return_true',
         ]);
 
-        // POST /wp-json/tourivo/v1/availability/hold
+        // POST /wp-json/readscope/v1/availability/hold
         register_rest_route(self::REST_NAMESPACE, '/availability/hold', [
             'methods'             => WP_REST_Server::CREATABLE,
             'callback'            => [$controller, 'hold'],
@@ -156,7 +156,7 @@ class RouteServiceProvider extends ServiceProvider
         /** @var PricingController $pricingController */
         $pricingController = $this->container->get(PricingController::class);
 
-        // GET /wp-json/tourivo/v1/pricing/quote
+        // GET /wp-json/readscope/v1/pricing/quote
         register_rest_route(self::REST_NAMESPACE, '/pricing/quote', [
             'methods'             => WP_REST_Server::READABLE,
             'callback'            => [$pricingController, 'quote'],
@@ -166,7 +166,7 @@ class RouteServiceProvider extends ServiceProvider
         /** @var BookingController $bookingController */
         $bookingController = $this->container->get(BookingController::class);
 
-        // POST /wp-json/tourivo/v1/bookings/direct
+        // POST /wp-json/readscope/v1/bookings/direct
         register_rest_route(self::REST_NAMESPACE, '/bookings/direct', [
             'methods'             => WP_REST_Server::CREATABLE,
             'callback'            => [$bookingController, 'directCheckout'],

@@ -5,20 +5,20 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Admin\MetaBoxes\RoomMetaBox;
-use Tourivo\Admin\MetaBoxes\TourMetaBox;
-use Tourivo\Common\Container;
-use Tourivo\Models\Tour;
-use Tourivo\Providers\AdminServiceProvider;
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\InventoryService;
-use Tourivo\Services\LogService;
-use Tourivo\Services\SeoService;
-use Tourivo\Tests\TestCase;
+use Readscope\Admin\MetaBoxes\RoomMetaBox;
+use Readscope\Admin\MetaBoxes\TourMetaBox;
+use Readscope\Common\Container;
+use Readscope\Models\Tour;
+use Readscope\Providers\AdminServiceProvider;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\InventoryService;
+use Readscope\Services\LogService;
+use Readscope\Services\SeoService;
+use Readscope\Tests\TestCase;
 use WP_Post;
 
 class AdminAvailabilityManagerTest extends TestCase
@@ -183,7 +183,7 @@ class AdminAvailabilityManagerTest extends TestCase
         $bookRes = $this->bookingService->createBooking($payload);
         $this->assertTrue($bookRes['success'], 'Booking with price override should succeed.');
 
-        $booking = tourivo_get_booking($bookRes['booking_id']);
+        $booking = readscope_get_booking($bookRes['booking_id']);
         $this->assertNotNull($booking);
         $this->assertEquals(500.0, (float) $booking->total_amount);
 
@@ -219,7 +219,7 @@ class AdminAvailabilityManagerTest extends TestCase
         }
 
         $this->assertTrue($died, 'handleUpdateAvailability must abort on invalid nonce.');
-        $this->assertEquals(403, $GLOBALS['tourivo_last_ajax_response']['status'] ?? 0);
+        $this->assertEquals(403, $GLOBALS['readscope_last_ajax_response']['status'] ?? 0);
     }
 
     /**
@@ -257,11 +257,11 @@ class AdminAvailabilityManagerTest extends TestCase
         $date = gmdate('Y-m-d', strtotime('+20 days'));
 
         // Pre-populate SEO transient
-        set_transient('tourivo_seo_avail_' . $tourId . '_tour', 'https://schema.org/InStock', 3600);
-        $this->assertEquals('https://schema.org/InStock', get_transient('tourivo_seo_avail_' . $tourId . '_tour'));
+        set_transient('readscope_seo_avail_' . $tourId . '_tour', 'https://schema.org/InStock', 3600);
+        $this->assertEquals('https://schema.org/InStock', get_transient('readscope_seo_avail_' . $tourId . '_tour'));
 
         // Clear mock actions
-        $GLOBALS['tourivo_mock_actions'] = [];
+        $GLOBALS['readscope_mock_actions'] = [];
 
         // Update availability
         $res = $this->invService->updateAvailability($tourId, 'tour', $date, $date, [
@@ -271,9 +271,9 @@ class AdminAvailabilityManagerTest extends TestCase
         $this->assertTrue($res['success']);
 
         // 1. Verify SEO transient is deleted
-        $this->assertFalse(get_transient('tourivo_seo_avail_' . $tourId . '_tour'), 'SEO transient must be cleared after availability update.');
+        $this->assertFalse(get_transient('readscope_seo_avail_' . $tourId . '_tour'), 'SEO transient must be cleared after availability update.');
 
-        // 2. Verify LogService recorded audit entry in wp_tourivo_logs
+        // 2. Verify LogService recorded audit entry in wp_readscope_logs
         global $wpdb;
         $hasLog = false;
         foreach ($wpdb->logs as $log) {
@@ -284,15 +284,15 @@ class AdminAvailabilityManagerTest extends TestCase
         }
         $this->assertTrue($hasLog, 'LogService must record an availability_update audit log entry.');
 
-        // 3. Verify do_action('tourivo/availability_updated', ...) fired
+        // 3. Verify do_action('readscope/availability_updated', ...) fired
         $actionFired = false;
-        foreach ($GLOBALS['tourivo_mock_actions'] as $act) {
-            if ($act['hook'] === 'tourivo/availability_updated' && ($act['args'][0] ?? null) === $tourId) {
+        foreach ($GLOBALS['readscope_mock_actions'] as $act) {
+            if ($act['hook'] === 'readscope/availability_updated' && ($act['args'][0] ?? null) === $tourId) {
                 $actionFired = true;
                 break;
             }
         }
-        $this->assertTrue($actionFired, "Hook 'tourivo/availability_updated' must be dispatched.");
+        $this->assertTrue($actionFired, "Hook 'readscope/availability_updated' must be dispatched.");
     }
 
     /**
@@ -304,21 +304,21 @@ class AdminAvailabilityManagerTest extends TestCase
         $hotelId = $hotelRoom['hotel_id'];
         $roomId = $hotelRoom['room_id'];
 
-        set_transient('tourivo_seo_avail_' . $hotelId . '_hotel', 'https://schema.org/InStock', 3600);
-        set_transient('tourivo_seo_avail_' . $roomId . '_room', 'https://schema.org/InStock', 3600);
+        set_transient('readscope_seo_avail_' . $hotelId . '_hotel', 'https://schema.org/InStock', 3600);
+        set_transient('readscope_seo_avail_' . $roomId . '_room', 'https://schema.org/InStock', 3600);
 
         // Save RoomMetaBox
         $_POST = [
-            '_tourivo_room_quantity'   => '5',
-            '_tourivo_parent_hotel_id' => (string) $hotelId,
-            '_tourivo_nightly_price'   => '130.00',
+            '_readscope_room_quantity'   => '5',
+            '_readscope_parent_hotel_id' => (string) $hotelId,
+            '_readscope_nightly_price'   => '130.00',
         ];
 
         $roomMetaBox = new RoomMetaBox();
         $roomPost = get_post($roomId);
         $roomMetaBox->save($roomId, $roomPost);
 
-        $this->assertFalse(get_transient('tourivo_seo_avail_' . $hotelId . '_hotel'), 'Parent hotel SEO transient must be cleared on room save.');
-        $this->assertFalse(get_transient('tourivo_seo_avail_' . $roomId . '_room'), 'Room SEO transient must be cleared on room save.');
+        $this->assertFalse(get_transient('readscope_seo_avail_' . $hotelId . '_hotel'), 'Parent hotel SEO transient must be cleared on room save.');
+        $this->assertFalse(get_transient('readscope_seo_avail_' . $roomId . '_room'), 'Room SEO transient must be cleared on room save.');
     }
 }

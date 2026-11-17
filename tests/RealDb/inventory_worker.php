@@ -31,7 +31,7 @@ $GLOBALS['wpdb'] = new wpdb(
     (string) getenv('TABLE_PREFIX')
 );
 
-$repo = new \Tourivo\Repositories\InventoryRepository();
+$repo = new \Readscope\Repositories\InventoryRepository();
 
 file_put_contents("{$runDir}/ready_{$workerId}", '1');
 while (!file_exists("{$runDir}/go")) {
@@ -44,7 +44,7 @@ while (!file_exists("{$runDir}/go")) {
 $overbooked = static function () use ($itemId, $date): ?string {
     $db  = $GLOBALS['wpdb'];
     $row = $db->get_row($db->prepare(
-        "SELECT total_capacity, booked_count, reserved_count FROM {$db->prefix}tourivo_inventories
+        "SELECT total_capacity, booked_count, reserved_count FROM {$db->prefix}readscope_inventories
          WHERE item_id = %d AND item_type = 'tour' AND event_date = %s AND time_slot = 'all_day'",
         (int) $itemId,
         $date

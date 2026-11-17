@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Support;
+namespace Readscope\Support;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) {
  * Each key gets one sanitizer, so raw `$_POST` / `$_GET` data never travels further than the handler
  * that read it, and unexpected keys are dropped.
  *
- * @package Tourivo\Support
+ * @package Readscope\Support
  */
 final class RequestInput
 {

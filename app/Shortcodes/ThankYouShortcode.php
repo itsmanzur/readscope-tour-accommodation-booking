@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Shortcodes;
+namespace Readscope\Shortcodes;
 
-use Tourivo\Config\Config;
-use Tourivo\Support\Money;
+use Readscope\Config\Config;
+use Readscope\Support\Money;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -22,9 +22,9 @@ if (!defined('ABSPATH')) {
  * - Actions: Print voucher, Add to calendar (.ics), Track reservation
  * - Conversion tracking: Optional GTM dataLayer event push (PII-free) with sessionStorage guard
  *
- * Shortcode: [tourivo_thank_you]
+ * Shortcode: [readscope_thank_you]
  *
- * @package Tourivo\Shortcodes
+ * @package Readscope\Shortcodes
  */
 class ThankYouShortcode
 {
@@ -35,7 +35,7 @@ class ThankYouShortcode
      */
     public static function register(): void
     {
-        add_shortcode('tourivo_thank_you', [self::class, 'render']);
+        add_shortcode('readscope_thank_you', [self::class, 'render']);
     }
 
     /**
@@ -49,7 +49,7 @@ class ThankYouShortcode
     {
         $issuedAt = $issuedAt ?? time();
         $salt     = wp_salt('nonce');
-        $hash     = hash_hmac('sha256', "tourivo_thankyou_{$bookingId}_{$issuedAt}", $salt);
+        $hash     = hash_hmac('sha256', "readscope_thankyou_{$bookingId}_{$issuedAt}", $salt);
 
         return "{$issuedAt}.{$hash}";
     }
@@ -82,7 +82,7 @@ class ThankYouShortcode
         }
 
         $salt         = wp_salt('nonce');
-        $expectedHash = hash_hmac('sha256', "tourivo_thankyou_{$bookingId}_{$issuedAt}", $salt);
+        $expectedHash = hash_hmac('sha256', "readscope_thankyou_{$bookingId}_{$issuedAt}", $salt);
 
         return hash_equals($expectedHash, $hash);
     }
@@ -114,8 +114,8 @@ class ThankYouShortcode
         }
 
         global $wpdb;
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
+        $itemsTable    = $wpdb->prefix . 'readscope_booking_items';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $booking = $wpdb->get_row($wpdb->prepare(
@@ -139,17 +139,17 @@ class ThankYouShortcode
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         // Fire thank you viewed hook for conversion integrations & audit
-        do_action('tourivo/thankyou_viewed', (int) $booking->id);
+        do_action('readscope/thankyou_viewed', (int) $booking->id);
 
         $voucherToken = BookingLookupShortcode::generateVoucherToken((int) $booking->id, (string) $booking->customer_email, $booking->access_key ?? null);
         $voucherUrl   = add_query_arg([
-            'action' => 'tourivo_print_voucher',
+            'action' => 'readscope_print_voucher',
             'code'   => $booking->booking_code,
             'token'  => $voucherToken,
         ], admin_url('admin-post.php'));
 
         $icsUrl = add_query_arg([
-            'action' => 'tourivo_download_ics',
+            'action' => 'readscope_download_ics',
             'code'   => $booking->booking_code,
             'token'  => $token,
         ], admin_url('admin-post.php'));
@@ -159,7 +159,7 @@ class ThankYouShortcode
         $primaryColor              = (string) Config::get('primary_color', '#0d9488');
 
         ob_start();
-        tourivo_get_template('thank-you.php', [
+        readscope_get_template('thank-you.php', [
             'booking'                    => $booking,
             'items'                      => $items,
             'voucherUrl'                 => $voucherUrl,
@@ -185,7 +185,7 @@ class ThankYouShortcode
     {
         ob_start();
         ?>
-        <div class="tourivo-thankyou-wrapper" style="max-width: 680px; margin: 40px auto; padding: 32px 24px; background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-family: inherit;">
+        <div class="readscope-thankyou-wrapper" style="max-width: 680px; margin: 40px auto; padding: 32px 24px; background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-family: inherit;">
             <div style="font-size: var(--trv-text-display); margin-bottom: 12px;">🔒</div>
             <h3 style="margin: 0 0 8px; color: #1e293b; font-size: var(--trv-text-2xl); font-weight: 700;"><?php esc_html_e('Unable to Display Booking Details', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
             <p style="color: #64748b; font-size: var(--trv-text-sm); line-height: 1.6; margin: 0 0 24px;">
@@ -211,8 +211,8 @@ class ThankYouShortcode
     public static function generateIcsContent(int $bookingId): string
     {
         global $wpdb;
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
+        $itemsTable    = $wpdb->prefix . 'readscope_booking_items';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $booking = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$bookingsTable} WHERE id = %d", $bookingId));
@@ -220,14 +220,14 @@ class ThankYouShortcode
             return '';
         }
 
-        $item = \Tourivo\Support\BookingItems::summaryRow(\Tourivo\Support\BookingItems::forBooking($bookingId), $bookingId);
+        $item = \Readscope\Support\BookingItems::summaryRow(\Readscope\Support\BookingItems::forBooking($bookingId), $bookingId);
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         $siteName = get_bloginfo('name') ?: 'Readscope Booking';
-        $host     = wp_parse_url(home_url(), PHP_URL_HOST) ?: 'tourivo.local';
+        $host     = wp_parse_url(home_url(), PHP_URL_HOST) ?: 'readscope.local';
         $title    = $item ? (string) $item->item_title : __('Tour / Hotel Reservation', 'the-readscope-tour-and-accommodation-booking');
         $code     = (string) $booking->booking_code;
-        $uid      = "tourivo-booking-{$bookingId}-{$code}@{$host}";
+        $uid      = "readscope-booking-{$bookingId}-{$code}@{$host}";
         $nowStamp = gmdate('Ymd\THis\Z');
 
         $checkInRaw  = $item ? (string) $item->check_in : (string) $booking->created_at;

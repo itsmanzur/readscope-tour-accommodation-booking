@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Services;
+namespace Readscope\Services;
 
-use Tourivo\Common\Container;
-use Tourivo\Config\Config;
-use Tourivo\Models\Hotel;
-use Tourivo\Models\Tour;
-use Tourivo\PostTypes\HotelPostType;
-use Tourivo\PostTypes\TourPostType;
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Support\Money;
+use Readscope\Common\Container;
+use Readscope\Config\Config;
+use Readscope\Models\Hotel;
+use Readscope\Models\Tour;
+use Readscope\PostTypes\HotelPostType;
+use Readscope\PostTypes\TourPostType;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Support\Money;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -23,7 +23,7 @@ if (!defined('ABSPATH')) {
  * Generates Schema.org JSON-LD Structured Data (TouristTrip, Hotel, Product)
  * and OpenGraph / Twitter Cards social meta tags for tours and hotel stays.
  *
- * @package Tourivo\Services
+ * @package Readscope\Services
  */
 class SeoService
 {
@@ -34,8 +34,8 @@ class SeoService
     {
         add_action('wp_head', [$this, 'renderJsonLdSchema'], 20);
         add_action('wp_head', [$this, 'renderOpenGraphMeta'], 25);
-        add_action('tourivo/booking/created', [__CLASS__, 'onBookingCreated'], 10, 2);
-        add_action('tourivo/booking/status_changed', [__CLASS__, 'onBookingStatusChanged'], 10, 3);
+        add_action('readscope/booking/created', [__CLASS__, 'onBookingCreated'], 10, 2);
+        add_action('readscope/booking/status_changed', [__CLASS__, 'onBookingStatusChanged'], 10, 3);
     }
 
     /**
@@ -63,7 +63,7 @@ class SeoService
         }
 
         $defaultEnable = !$this->hasThirdPartySeoPlugin();
-        $enableSchema  = (bool) apply_filters('tourivo/enable_schema', $defaultEnable);
+        $enableSchema  = (bool) apply_filters('readscope/enable_schema', $defaultEnable);
 
         if (!$enableSchema) {
             return;
@@ -121,7 +121,7 @@ class SeoService
             return;
         }
 
-        $itemsTable = $wpdb->prefix . 'tourivo_booking_items';
+        $itemsTable = $wpdb->prefix . 'readscope_booking_items';
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $items = $wpdb->get_results($wpdb->prepare("SELECT item_id, item_type FROM {$itemsTable} WHERE booking_id = %d", $bookingId));
         // phpcs:enable
@@ -148,24 +148,24 @@ class SeoService
 
         if (empty($itemType)) {
             $postType = get_post_type($itemId);
-            if ($postType === 'tourivo_tour') {
+            if ($postType === 'readscope_tour') {
                 $itemType = 'tour';
-            } elseif ($postType === 'tourivo_room') {
+            } elseif ($postType === 'readscope_room') {
                 $itemType = 'room';
-            } elseif ($postType === 'tourivo_hotel') {
+            } elseif ($postType === 'readscope_hotel') {
                 $itemType = 'hotel';
             }
         }
 
         if ($itemType === 'tour') {
-            delete_transient('tourivo_seo_avail_' . $itemId . '_tour');
+            delete_transient('readscope_seo_avail_' . $itemId . '_tour');
         } elseif ($itemType === 'hotel') {
-            delete_transient('tourivo_seo_avail_' . $itemId . '_hotel');
+            delete_transient('readscope_seo_avail_' . $itemId . '_hotel');
         } elseif ($itemType === 'room') {
-            delete_transient('tourivo_seo_avail_' . $itemId . '_room');
-            $parentHotelId = (int) get_post_meta($itemId, '_tourivo_parent_hotel_id', true);
+            delete_transient('readscope_seo_avail_' . $itemId . '_room');
+            $parentHotelId = (int) get_post_meta($itemId, '_readscope_parent_hotel_id', true);
             if ($parentHotelId > 0) {
-                delete_transient('tourivo_seo_avail_' . $parentHotelId . '_hotel');
+                delete_transient('readscope_seo_avail_' . $parentHotelId . '_hotel');
             }
         }
     }
@@ -181,7 +181,7 @@ class SeoService
      */
     public function getItemAvailability(int $postId, string $itemType): string
     {
-        $transientKey = 'tourivo_seo_avail_' . $postId . '_' . $itemType;
+        $transientKey = 'readscope_seo_avail_' . $postId . '_' . $itemType;
         $cached = get_transient($transientKey);
         if ($cached !== false) {
             return (string) $cached;
@@ -224,7 +224,7 @@ class SeoService
         }
 
         $availability = $hasAvailability ? 'https://schema.org/InStock' : 'https://schema.org/SoldOut';
-        $availability = (string) apply_filters('tourivo/seo/availability', $availability, $postId, $itemType);
+        $availability = (string) apply_filters('readscope/seo/availability', $availability, $postId, $itemType);
 
         set_transient($transientKey, $availability, HOUR_IN_SECONDS);
 
@@ -245,10 +245,10 @@ class SeoService
             return [];
         }
 
-        $currency    = (string) apply_filters('tourivo/currency_code', Config::get('currency', 'USD'));
+        $currency    = (string) apply_filters('readscope/currency_code', Config::get('currency', 'USD'));
         $siteName    = get_bloginfo('name');
         $siteUrl     = home_url();
-        $touristType = (string) apply_filters('tourivo/seo/tourist_type', 'Leisure', $postId, $tour);
+        $touristType = (string) apply_filters('readscope/seo/tourist_type', 'Leisure', $postId, $tour);
 
         $schema = [
             '@context'      => 'https://schema.org',
@@ -315,7 +315,7 @@ class SeoService
             ];
         }
 
-        return (array) apply_filters('tourivo/schema/tour', $schema, $postId, $tour);
+        return (array) apply_filters('readscope/schema/tour', $schema, $postId, $tour);
     }
 
     /**
@@ -332,7 +332,7 @@ class SeoService
             return [];
         }
 
-        $currency = (string) apply_filters('tourivo/currency_code', Config::get('currency', 'USD'));
+        $currency = (string) apply_filters('readscope/currency_code', Config::get('currency', 'USD'));
         $siteName = get_bloginfo('name');
         $siteUrl  = home_url();
 
@@ -417,7 +417,7 @@ class SeoService
             ];
         }
 
-        return (array) apply_filters('tourivo/schema/hotel', $schema, $postId, $hotel);
+        return (array) apply_filters('readscope/schema/hotel', $schema, $postId, $hotel);
     }
 
     /**
@@ -432,7 +432,7 @@ class SeoService
         }
 
         $defaultEnable = !$this->hasThirdPartySeoPlugin();
-        $enableOg      = (bool) apply_filters('tourivo/enable_og', apply_filters('tourivo/enable_opengraph', $defaultEnable));
+        $enableOg      = (bool) apply_filters('readscope/enable_og', apply_filters('readscope/enable_opengraph', $defaultEnable));
 
         if (!$enableOg) {
             return;
@@ -449,7 +449,7 @@ class SeoService
         $url         = get_permalink($postId);
         $siteName    = get_bloginfo('name');
         $imgUrl      = has_post_thumbnail($postId) ? get_the_post_thumbnail_url($postId, 'large') : '';
-        $currency    = (string) apply_filters('tourivo/currency_code', Config::get('currency', 'USD'));
+        $currency    = (string) apply_filters('readscope/currency_code', Config::get('currency', 'USD'));
         $postType    = get_post_type($postId);
 
         $price = 0.0;

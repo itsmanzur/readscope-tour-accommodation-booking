@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Admin\AdminDashboard;
-use Tourivo\Common\Container;
-use Tourivo\Config\Config;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\InventoryService;
-use Tourivo\Services\LogService;
-use Tourivo\Services\PricingService;
-use Tourivo\Tests\TestCase;
+use Readscope\Admin\AdminDashboard;
+use Readscope\Common\Container;
+use Readscope\Config\Config;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\InventoryService;
+use Readscope\Services\LogService;
+use Readscope\Services\PricingService;
+use Readscope\Tests\TestCase;
 
 /**
  * Class EmailSystemTest
@@ -26,7 +26,7 @@ use Tourivo\Tests\TestCase;
  * - Email templates, responsive styling, AltBody plain-text generation
  * - Header injection sanitization
  * - Failure handling & retry scheduling
- * - Pro / 3rd party filter compatibility (tourivo/send_email)
+ * - Pro / 3rd party filter compatibility (readscope/send_email)
  * - Deduplication / idempotency key checks
  */
 class EmailSystemTest extends TestCase
@@ -42,10 +42,10 @@ class EmailSystemTest extends TestCase
         $this->cleanDatabaseTables();
         $this->cleanTransients();
 
-        $GLOBALS['tourivo_mock_sent_emails'] = [];
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
-        $GLOBALS['tourivo_mock_filters'] = [];
-        $GLOBALS['tourivo_mock_action_callbacks'] = [];
+        $GLOBALS['readscope_mock_sent_emails'] = [];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_filters'] = [];
+        $GLOBALS['readscope_mock_action_callbacks'] = [];
 
         $invRepo = new InventoryRepository();
         $this->inventoryService = new InventoryService($invRepo);
@@ -84,14 +84,14 @@ class EmailSystemTest extends TestCase
         $bookingId = $res['booking_id'];
 
         // 1. Verify that wp_mail was NOT called synchronously during createBooking
-        $this->assertEmpty($GLOBALS['tourivo_mock_sent_emails'], 'wp_mail should not be called synchronously.');
+        $this->assertEmpty($GLOBALS['readscope_mock_sent_emails'], 'wp_mail should not be called synchronously.');
 
         // 2. Verify events queued in async / cron list
-        $queuedHooks = array_column($GLOBALS['tourivo_mock_scheduled_events'], 'hook');
+        $queuedHooks = array_column($GLOBALS['readscope_mock_scheduled_events'], 'hook');
         $this->assertNotEmpty($queuedHooks, 'Async events should be scheduled.');
 
-        // Filter events for tourivo_process_email_delivery
-        $emailEvents = array_filter($GLOBALS['tourivo_mock_scheduled_events'], fn ($e) => $e['hook'] === 'tourivo_process_email_delivery');
+        // Filter events for readscope_process_email_delivery
+        $emailEvents = array_filter($GLOBALS['readscope_mock_scheduled_events'], fn ($e) => $e['hook'] === 'readscope_process_email_delivery');
         $this->assertCount(2, $emailEvents, 'Two email deliveries should be queued: admin_new_booking and customer_booking_received.');
 
         $emailTypesQueued = array_map(fn ($e) => $e['args'][0], $emailEvents);
@@ -103,11 +103,11 @@ class EmailSystemTest extends TestCase
             $this->emailService->dispatch($ev['args'][0], $ev['args'][1], $ev['args'][2], $ev['args'][3] ?? 1);
         }
 
-        $this->assertCount(2, $GLOBALS['tourivo_mock_sent_emails'], 'Two emails should now be sent.');
+        $this->assertCount(2, $GLOBALS['readscope_mock_sent_emails'], 'Two emails should now be sent.');
 
         // Find customer received email
         $customerMail = null;
-        foreach ($GLOBALS['tourivo_mock_sent_emails'] as $m) {
+        foreach ($GLOBALS['readscope_mock_sent_emails'] as $m) {
             if ($m['to'] === 'rahim@example.com') {
                 $customerMail = $m;
                 break;
@@ -138,14 +138,14 @@ class EmailSystemTest extends TestCase
         $bookingId = $res['booking_id'];
 
         // Reset scheduled events
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
-        $GLOBALS['tourivo_mock_sent_emails'] = [];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_sent_emails'] = [];
 
         // Change status to confirmed
         $changeRes = $this->bookingService->changeStatus($bookingId, 'confirmed');
         $this->assertTrue($changeRes['success']);
 
-        $emailEvents = array_filter($GLOBALS['tourivo_mock_scheduled_events'], fn ($e) => $e['hook'] === 'tourivo_process_email_delivery');
+        $emailEvents = array_filter($GLOBALS['readscope_mock_scheduled_events'], fn ($e) => $e['hook'] === 'readscope_process_email_delivery');
         $this->assertCount(1, $emailEvents, 'customer_booking_confirmed should be queued on confirmation.');
 
         $this->assertEquals('customer_booking_confirmed', $emailEvents[array_key_first($emailEvents)]['args'][0]);
@@ -157,10 +157,10 @@ class EmailSystemTest extends TestCase
         $ev = reset($emailEvents);
         $this->emailService->dispatch($ev['args'][0], $ev['args'][1], $ev['args'][2], $ev['args'][3] ?? 1);
 
-        $this->assertCount(1, $GLOBALS['tourivo_mock_sent_emails']);
-        $sentMail = $GLOBALS['tourivo_mock_sent_emails'][0];
+        $this->assertCount(1, $GLOBALS['readscope_mock_sent_emails']);
+        $sentMail = $GLOBALS['readscope_mock_sent_emails'][0];
         $this->assertStringContainsString('Booking Confirmed', $sentMail['message']);
-        $this->assertStringContainsString('admin-post.php?action=tourivo_print_voucher', $sentMail['message'], 'Confirmation mail should contain voucher link.');
+        $this->assertStringContainsString('admin-post.php?action=readscope_print_voucher', $sentMail['message'], 'Confirmation mail should contain voucher link.');
     }
 
     /**
@@ -177,23 +177,23 @@ class EmailSystemTest extends TestCase
         ]);
         $bookingId = $res['booking_id'];
 
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
         $firedContext = [];
         $capture = function ($id, $old, $new, $context) use (&$firedContext) {
             $firedContext = $context;
         };
-        add_action('tourivo/booking/status_changed', $capture, 99, 4);
+        add_action('readscope/booking/status_changed', $capture, 99, 4);
         $this->bookingService->changeStatus($bookingId, 'confirmed');
-        remove_action('tourivo/booking/status_changed', $capture, 99);
+        remove_action('readscope/booking/status_changed', $capture, 99);
 
-        $emailEvents1 = array_filter($GLOBALS['tourivo_mock_scheduled_events'], fn ($e) => $e['hook'] === 'tourivo_process_email_delivery');
+        $emailEvents1 = array_filter($GLOBALS['readscope_mock_scheduled_events'], fn ($e) => $e['hook'] === 'readscope_process_email_delivery');
         $this->assertCount(1, $emailEvents1);
         $this->assertNotEmpty($firedContext['changed_at'] ?? '', 'changeStatus() should stamp the transition.');
 
         // The same transition fired again (same hook arguments)
         $this->emailService->onBookingStatusChanged($bookingId, 'pending', 'confirmed', $firedContext);
 
-        $emailEvents2 = array_filter($GLOBALS['tourivo_mock_scheduled_events'], fn ($e) => $e['hook'] === 'tourivo_process_email_delivery');
+        $emailEvents2 = array_filter($GLOBALS['readscope_mock_scheduled_events'], fn ($e) => $e['hook'] === 'readscope_process_email_delivery');
         $this->assertCount(1, $emailEvents2, 'Duplicate status transition should not enqueue duplicate email.');
     }
 
@@ -211,11 +211,11 @@ class EmailSystemTest extends TestCase
         ]);
         $bookingId = $res['booking_id'];
 
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
 
         $this->bookingService->changeStatus($bookingId, 'cancelled');
 
-        $emailEvents = array_filter($GLOBALS['tourivo_mock_scheduled_events'], fn ($e) => $e['hook'] === 'tourivo_process_email_delivery');
+        $emailEvents = array_filter($GLOBALS['readscope_mock_scheduled_events'], fn ($e) => $e['hook'] === 'readscope_process_email_delivery');
         $this->assertCount(2, $emailEvents, 'customer_booking_cancelled and admin_booking_cancelled should be queued.');
 
         $types = array_map(fn ($e) => $e['args'][0], $emailEvents);
@@ -228,7 +228,7 @@ class EmailSystemTest extends TestCase
      */
     public function test_disabled_email_type_is_not_sent(): void
     {
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'email_customer_booking_cancelled_enabled' => 0,
         ]);
 
@@ -241,10 +241,10 @@ class EmailSystemTest extends TestCase
         ]);
         $bookingId = $res['booking_id'];
 
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
         $this->bookingService->changeStatus($bookingId, 'cancelled');
 
-        $emailEvents = array_filter($GLOBALS['tourivo_mock_scheduled_events'], fn ($e) => $e['hook'] === 'tourivo_process_email_delivery');
+        $emailEvents = array_filter($GLOBALS['readscope_mock_scheduled_events'], fn ($e) => $e['hook'] === 'readscope_process_email_delivery');
         $types = array_map(fn ($e) => $e['args'][0], $emailEvents);
 
         $this->assertFalse(in_array('customer_booking_cancelled', $types, true), 'Disabled email type should not be enqueued.');
@@ -281,7 +281,7 @@ class EmailSystemTest extends TestCase
         ]);
         $bookingId = (int) $res['booking_id'];
 
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
 
         $dispatched = $this->emailService->dispatch('customer_booking_received', $this->emailService->recipientHash('fail@example.com'), $bookingId, 1);
         $this->assertFalse($dispatched, 'Dispatch should return false on mail failure.');
@@ -292,7 +292,7 @@ class EmailSystemTest extends TestCase
         $this->assertStringNotContainsString('fail@example.com', (string) ($logs[0]['details'] ?? $logs[0]['message'] ?? ''), 'Log must not hold the address.');
 
         // Verify retry is scheduled for attempt 2 (delay 120s)
-        $retryEvents = array_filter($GLOBALS['tourivo_mock_scheduled_events'], fn ($e) => $e['hook'] === 'tourivo_process_email_delivery');
+        $retryEvents = array_filter($GLOBALS['readscope_mock_scheduled_events'], fn ($e) => $e['hook'] === 'readscope_process_email_delivery');
         $this->assertNotEmpty($retryEvents, 'Retry should be scheduled.');
         $retry = reset($retryEvents);
         $this->assertEquals(2, $retry['args'][3], 'Next attempt should be 2.');
@@ -303,7 +303,7 @@ class EmailSystemTest extends TestCase
      */
     public function test_trip_reminder_cron_sends_once_on_correct_date(): void
     {
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'reminder_days_before' => 2,
         ]);
 
@@ -319,26 +319,26 @@ class EmailSystemTest extends TestCase
         $bookingId = $res['booking_id'];
         $this->bookingService->changeStatus($bookingId, 'confirmed');
 
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
 
         // Run daily reminders cron
         $this->emailService->processDailyReminders();
 
-        $reminderEvents = array_filter($GLOBALS['tourivo_mock_scheduled_events'], fn ($e) => ($e['args'][0] ?? '') === 'customer_trip_reminder');
+        $reminderEvents = array_filter($GLOBALS['readscope_mock_scheduled_events'], fn ($e) => ($e['args'][0] ?? '') === 'customer_trip_reminder');
         $this->assertCount(1, $reminderEvents, 'Reminder should be enqueued for confirmed booking in 2 days.');
 
         // Run cron again -> deduplication should prevent second enqueue
         $this->emailService->processDailyReminders();
-        $reminderEventsAfter = array_filter($GLOBALS['tourivo_mock_scheduled_events'], fn ($e) => ($e['args'][0] ?? '') === 'customer_trip_reminder');
+        $reminderEventsAfter = array_filter($GLOBALS['readscope_mock_scheduled_events'], fn ($e) => ($e['args'][0] ?? '') === 'customer_trip_reminder');
         $this->assertCount(1, $reminderEventsAfter, 'Reminder should not be enqueued a second time.');
     }
 
     /**
-     * Test (i): Pro filter tourivo/send_email can suppress email.
+     * Test (i): Pro filter readscope/send_email can suppress email.
      */
-    public function test_pro_filter_tourivo_send_email_can_suppress_email(): void
+    public function test_pro_filter_readscope_send_email_can_suppress_email(): void
     {
-        add_filter('tourivo/send_email', function ($send, $emailType, $data) {
+        add_filter('readscope/send_email', function ($send, $emailType, $data) {
             if ($emailType === 'customer_booking_received') {
                 return false; // Suppress received email
             }
@@ -353,7 +353,7 @@ class EmailSystemTest extends TestCase
             'customer_email' => 'filtered@example.com',
         ]);
 
-        $emailEvents = array_filter($GLOBALS['tourivo_mock_scheduled_events'], fn ($e) => $e['hook'] === 'tourivo_process_email_delivery');
+        $emailEvents = array_filter($GLOBALS['readscope_mock_scheduled_events'], fn ($e) => $e['hook'] === 'readscope_process_email_delivery');
         $types = array_map(fn ($e) => $e['args'][0], $emailEvents);
 
         $this->assertFalse(in_array('customer_booking_received', $types, true), 'customer_booking_received should be suppressed by filter.');
@@ -374,7 +374,7 @@ class EmailSystemTest extends TestCase
             'send_customer_email' => false,
         ], true);
 
-        $emailEvents = array_filter($GLOBALS['tourivo_mock_scheduled_events'], fn ($e) => $e['hook'] === 'tourivo_process_email_delivery');
+        $emailEvents = array_filter($GLOBALS['readscope_mock_scheduled_events'], fn ($e) => $e['hook'] === 'readscope_process_email_delivery');
         $types = array_map(fn ($e) => $e['args'][0], $emailEvents);
 
         $this->assertFalse(in_array('customer_booking_received', $types, true), 'Customer email should be suppressed when send_customer_email is false.');

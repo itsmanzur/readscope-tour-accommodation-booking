@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Services;
+namespace Readscope\Services;
 
-use Tourivo\Config\Config;
+use Readscope\Config\Config;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
  * Dispatches outbound real-time webhook notifications to external endpoints
  * (Zapier, Make.com, n8n, custom CRMs, Slack, etc.) on key booking lifecycle events.
  *
- * @package Tourivo\Services
+ * @package Readscope\Services
  */
 class WebhookService
 {
@@ -27,18 +27,18 @@ class WebhookService
      */
     public function register(): void
     {
-        add_action('tourivo/booking/created', [$this, 'onBookingCreated'], 20, 2);
-        add_action('tourivo/booking/email_verified', [$this, 'onBookingEmailVerified'], 20, 1);
-        add_action('tourivo/booking/status_changed', [$this, 'onBookingStatusChanged'], 20, 3);
-        add_action('tourivo/inquiry/created', [$this, 'onInquiryCreated'], 20, 2);
-        add_action('tourivo_process_webhook_delivery', [$this, 'dispatch'], 10, 3);
+        add_action('readscope/booking/created', [$this, 'onBookingCreated'], 20, 2);
+        add_action('readscope/booking/email_verified', [$this, 'onBookingEmailVerified'], 20, 1);
+        add_action('readscope/booking/status_changed', [$this, 'onBookingStatusChanged'], 20, 3);
+        add_action('readscope/inquiry/created', [$this, 'onInquiryCreated'], 20, 2);
+        add_action('readscope_process_webhook_delivery', [$this, 'dispatch'], 10, 3);
     }
 
     /**
      * Build the signature headers for a payload.
      *
-     * - `X-Tourivo-Signature`: HMAC-SHA256 of the raw body (original scheme, kept for existing receivers).
-     * - `X-Tourivo-Timestamp` + `X-Tourivo-Signature-V2`: HMAC-SHA256 of "{timestamp}.{body}". Receivers should
+     * - `X-Readscope-Signature`: HMAC-SHA256 of the raw body (original scheme, kept for existing receivers).
+     * - `X-Readscope-Timestamp` + `X-Readscope-Signature-V2`: HMAC-SHA256 of "{timestamp}.{body}". Receivers should
      *   verify V2 and reject timestamps older than a few minutes, which makes captured requests non-replayable.
      *
      * @return array<string, string>
@@ -52,9 +52,9 @@ class WebhookService
         $timestamp ??= time();
 
         return [
-            'X-Tourivo-Signature'    => hash_hmac('sha256', $jsonPayload, $secret),
-            'X-Tourivo-Timestamp'    => (string) $timestamp,
-            'X-Tourivo-Signature-V2' => hash_hmac('sha256', $timestamp . '.' . $jsonPayload, $secret),
+            'X-Readscope-Signature'    => hash_hmac('sha256', $jsonPayload, $secret),
+            'X-Readscope-Timestamp'    => (string) $timestamp,
+            'X-Readscope-Signature-V2' => hash_hmac('sha256', $timestamp . '.' . $jsonPayload, $secret),
         ];
     }
 
@@ -71,7 +71,7 @@ class WebhookService
         }
 
         $scheme = (string) wp_parse_url($url, PHP_URL_SCHEME);
-        $allowHttp = (bool) apply_filters('tourivo/webhook_allow_http', false, $url);
+        $allowHttp = (bool) apply_filters('readscope/webhook_allow_http', false, $url);
 
         if ($scheme === 'https' || ($scheme === 'http' && $allowHttp)) {
             return true;
@@ -109,9 +109,9 @@ class WebhookService
         }
 
         if (function_exists('as_enqueue_async_action')) {
-            as_enqueue_async_action('tourivo_process_webhook_delivery', [$event, $data, $attempt], 'tourivo-webhooks');
+            as_enqueue_async_action('readscope_process_webhook_delivery', [$event, $data, $attempt], 'readscope-webhooks');
         } else {
-            wp_schedule_single_event(time(), 'tourivo_process_webhook_delivery', [$event, $data, $attempt]);
+            wp_schedule_single_event(time(), 'readscope_process_webhook_delivery', [$event, $data, $attempt]);
             if (function_exists('spawn_cron')) {
                 spawn_cron();
             }
@@ -167,7 +167,7 @@ class WebhookService
      */
     public function onBookingEmailVerified(int $bookingId): void
     {
-        $booking = function_exists('tourivo_get_booking') ? tourivo_get_booking($bookingId) : null;
+        $booking = function_exists('readscope_get_booking') ? readscope_get_booking($bookingId) : null;
         if (!$booking) {
             return;
         }
@@ -175,7 +175,7 @@ class WebhookService
         global $wpdb;
         $item = null;
         if ($wpdb) {
-            $itemsTable = $wpdb->prefix . 'tourivo_booking_items';
+            $itemsTable = $wpdb->prefix . 'readscope_booking_items';
             // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
             $item = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$itemsTable} WHERE booking_id = %d LIMIT 1", $bookingId));
         }
@@ -208,7 +208,7 @@ class WebhookService
      */
     public function onBookingStatusChanged(int $bookingId, string $oldStatus, string $newStatus): void
     {
-        $booking = function_exists('tourivo_get_booking') ? tourivo_get_booking($bookingId) : null;
+        $booking = function_exists('readscope_get_booking') ? readscope_get_booking($bookingId) : null;
 
         if ($booking && empty($booking->email_verified_at)) {
             return;
@@ -287,11 +287,11 @@ class WebhookService
             'event'     => $event,
             'timestamp' => gmdate('c'),
             'source'    => esc_url_raw(home_url()),
-            'version'   => TOURIVO_VERSION,
+            'version'   => READSCOPE_VERSION,
             'data'      => $data,
         ];
 
-        $payload = (array) apply_filters('tourivo/webhook_payload', $payload, $event);
+        $payload = (array) apply_filters('readscope/webhook_payload', $payload, $event);
 
         $jsonPayload = wp_json_encode($payload);
         if ($jsonPayload === false) {
@@ -315,8 +315,8 @@ class WebhookService
 
         $headers = [
             'Content-Type'    => 'application/json; charset=utf-8',
-            'X-Tourivo-Event' => $event,
-            'User-Agent'      => 'Readscope Booking-Webhook/' . TOURIVO_VERSION,
+            'X-Readscope-Event' => $event,
+            'User-Agent'      => 'Readscope Booking-Webhook/' . READSCOPE_VERSION,
         ];
         $headers += self::signatureHeaders($jsonPayload, $secret);
 
@@ -379,9 +379,9 @@ class WebhookService
             $delay = ($nextAttempt === 2) ? 120 : 300;
 
             if (function_exists('as_schedule_single_action')) {
-                as_schedule_single_action(time() + $delay, 'tourivo_process_webhook_delivery', [$event, $data, $nextAttempt], 'tourivo-webhooks');
+                as_schedule_single_action(time() + $delay, 'readscope_process_webhook_delivery', [$event, $data, $nextAttempt], 'readscope-webhooks');
             } else {
-                wp_schedule_single_event(time() + $delay, 'tourivo_process_webhook_delivery', [
+                wp_schedule_single_event(time() + $delay, 'readscope_process_webhook_delivery', [
                     $event,
                     $data,
                     $nextAttempt,
@@ -409,7 +409,7 @@ class WebhookService
             'event'     => 'test.ping',
             'timestamp' => gmdate('c'),
             'source'    => esc_url_raw(home_url()),
-            'version'   => TOURIVO_VERSION,
+            'version'   => READSCOPE_VERSION,
             'data'      => [
                 'message' => __('This is a test webhook payload from Readscope Booking.', 'the-readscope-tour-and-accommodation-booking'),
                 'site'    => get_bloginfo('name'),
@@ -420,8 +420,8 @@ class WebhookService
 
         $headers = [
             'Content-Type'    => 'application/json; charset=utf-8',
-            'X-Tourivo-Event' => 'test.ping',
-            'User-Agent'      => 'Readscope Booking-Webhook/' . TOURIVO_VERSION,
+            'X-Readscope-Event' => 'test.ping',
+            'User-Agent'      => 'Readscope Booking-Webhook/' . READSCOPE_VERSION,
         ];
         $headers += self::signatureHeaders((string) $json, $secret);
 

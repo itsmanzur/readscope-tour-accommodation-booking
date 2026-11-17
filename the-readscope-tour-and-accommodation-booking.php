@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       The Readscope Tour and Accommodation Booking
  * Description:       The Next-Gen Travel, Tour & Accommodation Booking Engine for WordPress.
- * Version:           1.0.0
+ * Version:           1.1.0
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            The Readscope
@@ -20,21 +20,21 @@ if (!defined('ABSPATH')) {
 }
 
 // 1. Define Global Constants
-define('TOURIVO_VERSION', '1.0.0');
+define('READSCOPE_VERSION', '1.1.0');
 // Integer that only grows when the public hooks / helpers add-ons rely on change. Readscope Booking Pro compares it, not the version.
-define('TOURIVO_API_LEVEL', 1);
-define('TOURIVO_MIN_PHP_VER', '8.0');
-define('TOURIVO_PLUGIN_FILE', __FILE__);
-define('TOURIVO_PLUGIN_DIR', plugin_dir_path(__FILE__));
-define('TOURIVO_PLUGIN_URL', plugin_dir_url(__FILE__));
+define('READSCOPE_API_LEVEL', 1);
+define('READSCOPE_MIN_PHP_VER', '8.0');
+define('READSCOPE_PLUGIN_FILE', __FILE__);
+define('READSCOPE_PLUGIN_DIR', plugin_dir_path(__FILE__));
+define('READSCOPE_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 // 2. Minimum PHP Version Check
-if (version_compare(PHP_VERSION, TOURIVO_MIN_PHP_VER, '<')) {
+if (version_compare(PHP_VERSION, READSCOPE_MIN_PHP_VER, '<')) {
     add_action('admin_notices', static function () {
         $message = sprintf(
             /* translators: 1: Required PHP version, 2: Current PHP version */
             esc_html__('The Readscope Tour and Accommodation Booking requires PHP version %1$s or greater. You are running version %2$s. Please upgrade your PHP version.', 'the-readscope-tour-and-accommodation-booking'),
-            TOURIVO_MIN_PHP_VER,
+            READSCOPE_MIN_PHP_VER,
             PHP_VERSION
         );
         echo '<div class="notice notice-error"><p>' . esc_html($message) . '</p></div>';
@@ -43,13 +43,13 @@ if (version_compare(PHP_VERSION, TOURIVO_MIN_PHP_VER, '<')) {
 }
 
 // 3. PSR-4 Autoloading Setup
-if (file_exists(TOURIVO_PLUGIN_DIR . 'vendor/autoload.php')) {
-    require_once TOURIVO_PLUGIN_DIR . 'vendor/autoload.php';
+if (file_exists(READSCOPE_PLUGIN_DIR . 'vendor/autoload.php')) {
+    require_once READSCOPE_PLUGIN_DIR . 'vendor/autoload.php';
 } else {
-    // Fallback PSR-4 Autoloader for Tourivo\ namespace
+    // Fallback PSR-4 Autoloader for Readscope\ namespace
     spl_autoload_register(static function (string $class) {
-        $prefix = 'Tourivo\\';
-        $baseDir = TOURIVO_PLUGIN_DIR . 'app/';
+        $prefix = 'Readscope\\';
+        $baseDir = READSCOPE_PLUGIN_DIR . 'app/';
 
         $len = strlen($prefix);
         if (strncmp($prefix, $class, $len) !== 0) {
@@ -66,23 +66,23 @@ if (file_exists(TOURIVO_PLUGIN_DIR . 'vendor/autoload.php')) {
 }
 
 // 4. Register Activation & Deactivation Hooks
-register_activation_hook(TOURIVO_PLUGIN_FILE, ['Tourivo\\Core\\Installer', 'activate']);
-register_deactivation_hook(TOURIVO_PLUGIN_FILE, ['Tourivo\\Core\\Deactivator', 'deactivate']);
-add_action('wp_initialize_site', ['Tourivo\\Core\\Installer', 'onNewSite'], 900);
+register_activation_hook(READSCOPE_PLUGIN_FILE, ['Readscope\\Core\\Installer', 'activate']);
+register_deactivation_hook(READSCOPE_PLUGIN_FILE, ['Readscope\\Core\\Deactivator', 'deactivate']);
+add_action('wp_initialize_site', ['Readscope\\Core\\Installer', 'onNewSite'], 900);
 
 // 5. Load Public Developer Functions & Template Engine API
-require_once TOURIVO_PLUGIN_DIR . 'app/Support/functions.php';
+require_once READSCOPE_PLUGIN_DIR . 'app/Support/functions.php';
 
 // 6. Global Accessor Helper
-if (!function_exists('tourivo')) {
+if (!function_exists('readscope')) {
     /**
      * Get the main Readscope Booking plugin orchestrator instance.
      *
-     * @return \Tourivo\Core\Plugin
+     * @return \Readscope\Core\Plugin
      */
-    function tourivo(): \Tourivo\Core\Plugin
+    function readscope(): \Readscope\Core\Plugin
     {
-        return \Tourivo\Core\Plugin::instance();
+        return \Readscope\Core\Plugin::instance();
     }
 }
 
@@ -94,7 +94,7 @@ add_filter(
             return $locale;
         }
 
-        $lang = (string) \Tourivo\Config\Config::get('plugin_language', 'default');
+        $lang = (string) \Readscope\Config\Config::get('plugin_language', 'default');
         if ('bn' === $lang) {
             return 'bn_BD';
         }
@@ -109,10 +109,26 @@ add_filter(
 );
 
 add_action('init', static function (): void {
-    tourivo_load_plugin_textdomain();
+    readscope_load_plugin_textdomain();
 }, 1);
 
 // 8. Bootstrap Plugin on plugins_loaded
 add_action('plugins_loaded', static function () {
-    tourivo()->boot();
+    // 1.0.x stored everything under the old "tourivo" name; move it over once before anything reads it.
+    \Readscope\Database\LegacyMigrator::maybeRun();
+    readscope()->boot();
 }, 10);
+
+// 9. Keep shortcodes saved by 1.0.x working: [tourivo_tours] behaves exactly like [readscope_tours].
+add_action('init', static function (): void {
+    global $shortcode_tags;
+
+    foreach ($shortcode_tags as $tag => $callback) {
+        if (0 === strpos((string) $tag, 'readscope_')) {
+            $legacy = 'tourivo_' . substr((string) $tag, 10);
+            if (!isset($shortcode_tags[$legacy])) {
+                add_shortcode($legacy, $callback);
+            }
+        }
+    }
+}, 99);

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Services;
+namespace Readscope\Services;
 
-use Tourivo\PostTypes\HotelPostType;
-use Tourivo\PostTypes\TourPostType;
+use Readscope\PostTypes\HotelPostType;
+use Readscope\PostTypes\TourPostType;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -16,13 +16,13 @@ if (!defined('ABSPATH')) {
  *
  * Handles 5-star rating submission, average rating calculation, and verified traveler validation.
  *
- * @package Tourivo\Services
+ * @package Readscope\Services
  */
 class ReviewService
 {
-    public const META_RATING = '_tourivo_rating';
-    public const META_AVG_RATING = '_tourivo_average_rating';
-    public const META_REVIEW_COUNT = '_tourivo_review_count';
+    public const META_RATING = '_readscope_rating';
+    public const META_AVG_RATING = '_readscope_average_rating';
+    public const META_REVIEW_COUNT = '_readscope_review_count';
 
     public function __construct()
     {
@@ -56,8 +56,8 @@ class ReviewService
         }
 
         // phpcs:disable WordPress.Security.NonceVerification.Missing -- runs on core's comment_post after wp-comments-post.php accepted the comment (public comment form has no nonce by design); value is clamped to 1-5.
-        if (isset($_POST['tourivo_rating'])) {
-            $rating = max(1, min(5, (int) sanitize_text_field(wp_unslash((string) $_POST['tourivo_rating']))));
+        if (isset($_POST['readscope_rating'])) {
+            $rating = max(1, min(5, (int) sanitize_text_field(wp_unslash((string) $_POST['readscope_rating']))));
             update_comment_meta($commentId, self::META_RATING, $rating);
         }
         // phpcs:enable WordPress.Security.NonceVerification.Missing
@@ -197,8 +197,8 @@ class ReviewService
         }
 
         global $wpdb;
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        $itemsTable = $wpdb->prefix . 'tourivo_booking_items';
+        $bookingsTable = $wpdb->prefix . 'readscope_bookings';
+        $itemsTable = $wpdb->prefix . 'readscope_booking_items';
 
         $targetIds = [$postId];
         $postType = get_post_type($postId);
@@ -207,13 +207,13 @@ class ReviewService
         if ($postType === HotelPostType::POST_TYPE) {
             // phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
             $childRooms = get_posts([
-                'post_type'      => 'tourivo_room',
+                'post_type'      => 'readscope_room',
                 'posts_per_page' => -1,
                 'post_status'    => 'publish',
                 'fields'         => 'ids',
                 'meta_query'     => [
                     [
-                        'key'   => '_tourivo_parent_hotel_id',
+                        'key'   => '_readscope_parent_hotel_id',
                         'value' => $postId,
                     ],
                 ],

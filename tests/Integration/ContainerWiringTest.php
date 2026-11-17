@@ -5,17 +5,17 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Common\Container;
-use Tourivo\Controllers\Api\AvailabilityController;
-use Tourivo\Controllers\Api\BookingController;
-use Tourivo\Controllers\Api\PricingController;
-use Tourivo\Providers\RouteServiceProvider;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\InquiryService;
-use Tourivo\Services\PricingService;
-use Tourivo\Tests\TestCase;
+use Readscope\Common\Container;
+use Readscope\Controllers\Api\AvailabilityController;
+use Readscope\Controllers\Api\BookingController;
+use Readscope\Controllers\Api\PricingController;
+use Readscope\Providers\RouteServiceProvider;
+use Readscope\Services\BookingService;
+use Readscope\Services\InquiryService;
+use Readscope\Services\PricingService;
+use Readscope\Tests\TestCase;
 
 class ContainerWiringTest extends TestCase
 {
@@ -49,13 +49,13 @@ class ContainerWiringTest extends TestCase
 
     public function test_rest_routes_register_without_fatal(): void
     {
-        $GLOBALS['tourivo_mock_rest_routes'] = [];
+        $GLOBALS['readscope_mock_rest_routes'] = [];
         [, $provider] = $this->makeProvider();
 
         $provider->registerRestRoutes();
 
         foreach (['availability/check', 'availability/calendar', 'availability/hold', 'pricing/quote', 'bookings/direct'] as $route) {
-            $this->assertArrayHasKey('tourivo/v1/' . $route, $GLOBALS['tourivo_mock_rest_routes'], "Route {$route} not registered.");
+            $this->assertArrayHasKey('readscope/v1/' . $route, $GLOBALS['readscope_mock_rest_routes'], "Route {$route} not registered.");
         }
     }
 }

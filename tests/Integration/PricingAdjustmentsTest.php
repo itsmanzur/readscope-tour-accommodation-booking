@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\InventoryService;
-use Tourivo\Services\PricingService;
-use Tourivo\Tests\TestCase;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\InventoryService;
+use Readscope\Services\PricingService;
+use Readscope\Tests\TestCase;
 
 /**
  * Class PricingAdjustmentsTest
  *
- * Price changes from tourivo/booking/price filters are itemised on the quote.
+ * Price changes from readscope/booking/price filters are itemised on the quote.
  */
 class PricingAdjustmentsTest extends TestCase
 {
@@ -22,9 +22,9 @@ class PricingAdjustmentsTest extends TestCase
      */
     private function quoteWith(callable $filter): array
     {
-        update_option('tourivo_settings', []);
+        update_option('readscope_settings', []);
         $tourId = $this->createTour(100.0, 10);
-        add_filter('tourivo/booking/price', $filter, 10, 2);
+        add_filter('readscope/booking/price', $filter, 10, 2);
         try {
             return (new PricingService(new InventoryService(new InventoryRepository())))->quote([
                 'item_id'   => $tourId,
@@ -33,7 +33,7 @@ class PricingAdjustmentsTest extends TestCase
                 'adults'    => 2,
             ]);
         } finally {
-            remove_filter('tourivo/booking/price', $filter);
+            remove_filter('readscope/booking/price', $filter);
         }
     }
 

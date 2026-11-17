@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Shortcodes;
+namespace Readscope\Shortcodes;
 
-use Tourivo\Models\Hotel;
-use Tourivo\PostTypes\HotelPostType;
+use Readscope\Models\Hotel;
+use Readscope\PostTypes\HotelPostType;
 use WP_Query;
 
 if (!defined('ABSPATH')) {
@@ -15,15 +15,15 @@ if (!defined('ABSPATH')) {
 /**
  * Class HotelGridShortcode
  *
- * Shortcode: [tourivo_hotels columns="3" count="6" destination="..."]
+ * Shortcode: [readscope_hotels columns="3" count="6" destination="..."]
  *
- * @package Tourivo\Shortcodes
+ * @package Readscope\Shortcodes
  */
 class HotelGridShortcode
 {
     public static function register(): void
     {
-        add_shortcode('tourivo_hotels', [self::class, 'render']);
+        add_shortcode('readscope_hotels', [self::class, 'render']);
     }
 
     /**
@@ -40,7 +40,7 @@ class HotelGridShortcode
             'destination' => '',
             'orderby'     => 'date',
             'order'       => 'DESC',
-        ], (array) $atts, 'tourivo_hotels');
+        ], (array) $atts, 'readscope_hotels');
 
         $args = [
             'post_type'      => HotelPostType::POST_TYPE,
@@ -54,7 +54,7 @@ class HotelGridShortcode
         if (!empty($attributes['destination'])) {
             $args['tax_query'] = [
                 [
-                    'taxonomy' => 'tourivo_destination',
+                    'taxonomy' => 'readscope_destination',
                     'field'    => 'slug',
                     'terms'    => sanitize_text_field((string) $attributes['destination']),
                 ],
@@ -65,17 +65,17 @@ class HotelGridShortcode
         // phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 
         if (!$query->have_posts()) {
-            return '<p class="tourivo-no-items">' . esc_html__('No hotels found matching criteria.', 'the-readscope-tour-and-accommodation-booking') . '</p>';
+            return '<p class="readscope-no-items">' . esc_html__('No hotels found matching criteria.', 'the-readscope-tour-and-accommodation-booking') . '</p>';
         }
 
         $cols = max(1, min(4, (int) $attributes['columns']));
 
         ob_start();
-        echo '<div class="tourivo-grid" style="--trv-grid-cols: ' . esc_attr((string)$cols) . ';">';
+        echo '<div class="readscope-grid" style="--trv-grid-cols: ' . esc_attr((string)$cols) . ';">';
         while ($query->have_posts()) {
             $query->the_post();
             $hotel = new Hotel(get_post());
-            tourivo_get_template('cards/hotel-card.php', ['hotel' => $hotel]);
+            readscope_get_template('cards/hotel-card.php', ['hotel' => $hotel]);
         }
         echo '</div>';
         wp_reset_postdata();

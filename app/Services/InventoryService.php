@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Services;
+namespace Readscope\Services;
 
 use DateInterval;
 use DatePeriod;
 use DateTime;
 use Exception;
-use Tourivo\Models\Room;
-use Tourivo\Models\Tour;
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Support\Money;
+use Readscope\Models\Room;
+use Readscope\Models\Tour;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Support\Money;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -22,7 +22,7 @@ if (!defined('ABSPATH')) {
  *
  * Core business logic for availability tracking, date checks, checkout holds and calendar grids.
  *
- * @package Tourivo\Services
+ * @package Readscope\Services
  */
 class InventoryService
 {
@@ -79,7 +79,7 @@ class InventoryService
     public static function normalizeTimeSlot(?string $timeSlot): string
     {
         $allowed = ['all_day'];
-        $allowed = (array) apply_filters('tourivo/allowed_time_slots', $allowed);
+        $allowed = (array) apply_filters('readscope/allowed_time_slots', $allowed);
 
         $slot = !empty($timeSlot) ? sanitize_text_field(trim($timeSlot)) : 'all_day';
         if (!in_array($slot, $allowed, true)) {
@@ -154,7 +154,7 @@ class InventoryService
         ?string $holdToken = null
     ): array {
         $timeSlot = self::normalizeTimeSlot($timeSlot);
-        $currencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
+        $currencySymbol = (string) apply_filters('readscope/currency_symbol', '$');
         $defaultCapacity = $this->getDefaultCapacity($itemId, $itemType);
         $dates = $this->generateDateList($startDate, $endDate, $enforceFuture);
 
@@ -247,7 +247,7 @@ class InventoryService
     {
         $timeSlot = self::normalizeTimeSlot($timeSlot);
         $itemType = ($itemType === 'hotel_room' || $itemType === 'room') ? 'room' : 'tour';
-        $currencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
+        $currencySymbol = (string) apply_filters('readscope/currency_symbol', '$');
         $defaultCapacity = $this->getDefaultCapacity($itemId, $itemType);
 
         // Sanitize year & month bounds
@@ -304,7 +304,7 @@ class InventoryService
      * Holds live in a dedicated, per-token option (never autoloaded) instead of a transient so the
      * reserved spots can always be released exactly, even if the object cache is flushed.
      */
-    public const HOLD_OPTION_PREFIX = 'tourivo_hold_';
+    public const HOLD_OPTION_PREFIX = 'readscope_hold_';
 
     /**
      * Default checkout hold lifetime in minutes.
@@ -319,7 +319,7 @@ class InventoryService
      */
     public function getHold(?string $holdToken): ?array
     {
-        if (empty($holdToken) || !str_starts_with($holdToken, 'tourivo_hold_')) {
+        if (empty($holdToken) || !str_starts_with($holdToken, 'readscope_hold_')) {
             return null;
         }
 
@@ -399,7 +399,7 @@ class InventoryService
             $reservedDates[] = $date;
         }
 
-        $holdToken = 'tourivo_hold_' . bin2hex(random_bytes(16));
+        $holdToken = 'readscope_hold_' . bin2hex(random_bytes(16));
         update_option(self::HOLD_OPTION_PREFIX . $holdToken, [
             'item_id'    => $itemId,
             'item_type'  => $itemType,
@@ -516,7 +516,7 @@ class InventoryService
      */
     public function releaseHold(string $holdToken): bool
     {
-        if (!str_starts_with($holdToken, 'tourivo_hold_')) {
+        if (!str_starts_with($holdToken, 'readscope_hold_')) {
             return false;
         }
 
@@ -596,10 +596,10 @@ class InventoryService
      */
     protected function maybeReleaseExpiredHolds(): void
     {
-        if (get_transient('tourivo_hold_sweep')) {
+        if (get_transient('readscope_hold_sweep')) {
             return;
         }
-        set_transient('tourivo_hold_sweep', 1, 60);
+        set_transient('readscope_hold_sweep', 1, 60);
         $this->releaseExpiredHolds();
     }
 
@@ -700,7 +700,7 @@ class InventoryService
             ];
         }
 
-        $expectedPostType = $itemType === 'tour' ? 'tourivo_tour' : 'tourivo_room';
+        $expectedPostType = $itemType === 'tour' ? 'readscope_tour' : 'readscope_room';
         if ($post->post_type !== $expectedPostType) {
             return [
                 'success' => false,
@@ -898,7 +898,7 @@ class InventoryService
         LogService::log(0, 'availability_update', $logMsg, get_current_user_id());
 
         // 3. Fire developer action hook
-        do_action('tourivo/availability_updated', $itemId, $itemType, $fromStr, $toStr, $changes);
+        do_action('readscope/availability_updated', $itemId, $itemType, $fromStr, $toStr, $changes);
 
         return [
             'success'       => true,
@@ -1159,14 +1159,14 @@ class InventoryService
 
         // phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
         $rooms = get_posts([
-            'post_type'      => 'tourivo_room',
+            'post_type'      => 'readscope_room',
             'post_status'    => 'publish',
             'posts_per_page' => 200,
             'fields'         => 'ids',
             'no_found_rows'  => true,
             'meta_query'     => [
                 [
-                    'key'     => '_tourivo_parent_hotel_id',
+                    'key'     => '_readscope_parent_hotel_id',
                     'value'   => $hotelIds,
                     'compare' => 'IN',
                     'type'    => 'NUMERIC',
@@ -1180,7 +1180,7 @@ class InventoryService
             if ($roomId <= 0) {
                 continue;
             }
-            $parent = (int) get_post_meta($roomId, '_tourivo_parent_hotel_id', true);
+            $parent = (int) get_post_meta($roomId, '_readscope_parent_hotel_id', true);
             if ($parent <= 0 || !in_array($parent, $hotelIds, true)) {
                 continue;
             }
@@ -1236,7 +1236,7 @@ class InventoryService
     private function publishedTourIds(string $destination): array
     {
         $args = [
-            'post_type'      => 'tourivo_tour',
+            'post_type'      => 'readscope_tour',
             'post_status'    => 'publish',
             'posts_per_page' => 80,
             'fields'         => 'ids',
@@ -1250,7 +1250,7 @@ class InventoryService
             // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- One destination term on a small, paged listing query.
             $args['tax_query'] = [
                 [
-                    'taxonomy' => 'tourivo_destination',
+                    'taxonomy' => 'readscope_destination',
                     'field'    => 'slug',
                     'terms'    => $destination,
                 ],
@@ -1268,7 +1268,7 @@ class InventoryService
     private function publishedHotelIds(string $destination): array
     {
         $args = [
-            'post_type'      => 'tourivo_hotel',
+            'post_type'      => 'readscope_hotel',
             'post_status'    => 'publish',
             'posts_per_page' => 80,
             'fields'         => 'ids',
@@ -1282,7 +1282,7 @@ class InventoryService
             // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- One destination term on a small, paged listing query.
             $args['tax_query'] = [
                 [
-                    'taxonomy' => 'tourivo_destination',
+                    'taxonomy' => 'readscope_destination',
                     'field'    => 'slug',
                     'terms'    => $destination,
                 ],

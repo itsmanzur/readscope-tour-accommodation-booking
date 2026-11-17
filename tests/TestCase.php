@@ -5,7 +5,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests;
+namespace Readscope\Tests;
 
 if (class_exists('WP_UnitTestCase')) {
     abstract class BaseTestCaseParent extends \WP_UnitTestCase {}
@@ -98,14 +98,14 @@ abstract class TestCase extends BaseTestCaseParent
         if (function_exists('wp_insert_post')) {
             $postId = (int) wp_insert_post([
                 'post_title'   => 'Test Tour ' . uniqid(),
-                'post_type'    => 'tourivo_tour',
+                'post_type'    => 'readscope_tour',
                 'post_status'  => 'publish',
                 'post_content' => 'Test tour description',
             ]);
-            update_post_meta($postId, '_tourivo_tour_type', 'single_day');
-            update_post_meta($postId, '_tourivo_base_price', number_format($price, 2, '.', ''));
-            update_post_meta($postId, '_tourivo_max_guests', $maxGuests);
-            update_post_meta($postId, '_tourivo_min_guests', 1);
+            update_post_meta($postId, '_readscope_tour_type', 'single_day');
+            update_post_meta($postId, '_readscope_base_price', number_format($price, 2, '.', ''));
+            update_post_meta($postId, '_readscope_max_guests', $maxGuests);
+            update_post_meta($postId, '_readscope_min_guests', 1);
 
             foreach ($extraMeta as $k => $v) {
                 update_post_meta($postId, $k, $v);
@@ -129,23 +129,23 @@ abstract class TestCase extends BaseTestCaseParent
         if (function_exists('wp_insert_post')) {
             $hotelId = (int) wp_insert_post([
                 'post_title'   => 'Test Hotel ' . uniqid(),
-                'post_type'    => 'tourivo_hotel',
+                'post_type'    => 'readscope_hotel',
                 'post_status'  => 'publish',
             ]);
 
             $roomId = (int) wp_insert_post([
                 'post_title'   => 'Test Room ' . uniqid(),
-                'post_type'    => 'tourivo_room',
+                'post_type'    => 'readscope_room',
                 'post_status'  => 'publish',
             ]);
 
-            update_post_meta($roomId, '_tourivo_parent_hotel_id', $hotelId);
-            update_post_meta($roomId, '_tourivo_room_quantity', $roomQuantity);
-            update_post_meta($roomId, '_tourivo_nightly_price', number_format($roomPrice, 2, '.', ''));
-            update_post_meta($roomId, '_tourivo_room_base_price', number_format($roomPrice, 2, '.', ''));
-            update_post_meta($roomId, '_tourivo_max_adults', 2);
-            update_post_meta($roomId, '_tourivo_max_children', 1);
-            update_post_meta($roomId, '_tourivo_max_guests', 3);
+            update_post_meta($roomId, '_readscope_parent_hotel_id', $hotelId);
+            update_post_meta($roomId, '_readscope_room_quantity', $roomQuantity);
+            update_post_meta($roomId, '_readscope_nightly_price', number_format($roomPrice, 2, '.', ''));
+            update_post_meta($roomId, '_readscope_room_base_price', number_format($roomPrice, 2, '.', ''));
+            update_post_meta($roomId, '_readscope_max_adults', 2);
+            update_post_meta($roomId, '_readscope_max_children', 1);
+            update_post_meta($roomId, '_readscope_max_guests', 3);
 
             foreach ($extraMeta as $k => $v) {
                 update_post_meta($roomId, $k, $v);
@@ -191,7 +191,7 @@ abstract class TestCase extends BaseTestCaseParent
      */
     public function cleanDatabaseTables(): void
     {
-        global $wpdb, $tourivo_mock_usermeta;
+        global $wpdb, $readscope_mock_usermeta;
         if ($wpdb) {
             $wpdb->bookings = [];
             $wpdb->booking_items = [];
@@ -200,7 +200,7 @@ abstract class TestCase extends BaseTestCaseParent
             $wpdb->logs = [];
             $wpdb->rl_rows = [];
         }
-        $tourivo_mock_usermeta = [];
+        $readscope_mock_usermeta = [];
     }
 
     /**
@@ -208,8 +208,8 @@ abstract class TestCase extends BaseTestCaseParent
      */
     public function cleanTransients(): void
     {
-        global $tourivo_mock_transients;
-        $tourivo_mock_transients = [];
+        global $readscope_mock_transients;
+        $readscope_mock_transients = [];
         global $wpdb;
         if ($wpdb) {
             $wpdb->rl_rows = [];

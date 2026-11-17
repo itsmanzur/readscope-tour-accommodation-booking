@@ -2,25 +2,25 @@
 /**
  * Readscope Booking ↔ Readscope Booking Pro hook compatibility check.
  *
- * Scans both repositories with the PHP tokenizer and lists every tourivo/... hook that Pro listens to
+ * Scans both repositories with the PHP tokenizer and lists every readscope/... hook that Pro listens to
  * (add_action, add_filter, has_*, remove_*) but nobody fires (do_action*, apply_filters*).
  *
  * Usage:
  *   php scripts/check-hooks.php [--core=<path>] [--pro=<path>] [--verbose]
  *
  *   --core     Readscope Booking (free) checkout. Default: the folder above this script.
- *   --pro      Readscope Booking Pro checkout. Default: ../tourivo-pro next to the core folder.
+ *   --pro      Readscope Booking Pro checkout. Default: ../readscope-pro next to the core folder.
  *   --verbose  Also list every matched hook with the files that fire and listen to it.
  *
  * Exit code: 0 = no mismatch, 1 = mismatches found, 2 = a path is missing.
- * Hook names built at runtime ('tourivo/seo/' . $x) are matched by their literal prefix and listed separately.
+ * Hook names built at runtime ('readscope/seo/' . $x) are matched by their literal prefix and listed separately.
  */
 
 declare(strict_types=1);
 
 $options = getopt('', ['core::', 'pro::', 'verbose']);
 $core    = rtrim((string) ($options['core'] ?? dirname(__DIR__)), '/\\');
-$pro     = rtrim((string) ($options['pro'] ?? dirname($core) . '/tourivo-pro'), '/\\');
+$pro     = rtrim((string) ($options['pro'] ?? dirname($core) . '/readscope-pro'), '/\\');
 $verbose = isset($options['verbose']);
 
 foreach (['core' => $core, 'pro' => $pro] as $label => $path) {
@@ -30,8 +30,8 @@ foreach (['core' => $core, 'pro' => $pro] as $label => $path) {
     }
 }
 
-const TOURIVO_FIRE   = ['do_action', 'do_action_ref_array', 'do_action_deprecated', 'apply_filters', 'apply_filters_ref_array', 'apply_filters_deprecated'];
-const TOURIVO_LISTEN = ['add_action', 'add_filter', 'has_action', 'has_filter', 'remove_action', 'remove_filter', 'remove_all_actions', 'remove_all_filters'];
+const READSCOPE_FIRE   = ['do_action', 'do_action_ref_array', 'do_action_deprecated', 'apply_filters', 'apply_filters_ref_array', 'apply_filters_deprecated'];
+const READSCOPE_LISTEN = ['add_action', 'add_filter', 'has_action', 'has_filter', 'remove_action', 'remove_filter', 'remove_all_actions', 'remove_all_filters'];
 const TRV_SKIP   = ['vendor', 'node_modules', 'tests', 'dist', 'bin', 'scripts', '.git'];
 
 /**
@@ -39,7 +39,7 @@ const TRV_SKIP   = ['vendor', 'node_modules', 'tests', 'dist', 'bin', 'scripts',
  *
  * @return string[]
  */
-function tourivo_php_files(string $root): array
+function readscope_php_files(string $root): array
 {
     $files    = [];
     $iterator = new RecursiveIteratorIterator(
@@ -58,12 +58,12 @@ function tourivo_php_files(string $root): array
 }
 
 /**
- * Every tourivo/... hook name passed as the first argument of the given functions.
+ * Every readscope/... hook name passed as the first argument of the given functions.
  *
  * @param string[] $functions
  * @return array<int, array{name: string, dynamic: bool, function: string, file: string, line: int}>
  */
-function tourivo_hook_calls(string $file, array $functions, string $root): array
+function readscope_hook_calls(string $file, array $functions, string $root): array
 {
     $tokens = token_get_all((string) file_get_contents($file));
     $found  = [];
@@ -99,7 +99,7 @@ function tourivo_hook_calls(string $file, array $functions, string $root): array
             continue;
         }
         $name = substr($arg[1], 1, -1);
-        if (!str_starts_with($name, 'tourivo/')) {
+        if (!str_starts_with($name, 'readscope/')) {
             continue;
         }
 
@@ -123,22 +123,22 @@ function tourivo_hook_calls(string $file, array $functions, string $root): array
 /**
  * @return array{fired: array<int, array<string, mixed>>, listened: array<int, array<string, mixed>>}
  */
-function tourivo_scan(string $root, string $label): array
+function readscope_scan(string $root, string $label): array
 {
     $fired = $listened = [];
-    foreach (tourivo_php_files($root) as $file) {
-        foreach (tourivo_hook_calls($file, TOURIVO_FIRE, $root) as $call) {
+    foreach (readscope_php_files($root) as $file) {
+        foreach (readscope_hook_calls($file, READSCOPE_FIRE, $root) as $call) {
             $fired[] = $call + ['repo' => $label];
         }
-        foreach (tourivo_hook_calls($file, TOURIVO_LISTEN, $root) as $call) {
+        foreach (readscope_hook_calls($file, READSCOPE_LISTEN, $root) as $call) {
             $listened[] = $call + ['repo' => $label];
         }
     }
     return ['fired' => $fired, 'listened' => $listened];
 }
 
-$coreScan = tourivo_scan($core, 'core');
-$proScan  = tourivo_scan($pro, 'pro');
+$coreScan = readscope_scan($core, 'core');
+$proScan  = readscope_scan($pro, 'pro');
 
 // Pro may listen to hooks fired by core or by Pro itself.
 $fired = array_merge($coreScan['fired'], $proScan['fired']);
@@ -177,7 +177,7 @@ foreach ($proScan['listened'] as $l) {
 echo "Readscope Booking hook compatibility\n";
 echo "  core: {$core}\n  pro:  {$pro}\n";
 echo sprintf(
-    "  core fires %d tourivo/ hook names, pro fires %d; pro listens to %d.\n\n",
+    "  core fires %d readscope/ hook names, pro fires %d; pro listens to %d.\n\n",
     count(array_unique(array_column($coreScan['fired'], 'name'))),
     count(array_unique(array_column($proScan['fired'], 'name'))),
     count(array_unique(array_column($proScan['listened'], 'name')))
@@ -210,5 +210,5 @@ if ($missing) {
     exit(1);
 }
 
-echo "✓ Every tourivo/ hook Pro listens to is fired (" . count($matched) . " names).\n";
+echo "✓ Every readscope/ hook Pro listens to is fired (" . count($matched) . " names).\n";
 exit(0);

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Admin;
+namespace Readscope\Admin;
 
-use Tourivo\Config\Config;
-use Tourivo\Shortcodes\CurrencySwitcherShortcode;
+use Readscope\Config\Config;
+use Readscope\Shortcodes\CurrencySwitcherShortcode;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
  *
  * Renders and saves Readscope Booking global settings with tabbed UI and test email dispatcher.
  *
- * @package Tourivo\Admin
+ * @package Readscope\Admin
  */
 class SettingsPage
 {
@@ -68,15 +68,15 @@ class SettingsPage
      */
     public static function handleSave(): void
     {
-        check_admin_referer('tourivo_settings_action', 'tourivo_settings_nonce');
+        check_admin_referer('readscope_settings_action', 'readscope_settings_nonce');
 
-        if (!current_user_can('manage_tourivo_settings')) {
+        if (!current_user_can('manage_readscope_settings')) {
             wp_die(esc_html__('Unauthorized access.', 'the-readscope-tour-and-accommodation-booking'));
         }
 
         self::saveSettings();
 
-        wp_safe_redirect(add_query_arg('settings-updated', '1', admin_url('admin.php?page=tourivo-settings')));
+        wp_safe_redirect(add_query_arg('settings-updated', '1', admin_url('admin.php?page=readscope-settings')));
         exit;
     }
 
@@ -88,7 +88,7 @@ class SettingsPage
     public static function saveSettings(): void
     {
         // phpcs:disable WordPress.Security.NonceVerification.Missing -- handleSave() runs check_admin_referer() and current_user_can() before calling this method.
-        $currentSettings = get_option('tourivo_settings', Config::getDefaults());
+        $currentSettings = get_option('readscope_settings', Config::getDefaults());
 
         $newSettings = [
             'currency'                => self::sanitizeCurrencyCode(sanitize_text_field(wp_unslash($_POST['currency'] ?? '')), (string) ($currentSettings['currency'] ?? 'USD')),
@@ -170,7 +170,7 @@ class SettingsPage
             'primary_hover'              => sanitize_hex_color(wp_unslash((string)($_POST['primary_hover'] ?? '#0f766e'))) ?: '#0f766e',
             'accent_color'               => sanitize_hex_color(wp_unslash((string)($_POST['accent_color'] ?? '#f59e0b'))) ?: '#f59e0b',
             'border_radius'              => self::borderRadius(sanitize_text_field(wp_unslash($_POST['border_radius'] ?? ''))),
-            'font_family'                => self::choice('font_family', \Tourivo\Support\Typography::MODES, 'anek'),
+            'font_family'                => self::choice('font_family', \Readscope\Support\Typography::MODES, 'anek'),
             'button_text_color'          => sanitize_hex_color(wp_unslash((string)($_POST['button_text_color'] ?? '#ffffff'))) ?: '#ffffff',
             'enable_schema'              => isset($_POST['enable_schema']) ? 1 : 0,
             'enable_opengraph'           => isset($_POST['enable_opengraph']) ? 1 : 0,
@@ -189,7 +189,7 @@ class SettingsPage
             'anonymize_after_months'     => 0,
             'retention_statuses'         => array_values(array_intersect(
                 array_map('sanitize_key', (array) wp_unslash($_POST['retention_statuses'] ?? [])),
-                \Tourivo\Services\PrivacyService::RETENTION_STATUS_CHOICES
+                \Readscope\Services\PrivacyService::RETENTION_STATUS_CHOICES
             )),
             'delete_inquiries_after_months' => max(0, (int) sanitize_text_field(wp_unslash($_POST['delete_inquiries_after_months'] ?? '0'))),
             'proxy_mode'                 => in_array(sanitize_text_field(wp_unslash($_POST['proxy_mode'] ?? '')), ['cloudflare', 'reverse_proxy'], true) ? sanitize_text_field(wp_unslash($_POST['proxy_mode'])) : 'disabled',
@@ -199,7 +199,7 @@ class SettingsPage
         ];
 
         $merged = array_merge($currentSettings, $newSettings);
-        update_option('tourivo_settings', $merged);
+        update_option('readscope_settings', $merged);
         // phpcs:enable WordPress.Security.NonceVerification.Missing
     }
 
@@ -210,7 +210,7 @@ class SettingsPage
      */
     public static function render(): void
     {
-        if (!current_user_can('manage_tourivo_settings')) {
+        if (!current_user_can('manage_readscope_settings')) {
             wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'the-readscope-tour-and-accommodation-booking'), 403);
         }
 
@@ -264,8 +264,8 @@ class SettingsPage
         $termsPageId           = (int) Config::get('terms_page_id', 0);
         $consentLabel          = (string) Config::get('consent_label', 'I agree to the {privacy} and {terms}');
         $storeIp               = Config::get('store_ip', 1);
-        $anonymizeAfterDays    = \Tourivo\Services\PrivacyService::retentionDays();
-        $retentionStatuses     = \Tourivo\Services\PrivacyService::retentionStatuses();
+        $anonymizeAfterDays    = \Readscope\Services\PrivacyService::retentionDays();
+        $retentionStatuses     = \Readscope\Services\PrivacyService::retentionStatuses();
         $deleteInqAfterMonths  = (int) Config::get('delete_inquiries_after_months', 0);
         $webhookIncludePhone   = Config::get('webhook_include_phone', 1);
         $webhookIncludeMessage = Config::get('webhook_include_message', 1);
@@ -273,7 +273,7 @@ class SettingsPage
         $primaryHover      = Config::get('primary_hover', '#0f766e');
         $accentColor       = Config::get('accent_color', '#f59e0b');
         $borderRadius      = Config::get('border_radius', '8px');
-        $fontFamily        = \Tourivo\Support\Typography::mode();
+        $fontFamily        = \Readscope\Support\Typography::mode();
         $btnTextColor      = Config::get('button_text_color', '#ffffff');
         $enableSchema      = Config::get('enable_schema', 1);
         $enableOpenGraph   = Config::get('enable_opengraph', 1);
@@ -351,17 +351,17 @@ class SettingsPage
             ],
         ];
         ?>
-        <div class="wrap tourivo-admin-wrap">
-            <div class="tourivo-page-header">
-                <div class="tourivo-page-header__text">
+        <div class="wrap readscope-admin-wrap">
+            <div class="readscope-page-header">
+                <div class="readscope-page-header__text">
                     <h1><?php esc_html_e('Readscope Booking Settings', 'the-readscope-tour-and-accommodation-booking'); ?></h1>
-                    <p class="tourivo-subtitle"><?php esc_html_e('Configure your currency rates, booking defaults, design styling, SEO, and Webhooks.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
+                    <p class="readscope-subtitle"><?php esc_html_e('Configure your currency rates, booking defaults, design styling, SEO, and Webhooks.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                 </div>
             </div>
             <hr class="wp-header-end">
 
             <!-- Settings Tabs Navigation -->
-            <h2 class="nav-tab-wrapper tourivo-settings-tabs">
+            <h2 class="nav-tab-wrapper readscope-settings-tabs">
                 <a href="#tab-general" class="nav-tab nav-tab-active" data-tab="general">
                     <span class="dashicons dashicons-admin-generic"></span> <?php esc_html_e('General & Currency', 'the-readscope-tour-and-accommodation-booking'); ?>
                 </a>
@@ -382,13 +382,13 @@ class SettingsPage
                 </a>
             </h2>
 
-            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="tourivo-settings-form">
-                <input type="hidden" name="action" value="tourivo_save_settings">
-                <?php wp_nonce_field('tourivo_settings_action', 'tourivo_settings_nonce'); ?>
+            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="readscope-settings-form">
+                <input type="hidden" name="action" value="readscope_save_settings">
+                <?php wp_nonce_field('readscope_settings_action', 'readscope_settings_nonce'); ?>
 
                 <!-- TAB 1: General & Currency -->
-                <div id="settings-tab-general" class="tourivo-settings-tab-pane">
-                    <div class="tourivo-settings-box">
+                <div id="settings-tab-general" class="readscope-settings-tab-pane">
+                    <div class="readscope-settings-box">
                         <h2><?php esc_html_e('Base Currency & Pricing Options', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <table class="form-table">
                             <tr>
@@ -411,7 +411,7 @@ class SettingsPage
                             <tr>
                                 <th scope="row"><label for="currency_symbol"><?php esc_html_e('Currency Symbol', 'the-readscope-tour-and-accommodation-booking'); ?></label></th>
                                 <td>
-                                    <input name="currency_symbol" type="text" id="currency_symbol" value="<?php echo esc_attr($currencySymbol); ?>" class="small-text tourivo-input-symbol">
+                                    <input name="currency_symbol" type="text" id="currency_symbol" value="<?php echo esc_attr($currencySymbol); ?>" class="small-text readscope-input-symbol">
                                 </td>
                             </tr>
 
@@ -429,7 +429,7 @@ class SettingsPage
                             <tr>
                                 <th scope="row"><label for="number_of_decimals"><?php esc_html_e('Number Format', 'the-readscope-tour-and-accommodation-booking'); ?></label></th>
                                 <td>
-                                    <div class="tourivo-inline-fields">
+                                    <div class="readscope-inline-fields">
                                         <input name="number_of_decimals" type="number" id="number_of_decimals" min="0" max="4" value="<?php echo esc_attr((string) $numDecimals); ?>" class="small-text">
                                         <span><?php esc_html_e('decimals', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                         <select name="decimal_separator" id="decimal_separator" aria-label="<?php esc_attr_e('Decimal separator', 'the-readscope-tour-and-accommodation-booking'); ?>">
@@ -448,7 +448,7 @@ class SettingsPage
                         </table>
 
                     </div>
-                    <div class="tourivo-settings-box">
+                    <div class="readscope-settings-box">
 
                         <h2><?php esc_html_e('Tax & VAT Configuration', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <table class="form-table">
@@ -495,12 +495,12 @@ class SettingsPage
                         </table>
 
                     </div>
-                    <div class="tourivo-settings-box">
+                    <div class="readscope-settings-box">
 
                         <h2><?php esc_html_e('Supported Multi-Currencies for Frontend Switcher', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
-                        <p class="description"><?php esc_html_e('These exchange rates are used when travelers switch currencies with [tourivo_currency_switcher]:', 'the-readscope-tour-and-accommodation-booking'); ?></p>
+                        <p class="description"><?php esc_html_e('These exchange rates are used when travelers switch currencies with [readscope_currency_switcher]:', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                         
-                        <table class="widefat striped tourivo-settings-table">
+                        <table class="widefat striped readscope-settings-table">
                             <thead>
                                 <tr>
                                     <th><?php esc_html_e('Currency', 'the-readscope-tour-and-accommodation-booking'); ?></th>
@@ -520,7 +520,7 @@ class SettingsPage
                         </table>
 
                     </div>
-                    <div class="tourivo-settings-box">
+                    <div class="readscope-settings-box">
 
                         <h2><?php esc_html_e('Booking Defaults & Post-Booking Experience', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <table class="form-table">
@@ -551,17 +551,17 @@ class SettingsPage
                                         'name'              => 'thankyou_page_id',
                                         'id'                => 'thankyou_page_id',
                                         'selected'          => absint($thankyouPageId),
-                                        'show_option_none'  => esc_html__('— Select Page with [tourivo_thank_you] —', 'the-readscope-tour-and-accommodation-booking'),
+                                        'show_option_none'  => esc_html__('— Select Page with [readscope_thank_you] —', 'the-readscope-tour-and-accommodation-booking'),
                                         'option_none_value' => '0',
                                     ]);
                                     ?>
-                                    <p class="description"><?php esc_html_e('Page containing the [tourivo_thank_you] shortcode where travelers are redirected.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
+                                    <p class="description"><?php esc_html_e('Page containing the [readscope_thank_you] shortcode where travelers are redirected.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                                 </td>
                             </tr>
                         </table>
 
                     </div>
-                    <div class="tourivo-settings-box">
+                    <div class="readscope-settings-box">
 
                         <h2><?php esc_html_e('Traveler Self-Service & Cancellation Policy', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <table class="form-table">
@@ -586,7 +586,7 @@ class SettingsPage
                         </table>
 
                     </div>
-                    <div class="tourivo-settings-box">
+                    <div class="readscope-settings-box">
 
                         <h2><?php esc_html_e('Booking Hygiene & Anti-Abuse', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <table class="form-table">
@@ -618,7 +618,7 @@ class SettingsPage
                         </table>
 
                     </div>
-                    <div class="tourivo-settings-box">
+                    <div class="readscope-settings-box">
 
                         <h2><?php esc_html_e('Language & Localization / ভাষা ও লোকালাইজেশন', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <table class="form-table">
@@ -665,13 +665,13 @@ class SettingsPage
                         </table>
 
                     </div>
-                    <div class="tourivo-settings-box">
+                    <div class="readscope-settings-box">
 
                         <h2><?php esc_html_e('Offline Payment Methods (Bank Transfer & Cash on Arrival)', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <p class="description"><?php esc_html_e('Configure structured bank details for direct wire transfer and Pay-on-Arrival terms for bookings without online payment gateways.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
 
                         <!-- Bank Transfer Configuration -->
-                        <h3 class="tourivo-settings-subhead"><?php esc_html_e('Direct Bank Transfer (Wire / Deposit)', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
+                        <h3 class="readscope-settings-subhead"><?php esc_html_e('Direct Bank Transfer (Wire / Deposit)', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
                         <table class="form-table">
                             <tr>
                                 <th scope="row"><?php esc_html_e('Enable Bank Transfer', 'the-readscope-tour-and-accommodation-booking'); ?></th>
@@ -727,7 +727,7 @@ class SettingsPage
                         </table>
 
                         <!-- Cash on Arrival Configuration -->
-                        <h3 class="tourivo-settings-subhead"><?php esc_html_e('Cash on Arrival / Pay at Check-in', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
+                        <h3 class="readscope-settings-subhead"><?php esc_html_e('Cash on Arrival / Pay at Check-in', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
                         <table class="form-table">
                             <tr>
                                 <th scope="row"><?php esc_html_e('Enable Cash on Arrival', 'the-readscope-tour-and-accommodation-booking'); ?></th>
@@ -749,8 +749,8 @@ class SettingsPage
                 </div>
 
                 <!-- TAB 2: Design & SEO Styling -->
-                <div id="settings-tab-appearance" class="tourivo-settings-tab-pane" style="display:none;">
-                    <div class="tourivo-settings-box">
+                <div id="settings-tab-appearance" class="readscope-settings-tab-pane" style="display:none;">
+                    <div class="readscope-settings-box">
                         <h2><?php esc_html_e('Brand Color Customizer & Styling', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <p class="description"><?php esc_html_e('Match Readscope Booking booking widgets, cards, and buttons with your active WordPress theme styling.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                         
@@ -758,7 +758,7 @@ class SettingsPage
                             <tr>
                                 <th scope="row"><label for="primary_color"><?php esc_html_e('Primary Brand Color', 'the-readscope-tour-and-accommodation-booking'); ?></label></th>
                                 <td>
-                                    <input name="primary_color" type="color" id="primary_color" value="<?php echo esc_attr($primaryColor); ?>" class="tourivo-color-input">
+                                    <input name="primary_color" type="color" id="primary_color" value="<?php echo esc_attr($primaryColor); ?>" class="readscope-color-input">
                                     <code><?php echo esc_html($primaryColor); ?></code>
                                     <p class="description"><?php esc_html_e('Used for primary booking buttons, price tags, active calendar dates, and highlights.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                                 </td>
@@ -766,14 +766,14 @@ class SettingsPage
                             <tr>
                                 <th scope="row"><label for="primary_hover"><?php esc_html_e('Primary Hover Color', 'the-readscope-tour-and-accommodation-booking'); ?></label></th>
                                 <td>
-                                    <input name="primary_hover" type="color" id="primary_hover" value="<?php echo esc_attr($primaryHover); ?>" class="tourivo-color-input">
+                                    <input name="primary_hover" type="color" id="primary_hover" value="<?php echo esc_attr($primaryHover); ?>" class="readscope-color-input">
                                     <code><?php echo esc_html($primaryHover); ?></code>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row"><label for="accent_color"><?php esc_html_e('Accent / Badge Color', 'the-readscope-tour-and-accommodation-booking'); ?></label></th>
                                 <td>
-                                    <input name="accent_color" type="color" id="accent_color" value="<?php echo esc_attr($accentColor); ?>" class="tourivo-color-input">
+                                    <input name="accent_color" type="color" id="accent_color" value="<?php echo esc_attr($accentColor); ?>" class="readscope-color-input">
                                     <code><?php echo esc_html($accentColor); ?></code>
                                     <p class="description"><?php esc_html_e('Used for promotional ribbons, star ratings, and discount tags.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                                 </td>
@@ -781,7 +781,7 @@ class SettingsPage
                             <tr>
                                 <th scope="row"><label for="button_text_color"><?php esc_html_e('Button Text Color', 'the-readscope-tour-and-accommodation-booking'); ?></label></th>
                                 <td>
-                                    <input name="button_text_color" type="color" id="button_text_color" value="<?php echo esc_attr($btnTextColor); ?>" class="tourivo-color-input">
+                                    <input name="button_text_color" type="color" id="button_text_color" value="<?php echo esc_attr($btnTextColor); ?>" class="readscope-color-input">
                                     <code><?php echo esc_html($btnTextColor); ?></code>
                                 </td>
                             </tr>
@@ -810,7 +810,7 @@ class SettingsPage
                         </table>
 
                     </div>
-                    <div class="tourivo-settings-box">
+                    <div class="readscope-settings-box">
 
                         <h2><?php esc_html_e('Search Engine Optimization (SEO) & Social Sharing', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <table class="form-table">
@@ -840,7 +840,7 @@ class SettingsPage
                                         <input name="enable_datalayer" type="checkbox" id="enable_datalayer" value="1" <?php checked($enableDatalayer, 1); ?>>
                                         <strong><?php esc_html_e('Enable eCommerce conversion tracking dataLayer event on Thank You page.', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                                     </label>
-                                    <p class="description"><?php esc_html_e('Pushes a privacy-friendly tourivo_booking event (booking_id, value, currency) to window.dataLayer without customer PII.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
+                                    <p class="description"><?php esc_html_e('Pushes a privacy-friendly readscope_booking event (booking_id, value, currency) to window.dataLayer without customer PII.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                                 </td>
                             </tr>
                         </table>
@@ -848,8 +848,8 @@ class SettingsPage
                 </div>
 
                 <!-- TAB 3: Email Notifications -->
-                <div id="settings-tab-emails" class="tourivo-settings-tab-pane" style="display: none;">
-                    <div class="tourivo-settings-box">
+                <div id="settings-tab-emails" class="readscope-settings-tab-pane" style="display: none;">
+                    <div class="readscope-settings-box">
                         <h2><?php esc_html_e('Sender Details & Routing', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <table class="form-table">
                             <tr>
@@ -876,7 +876,7 @@ class SettingsPage
                         </table>
 
                     </div>
-                    <div class="tourivo-settings-box">
+                    <div class="readscope-settings-box">
 
                         <h2><?php esc_html_e('General Email & Reminder Settings', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <table class="form-table">
@@ -896,7 +896,7 @@ class SettingsPage
                                         'name'              => 'lookup_page_id',
                                         'id'                => 'lookup_page_id',
                                         'selected'          => absint($lookupPageId),
-                                        'show_option_none'  => esc_html__('— Select Page with [tourivo_booking_lookup] —', 'the-readscope-tour-and-accommodation-booking'),
+                                        'show_option_none'  => esc_html__('— Select Page with [readscope_booking_lookup] —', 'the-readscope-tour-and-accommodation-booking'),
                                         'option_none_value' => '0',
                                     ]);
                                     ?>
@@ -911,7 +911,7 @@ class SettingsPage
                                         'name'              => 'my_bookings_page_id',
                                         'id'                => 'my_bookings_page_id',
                                         'selected'          => absint($myBookingsPageId),
-                                        'show_option_none'  => esc_html__('— Select Page with [tourivo_my_bookings] —', 'the-readscope-tour-and-accommodation-booking'),
+                                        'show_option_none'  => esc_html__('— Select Page with [readscope_my_bookings] —', 'the-readscope-tour-and-accommodation-booking'),
                                         'option_none_value' => '0',
                                     ]);
                                     ?>
@@ -928,7 +928,7 @@ class SettingsPage
                         </table>
 
                     </div>
-                    <div class="tourivo-settings-box">
+                    <div class="readscope-settings-box">
 
                         <h2><?php esc_html_e('Available Template Placeholders', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <p class="description"><?php esc_html_e('Use these tags inside email subjects, headings, and additional content. They will be dynamically replaced with real booking data:', 'the-readscope-tour-and-accommodation-booking'); ?></p>
@@ -938,10 +938,10 @@ class SettingsPage
                         </div>
 
                     </div>
-                    <div class="tourivo-settings-box">
+                    <div class="readscope-settings-box">
 
                         <h2><?php esc_html_e('Email Templates Configuration', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
-                        <p class="description"><?php esc_html_e('Customize the subject lines, headings, and additional notes for all automated emails. You can also override email layouts in your active WordPress theme under your-theme/tourivo/emails/.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
+                        <p class="description"><?php esc_html_e('Customize the subject lines, headings, and additional notes for all automated emails. You can also override email layouts in your active WordPress theme under your-theme/readscope/emails/.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
 
                         <div style="display: flex; flex-direction: column; gap: 20px; margin-top: 18px;">
                             <?php foreach ($emailTemplates as $tmplKey => $tmpl) : ?>
@@ -957,7 +957,7 @@ class SettingsPage
                                             </span>
                                         </div>
                                         <div>
-                                            <button type="button" class="button button-small tourivo-send-single-test-email-btn" data-email-type="<?php echo esc_attr($tmplKey); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_test_email_nonce')); ?>">
+                                            <button type="button" class="button button-small readscope-send-single-test-email-btn" data-email-type="<?php echo esc_attr($tmplKey); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce('readscope_test_email_nonce')); ?>">
                                                 <?php esc_html_e('Test This Email', 'the-readscope-tour-and-accommodation-booking'); ?>
                                             </button>
                                         </div>
@@ -991,29 +991,29 @@ class SettingsPage
                         </div>
 
                     </div>
-                    <div class="tourivo-settings-box">
+                    <div class="readscope-settings-box">
 
                         <h2><?php esc_html_e('Test Email Dispatcher', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <p class="description"><?php esc_html_e('Send a sample email to verify your WordPress mail server setup and layout rendering.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                         
-                        <div class="tourivo-inline-fields">
-                            <select id="tourivo_test_email_type">
+                        <div class="readscope-inline-fields">
+                            <select id="readscope_test_email_type">
                                 <?php foreach ($emailTemplates as $tmplKey => $tmpl) : ?>
                                     <option value="<?php echo esc_attr($tmplKey); ?>"><?php echo esc_html($tmpl['title']); ?></option>
                                 <?php endforeach; ?>
                             </select>
-                            <input type="email" id="tourivo_test_email_recipient" value="<?php echo esc_attr(get_option('admin_email')); ?>" class="regular-text" placeholder="<?php esc_attr_e('your-email@example.com', 'the-readscope-tour-and-accommodation-booking'); ?>">
-                            <button type="button" class="button button-secondary" id="tourivo-send-test-email-btn" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_test_email_nonce')); ?>">
+                            <input type="email" id="readscope_test_email_recipient" value="<?php echo esc_attr(get_option('admin_email')); ?>" class="regular-text" placeholder="<?php esc_attr_e('your-email@example.com', 'the-readscope-tour-and-accommodation-booking'); ?>">
+                            <button type="button" class="button button-secondary" id="readscope-send-test-email-btn" data-nonce="<?php echo esc_attr(wp_create_nonce('readscope_test_email_nonce')); ?>">
                                 <?php esc_html_e('Send Test Email', 'the-readscope-tour-and-accommodation-booking'); ?>
                             </button>
                         </div>
-                        <div id="tourivo-test-email-alert" style="display: none; margin-top: 12px; font-weight: 600;"></div>
+                        <div id="readscope-test-email-alert" style="display: none; margin-top: 12px; font-weight: 600;"></div>
                     </div>
                 </div>
 
                 <!-- TAB 4: Webhooks & API -->
-                <div id="settings-tab-webhooks" class="tourivo-settings-tab-pane" style="display: none;">
-                    <div class="tourivo-settings-box">
+                <div id="settings-tab-webhooks" class="readscope-settings-tab-pane" style="display: none;">
+                    <div class="readscope-settings-box">
                         <h2><?php esc_html_e('Outbound Webhooks (Zapier, Make, n8n, CRMs)', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <p class="description"><?php esc_html_e('Send real-time JSON payloads to external webhooks whenever reservations are created or updated.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                         
@@ -1029,11 +1029,11 @@ class SettingsPage
                             <tr>
                                 <th scope="row"><label for="webhook_secret"><?php esc_html_e('Secret Key (HMAC SHA-256)', 'the-readscope-tour-and-accommodation-booking'); ?></label></th>
                                 <td>
-                                    <div class="tourivo-inline-fields">
-                                        <input name="webhook_secret" type="password" autocomplete="new-password" id="webhook_secret" value="<?php echo esc_attr($webhookSecret); ?>" class="regular-text" placeholder="<?php esc_attr_e('e.g. secret_tourivo_xxxx', 'the-readscope-tour-and-accommodation-booking'); ?>">
-                                        <button type="button" class="button" id="tourivo-gen-secret-btn"><?php esc_html_e('Generate Secret', 'the-readscope-tour-and-accommodation-booking'); ?></button>
+                                    <div class="readscope-inline-fields">
+                                        <input name="webhook_secret" type="password" autocomplete="new-password" id="webhook_secret" value="<?php echo esc_attr($webhookSecret); ?>" class="regular-text" placeholder="<?php esc_attr_e('e.g. secret_readscope_xxxx', 'the-readscope-tour-and-accommodation-booking'); ?>">
+                                        <button type="button" class="button" id="readscope-gen-secret-btn"><?php esc_html_e('Generate Secret', 'the-readscope-tour-and-accommodation-booking'); ?></button>
                                     </div>
-                                    <p class="description"><?php esc_html_e('Optional secret key used to compute the X-Tourivo-Signature HTTP header for payload verification.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
+                                    <p class="description"><?php esc_html_e('Optional secret key used to compute the X-Readscope-Signature HTTP header for payload verification.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                                 </td>
                             </tr>
 
@@ -1076,23 +1076,23 @@ class SettingsPage
                         </table>
 
                     </div>
-                    <div class="tourivo-settings-box">
+                    <div class="readscope-settings-box">
 
                         <h2><?php esc_html_e('Test Webhook Dispatcher', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <p class="description"><?php esc_html_e('Send a test ping payload to your webhook target URL to verify connectivity.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                         
                         <div style="display: flex; gap: 10px; align-items: center; margin-top: 12px;">
-                            <button type="button" class="button button-secondary" id="tourivo-send-test-webhook-btn" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_test_webhook_nonce')); ?>">
+                            <button type="button" class="button button-secondary" id="readscope-send-test-webhook-btn" data-nonce="<?php echo esc_attr(wp_create_nonce('readscope_test_webhook_nonce')); ?>">
                                 <?php esc_html_e('Send Test Ping Payload', 'the-readscope-tour-and-accommodation-booking'); ?>
                             </button>
                         </div>
-                        <div id="tourivo-test-webhook-alert" style="display: none; margin-top: 12px; font-weight: 600;"></div>
+                        <div id="readscope-test-webhook-alert" style="display: none; margin-top: 12px; font-weight: 600;"></div>
                     </div>
                 </div>
 
                 <!-- TAB 5: Privacy & GDPR Compliance -->
-                <div id="settings-tab-privacy" class="tourivo-settings-tab-pane" style="display: none;">
-                    <div class="tourivo-settings-box">
+                <div id="settings-tab-privacy" class="readscope-settings-tab-pane" style="display: none;">
+                    <div class="readscope-settings-box">
                         <h2><?php esc_html_e('User Consent & Terms Agreement', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <p class="description"><?php esc_html_e('Require travelers to explicitly agree to your Terms and Privacy Policy before submitting bookings or trip inquiries.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
 
@@ -1146,7 +1146,7 @@ class SettingsPage
                         </table>
 
                     </div>
-                    <div class="tourivo-settings-box">
+                    <div class="readscope-settings-box">
 
                         <h2><?php esc_html_e('IP Storage & Data Minimization', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <table class="form-table">
@@ -1163,7 +1163,7 @@ class SettingsPage
                         </table>
 
                     </div>
-                    <div class="tourivo-settings-box">
+                    <div class="readscope-settings-box">
 
                         <h2><?php esc_html_e('Scheduled Data Retention & Anonymization Routine', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <p class="description"><?php esc_html_e('Automate GDPR storage limitation compliance. Bookings are safely anonymized (retaining financial amounts and lines for tax laws), while inquiries are permanently deleted.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
@@ -1182,16 +1182,16 @@ class SettingsPage
                                 <td>
                                     <fieldset>
                                         <?php
-                                        $tourivoStatusLabels = [
+                                        $readscopeStatusLabels = [
                                             'completed' => __('Completed', 'the-readscope-tour-and-accommodation-booking'),
                                             'cancelled' => __('Cancelled', 'the-readscope-tour-and-accommodation-booking'),
                                             'confirmed' => __('Confirmed', 'the-readscope-tour-and-accommodation-booking'),
                                             'pending'   => __('Pending', 'the-readscope-tour-and-accommodation-booking'),
                                             'on_hold'   => __('On hold', 'the-readscope-tour-and-accommodation-booking'),
                                         ];
-                                        foreach ($tourivoStatusLabels as $tourivoStatus => $tourivoStatusLabel) :
+                                        foreach ($readscopeStatusLabels as $readscopeStatus => $readscopeStatusLabel) :
                                             ?>
-                                            <label style="margin-right: 14px;"><input type="checkbox" name="retention_statuses[]" value="<?php echo esc_attr($tourivoStatus); ?>" <?php checked(in_array($tourivoStatus, $retentionStatuses, true)); ?>> <?php echo esc_html($tourivoStatusLabel); ?></label>
+                                            <label style="margin-right: 14px;"><input type="checkbox" name="retention_statuses[]" value="<?php echo esc_attr($readscopeStatus); ?>" <?php checked(in_array($readscopeStatus, $retentionStatuses, true)); ?>> <?php echo esc_html($readscopeStatusLabel); ?></label>
                                         <?php endforeach; ?>
                                     </fieldset>
                                     <p class="description"><?php esc_html_e('Only bookings in these statuses are anonymized. None ticked = Completed and Cancelled.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
@@ -1209,14 +1209,14 @@ class SettingsPage
                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-top: 15px; max-width: 650px;">
                             <h4 style="margin: 0 0 8px; color: #1e293b;"><?php esc_html_e('Retention Routine Dry-Run Preview', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                             <p style="margin: 0 0 12px; font-size: var(--trv-admin-text-sm); color: #64748b;"><?php esc_html_e('Check how many expired records are currently eligible for scheduled retention actions without modifying data.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
-                            <button type="button" class="button button-secondary" id="tourivo-retention-dry-run-btn" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_admin_nonce')); ?>">
+                            <button type="button" class="button button-secondary" id="readscope-retention-dry-run-btn" data-nonce="<?php echo esc_attr(wp_create_nonce('readscope_admin_nonce')); ?>">
                                 <?php esc_html_e('Check Eligible Records Count', 'the-readscope-tour-and-accommodation-booking'); ?>
                             </button>
-                            <div id="tourivo-retention-dry-run-result" style="display: none; margin-top: 10px; font-size: var(--trv-admin-text-sm); font-weight: 600;"></div>
+                            <div id="readscope-retention-dry-run-result" style="display: none; margin-top: 10px; font-size: var(--trv-admin-text-sm); font-weight: 600;"></div>
                         </div>
 
                     </div>
-                    <div class="tourivo-settings-box">
+                    <div class="readscope-settings-box">
 
                         <h2><?php esc_html_e('WordPress Core Privacy Tools Integration', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <p class="description"><?php esc_html_e('Readscope Booking is fully integrated with standard WordPress privacy compliance features:', 'the-readscope-tour-and-accommodation-booking'); ?></p>
@@ -1229,8 +1229,8 @@ class SettingsPage
                 </div>
 
                 <!-- TAB 6: Advanced & System -->
-                <div id="settings-tab-advanced" class="tourivo-settings-tab-pane" style="display: none;">
-                    <div class="tourivo-settings-box">
+                <div id="settings-tab-advanced" class="readscope-settings-tab-pane" style="display: none;">
+                    <div class="readscope-settings-box">
                         <h2><?php esc_html_e('Network & Proxy Configuration', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <table class="form-table">
                             <tr>
@@ -1254,7 +1254,7 @@ class SettingsPage
                         </table>
 
                     </div>
-                    <div class="tourivo-settings-box">
+                    <div class="readscope-settings-box">
 
                         <h2><?php esc_html_e('Data Deletion on Uninstall', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <table class="form-table">
@@ -1270,29 +1270,29 @@ class SettingsPage
                         </table>
 
                     </div>
-                    <div class="tourivo-settings-box">
+                    <div class="readscope-settings-box">
                         <h2><?php esc_html_e('Setup Wizard & Demo Tools', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
-                        <div class="tourivo-settings-tip">
+                        <div class="readscope-settings-tip">
                             <h4 style="margin: 0 0 6px; color: #0f766e;"><?php esc_html_e('Quick Onboarding & Sample Data', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                             <p style="margin: 0 0 12px; font-size: var(--trv-admin-text-sm); color: #115e59;"><?php esc_html_e('Need to regenerate core pages, re-configure currency, or re-import sample demo tours and boutique hotels?', 'the-readscope-tour-and-accommodation-booking'); ?></p>
-                            <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-setup-wizard')); ?>" class="button button-secondary">
+                            <a href="<?php echo esc_url(admin_url('admin.php?page=readscope-setup-wizard')); ?>" class="button button-secondary">
                                 <?php esc_html_e('Launch Setup Wizard', 'the-readscope-tour-and-accommodation-booking'); ?>
                             </a>
                         </div>
 
                     </div>
-                    <div class="tourivo-settings-box">
+                    <div class="readscope-settings-box">
 
                         <h2><?php esc_html_e('System Information', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
-                        <table class="widefat striped tourivo-settings-table">
+                        <table class="widefat striped readscope-settings-table">
                             <tbody>
                                 <tr>
                                     <td><strong><?php esc_html_e('Readscope Booking Core Version', 'the-readscope-tour-and-accommodation-booking'); ?></strong></td>
-                                    <td><code><?php echo esc_html(TOURIVO_VERSION); ?></code></td>
+                                    <td><code><?php echo esc_html(READSCOPE_VERSION); ?></code></td>
                                 </tr>
                                 <tr>
                                     <td><strong><?php esc_html_e('Database Schema Version', 'the-readscope-tour-and-accommodation-booking'); ?></strong></td>
-                                    <td><code><?php echo esc_html((string)get_option('tourivo_db_version', '1.1.0')); ?></code></td>
+                                    <td><code><?php echo esc_html((string)get_option('readscope_db_version', '1.1.0')); ?></code></td>
                                 </tr>
                                 <tr>
                                     <td><strong><?php esc_html_e('PHP Version', 'the-readscope-tour-and-accommodation-booking'); ?></strong></td>
@@ -1307,8 +1307,8 @@ class SettingsPage
                     </div>
                 </div>
 
-                <div class="tourivo-savebar">
-                    <input type="submit" name="tourivo_save_settings" class="button button-primary" value="<?php esc_attr_e('Save Changes', 'the-readscope-tour-and-accommodation-booking'); ?>">
+                <div class="readscope-savebar">
+                    <input type="submit" name="readscope_save_settings" class="button button-primary" value="<?php esc_attr_e('Save Changes', 'the-readscope-tour-and-accommodation-booking'); ?>">
                 </div>
             </form>
         </div>

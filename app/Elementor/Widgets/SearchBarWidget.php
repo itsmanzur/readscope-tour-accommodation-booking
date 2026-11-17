@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Elementor\Widgets;
+namespace Readscope\Elementor\Widgets;
 
-use Tourivo\Shortcodes\SearchBarShortcode;
+use Readscope\Shortcodes\SearchBarShortcode;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -19,13 +19,13 @@ if (!class_exists('\Elementor\Widget_Base')) {
  *
  * Elementor Widget for embedding the Readscope Booking search filter bar.
  *
- * @package Tourivo\Elementor\Widgets
+ * @package Readscope\Elementor\Widgets
  */
 class SearchBarWidget extends \Elementor\Widget_Base
 {
     public function get_name(): string
     {
-        return 'tourivo_search_bar';
+        return 'readscope_search_bar';
     }
 
     public function get_title(): string
@@ -40,7 +40,7 @@ class SearchBarWidget extends \Elementor\Widget_Base
 
     public function get_categories(): array
     {
-        return ['tourivo-elements'];
+        return ['readscope-elements'];
     }
 
     public function get_keywords(): array
@@ -70,6 +70,6 @@ class SearchBarWidget extends \Elementor\Widget_Base
 
     protected function render(): void
     {
-        \Tourivo\Support\Html::print(SearchBarShortcode::render());
+        \Readscope\Support\Html::print(SearchBarShortcode::render());
     }
 }

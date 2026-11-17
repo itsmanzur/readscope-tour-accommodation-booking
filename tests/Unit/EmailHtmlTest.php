@@ -5,11 +5,11 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Unit;
+namespace Readscope\Tests\Unit;
 
-use Tourivo\Services\EmailService;
-use Tourivo\Support\Html;
-use Tourivo\Tests\TestCase;
+use Readscope\Services\EmailService;
+use Readscope\Support\Html;
+use Readscope\Tests\TestCase;
 
 class EmailHtmlTest extends TestCase
 {
@@ -68,7 +68,7 @@ class EmailHtmlTest extends TestCase
             'isTest'           => false,
         ]);
 
-        $content = substr($html, (int) strpos($html, 'tourivo-email-content'));
+        $content = substr($html, (int) strpos($html, 'readscope-email-content'));
         $this->assertStringNotContainsString('<script', strtolower($content));
         $this->assertStringContainsString('Body', $content);
         $this->assertStringContainsString('border-radius:6px', str_replace(' ', '', $content));

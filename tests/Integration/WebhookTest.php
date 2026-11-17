@@ -5,11 +5,11 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Config\Config;
-use Tourivo\Services\WebhookService;
-use Tourivo\Tests\TestCase;
+use Readscope\Config\Config;
+use Readscope\Services\WebhookService;
+use Readscope\Tests\TestCase;
 
 class WebhookTest extends TestCase
 {

@@ -5,10 +5,10 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Unit;
+namespace Readscope\Tests\Unit;
 
-use Tourivo\Support\PublicSearch;
-use Tourivo\Tests\TestCase;
+use Readscope\Support\PublicSearch;
+use Readscope\Tests\TestCase;
 
 class PublicSearchTest extends TestCase
 {
@@ -46,14 +46,14 @@ class PublicSearchTest extends TestCase
 
     public function test_query_vars_are_registered_once(): void
     {
-        $vars = PublicSearch::addQueryVars(['s', 'tourivo_destination']);
+        $vars = PublicSearch::addQueryVars(['s', 'readscope_destination']);
 
-        $this->assertSame(['s', 'tourivo_destination', 'tourivo_date', 'tourivo_guests'], $vars);
+        $this->assertSame(['s', 'readscope_destination', 'readscope_date', 'readscope_guests'], $vars);
     }
 
     public function test_values_are_read_from_the_parsed_request_and_validated(): void
     {
-        $this->request(['tourivo_date' => '2027-01-10', 'tourivo_guests' => '4', 'tourivo_destination' => 'Coxs Bazar']);
+        $this->request(['readscope_date' => '2027-01-10', 'readscope_guests' => '4', 'readscope_destination' => 'Coxs Bazar']);
 
         $this->assertSame('2027-01-10', PublicSearch::date());
         $this->assertSame(4, PublicSearch::guests());
@@ -64,26 +64,26 @@ class PublicSearchTest extends TestCase
 
     public function test_date_and_guests_leave_the_main_query_destination_stays(): void
     {
-        $wp = $this->request(['tourivo_date' => '2027-01-10', 'tourivo_guests' => '2', 'tourivo_destination' => 'sylhet']);
+        $wp = $this->request(['readscope_date' => '2027-01-10', 'readscope_guests' => '2', 'readscope_destination' => 'sylhet']);
 
-        $this->assertSame(['tourivo_destination' => 'sylhet'], $wp->query_vars);
+        $this->assertSame(['readscope_destination' => 'sylhet'], $wp->query_vars);
         $this->assertSame('2027-01-10', PublicSearch::date());
     }
 
     public function test_invalid_input_is_rejected(): void
     {
-        $this->request(['tourivo_date' => '10/01/2027<script>', 'tourivo_guests' => '999']);
+        $this->request(['readscope_date' => '10/01/2027<script>', 'readscope_guests' => '999']);
         $this->assertSame('', PublicSearch::date());
         $this->assertTrue(PublicSearch::hasDate());
         $this->assertSame(50, PublicSearch::guests());
 
         PublicSearch::reset();
-        $this->request(['tourivo_date' => ['2027-01-10'], 'tourivo_guests' => '-3']);
+        $this->request(['readscope_date' => ['2027-01-10'], 'readscope_guests' => '-3']);
         $this->assertSame('2027-01-10', PublicSearch::date());
         $this->assertSame(3, PublicSearch::guests());
 
         PublicSearch::reset();
-        $this->request(['tourivo_guests' => '0']);
+        $this->request(['readscope_guests' => '0']);
         $this->assertSame(1, PublicSearch::guests());
     }
 
@@ -101,7 +101,7 @@ class PublicSearchTest extends TestCase
 
     public function test_the_get_superglobal_is_never_consulted(): void
     {
-        $_GET = ['tourivo_date' => '2027-05-05', 'tourivo_guests' => '9', 'tourivo_destination' => 'dhaka'];
+        $_GET = ['readscope_date' => '2027-05-05', 'readscope_guests' => '9', 'readscope_destination' => 'dhaka'];
         $this->request([]);
 
         $this->assertSame('', PublicSearch::date());

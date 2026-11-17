@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Admin;
+namespace Readscope\Admin;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
  *
  * Interactive, beginner-friendly documentation, feature catalog, and onboarding guide for Readscope Booking.
  *
- * @package Tourivo\Admin
+ * @package Readscope\Admin
  */
 class DocumentationPage
 {
@@ -26,9 +26,9 @@ class DocumentationPage
     {
         $adminUrl = admin_url();
         ?>
-        <div class="wrap tourivo-admin-wrap tourivo-docs-wrap">
+        <div class="wrap readscope-admin-wrap readscope-docs-wrap">
             <!-- Hero Header -->
-            <div class="tourivo-docs-hero">
+            <div class="readscope-docs-hero">
                 <div class="hero-content">
                     <span class="hero-tagline"><?php esc_html_e('The Complete Agency Guide & Feature Showcase', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                     <h1 class="hero-title"><?php esc_html_e('Readscope Booking Docs & Features Hub', 'the-readscope-tour-and-accommodation-booking'); ?></h1>
@@ -36,10 +36,10 @@ class DocumentationPage
                         <?php esc_html_e('Readscope Booking is your all-in-one travel booking engine and tour management powerhouse for WordPress. Explore our complete feature catalog, step-by-step guides, and copyable shortcodes to launch your booking website effortlessly—no coding required!', 'the-readscope-tour-and-accommodation-booking'); ?>
                     </p>
                     <div class="hero-quick-actions">
-                        <a href="<?php echo esc_url($adminUrl . 'admin.php?page=tourivo'); ?>" class="tourivo-btn-hero tourivo-btn-hero-primary">
+                        <a href="<?php echo esc_url($adminUrl . 'admin.php?page=readscope'); ?>" class="readscope-btn-hero readscope-btn-hero-primary">
                             <span class="dashicons dashicons-dashboard"></span> <?php esc_html_e('Go to Dashboard', 'the-readscope-tour-and-accommodation-booking'); ?>
                         </a>
-                        <a href="<?php echo esc_url($adminUrl . 'admin.php?page=tourivo-settings'); ?>" class="tourivo-btn-hero tourivo-btn-hero-outline">
+                        <a href="<?php echo esc_url($adminUrl . 'admin.php?page=readscope-settings'); ?>" class="readscope-btn-hero readscope-btn-hero-outline">
                             <span class="dashicons dashicons-admin-settings"></span> <?php esc_html_e('Configure Settings', 'the-readscope-tour-and-accommodation-booking'); ?>
                         </a>
                     </div>
@@ -47,9 +47,9 @@ class DocumentationPage
             </div>
 
             <!-- Interactive Documentation Container -->
-            <div class="tourivo-docs-container">
+            <div class="readscope-docs-container">
                 <!-- Navigation Sidebar Tabs -->
-                <div class="tourivo-docs-nav">
+                <div class="readscope-docs-nav">
                     <ul>
                         <li class="active"><a href="#doc-intro"><span class="dashicons dashicons-info-outline"></span> <?php esc_html_e('1. Introduction & Quick Start', 'the-readscope-tour-and-accommodation-booking'); ?></a></li>
                         <li><a href="#doc-features"><span class="dashicons dashicons-awards" style="color:#0d9488;"></span> <strong><?php esc_html_e('2. All Features Catalog', 'the-readscope-tour-and-accommodation-booking'); ?></strong></a></li>
@@ -63,16 +63,16 @@ class DocumentationPage
                 </div>
 
                 <!-- Documentation Content Panes -->
-                <div class="tourivo-docs-content">
+                <div class="readscope-docs-content">
                     
                     <!-- TAB 1: Introduction & Quick Start -->
-                    <div id="doc-intro" class="tourivo-doc-pane active">
+                    <div id="doc-intro" class="readscope-doc-pane active">
                         <h2><?php esc_html_e('What is Readscope Booking and How Does it Work?', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <p class="lead-paragraph">
                             <?php esc_html_e('Think of Readscope Booking as your private booking engine (similar to Booking.com, Airbnb, or Viator) operating directly inside your own WordPress website.', 'the-readscope-tour-and-accommodation-booking'); ?>
                         </p>
 
-                        <div class="tourivo-feature-cards-grid">
+                        <div class="readscope-feature-cards-grid">
                             <div class="feature-card">
                                 <div class="feature-card-icon icon-tour"><span class="dashicons dashicons-location-alt"></span></div>
                                 <h3><?php esc_html_e('Tour Packages & Day Trips', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
@@ -99,7 +99,7 @@ class DocumentationPage
                                 <div class="step-details">
                                     <strong><?php esc_html_e('Set Your Currency & Details', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                                     <p><?php esc_html_e('Go to Readscope Booking -> Settings. Select your currency code (e.g. USD $, EUR €, BDT ৳), symbol position, and sender email.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
-                                    <a href="<?php echo esc_url($adminUrl . 'admin.php?page=tourivo-settings'); ?>" class="step-action-link"><?php esc_html_e('Open Settings', 'the-readscope-tour-and-accommodation-booking'); ?> &rarr;</a>
+                                    <a href="<?php echo esc_url($adminUrl . 'admin.php?page=readscope-settings'); ?>" class="step-action-link"><?php esc_html_e('Open Settings', 'the-readscope-tour-and-accommodation-booking'); ?> &rarr;</a>
                                 </div>
                             </div>
                             <div class="launch-step">
@@ -108,10 +108,10 @@ class DocumentationPage
                                     <strong><?php esc_html_e('Import Starter Demo Data (Recommended for Beginners)', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                                     <p><?php esc_html_e('Instantly create complete starter packages: 3 guided tours (Bali, Swiss Alps, Dubai) and 2 boutique hotels with 4 rooms to see full itineraries, rooms, and booking forms in action.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                                     <div style="margin-top: 8px;">
-                                        <button type="button" class="button button-primary tourivo-import-sample-btn" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_admin_nonce')); ?>" style="background: #0d9488; border-color: #0d9488; font-weight:600; display:inline-flex; align-items:center; gap:6px;">
+                                        <button type="button" class="button button-primary readscope-import-sample-btn" data-nonce="<?php echo esc_attr(wp_create_nonce('readscope_admin_nonce')); ?>" style="background: #0d9488; border-color: #0d9488; font-weight:600; display:inline-flex; align-items:center; gap:6px;">
                                             <span class="dashicons dashicons-cloud-upload"></span> <?php esc_html_e('Import Starter Demo Content Now', 'the-readscope-tour-and-accommodation-booking'); ?>
                                         </button>
-                                        <div class="tourivo-seeder-notice" style="display:none; margin-top:8px;"></div>
+                                        <div class="readscope-seeder-notice" style="display:none; margin-top:8px;"></div>
                                     </div>
                                 </div>
                             </div>
@@ -126,7 +126,7 @@ class DocumentationPage
                                 <div class="step-num">4</div>
                                 <div class="step-details">
                                     <strong><?php esc_html_e('Publish on Pages via Shortcode or Elementor', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
-                                    <p><?php esc_html_e('Paste shortcodes like [tourivo_tours] or [tourivo_filter_search] on any page or drag Readscope Booking widgets into Elementor.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
+                                    <p><?php esc_html_e('Paste shortcodes like [readscope_tours] or [readscope_filter_search] on any page or drag Readscope Booking widgets into Elementor.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                                     <a href="#doc-embed" class="step-action-link"><?php esc_html_e('View Shortcodes Table', 'the-readscope-tour-and-accommodation-booking'); ?> &rarr;</a>
                                 </div>
                             </div>
@@ -134,7 +134,7 @@ class DocumentationPage
                     </div>
 
                     <!-- TAB 2: All Features Catalog -->
-                    <div id="doc-features" class="tourivo-doc-pane">
+                    <div id="doc-features" class="readscope-doc-pane">
                         <h2><?php esc_html_e('Complete Readscope Booking Feature Catalog', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <p class="lead-paragraph">
                             <?php esc_html_e('Explore the complete roster of features engineered into Readscope Booking to power modern travel agencies, tour operators, and boutique hoteliers.', 'the-readscope-tour-and-accommodation-booking'); ?>
@@ -142,19 +142,19 @@ class DocumentationPage
 
                         <!-- Feature Category 1: Tours & Trips -->
                         <h3 style="margin-top: 24px;"><?php esc_html_e('Tour & Excursion Management', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
-                        <div class="tourivo-feature-cards-grid">
+                        <div class="readscope-feature-cards-grid">
                             <div class="feature-card">
-                                <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <span class="readscope-badge readscope-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 <h4><?php esc_html_e('Interactive Itinerary Builder', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('Create day-by-day or stage-by-stage itineraries with custom titles, included meals (Breakfast/Lunch/Dinner), and detailed descriptions.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
                             <div class="feature-card">
-                                <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <span class="readscope-badge readscope-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 <h4><?php esc_html_e('Inclusions & Exclusions Checklist', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('Visual checkmark and cross-mark list displaying what is included (e.g. Flight, Hotel, Tour Guide) and excluded (e.g. Visa, Tips).', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
                             <div class="feature-card">
-                                <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <span class="readscope-badge readscope-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 <h4><?php esc_html_e('GPS Map Coordinates & Pickup Points', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('Define exact departure points, return drop-offs, and GPS Latitude/Longitude for interactive map pinpoints.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
@@ -162,19 +162,19 @@ class DocumentationPage
 
                         <!-- Feature Category 2: Hotels & Accommodations -->
                         <h3 style="margin-top: 30px;"><?php esc_html_e('Hotels, Resorts & Accommodation Engine', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
-                        <div class="tourivo-feature-cards-grid">
+                        <div class="readscope-feature-cards-grid">
                             <div class="feature-card">
-                                <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <span class="readscope-badge readscope-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 <h4><?php esc_html_e('2-Level Hierarchy (Hotel -> Rooms)', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('Create parent hotels/resorts and attach unlimited individual room types (Deluxe Suite, Ocean Villa, Standard Room) with unique specs.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
                             <div class="feature-card">
-                                <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <span class="readscope-badge readscope-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 <h4><?php esc_html_e('Star Ratings & Amenities', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('Display 1 to 5 star rating badges, property check-in/out times, and assign custom amenities (Free WiFi, Pool, Spa).', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
                             <div class="feature-card">
-                                <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <span class="readscope-badge readscope-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 <h4><?php esc_html_e('Bed Styles & Dimensions', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('Specify room dimensions (m²/sqft) and bed configurations (King Bed, Twin Beds) for traveler clarity.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
@@ -182,39 +182,39 @@ class DocumentationPage
 
                         <!-- Feature Category 3: Search, Filter & Wishlist -->
                         <h3 style="margin-top: 30px;"><?php esc_html_e('Live Search, Filter & Traveler Wishlist', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
-                        <div class="tourivo-feature-cards-grid">
+                        <div class="readscope-feature-cards-grid">
                             <div class="feature-card">
-                                <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
-                                <h4><?php esc_html_e('Live AJAX Filter & Search [tourivo_filter_search]', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
+                                <span class="readscope-badge readscope-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <h4><?php esc_html_e('Live AJAX Filter & Search [readscope_filter_search]', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('Real-time, zero page-reload filtering by keyword, destination, budget range slider, duration, and star ratings.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
                             <div class="feature-card">
-                                <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
-                                <h4><?php esc_html_e('Traveler Wishlist & Favorites [tourivo_wishlist]', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
+                                <span class="readscope-badge readscope-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <h4><?php esc_html_e('Traveler Wishlist & Favorites [readscope_wishlist]', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('1-Click animated heart button on all cards. Snappy LocalStorage saving + cloud account sync for logged-in users.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
                             <div class="feature-card">
-                                <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
-                                <h4><?php esc_html_e('Multi-Currency Switcher [tourivo_currency_switcher]', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
+                                <span class="readscope-badge readscope-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <h4><?php esc_html_e('Multi-Currency Switcher [readscope_currency_switcher]', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('Instant dropdown widget converting prices into USD, EUR, GBP, BDT ৳, INR ₹, AUD, CAD, and AED in real-time.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
                         </div>
 
                         <!-- Feature Category 4: Reviews & Lead Capture -->
                         <h3 style="margin-top: 30px;"><?php esc_html_e('Trust, Reviews & Lead Management', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
-                        <div class="tourivo-feature-cards-grid">
+                        <div class="readscope-feature-cards-grid">
                             <div class="feature-card">
-                                <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <span class="readscope-badge readscope-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 <h4><?php esc_html_e('5-Star Reviews & Rating Scorecards', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('Interactive star rating submission form with aggregate 5★ to 1★ breakdown progress bars on single pages.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
                             <div class="feature-card">
-                                <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <span class="readscope-badge readscope-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 <h4><?php esc_html_e('✓ Verified Traveler Trust Badge', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('Automatically detects confirmed booking emails in database and awards a glowing Verified Traveler badge to genuine reviews.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
                             <div class="feature-card">
-                                <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <span class="readscope-badge readscope-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 <h4><?php esc_html_e('1-Click "Trip Inquiry" Lead Capture', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('Lead capture popup directly on booking panels with instant admin email alerts and full lead management table in wp-admin.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
@@ -222,19 +222,19 @@ class DocumentationPage
 
                         <!-- Feature Category 5: Operations & Safety -->
                         <h3 style="margin-top: 30px;"><?php esc_html_e('Booking Operations & Safety', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
-                        <div class="tourivo-feature-cards-grid">
+                        <div class="readscope-feature-cards-grid">
                             <div class="feature-card">
-                                <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <span class="readscope-badge readscope-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 <h4><?php esc_html_e('Anti-Double-Booking Inventory Engine', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('MySQL row-level pessimistic locking ensures zero double-booking or overselling even during high-traffic sales.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
                             <div class="feature-card">
-                                <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <span class="readscope-badge readscope-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 <h4><?php esc_html_e('Admin Manual Booking Creator', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('Log phone, WhatsApp, and walk-in offline bookings with inventory lock enforcement and reference code generation.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
                             <div class="feature-card">
-                                <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <span class="readscope-badge readscope-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 <h4><?php esc_html_e('1-Click Excel / CSV Traveler Export', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('Download traveler manifest lists with UTF-8 BOM encoding for seamless viewing in Microsoft Excel & Google Sheets.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
@@ -242,34 +242,34 @@ class DocumentationPage
 
                         <!-- Feature Category 6: Readscope Booking Pro -->
                         <h3 style="margin-top: 30px;"><?php esc_html_e('Readscope Booking Pro Enterprise Upgrades', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
-                        <div class="tourivo-feature-cards-grid">
+                        <div class="readscope-feature-cards-grid">
                             <div class="feature-card" style="border-color: #fde68a;">
-                                <span class="tourivo-badge tourivo-badge-pending" style="margin-bottom: 8px;"><?php esc_html_e('PRO ADDON', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <span class="readscope-badge readscope-badge-pending" style="margin-bottom: 8px;"><?php esc_html_e('PRO ADDON', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 <h4><?php esc_html_e('WooCommerce 100+ Gateways Bridge', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('Accept Stripe, PayPal, bKash, Nagad, Mollie, Razorpay, Authorize.net, and COD with automated inventory commit on payment.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
                             <div class="feature-card" style="border-color: #fde68a;">
-                                <span class="tourivo-badge tourivo-badge-pending" style="margin-bottom: 8px;"><?php esc_html_e('PRO ADDON', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <span class="readscope-badge readscope-badge-pending" style="margin-bottom: 8px;"><?php esc_html_e('PRO ADDON', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 <h4><?php esc_html_e('Bookable Extra Addons & Upsells', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('Sell airport transfers, private guides, breakfast buffets, and extra beds with per-person, per-night calculations.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
                             <div class="feature-card" style="border-color: #fde68a;">
-                                <span class="tourivo-badge tourivo-badge-pending" style="margin-bottom: 8px;"><?php esc_html_e('PRO ADDON', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <span class="readscope-badge readscope-badge-pending" style="margin-bottom: 8px;"><?php esc_html_e('PRO ADDON', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 <h4><?php esc_html_e('iCal 2-Way Sync (Airbnb / Booking.com)', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('Automatic two-way calendar sync with Airbnb, Booking.com, and VRBO via standard RFC 5545 iCalendar feeds.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
                             <div class="feature-card" style="border-color: #fde68a;">
-                                <span class="tourivo-badge tourivo-badge-pending" style="margin-bottom: 8px;"><?php esc_html_e('PRO ADDON', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <span class="readscope-badge readscope-badge-pending" style="margin-bottom: 8px;"><?php esc_html_e('PRO ADDON', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 <h4><?php esc_html_e('Printable PDF Tickets & QR Check-in', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('Generate beautiful PDF boarding passes with secure HMAC-verified QR codes for mobile smartphone scanning.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
                             <div class="feature-card" style="border-color: #fde68a;">
-                                <span class="tourivo-badge tourivo-badge-pending" style="margin-bottom: 8px;"><?php esc_html_e('PRO ADDON', 'the-readscope-tour-and-accommodation-booking'); ?></span>
-                                <h4><?php esc_html_e('Customer Account Dashboard [tourivo_customer_dashboard]', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
+                                <span class="readscope-badge readscope-badge-pending" style="margin-bottom: 8px;"><?php esc_html_e('PRO ADDON', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <h4><?php esc_html_e('Customer Account Dashboard [readscope_customer_dashboard]', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('Dedicated traveler portal displaying upcoming trips, past itineraries, 1-click PDF vouchers, and guest lookup form.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
                             <div class="feature-card" style="border-color: #fde68a;">
-                                <span class="tourivo-badge tourivo-badge-pending" style="margin-bottom: 8px;"><?php esc_html_e('PRO ADDON', 'the-readscope-tour-and-accommodation-booking'); ?></span>
+                                <span class="readscope-badge readscope-badge-pending" style="margin-bottom: 8px;"><?php esc_html_e('PRO ADDON', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                                 <h4><?php esc_html_e('Tiered Passenger & Group Discounts', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
                                 <p><?php esc_html_e('Independent rates for Adults, Children, and Infants + automated volume discounts (e.g. 5+ travelers get 10% off).', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
@@ -277,7 +277,7 @@ class DocumentationPage
                     </div>
 
                     <!-- TAB 3: Creating Tour Packages -->
-                    <div id="doc-tours" class="tourivo-doc-pane">
+                    <div id="doc-tours" class="readscope-doc-pane">
                         <h2><?php esc_html_e('How to Create & Configure Tour Packages', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <p class="lead-paragraph">
                             <?php esc_html_e('Navigate to Tours -> Add New Tour in your WordPress admin menu. Readscope Booking uses a structured tabbed interface:', 'the-readscope-tour-and-accommodation-booking'); ?>
@@ -327,7 +327,7 @@ class DocumentationPage
                     </div>
 
                     <!-- TAB 4: Hotels & Room Listings -->
-                    <div id="doc-hotels" class="tourivo-doc-pane">
+                    <div id="doc-hotels" class="readscope-doc-pane">
                         <h2><?php esc_html_e('Understanding the 2-Level Hotel Structure', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <p class="lead-paragraph">
                             <?php esc_html_e('Readscope Booking handles accommodation in an industry-standard 2-level hierarchy: 1. Hotel Property (the building / resort) and 2. Room Types (the bookable units).', 'the-readscope-tour-and-accommodation-booking'); ?>
@@ -366,7 +366,7 @@ class DocumentationPage
                     </div>
 
                     <!-- TAB 5: Page Builders & Shortcodes -->
-                    <div id="doc-embed" class="tourivo-doc-pane">
+                    <div id="doc-embed" class="readscope-doc-pane">
                         <h2><?php esc_html_e('Displaying Tours, Hotels & Search Bars on Your Pages', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <p class="lead-paragraph">
                             <?php esc_html_e('You can embed Readscope Booking elements on your Homepage, Destination pages, or any Custom page using Gutenberg, Elementor, or simple Shortcodes.', 'the-readscope-tour-and-accommodation-booking'); ?>
@@ -374,7 +374,7 @@ class DocumentationPage
 
                         <!-- Copyable Shortcodes Table -->
                         <h3><?php esc_html_e('1. Copy-and-Paste Shortcodes', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
-                        <table class="widefat tourivo-code-table">
+                        <table class="widefat readscope-code-table">
                             <thead>
                                 <tr>
                                     <th><?php esc_html_e('Element / Purpose', 'the-readscope-tour-and-accommodation-booking'); ?></th>
@@ -388,88 +388,88 @@ class DocumentationPage
                                         <strong><?php esc_html_e('Travel Search Bar', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                                         <br><small><?php esc_html_e('Destination dropdown, date picker, and traveler counter bar.', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                                     </td>
-                                    <td><code>[tourivo_search_bar]</code></td>
-                                    <td><button type="button" class="button copy-code-btn" data-code="[tourivo_search_bar]"><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
+                                    <td><code>[readscope_search_bar]</code></td>
+                                    <td><button type="button" class="button copy-code-btn" data-code="[readscope_search_bar]"><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <strong><?php esc_html_e('All Tours Grid (3 Columns)', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                                         <br><small><?php esc_html_e('Displays 6 latest tours in a 3-column responsive card grid.', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                                     </td>
-                                    <td><code>[tourivo_tours columns="3" count="6"]</code></td>
-                                    <td><button type="button" class="button copy-code-btn" data-code='[tourivo_tours columns="3" count="6"]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
+                                    <td><code>[readscope_tours columns="3" count="6"]</code></td>
+                                    <td><button type="button" class="button copy-code-btn" data-code='[readscope_tours columns="3" count="6"]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <strong><?php esc_html_e('Tours by Destination (e.g. Bali)', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                                         <br><small><?php esc_html_e('Filters tours belonging only to a specific destination slug.', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                                     </td>
-                                    <td><code>[tourivo_tours destination="bali" count="4"]</code></td>
-                                    <td><button type="button" class="button copy-code-btn" data-code='[tourivo_tours destination="bali" count="4"]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
+                                    <td><code>[readscope_tours destination="bali" count="4"]</code></td>
+                                    <td><button type="button" class="button copy-code-btn" data-code='[readscope_tours destination="bali" count="4"]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <strong><?php esc_html_e('All Hotels & Stays Grid', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                                         <br><small><?php esc_html_e('Displays your luxury hotels with star ratings and starting prices.', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                                     </td>
-                                    <td><code>[tourivo_hotels columns="3" count="6"]</code></td>
-                                    <td><button type="button" class="button copy-code-btn" data-code='[tourivo_hotels columns="3" count="6"]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
+                                    <td><code>[readscope_hotels columns="3" count="6"]</code></td>
+                                    <td><button type="button" class="button copy-code-btn" data-code='[readscope_hotels columns="3" count="6"]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <strong><?php esc_html_e('Live AJAX Filter & Search Grid', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                                         <br><small><?php esc_html_e('Instant no-reload live search with destination, budget slider & duration filters.', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                                     </td>
-                                    <td><code>[tourivo_filter_search type="tour" columns="3"]</code></td>
-                                    <td><button type="button" class="button copy-code-btn" data-code='[tourivo_filter_search type="tour" columns="3"]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
+                                    <td><code>[readscope_filter_search type="tour" columns="3"]</code></td>
+                                    <td><button type="button" class="button copy-code-btn" data-code='[readscope_filter_search type="tour" columns="3"]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <strong><?php esc_html_e('Traveler Wishlist & Favorites Page', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                                         <br><small><?php esc_html_e('Displays all saved tours and hotels stored in traveler wishlist.', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                                     </td>
-                                    <td><code>[tourivo_wishlist columns="3"]</code></td>
-                                    <td><button type="button" class="button copy-code-btn" data-code='[tourivo_wishlist columns="3"]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
+                                    <td><code>[readscope_wishlist columns="3"]</code></td>
+                                    <td><button type="button" class="button copy-code-btn" data-code='[readscope_wishlist columns="3"]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <strong><?php esc_html_e('Track My Booking & Voucher Portal', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                                         <br><small><?php esc_html_e('Self-service portal for travelers to track status & download printable vouchers.', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                                     </td>
-                                    <td><code>[tourivo_booking_lookup]</code></td>
-                                    <td><button type="button" class="button copy-code-btn" data-code='[tourivo_booking_lookup]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
+                                    <td><code>[readscope_booking_lookup]</code></td>
+                                    <td><button type="button" class="button copy-code-btn" data-code='[readscope_booking_lookup]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <strong><?php esc_html_e('Multi-Currency Dropdown Switcher', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                                         <br><small><?php esc_html_e('Allows travelers to toggle and convert pricing into USD, EUR, GBP, BDT, INR, AUD, CAD, AED.', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                                     </td>
-                                    <td><code>[tourivo_currency_switcher]</code></td>
-                                    <td><button type="button" class="button copy-code-btn" data-code='[tourivo_currency_switcher]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
+                                    <td><code>[readscope_currency_switcher]</code></td>
+                                    <td><button type="button" class="button copy-code-btn" data-code='[readscope_currency_switcher]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <strong><?php esc_html_e('Customer Account / My Bookings Portal', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                                         <br><small><?php esc_html_e('Authenticated traveler portal showing past and upcoming reservations, status, calendar .ics, vouchers, and cancellation requests.', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                                     </td>
-                                    <td><code>[tourivo_my_bookings per_page="10" show_stats="yes"]</code></td>
-                                    <td><button type="button" class="button copy-code-btn" data-code='[tourivo_my_bookings per_page="10" show_stats="yes"]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
+                                    <td><code>[readscope_my_bookings per_page="10" show_stats="yes"]</code></td>
+                                    <td><button type="button" class="button copy-code-btn" data-code='[readscope_my_bookings per_page="10" show_stats="yes"]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
                                 </tr>
                                 <tr>
                                     <td>
                                         <strong><?php esc_html_e('Booking Confirmation & Thank You Page', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                                         <br><small><?php esc_html_e('Displays post-booking overview, token-secured printable voucher, and .ics calendar download.', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                                     </td>
-                                    <td><code>[tourivo_thank_you]</code></td>
-                                    <td><button type="button" class="button copy-code-btn" data-code='[tourivo_thank_you]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
+                                    <td><code>[readscope_thank_you]</code></td>
+                                    <td><button type="button" class="button copy-code-btn" data-code='[readscope_thank_you]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
                                 </tr>
                                 <tr>
                                     <td>
-                                        <strong><?php esc_html_e('Customer Frontend Account Dashboard', 'the-readscope-tour-and-accommodation-booking'); ?> <span class="tourivo-badge tourivo-badge-pending" style="font-size: var(--trv-admin-text-xs); padding:2px 6px;"><?php esc_html_e('PRO', 'the-readscope-tour-and-accommodation-booking'); ?></span></strong>
+                                        <strong><?php esc_html_e('Customer Frontend Account Dashboard', 'the-readscope-tour-and-accommodation-booking'); ?> <span class="readscope-badge readscope-badge-pending" style="font-size: var(--trv-admin-text-xs); padding:2px 6px;"><?php esc_html_e('PRO', 'the-readscope-tour-and-accommodation-booking'); ?></span></strong>
                                         <br><small><?php esc_html_e('Self-service portal for travelers: past bookings, itinerary lookup, PDF tickets & invoices.', 'the-readscope-tour-and-accommodation-booking'); ?></small>
                                     </td>
-                                    <td><code>[tourivo_customer_dashboard]</code></td>
-                                    <td><button type="button" class="button copy-code-btn" data-code='[tourivo_customer_dashboard]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
+                                    <td><code>[readscope_customer_dashboard]</code></td>
+                                    <td><button type="button" class="button copy-code-btn" data-code='[readscope_customer_dashboard]'><?php esc_html_e('Copy', 'the-readscope-tour-and-accommodation-booking'); ?></button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -503,7 +503,7 @@ class DocumentationPage
                     </div>
 
                     <!-- TAB 6: Managing Orders & Bookings -->
-                    <div id="doc-bookings" class="tourivo-doc-pane">
+                    <div id="doc-bookings" class="readscope-doc-pane">
                         <h2><?php esc_html_e('Managing Traveler Bookings & Inquiries', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <p class="lead-paragraph">
                             <?php esc_html_e('Readscope Booking gives your front desk and agency administrators full control over customer reservations and pre-sale inquiries.', 'the-readscope-tour-and-accommodation-booking'); ?>
@@ -534,13 +534,13 @@ class DocumentationPage
                     </div>
 
                     <!-- TAB 7: Availability & Pricing Manager -->
-                    <div id="doc-availability" class="tourivo-doc-pane">
+                    <div id="doc-availability" class="readscope-doc-pane">
                         <h2><?php esc_html_e('Availability & Pricing Calendar Manager', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
                         <p class="lead-paragraph">
                             <?php esc_html_e('Take total control of your tour departures and hotel room availability with our visual monthly calendar grid. Block dates for maintenance or holidays, adjust seasonal capacities, and set custom date pricing with bulk actions.', 'the-readscope-tour-and-accommodation-booking'); ?>
                         </p>
 
-                        <div class="tourivo-feature-cards-grid">
+                        <div class="readscope-feature-cards-grid">
                             <div class="feature-card">
                                 <div class="feature-card-icon icon-tour"><span class="dashicons dashicons-calendar-alt"></span></div>
                                 <h3><?php esc_html_e('Visual Monthly Grid', 'the-readscope-tour-and-accommodation-booking'); ?></h3>
@@ -572,13 +572,13 @@ class DocumentationPage
                             <strong style="color: #0f766e;"><?php esc_html_e('Developer Hook:', 'the-readscope-tour-and-accommodation-booking'); ?></strong>
                             <p style="margin: 4px 0 0 0; font-size: var(--trv-admin-text-sm); color: #0c4a6e;">
                                 <?php esc_html_e('Listen to availability updates via:', 'the-readscope-tour-and-accommodation-booking'); ?>
-                                <code>do_action("tourivo/availability_updated", $itemId, $itemType, $startDate, $endDate, $changes);</code>
+                                <code>do_action("readscope/availability_updated", $itemId, $itemType, $startDate, $endDate, $changes);</code>
                             </p>
                         </div>
                     </div>
 
                     <!-- TAB 8: Readscope Booking Pro Features -->
-                    <div id="doc-pro" class="tourivo-doc-pane">
+                    <div id="doc-pro" class="readscope-doc-pane">
                         <div class="pro-showcase-header">
                             <span class="pro-pill"><?php esc_html_e('ENTERPRISE EXTENSIONS', 'the-readscope-tour-and-accommodation-booking'); ?></span>
                             <h2><?php esc_html_e('Unlock the Full Potential with Readscope Booking Pro', 'the-readscope-tour-and-accommodation-booking'); ?></h2>
@@ -621,7 +621,7 @@ class DocumentationPage
                             <div class="pro-feature-item">
                                 <div class="pro-icon"><span class="dashicons dashicons-admin-users"></span></div>
                                 <h4><?php esc_html_e('6. Customer Frontend Dashboard & Guest Lookup', 'the-readscope-tour-and-accommodation-booking'); ?></h4>
-                                <p><?php esc_html_e('Shortcode [tourivo_customer_dashboard] gives travelers a self-service portal to view upcoming trips, order history, and download PDF tickets.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
+                                <p><?php esc_html_e('Shortcode [readscope_customer_dashboard] gives travelers a self-service portal to view upcoming trips, order history, and download PDF tickets.', 'the-readscope-tour-and-accommodation-booking'); ?></p>
                             </div>
                         </div>
                     </div>

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Support;
+namespace Readscope\Support;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -15,7 +15,7 @@ if (!defined('ABSPATH')) {
  * which wp_kses_post() would strip. Cards set `--trv-*` CSS custom properties in `style`; those are
  * kept, everything else in `style` follows WordPress' own rules.
  *
- * @package Tourivo\Support
+ * @package Readscope\Support
  */
 final class Html
 {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Models;
+namespace Readscope\Models;
 
-use Tourivo\Common\Abstracts\Model;
-use Tourivo\PostTypes\HotelPostType;
-use Tourivo\PostTypes\RoomPostType;
+use Readscope\Common\Abstracts\Model;
+use Readscope\PostTypes\HotelPostType;
+use Readscope\PostTypes\RoomPostType;
 use WP_Query;
 
 if (!defined('ABSPATH')) {
@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
  *
  * Object model for Hotel entities.
  *
- * @package Tourivo\Models
+ * @package Readscope\Models
  */
 class Hotel extends Model
 {
@@ -29,7 +29,7 @@ class Hotel extends Model
      */
     public function getStarRating(): int
     {
-        return (int) ($this->getMeta('_tourivo_star_rating') ?: 3);
+        return (int) ($this->getMeta('_readscope_star_rating') ?: 3);
     }
 
     /**
@@ -39,7 +39,7 @@ class Hotel extends Model
      */
     public function getAddress(): string
     {
-        return (string) ($this->getMeta('_tourivo_address') ?: '');
+        return (string) ($this->getMeta('_readscope_address') ?: '');
     }
 
     /**
@@ -49,7 +49,7 @@ class Hotel extends Model
      */
     public function getCity(): string
     {
-        return (string) ($this->getMeta('_tourivo_city') ?: '');
+        return (string) ($this->getMeta('_readscope_city') ?: '');
     }
 
     /**
@@ -59,7 +59,7 @@ class Hotel extends Model
      */
     public function getCheckInTime(): string
     {
-        return (string) ($this->getMeta('_tourivo_check_in_time') ?: '14:00');
+        return (string) ($this->getMeta('_readscope_check_in_time') ?: '14:00');
     }
 
     /**
@@ -69,7 +69,7 @@ class Hotel extends Model
      */
     public function getCheckOutTime(): string
     {
-        return (string) ($this->getMeta('_tourivo_check_out_time') ?: '11:00');
+        return (string) ($this->getMeta('_readscope_check_out_time') ?: '11:00');
     }
 
     /**
@@ -79,7 +79,7 @@ class Hotel extends Model
      */
     public function getPhone(): string
     {
-        return (string) ($this->getMeta('_tourivo_phone') ?: '');
+        return (string) ($this->getMeta('_readscope_phone') ?: '');
     }
 
     /**
@@ -89,7 +89,7 @@ class Hotel extends Model
      */
     public function getEmail(): string
     {
-        return (string) ($this->getMeta('_tourivo_email') ?: '');
+        return (string) ($this->getMeta('_readscope_email') ?: '');
     }
 
     /**
@@ -117,7 +117,7 @@ class Hotel extends Model
             'posts_per_page' => -1,
             'meta_query'     => [
                 [
-                    'key'     => '_tourivo_parent_hotel_id',
+                    'key'     => '_readscope_parent_hotel_id',
                     'value'   => $this->id,
                     'compare' => '=',
                 ],
@@ -165,7 +165,7 @@ class Hotel extends Model
      */
     public function getAverageRating(): float
     {
-        return (float) ($this->getMeta('_tourivo_average_rating') ?: 0.0);
+        return (float) ($this->getMeta('_readscope_average_rating') ?: 0.0);
     }
 
     /**
@@ -175,7 +175,7 @@ class Hotel extends Model
      */
     public function getReviewCount(): int
     {
-        return (int) ($this->getMeta('_tourivo_review_count') ?: 0);
+        return (int) ($this->getMeta('_readscope_review_count') ?: 0);
     }
 }
 

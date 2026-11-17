@@ -6,7 +6,7 @@ parameters:
 			path: app/Elementor/ElementorManager.php
 
 		-
-			message: "#^Parameter \\$widgetsManager of method Tourivo\\\\Elementor\\\\ElementorManager\\:\\:registerWidgets\\(\\) has invalid type Elementor\\\\Widgets_Manager\\.$#"
+			message: "#^Parameter \\$widgetsManager of method Readscope\\\\Elementor\\\\ElementorManager\\:\\:registerWidgets\\(\\) has invalid type Elementor\\\\Widgets_Manager\\.$#"
 			count: 1
 			path: app/Elementor/ElementorManager.php
 
@@ -21,22 +21,22 @@ parameters:
 			path: app/Elementor/Widgets/BookingPanelWidget.php
 
 		-
-			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\BookingPanelWidget\\:\\:add_control\\(\\)\\.$#"
+			message: "#^Call to an undefined method Readscope\\\\Elementor\\\\Widgets\\\\BookingPanelWidget\\:\\:add_control\\(\\)\\.$#"
 			count: 2
 			path: app/Elementor/Widgets/BookingPanelWidget.php
 
 		-
-			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\BookingPanelWidget\\:\\:end_controls_section\\(\\)\\.$#"
+			message: "#^Call to an undefined method Readscope\\\\Elementor\\\\Widgets\\\\BookingPanelWidget\\:\\:end_controls_section\\(\\)\\.$#"
 			count: 1
 			path: app/Elementor/Widgets/BookingPanelWidget.php
 
 		-
-			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\BookingPanelWidget\\:\\:get_settings_for_display\\(\\)\\.$#"
+			message: "#^Call to an undefined method Readscope\\\\Elementor\\\\Widgets\\\\BookingPanelWidget\\:\\:get_settings_for_display\\(\\)\\.$#"
 			count: 1
 			path: app/Elementor/Widgets/BookingPanelWidget.php
 
 		-
-			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\BookingPanelWidget\\:\\:start_controls_section\\(\\)\\.$#"
+			message: "#^Call to an undefined method Readscope\\\\Elementor\\\\Widgets\\\\BookingPanelWidget\\:\\:start_controls_section\\(\\)\\.$#"
 			count: 1
 			path: app/Elementor/Widgets/BookingPanelWidget.php
 
@@ -56,22 +56,22 @@ parameters:
 			path: app/Elementor/Widgets/HotelGridWidget.php
 
 		-
-			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\HotelGridWidget\\:\\:add_control\\(\\)\\.$#"
+			message: "#^Call to an undefined method Readscope\\\\Elementor\\\\Widgets\\\\HotelGridWidget\\:\\:add_control\\(\\)\\.$#"
 			count: 3
 			path: app/Elementor/Widgets/HotelGridWidget.php
 
 		-
-			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\HotelGridWidget\\:\\:end_controls_section\\(\\)\\.$#"
+			message: "#^Call to an undefined method Readscope\\\\Elementor\\\\Widgets\\\\HotelGridWidget\\:\\:end_controls_section\\(\\)\\.$#"
 			count: 1
 			path: app/Elementor/Widgets/HotelGridWidget.php
 
 		-
-			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\HotelGridWidget\\:\\:get_settings_for_display\\(\\)\\.$#"
+			message: "#^Call to an undefined method Readscope\\\\Elementor\\\\Widgets\\\\HotelGridWidget\\:\\:get_settings_for_display\\(\\)\\.$#"
 			count: 1
 			path: app/Elementor/Widgets/HotelGridWidget.php
 
 		-
-			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\HotelGridWidget\\:\\:start_controls_section\\(\\)\\.$#"
+			message: "#^Call to an undefined method Readscope\\\\Elementor\\\\Widgets\\\\HotelGridWidget\\:\\:start_controls_section\\(\\)\\.$#"
 			count: 1
 			path: app/Elementor/Widgets/HotelGridWidget.php
 
@@ -81,17 +81,17 @@ parameters:
 			path: app/Elementor/Widgets/SearchBarWidget.php
 
 		-
-			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\SearchBarWidget\\:\\:add_control\\(\\)\\.$#"
+			message: "#^Call to an undefined method Readscope\\\\Elementor\\\\Widgets\\\\SearchBarWidget\\:\\:add_control\\(\\)\\.$#"
 			count: 1
 			path: app/Elementor/Widgets/SearchBarWidget.php
 
 		-
-			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\SearchBarWidget\\:\\:end_controls_section\\(\\)\\.$#"
+			message: "#^Call to an undefined method Readscope\\\\Elementor\\\\Widgets\\\\SearchBarWidget\\:\\:end_controls_section\\(\\)\\.$#"
 			count: 1
 			path: app/Elementor/Widgets/SearchBarWidget.php
 
 		-
-			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\SearchBarWidget\\:\\:start_controls_section\\(\\)\\.$#"
+			message: "#^Call to an undefined method Readscope\\\\Elementor\\\\Widgets\\\\SearchBarWidget\\:\\:start_controls_section\\(\\)\\.$#"
 			count: 1
 			path: app/Elementor/Widgets/SearchBarWidget.php
 
@@ -111,42 +111,42 @@ parameters:
 			path: app/Elementor/Widgets/TourGridWidget.php
 
 		-
-			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\TourGridWidget\\:\\:add_control\\(\\)\\.$#"
+			message: "#^Call to an undefined method Readscope\\\\Elementor\\\\Widgets\\\\TourGridWidget\\:\\:add_control\\(\\)\\.$#"
 			count: 3
 			path: app/Elementor/Widgets/TourGridWidget.php
 
 		-
-			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\TourGridWidget\\:\\:end_controls_section\\(\\)\\.$#"
+			message: "#^Call to an undefined method Readscope\\\\Elementor\\\\Widgets\\\\TourGridWidget\\:\\:end_controls_section\\(\\)\\.$#"
 			count: 1
 			path: app/Elementor/Widgets/TourGridWidget.php
 
 		-
-			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\TourGridWidget\\:\\:get_settings_for_display\\(\\)\\.$#"
+			message: "#^Call to an undefined method Readscope\\\\Elementor\\\\Widgets\\\\TourGridWidget\\:\\:get_settings_for_display\\(\\)\\.$#"
 			count: 1
 			path: app/Elementor/Widgets/TourGridWidget.php
 
 		-
-			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\TourGridWidget\\:\\:start_controls_section\\(\\)\\.$#"
+			message: "#^Call to an undefined method Readscope\\\\Elementor\\\\Widgets\\\\TourGridWidget\\:\\:start_controls_section\\(\\)\\.$#"
 			count: 1
 			path: app/Elementor/Widgets/TourGridWidget.php
 
 		-
-			message: "#^Parameter \\#3 \\$args of function register_taxonomy expects array\\{labels\\?\\: array\\<string\\>, description\\?\\: string, public\\?\\: bool, publicly_queryable\\?\\: bool, hierarchical\\?\\: bool, show_ui\\?\\: bool, show_in_menu\\?\\: bool, show_in_nav_menus\\?\\: bool, \\.\\.\\.\\}, array\\{hierarchical\\: false, labels\\: array\\{name\\: string, singular_name\\: string, search_items\\: string, all_items\\: string, edit_item\\: string, update_item\\: string, add_new_item\\: string, menu_name\\: string\\}, show_ui\\: true, show_in_menu\\: 'tourivo', show_admin_column\\: true, query_var\\: true, rewrite\\: array\\{slug\\: 'amenity', with_front\\: false\\}, show_in_rest\\: true\\} given\\.$#"
+			message: "#^Parameter \\#3 \\$args of function register_taxonomy expects array\\{labels\\?\\: array\\<string\\>, description\\?\\: string, public\\?\\: bool, publicly_queryable\\?\\: bool, hierarchical\\?\\: bool, show_ui\\?\\: bool, show_in_menu\\?\\: bool, show_in_nav_menus\\?\\: bool, \\.\\.\\.\\}, array\\{hierarchical\\: false, labels\\: array\\{name\\: string, singular_name\\: string, search_items\\: string, all_items\\: string, edit_item\\: string, update_item\\: string, add_new_item\\: string, menu_name\\: string\\}, show_ui\\: true, show_in_menu\\: 'readscope', show_admin_column\\: true, query_var\\: true, rewrite\\: array\\{slug\\: 'amenity', with_front\\: false\\}, show_in_rest\\: true\\} given\\.$#"
 			count: 1
 			path: app/PostTypes/HotelPostType.php
 
 		-
-			message: "#^Parameter \\#3 \\$args of function register_taxonomy expects array\\{labels\\?\\: array\\<string\\>, description\\?\\: string, public\\?\\: bool, publicly_queryable\\?\\: bool, hierarchical\\?\\: bool, show_ui\\?\\: bool, show_in_menu\\?\\: bool, show_in_nav_menus\\?\\: bool, \\.\\.\\.\\}, array\\{hierarchical\\: false, labels\\: array\\{name\\: string, singular_name\\: string, menu_name\\: string\\}, show_ui\\: true, show_in_menu\\: 'tourivo', show_admin_column\\: false, query_var\\: true, rewrite\\: array\\{slug\\: 'tour\\-feature', with_front\\: false\\}, show_in_rest\\: true\\} given\\.$#"
+			message: "#^Parameter \\#3 \\$args of function register_taxonomy expects array\\{labels\\?\\: array\\<string\\>, description\\?\\: string, public\\?\\: bool, publicly_queryable\\?\\: bool, hierarchical\\?\\: bool, show_ui\\?\\: bool, show_in_menu\\?\\: bool, show_in_nav_menus\\?\\: bool, \\.\\.\\.\\}, array\\{hierarchical\\: false, labels\\: array\\{name\\: string, singular_name\\: string, menu_name\\: string\\}, show_ui\\: true, show_in_menu\\: 'readscope', show_admin_column\\: false, query_var\\: true, rewrite\\: array\\{slug\\: 'tour\\-feature', with_front\\: false\\}, show_in_rest\\: true\\} given\\.$#"
 			count: 1
 			path: app/PostTypes/TourPostType.php
 
 		-
-			message: "#^Parameter \\#3 \\$args of function register_taxonomy expects array\\{labels\\?\\: array\\<string\\>, description\\?\\: string, public\\?\\: bool, publicly_queryable\\?\\: bool, hierarchical\\?\\: bool, show_ui\\?\\: bool, show_in_menu\\?\\: bool, show_in_nav_menus\\?\\: bool, \\.\\.\\.\\}, array\\{hierarchical\\: false, labels\\: array\\{name\\: string, singular_name\\: string, search_items\\: string, all_items\\: string, edit_item\\: string, update_item\\: string, add_new_item\\: string, menu_name\\: string\\}, show_ui\\: true, show_in_menu\\: 'tourivo', show_admin_column\\: true, query_var\\: true, rewrite\\: array\\{slug\\: 'activity', with_front\\: false\\}, show_in_rest\\: true\\} given\\.$#"
+			message: "#^Parameter \\#3 \\$args of function register_taxonomy expects array\\{labels\\?\\: array\\<string\\>, description\\?\\: string, public\\?\\: bool, publicly_queryable\\?\\: bool, hierarchical\\?\\: bool, show_ui\\?\\: bool, show_in_menu\\?\\: bool, show_in_nav_menus\\?\\: bool, \\.\\.\\.\\}, array\\{hierarchical\\: false, labels\\: array\\{name\\: string, singular_name\\: string, search_items\\: string, all_items\\: string, edit_item\\: string, update_item\\: string, add_new_item\\: string, menu_name\\: string\\}, show_ui\\: true, show_in_menu\\: 'readscope', show_admin_column\\: true, query_var\\: true, rewrite\\: array\\{slug\\: 'activity', with_front\\: false\\}, show_in_rest\\: true\\} given\\.$#"
 			count: 1
 			path: app/PostTypes/TourPostType.php
 
 		-
-			message: "#^Parameter \\#3 \\$args of function register_taxonomy expects array\\{labels\\?\\: array\\<string\\>, description\\?\\: string, public\\?\\: bool, publicly_queryable\\?\\: bool, hierarchical\\?\\: bool, show_ui\\?\\: bool, show_in_menu\\?\\: bool, show_in_nav_menus\\?\\: bool, \\.\\.\\.\\}, array\\{hierarchical\\: true, labels\\: array\\{name\\: string, singular_name\\: string, search_items\\: string, all_items\\: string, parent_item\\: string, parent_item_colon\\: string, edit_item\\: string, update_item\\: string, \\.\\.\\.\\}, show_ui\\: true, show_in_menu\\: 'tourivo', show_admin_column\\: true, query_var\\: true, rewrite\\: array\\{slug\\: 'destination', with_front\\: false\\}, show_in_rest\\: true\\} given\\.$#"
+			message: "#^Parameter \\#3 \\$args of function register_taxonomy expects array\\{labels\\?\\: array\\<string\\>, description\\?\\: string, public\\?\\: bool, publicly_queryable\\?\\: bool, hierarchical\\?\\: bool, show_ui\\?\\: bool, show_in_menu\\?\\: bool, show_in_nav_menus\\?\\: bool, \\.\\.\\.\\}, array\\{hierarchical\\: true, labels\\: array\\{name\\: string, singular_name\\: string, search_items\\: string, all_items\\: string, parent_item\\: string, parent_item_colon\\: string, edit_item\\: string, update_item\\: string, \\.\\.\\.\\}, show_ui\\: true, show_in_menu\\: 'readscope', show_admin_column\\: true, query_var\\: true, rewrite\\: array\\{slug\\: 'destination', with_front\\: false\\}, show_in_rest\\: true\\} given\\.$#"
 			count: 1
 			path: app/PostTypes/TourPostType.php
 
@@ -166,7 +166,7 @@ parameters:
 			path: app/Services/EmailService.php
 
 		-
-			message: "#^Property Tourivo\\\\Services\\\\InquiryService\\:\\:\\$emailService is never read, only written\\.$#"
+			message: "#^Property Readscope\\\\Services\\\\InquiryService\\:\\:\\$emailService is never read, only written\\.$#"
 			count: 1
 			path: app/Services/InquiryService.php
 
@@ -196,17 +196,17 @@ parameters:
 			path: app/Services/PricingService.php
 
 		-
-			message: "#^Call to an undefined method Tourivo\\\\Models\\\\Hotel\\:\\:getLatitude\\(\\)\\.$#"
+			message: "#^Call to an undefined method Readscope\\\\Models\\\\Hotel\\:\\:getLatitude\\(\\)\\.$#"
 			count: 2
 			path: app/Services/SeoService.php
 
 		-
-			message: "#^Call to an undefined method Tourivo\\\\Models\\\\Hotel\\:\\:getLongitude\\(\\)\\.$#"
+			message: "#^Call to an undefined method Readscope\\\\Models\\\\Hotel\\:\\:getLongitude\\(\\)\\.$#"
 			count: 2
 			path: app/Services/SeoService.php
 
 		-
-			message: "#^Call to an undefined method Tourivo\\\\Models\\\\Hotel\\:\\:getPostalCode\\(\\)\\.$#"
+			message: "#^Call to an undefined method Readscope\\\\Models\\\\Hotel\\:\\:getPostalCode\\(\\)\\.$#"
 			count: 1
 			path: app/Services/SeoService.php
 

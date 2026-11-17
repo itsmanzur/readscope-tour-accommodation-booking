@@ -11,11 +11,11 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!targetPane) return;
 
         // Switch pane
-        document.querySelectorAll('.tourivo-doc-pane').forEach(pane => pane.classList.remove('active'));
+        document.querySelectorAll('.readscope-doc-pane').forEach(pane => pane.classList.remove('active'));
         targetPane.classList.add('active');
 
         // Set active nav item in sidebar
-        document.querySelectorAll('.tourivo-docs-nav li').forEach(li => {
+        document.querySelectorAll('.readscope-docs-nav li').forEach(li => {
             const link = li.querySelector('a');
             if (link && link.getAttribute('href') === targetId) {
                 li.classList.add('active');
@@ -114,11 +114,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // 3. 1-Click Sample Data Importer (Supports Dashboard, Notice, and Docs Hub)
-    const importButtons = document.querySelectorAll('.tourivo-import-sample-btn, #tourivo-import-sample-btn');
+    const importButtons = document.querySelectorAll('.readscope-import-sample-btn, #readscope-import-sample-btn');
 
     importButtons.forEach(btn => {
         btn.addEventListener('click', function () {
-            const nonce = this.dataset.nonce || (window.tourivoAdminConfig ? window.tourivoAdminConfig.nonce : '');
+            const nonce = this.dataset.nonce || (window.readscopeAdminConfig ? window.readscopeAdminConfig.nonce : '');
             if (!confirm('Are you sure you want to import sample tours, hotels, and rooms data? This will add starter packages.')) {
                 return;
             }
@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
             });
 
             const formData = new FormData();
-            formData.append('action', 'tourivo_import_sample_data');
+            formData.append('action', 'readscope_import_sample_data');
             formData.append('nonce', nonce);
 
             fetch(ajaxurl, {
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         b.innerHTML = '<span class="dashicons dashicons-yes"></span> Imported Successfully!';
                     });
 
-                    document.querySelectorAll('.tourivo-seeder-notice, #tourivo-seeder-notice').forEach(noticeBox => {
+                    document.querySelectorAll('.readscope-seeder-notice, #readscope-seeder-notice').forEach(noticeBox => {
                         noticeBox.className = 'notice notice-success inline';
                         const noticeText = document.createElement('p');
                         noticeText.textContent = data.data ? data.data.message : 'Sample data imported successfully!';
@@ -169,12 +169,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 3.1 Welcome Notice Dismissal Persistence
     document.addEventListener('click', function (e) {
-        if (e.target.matches('.tourivo-welcome-notice .notice-dismiss') || e.target.closest('.tourivo-welcome-notice .notice-dismiss')) {
-            const noticeEl = e.target.closest('.tourivo-welcome-notice');
-            const nonce = noticeEl ? noticeEl.dataset.nonce : (window.tourivoAdminConfig ? window.tourivoAdminConfig.nonce : '');
+        if (e.target.matches('.readscope-welcome-notice .notice-dismiss') || e.target.closest('.readscope-welcome-notice .notice-dismiss')) {
+            const noticeEl = e.target.closest('.readscope-welcome-notice');
+            const nonce = noticeEl ? noticeEl.dataset.nonce : (window.readscopeAdminConfig ? window.readscopeAdminConfig.nonce : '');
 
             const formData = new FormData();
-            formData.append('action', 'tourivo_dismiss_welcome_notice');
+            formData.append('action', 'readscope_dismiss_welcome_notice');
             formData.append('nonce', nonce);
 
             fetch(ajaxurl, {
@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function () {
             this.disabled = true;
 
             const formData = new FormData();
-            formData.append('action', 'tourivo_update_booking_status');
+            formData.append('action', 'readscope_update_booking_status');
             formData.append('booking_id', bookingId);
             formData.append('status', newStatus);
             formData.append('nonce', nonce);
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (data.success) {
                         const badge = document.getElementById('status-badge-' + bookingId);
                         if (badge) {
-                            badge.className = 'tourivo-badge tourivo-badge-' + newStatus;
+                            badge.className = 'readscope-badge readscope-badge-' + newStatus;
                             badge.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
                         }
                     } else {
@@ -235,7 +235,7 @@ document.addEventListener('DOMContentLoaded', function () {
             this.disabled = true;
 
             const formData = new FormData();
-            formData.append('action', 'tourivo_revoke_booking_links');
+            formData.append('action', 'readscope_revoke_booking_links');
             formData.append('booking_id', this.dataset.id);
             formData.append('nonce', this.dataset.nonce);
 
@@ -253,9 +253,9 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // 5. Manual Booking Modal & Submission
-    const openManualBookingBtn = document.getElementById('tourivo-open-manual-booking-btn');
-    const manualBookingModal = document.getElementById('tourivo-manual-booking-modal');
-    const manualBookingForm = document.getElementById('tourivo-manual-booking-form');
+    const openManualBookingBtn = document.getElementById('readscope-open-manual-booking-btn');
+    const manualBookingModal = document.getElementById('readscope-manual-booking-modal');
+    const manualBookingForm = document.getElementById('readscope-manual-booking-form');
     const itemSelect = document.getElementById('manual_item_select');
     const itemTypeInput = document.getElementById('manual_item_type');
 
@@ -288,8 +288,8 @@ document.addEventListener('DOMContentLoaded', function () {
             submitBtn.textContent = 'Creating Booking...';
 
             const formData = new FormData(manualBookingForm);
-            formData.append('action', 'tourivo_create_manual_booking');
-            formData.append('nonce', window.tourivoAdminConfig ? window.tourivoAdminConfig.nonce : '');
+            formData.append('action', 'readscope_create_manual_booking');
+            formData.append('nonce', window.readscopeAdminConfig ? window.readscopeAdminConfig.nonce : '');
 
             fetch(ajaxurl, {
                 method: 'POST',
@@ -323,7 +323,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const nonce = this.dataset.nonce;
 
             const formData = new FormData();
-            formData.append('action', 'tourivo_update_inquiry_status');
+            formData.append('action', 'readscope_update_inquiry_status');
             formData.append('id', inqId);
             formData.append('status', newStatus);
             formData.append('_wpnonce', nonce);
@@ -351,7 +351,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             const formData = new FormData();
-            formData.append('action', 'tourivo_delete_inquiry');
+            formData.append('action', 'readscope_delete_inquiry');
             formData.append('id', inqId);
             formData.append('_wpnonce', nonce);
 
@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // 7. Settings Page Tabs Navigation
-    const settingsTabs = document.querySelectorAll('.tourivo-settings-tabs .nav-tab');
+    const settingsTabs = document.querySelectorAll('.readscope-settings-tabs .nav-tab');
     if (settingsTabs.length > 0) {
         settingsTabs.forEach(tab => {
             tab.addEventListener('click', function (e) {
@@ -381,7 +381,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 settingsTabs.forEach(t => t.classList.remove('nav-tab-active'));
                 this.classList.add('nav-tab-active');
 
-                document.querySelectorAll('.tourivo-settings-tab-pane').forEach(pane => {
+                document.querySelectorAll('.readscope-settings-tab-pane').forEach(pane => {
                     pane.style.display = 'none';
                 });
 
@@ -397,14 +397,14 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!match) {
                 return;
             }
-            const tab = document.querySelector('.tourivo-settings-tabs .nav-tab[data-tab="' + match[1] + '"]');
+            const tab = document.querySelector('.readscope-settings-tabs .nav-tab[data-tab="' + match[1] + '"]');
             if (tab && !tab.classList.contains('nav-tab-active')) {
                 tab.click();
             }
             if (match[1] === 'advanced') {
                 const row = document.getElementById('proxy_mode')?.closest('tr');
                 if (row) {
-                    row.classList.add('tourivo-proxy-target');
+                    row.classList.add('readscope-proxy-target');
                     row.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             }
@@ -414,10 +414,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 8. Test Email Dispatcher
-    const sendTestEmailBtn = document.getElementById('tourivo-send-test-email-btn');
-    const testEmailTypeSelect = document.getElementById('tourivo_test_email_type');
-    const testEmailInput = document.getElementById('tourivo_test_email_recipient');
-    const testEmailAlert = document.getElementById('tourivo-test-email-alert');
+    const sendTestEmailBtn = document.getElementById('readscope-send-test-email-btn');
+    const testEmailTypeSelect = document.getElementById('readscope_test_email_type');
+    const testEmailInput = document.getElementById('readscope_test_email_recipient');
+    const testEmailAlert = document.getElementById('readscope-test-email-alert');
 
     function performTestEmailSend(btn, email, emailType, nonce) {
         if (!email) {
@@ -431,7 +431,7 @@ document.addEventListener('DOMContentLoaded', function () {
         if (testEmailAlert) testEmailAlert.style.display = 'none';
 
         const formData = new FormData();
-        formData.append('action', 'tourivo_send_test_email');
+        formData.append('action', 'readscope_send_test_email');
         formData.append('email', email);
         formData.append('email_type', emailType);
         formData.append('_wpnonce', nonce);
@@ -476,7 +476,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    document.querySelectorAll('.tourivo-send-single-test-email-btn').forEach(btn => {
+    document.querySelectorAll('.readscope-send-single-test-email-btn').forEach(btn => {
         btn.addEventListener('click', function () {
             const emailType = this.dataset.emailType;
             const nonce = this.dataset.nonce;
@@ -486,7 +486,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // 8b. Webhook Secret Generator
-    const genSecretBtn = document.getElementById('tourivo-gen-secret-btn');
+    const genSecretBtn = document.getElementById('readscope-gen-secret-btn');
     const secretInput = document.getElementById('webhook_secret');
     if (genSecretBtn && secretInput) {
         genSecretBtn.addEventListener('click', function () {
@@ -500,9 +500,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 8c. Test Webhook Dispatcher
-    const sendTestWebhookBtn = document.getElementById('tourivo-send-test-webhook-btn');
+    const sendTestWebhookBtn = document.getElementById('readscope-send-test-webhook-btn');
     const webhookUrlInput = document.getElementById('webhook_url');
-    const testWebhookAlert = document.getElementById('tourivo-test-webhook-alert');
+    const testWebhookAlert = document.getElementById('readscope-test-webhook-alert');
 
     if (sendTestWebhookBtn && webhookUrlInput) {
         sendTestWebhookBtn.addEventListener('click', function () {
@@ -521,7 +521,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (testWebhookAlert) testWebhookAlert.style.display = 'none';
 
             const formData = new FormData();
-            formData.append('action', 'tourivo_send_test_webhook');
+            formData.append('action', 'readscope_send_test_webhook');
             formData.append('url', url);
             formData.append('secret', secret);
             formData.append('_wpnonce', nonce);
@@ -559,9 +559,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 9. Booking Details & Activity Timeline Modal
-    const timelineModal = document.getElementById('tourivo-booking-timeline-modal');
+    const timelineModal = document.getElementById('readscope-booking-timeline-modal');
     const logsContainer = document.getElementById('timeline-logs-container');
-    const addNoteForm = document.getElementById('tourivo-add-note-form');
+    const addNoteForm = document.getElementById('readscope-add-note-form');
     let currentTimelineNonce = '';
 
     document.querySelectorAll('.open-timeline-btn').forEach(btn => {
@@ -603,7 +603,7 @@ document.addEventListener('DOMContentLoaded', function () {
         logsContainer.innerHTML = '<div class="timeline-loading" style="text-align:center; color:#64748b; padding:10px;"><span class="dashicons dashicons-update spin"></span> Loading activity logs...</div>';
 
         const formData = new FormData();
-        formData.append('action', 'tourivo_get_booking_timeline');
+        formData.append('action', 'readscope_get_booking_timeline');
         formData.append('booking_id', bookingId);
         formData.append('_wpnonce', nonce);
 
@@ -637,7 +637,7 @@ document.addEventListener('DOMContentLoaded', function () {
             submitBtn.textContent = 'Adding...';
 
             const formData = new FormData();
-            formData.append('action', 'tourivo_add_booking_note');
+            formData.append('action', 'readscope_add_booking_note');
             formData.append('booking_id', bookingId);
             formData.append('note', noteInput.value.trim());
             formData.append('_wpnonce', currentTimelineNonce);
@@ -667,19 +667,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 10. Privacy & GDPR Retention Dry-Run Button
-    const retentionDryRunBtn = document.getElementById('tourivo-retention-dry-run-btn');
-    const retentionDryRunResult = document.getElementById('tourivo-retention-dry-run-result');
+    const retentionDryRunBtn = document.getElementById('readscope-retention-dry-run-btn');
+    const retentionDryRunResult = document.getElementById('readscope-retention-dry-run-result');
 
     if (retentionDryRunBtn && retentionDryRunResult) {
         retentionDryRunBtn.addEventListener('click', function () {
-            const nonce = this.dataset.nonce || (window.tourivoAdminConfig ? window.tourivoAdminConfig.nonce : '');
+            const nonce = this.dataset.nonce || (window.readscopeAdminConfig ? window.readscopeAdminConfig.nonce : '');
             retentionDryRunBtn.dataset.label = retentionDryRunBtn.dataset.label || retentionDryRunBtn.textContent;
             retentionDryRunBtn.disabled = true;
             retentionDryRunBtn.textContent = 'Calculating...';
             retentionDryRunResult.style.display = 'none';
 
             const formData = new FormData();
-            formData.append('action', 'tourivo_retention_dry_run');
+            formData.append('action', 'readscope_retention_dry_run');
             formData.append('nonce', nonce);
 
             fetch(ajaxurl, {
@@ -717,9 +717,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 10. Export Bookings & Reporting Modal Management
-    const exportModal = document.getElementById('tourivo-export-modal');
-    const openExportBtns = document.querySelectorAll('.tourivo-open-export-modal-btn');
-    const exportForm = document.getElementById('tourivo-export-form');
+    const exportModal = document.getElementById('readscope-export-modal');
+    const openExportBtns = document.querySelectorAll('.readscope-open-export-modal-btn');
+    const exportForm = document.getElementById('readscope-export-form');
 
     if (exportModal && exportForm) {
         function openExportDialog(btn) {
@@ -824,9 +824,9 @@ document.addEventListener('DOMContentLoaded', function () {
         function fetchExportPreview() {
             if (!previewCountEl || !previewRevenueEl) return;
 
-            const nonce = (window.tourivoAdminConfig && window.tourivoAdminConfig.nonce)
-                ? window.tourivoAdminConfig.nonce
-                : (document.getElementById('tourivo_admin_nonce_val') ? document.getElementById('tourivo_admin_nonce_val').value : '');
+            const nonce = (window.readscopeAdminConfig && window.readscopeAdminConfig.nonce)
+                ? window.readscopeAdminConfig.nonce
+                : (document.getElementById('readscope_admin_nonce_val') ? document.getElementById('readscope_admin_nonce_val').value : '');
 
             const status = document.getElementById('export_status')?.value || 'all';
             const paymentStatus = document.getElementById('export_payment_status')?.value || 'all';
@@ -840,7 +840,7 @@ document.addEventListener('DOMContentLoaded', function () {
             previewRevenueEl.textContent = 'calculating';
 
             const formData = new FormData();
-            formData.append('action', 'tourivo_get_export_preview');
+            formData.append('action', 'readscope_get_export_preview');
             formData.append('nonce', nonce);
             formData.append('status', status);
             formData.append('payment_status', paymentStatus);
@@ -879,8 +879,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // 16. Admin Record Payment Modal Handler
-    const paymentModal = document.getElementById('tourivo-record-payment-modal');
-    const paymentForm = document.getElementById('tourivo-record-payment-form');
+    const paymentModal = document.getElementById('readscope-record-payment-modal');
+    const paymentForm = document.getElementById('readscope-record-payment-form');
     if (paymentModal && paymentForm) {
         const bIdInput = document.getElementById('payment-modal-booking-id');
         const bNonceInput = document.getElementById('payment-modal-nonce');
@@ -896,9 +896,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const autoConfirmWrap = document.getElementById('payment-auto-confirm-wrap');
         const autoConfirmCheck = document.getElementById('payment-auto-confirm');
         const alertBox = document.getElementById('payment-modal-alert');
-        const submitBtn = document.getElementById('tourivo-submit-payment-btn');
+        const submitBtn = document.getElementById('readscope-submit-payment-btn');
 
-        document.querySelectorAll('.tourivo-open-payment-modal-btn').forEach(btn => {
+        document.querySelectorAll('.readscope-open-payment-modal-btn').forEach(btn => {
             btn.addEventListener('click', function () {
                 const bookingId = this.dataset.id;
                 const bookingCode = this.dataset.code;
@@ -941,7 +941,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Close modal buttons & background overlay
-        paymentModal.querySelectorAll('.close-modal-btn, .tourivo-modal-overlay').forEach(el => {
+        paymentModal.querySelectorAll('.close-modal-btn, .readscope-modal-overlay').forEach(el => {
             el.addEventListener('click', () => {
                 paymentModal.style.display = 'none';
             });
@@ -957,7 +957,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (alertBox) alertBox.style.display = 'none';
 
             const formData = new FormData(paymentForm);
-            formData.append('action', 'tourivo_record_payment');
+            formData.append('action', 'readscope_record_payment');
 
             fetch(ajaxurl, {
                 method: 'POST',

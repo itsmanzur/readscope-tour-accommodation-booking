@@ -5,19 +5,19 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Common\Container;
-use Tourivo\Config\Config;
-use Tourivo\Controllers\Api\PricingController;
-use Tourivo\Models\Room;
-use Tourivo\Models\Tour;
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\InventoryService;
-use Tourivo\Services\PricingService;
-use Tourivo\Tests\TestCase;
+use Readscope\Common\Container;
+use Readscope\Config\Config;
+use Readscope\Controllers\Api\PricingController;
+use Readscope\Models\Room;
+use Readscope\Models\Tour;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\InventoryService;
+use Readscope\Services\PricingService;
+use Readscope\Tests\TestCase;
 
 class PricingEngineTest extends TestCase
 {
@@ -29,9 +29,9 @@ class PricingEngineTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        global $tourivo_mock_filters, $tourivo_mock_options;
-        $tourivo_mock_filters = [];
-        $tourivo_mock_options = [];
+        global $readscope_mock_filters, $readscope_mock_options;
+        $readscope_mock_filters = [];
+        $readscope_mock_options = [];
 
         $this->inventoryRepo = new InventoryRepository();
         $this->inventoryService = new InventoryService($this->inventoryRepo);
@@ -42,9 +42,9 @@ class PricingEngineTest extends TestCase
 
     protected function tearDown(): void
     {
-        global $tourivo_mock_filters, $tourivo_mock_options;
-        $tourivo_mock_filters = [];
-        $tourivo_mock_options = [];
+        global $readscope_mock_filters, $readscope_mock_options;
+        $readscope_mock_filters = [];
+        $readscope_mock_options = [];
         parent::tearDown();
     }
 
@@ -86,7 +86,7 @@ class PricingEngineTest extends TestCase
         $this->assertTrue($res['success']);
 
         global $wpdb;
-        $booking = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tourivo_bookings WHERE id = " . (int) $res['booking_id']);
+        $booking = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}readscope_bookings WHERE id = " . (int) $res['booking_id']);
         $this->assertEquals(300.00, (float) $booking->total_amount);
     }
 
@@ -133,9 +133,9 @@ class PricingEngineTest extends TestCase
 
         // Case 1: Percent (50% of adult price)
         $tourPercent = $this->createTour(100.0, 10, [
-            '_tourivo_child_price_type'  => 'percent',
-            '_tourivo_child_price_value' => '50',
-            '_tourivo_infants_free'      => 'yes',
+            '_readscope_child_price_type'  => 'percent',
+            '_readscope_child_price_value' => '50',
+            '_readscope_infants_free'      => 'yes',
         ]);
 
         $quote = $this->pricingService->quote([
@@ -151,8 +151,8 @@ class PricingEngineTest extends TestCase
 
         // Case 2: Fixed ($35 per child)
         $tourFixed = $this->createTour(100.0, 10, [
-            '_tourivo_child_price_type'  => 'fixed',
-            '_tourivo_child_price_value' => '35',
+            '_readscope_child_price_type'  => 'fixed',
+            '_readscope_child_price_value' => '35',
         ]);
         $quoteFixed = $this->pricingService->quote([
             'item_id'   => $tourFixed,
@@ -167,7 +167,7 @@ class PricingEngineTest extends TestCase
 
         // Case 3: Free ($0 per child)
         $tourFree = $this->createTour(100.0, 10, [
-            '_tourivo_child_price_type' => 'free',
+            '_readscope_child_price_type' => 'free',
         ]);
         $quoteFree = $this->pricingService->quote([
             'item_id'   => $tourFree,
@@ -181,7 +181,7 @@ class PricingEngineTest extends TestCase
 
         // Case 4: Full (100% per child)
         $tourFull = $this->createTour(100.0, 10, [
-            '_tourivo_child_price_type' => 'full',
+            '_readscope_child_price_type' => 'full',
         ]);
         $quoteFull = $this->pricingService->quote([
             'item_id'   => $tourFull,
@@ -200,7 +200,7 @@ class PricingEngineTest extends TestCase
     public function test_min_guests_validation(): void
     {
         $tourId = $this->createTour(100.0, 10, [
-            '_tourivo_min_guests' => 3,
+            '_readscope_min_guests' => 3,
         ]);
         $date = gmdate('Y-m-d', strtotime('+3 days'));
 
@@ -248,7 +248,7 @@ class PricingEngineTest extends TestCase
         $date = gmdate('Y-m-d', strtotime('+3 days'));
 
         // 1. Tax Exclusive: 10%
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'tax_enabled'    => true,
             'tax_label'      => 'VAT',
             'tax_rate'       => 10.0,
@@ -268,7 +268,7 @@ class PricingEngineTest extends TestCase
         $this->assertEquals(220.00, (float) $quote['total']);
 
         // 2. Tax Inclusive: 10%
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'tax_enabled'    => true,
             'tax_label'      => 'VAT Included',
             'tax_rate'       => 10.0,
@@ -288,7 +288,7 @@ class PricingEngineTest extends TestCase
         $this->assertEquals(18.18, (float) $quoteInc['tax']);
 
         // 3. Tax applies_to 'rooms' only -> tour has 0 tax
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'tax_enabled'    => true,
             'tax_label'      => 'Room Tax',
             'tax_rate'       => 10.0,
@@ -307,14 +307,14 @@ class PricingEngineTest extends TestCase
     }
 
     /**
-     * Test (f): Pro filter `tourivo/booking/price` modifies subtotal and tax applies on top.
+     * Test (f): Pro filter `readscope/booking/price` modifies subtotal and tax applies on top.
      */
     public function test_pro_filter_compatibility(): void
     {
         $tourId = $this->createTour(100.0, 10);
         $date = gmdate('Y-m-d', strtotime('+3 days'));
 
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'tax_enabled'    => true,
             'tax_label'      => 'GST',
             'tax_rate'       => 10.0,
@@ -323,7 +323,7 @@ class PricingEngineTest extends TestCase
         ]);
 
         // Mock Pro plugin applying a coupon or tiered discount of $50
-        add_filter('tourivo/booking/price', function ($pricingData, $context) {
+        add_filter('readscope/booking/price', function ($pricingData, $context) {
             $pricingData['total_price'] = (float) $pricingData['total_price'] - 50.00;
             return $pricingData;
         }, 10, 2);
@@ -349,12 +349,12 @@ class PricingEngineTest extends TestCase
     public function test_booking_creation_persists_breakdown_and_financials(): void
     {
         $tourId = $this->createTour(100.0, 10, [
-            '_tourivo_child_price_type'  => 'percent',
-            '_tourivo_child_price_value' => '50',
+            '_readscope_child_price_type'  => 'percent',
+            '_readscope_child_price_value' => '50',
         ]);
         $date = gmdate('Y-m-d', strtotime('+3 days'));
 
-        update_option('tourivo_settings', [
+        update_option('readscope_settings', [
             'tax_enabled'    => true,
             'tax_label'      => 'VAT',
             'tax_rate'       => 10.0,
@@ -375,13 +375,13 @@ class PricingEngineTest extends TestCase
         $this->assertTrue($res['success']);
 
         global $wpdb;
-        $booking = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tourivo_bookings WHERE id = " . (int) $res['booking_id']);
+        $booking = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}readscope_bookings WHERE id = " . (int) $res['booking_id']);
         $this->assertEquals(275.00, (float) $booking->total_amount);
         $this->assertEquals(25.00, (float) $booking->tax_amount);
         $this->assertEquals(0.00, (float) $booking->discount_amount);
         $this->assertEquals(275.00, (float) $booking->due_amount);
 
-        $item = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}tourivo_booking_items WHERE booking_id = " . (int) $res['booking_id']);
+        $item = $wpdb->get_row("SELECT * FROM {$wpdb->prefix}readscope_booking_items WHERE booking_id = " . (int) $res['booking_id']);
         $this->assertEquals(2, (int) $item->adults_count);
         $this->assertEquals(1, (int) $item->children_count);
         $this->assertEquals(1, (int) $item->infants_count);
@@ -394,20 +394,20 @@ class PricingEngineTest extends TestCase
     }
 
     /**
-     * Test (h): REST PricingController /tourivo/v1/pricing/quote endpoint computes valid quote.
+     * Test (h): REST PricingController /readscope/v1/pricing/quote endpoint computes valid quote.
      */
     public function test_rest_pricing_quote_endpoint(): void
     {
         $tourId = $this->createTour(150.0, 10, [
-            '_tourivo_child_price_type'  => 'percent',
-            '_tourivo_child_price_value' => '50',
+            '_readscope_child_price_type'  => 'percent',
+            '_readscope_child_price_value' => '50',
         ]);
         $date = gmdate('Y-m-d', strtotime('+4 days'));
 
         $container = Container::getInstance();
         $pricingController = new PricingController($container, $this->pricingService);
 
-        $request = new \WP_REST_Request('GET', '/tourivo/v1/pricing/quote');
+        $request = new \WP_REST_Request('GET', '/readscope/v1/pricing/quote');
         $request->set_query_params([
             'item_id'   => $tourId,
             'item_type' => 'tour',
@@ -429,7 +429,7 @@ class PricingEngineTest extends TestCase
     }
 
     /**
-     * Test (i): Infants do not consume capacity unless tourivo/infants_use_capacity filter is enabled.
+     * Test (i): Infants do not consume capacity unless readscope/infants_use_capacity filter is enabled.
      */
     public function test_infant_capacity_filter(): void
     {
@@ -453,7 +453,7 @@ class PricingEngineTest extends TestCase
         $this->cleanDatabaseTables();
 
         // When filter returns true, 2 adults + 1 infant = 3 capacity guests > 2 spots -> rejected
-        add_filter('tourivo/infants_use_capacity', '__return_true');
+        add_filter('readscope/infants_use_capacity', '__return_true');
 
         $res2 = $this->bookingService->createBooking($payload, false);
         $this->assertFalse($res2['success']);

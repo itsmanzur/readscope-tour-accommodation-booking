@@ -6,19 +6,19 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Admin\SettingsPage;
-use Tourivo\Common\Container;
-use Tourivo\Config\Config;
-use Tourivo\Core\Installer;
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\InventoryService;
-use Tourivo\Services\PricingService;
-use Tourivo\Shortcodes\BookingLookupShortcode;
-use Tourivo\Tests\TestCase;
+use Readscope\Admin\SettingsPage;
+use Readscope\Common\Container;
+use Readscope\Config\Config;
+use Readscope\Core\Installer;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\InventoryService;
+use Readscope\Services\PricingService;
+use Readscope\Shortcodes\BookingLookupShortcode;
+use Readscope\Tests\TestCase;
 
 class LowFixesTest extends TestCase
 {
@@ -29,11 +29,11 @@ class LowFixesTest extends TestCase
     {
         parent::setUp();
         $this->cleanDatabaseTables();
-        $GLOBALS['tourivo_mock_options']          = ['admin_email' => 'admin@example.com'];
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
-        $GLOBALS['tourivo_mock_action_callbacks'] = [];
-        $GLOBALS['tourivo_mock_is_multisite']     = false;
-        $GLOBALS['tourivo_mock_blog_log']         = [];
+        $GLOBALS['readscope_mock_options']          = ['admin_email' => 'admin@example.com'];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_action_callbacks'] = [];
+        $GLOBALS['readscope_mock_is_multisite']     = false;
+        $GLOBALS['readscope_mock_blog_log']         = [];
         $_POST = [];
         Config::flushDefaults();
 
@@ -44,7 +44,7 @@ class LowFixesTest extends TestCase
 
     protected function tearDown(): void
     {
-        $GLOBALS['tourivo_mock_is_multisite'] = false;
+        $GLOBALS['readscope_mock_is_multisite'] = false;
         $_POST = [];
         parent::tearDown();
     }
@@ -121,8 +121,8 @@ class LowFixesTest extends TestCase
 
     public function test_exclusive_tax_total_equals_sum_of_displayed_lines(): void
     {
-        update_option('tourivo_settings', ['tax_enabled' => 1, 'tax_rate' => 10.0, 'tax_mode' => 'exclusive', 'tax_applies_to' => 'all']);
-        $tour = $this->createTour(10.0, 10, ['_tourivo_child_price_type' => 'percent', '_tourivo_child_price_value' => '33.33']);
+        update_option('readscope_settings', ['tax_enabled' => 1, 'tax_rate' => 10.0, 'tax_mode' => 'exclusive', 'tax_applies_to' => 'all']);
+        $tour = $this->createTour(10.0, 10, ['_readscope_child_price_type' => 'percent', '_readscope_child_price_value' => '33.33']);
 
         $pricing = new PricingService($this->inventory);
         $quote   = $pricing->quote([
@@ -140,7 +140,7 @@ class LowFixesTest extends TestCase
 
     public function test_free_booking_requires_explicit_opt_in_and_is_settled(): void
     {
-        $free   = $this->createTour(0.0, 10, ['_tourivo_allow_free_booking' => '1']);
+        $free   = $this->createTour(0.0, 10, ['_readscope_allow_free_booking' => '1']);
         $broken = $this->createTour(0.0, 10); // price meta missing/zero without opt-in = pricing failure
 
         $ok = $this->book($free, 30);
@@ -156,8 +156,8 @@ class LowFixesTest extends TestCase
 
     public function test_free_bookings_are_exempt_from_unpaid_expiry(): void
     {
-        update_option('tourivo_settings', ['pending_expiry_hours' => 1]);
-        $free = $this->createTour(0.0, 10, ['_tourivo_allow_free_booking' => '1']);
+        update_option('readscope_settings', ['pending_expiry_hours' => 1]);
+        $free = $this->createTour(0.0, 10, ['_readscope_allow_free_booking' => '1']);
         $res  = $this->book($free, 30);
 
         global $wpdb;
@@ -171,7 +171,7 @@ class LowFixesTest extends TestCase
 
     public function test_daily_capacity_is_independent_from_group_size(): void
     {
-        $tour = $this->createTour(100.0, 4, ['_tourivo_daily_capacity' => 10]);
+        $tour = $this->createTour(100.0, 4, ['_readscope_daily_capacity' => 10]);
         $this->assertEquals(10, $this->inventory->getDefaultCapacity($tour, 'tour'));
 
         $this->assertTrue($this->book($tour, 30, ['adults' => 4, 'customer_email' => 'a@example.com'])['success']);
@@ -191,21 +191,21 @@ class LowFixesTest extends TestCase
 
     public function test_network_activation_provisions_every_site_and_restores_context(): void
     {
-        $GLOBALS['tourivo_mock_is_multisite'] = true;
-        $GLOBALS['tourivo_mock_sites']        = [2, 5, 9];
+        $GLOBALS['readscope_mock_is_multisite'] = true;
+        $GLOBALS['readscope_mock_sites']        = [2, 5, 9];
 
         Installer::activate(true);
 
         $this->assertEquals(
             ['switch:2', 'restore', 'switch:5', 'restore', 'switch:9', 'restore'],
-            $GLOBALS['tourivo_mock_blog_log']
+            $GLOBALS['readscope_mock_blog_log']
         );
     }
 
     public function test_single_site_activation_does_not_switch_blogs(): void
     {
         Installer::activate(false);
-        $this->assertEquals([], $GLOBALS['tourivo_mock_blog_log']);
+        $this->assertEquals([], $GLOBALS['readscope_mock_blog_log']);
     }
 
     // ---- number format settings
@@ -214,7 +214,7 @@ class LowFixesTest extends TestCase
     {
         $_POST = ['number_of_decimals' => '9', 'decimal_separator' => ';', 'thousand_separator' => 'x', 'currency_position' => 'middle'];
         SettingsPage::saveSettings();
-        $saved = get_option('tourivo_settings');
+        $saved = get_option('readscope_settings');
 
         $this->assertEquals(4, $saved['number_of_decimals']);
         $this->assertEquals('.', $saved['decimal_separator']);
@@ -223,7 +223,7 @@ class LowFixesTest extends TestCase
 
         $_POST = ['number_of_decimals' => '0', 'decimal_separator' => ',', 'thousand_separator' => '.'];
         SettingsPage::saveSettings();
-        $saved = get_option('tourivo_settings');
+        $saved = get_option('readscope_settings');
         $this->assertEquals(0, $saved['number_of_decimals']);
         $this->assertEquals(',', $saved['decimal_separator']);
         $this->assertEquals('.', $saved['thousand_separator']);

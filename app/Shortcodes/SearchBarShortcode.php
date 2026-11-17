@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Shortcodes;
+namespace Readscope\Shortcodes;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -11,15 +11,15 @@ if (!defined('ABSPATH')) {
 /**
  * Class SearchBarShortcode
  *
- * Shortcode: [tourivo_search_bar]
+ * Shortcode: [readscope_search_bar]
  *
- * @package Tourivo\Shortcodes
+ * @package Readscope\Shortcodes
  */
 class SearchBarShortcode
 {
     public static function register(): void
     {
-        add_shortcode('tourivo_search_bar', [self::class, 'render']);
+        add_shortcode('readscope_search_bar', [self::class, 'render']);
     }
 
     /**
@@ -31,7 +31,7 @@ class SearchBarShortcode
     public static function render(array|string $atts = []): string
     {
         ob_start();
-        tourivo_get_template('search-bar.php');
+        readscope_get_template('search-bar.php');
 
         return ob_get_clean() ?: '';
     }

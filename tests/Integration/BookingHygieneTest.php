@@ -6,17 +6,17 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Common\Container;
-use Tourivo\Database\Schema;
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\InventoryService;
-use Tourivo\Shortcodes\BookingLookupShortcode;
-use Tourivo\Support\RateLimiter;
-use Tourivo\Tests\TestCase;
+use Readscope\Common\Container;
+use Readscope\Database\Schema;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\InventoryService;
+use Readscope\Shortcodes\BookingLookupShortcode;
+use Readscope\Support\RateLimiter;
+use Readscope\Tests\TestCase;
 
 class BookingHygieneTest extends TestCase
 {
@@ -28,11 +28,11 @@ class BookingHygieneTest extends TestCase
     {
         parent::setUp();
         $this->cleanDatabaseTables();
-        $GLOBALS['tourivo_mock_options']           = [];
-        $GLOBALS['tourivo_mock_scheduled_events']  = [];
-        $GLOBALS['tourivo_mock_action_callbacks']  = [];
-        $GLOBALS['tourivo_mock_ext_object_cache']  = false;
-        $GLOBALS['tourivo_last_ajax_response']     = null;
+        $GLOBALS['readscope_mock_options']           = [];
+        $GLOBALS['readscope_mock_scheduled_events']  = [];
+        $GLOBALS['readscope_mock_action_callbacks']  = [];
+        $GLOBALS['readscope_mock_ext_object_cache']  = false;
+        $GLOBALS['readscope_last_ajax_response']     = null;
         $_POST = [];
 
         $this->inventory = new InventoryService(new InventoryRepository());
@@ -49,21 +49,21 @@ class BookingHygieneTest extends TestCase
 
     protected function tearDown(): void
     {
-        $GLOBALS['tourivo_mock_ext_object_cache'] = false;
+        $GLOBALS['readscope_mock_ext_object_cache'] = false;
         $_POST = [];
         parent::tearDown();
     }
 
     protected function settings(array $s): void
     {
-        update_option('tourivo_settings', $s);
+        update_option('readscope_settings', $s);
     }
 
     protected function emailTypes(): array
     {
         $types = [];
-        foreach ($GLOBALS['tourivo_mock_scheduled_events'] as $ev) {
-            if ($ev['hook'] === 'tourivo_process_email_delivery') {
+        foreach ($GLOBALS['readscope_mock_scheduled_events'] as $ev) {
+            if ($ev['hook'] === 'readscope_process_email_delivery') {
                 $types[] = $ev['args'][0];
             }
         }
@@ -101,7 +101,7 @@ class BookingHygieneTest extends TestCase
 
     public function test_rate_limiter_uses_atomic_counter_with_object_cache(): void
     {
-        $GLOBALS['tourivo_mock_ext_object_cache'] = true;
+        $GLOBALS['readscope_mock_ext_object_cache'] = true;
 
         $results = [];
         for ($i = 0; $i < 4; $i++) {
@@ -145,7 +145,7 @@ class BookingHygieneTest extends TestCase
         $this->assertEmpty($wpdb->bookings[$res['booking_id']]['email_verified_at']);
         $this->assertEquals(['customer_verify_email'], $this->emailTypes(), 'Only the confirmation link may be mailed; no staff alert yet.');
 
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
         $token = BookingService::generateVerificationToken($res['booking_id'], 'new@example.com');
 
         $this->assertFalse($this->bookings->verifyEmail($res['booking_code'], 'bad-token')['success']);
@@ -158,7 +158,7 @@ class BookingHygieneTest extends TestCase
         $this->assertTrue(in_array('customer_booking_received', $types, true), 'Normal received mail is released after confirmation.');
 
         // Replaying the link is harmless and does not re-send mail.
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
         $this->assertTrue($this->bookings->verifyEmail($res['booking_code'], $token)['success']);
         $this->assertEquals([], $this->emailTypes());
     }
@@ -201,7 +201,7 @@ class BookingHygieneTest extends TestCase
         global $wpdb;
         $this->assertEquals(2, (int) $wpdb->inventories["{$tour}_{$date}"]['booked_count']);
 
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
         $result = $this->bookings->expireStaleBookings();
 
         $this->assertEquals(1, $result['unverified']);
@@ -249,7 +249,7 @@ class BookingHygieneTest extends TestCase
         $res  = $this->book($tour, 25);
         $this->ageBooking($res['booking_id'], 10 * 3600);
 
-        add_filter('tourivo/expire_booking', fn () => false, 10, 3);
+        add_filter('readscope/expire_booking', fn () => false, 10, 3);
 
         $this->assertEquals(0, $this->bookings->expireStaleBookings()['pending']);
     }
@@ -285,7 +285,7 @@ class BookingHygieneTest extends TestCase
 
     protected function lastError(): array
     {
-        $r = $GLOBALS['tourivo_last_ajax_response'];
+        $r = $GLOBALS['readscope_last_ajax_response'];
         return ['status' => $r['status'] ?? 0, 'code' => $r['body']['data']['code'] ?? '', 'success' => $r['body']['success'] ?? null];
     }
 
@@ -304,7 +304,7 @@ class BookingHygieneTest extends TestCase
         BookingLookupShortcode::handleLookupAjax();
         $this->assertEquals('nonce_expired', $this->lastError()['code']);
 
-        $GLOBALS['tourivo_last_ajax_response'] = null;
+        $GLOBALS['readscope_last_ajax_response'] = null;
         $_POST = $payload + ['reason' => 'x'];
         BookingLookupShortcode::handleCancellationAjax();
         $this->assertEquals('nonce_expired', $this->lastError()['code']);
@@ -312,16 +312,16 @@ class BookingHygieneTest extends TestCase
         global $wpdb;
         $this->assertEmpty($wpdb->bookings[$res['booking_id']]['cancel_requested_at'] ?? null, 'Request without nonce must not be recorded.');
 
-        $_POST = $payload + ['nonce' => wp_create_nonce('tourivo_lookup_nonce')];
+        $_POST = $payload + ['nonce' => wp_create_nonce('readscope_lookup_nonce')];
         BookingLookupShortcode::handleLookupAjax();
-        $this->assertTrue(($GLOBALS['tourivo_last_ajax_response']['body']['success'] ?? false) === true);
+        $this->assertTrue(($GLOBALS['readscope_last_ajax_response']['body']['success'] ?? false) === true);
     }
 
     public function test_repeated_cancellation_requests_do_not_realert_admin(): void
     {
         $tour = $this->createTour(100.0, 10);
         $res  = $this->book($tour, 25, 'cx@example.com');
-        $GLOBALS['tourivo_mock_scheduled_events'] = [];
+        $GLOBALS['readscope_mock_scheduled_events'] = [];
 
         $first  = BookingLookupShortcode::processCancellationRequest($res['booking_code'], 'cx@example.com', 'change of plans');
         $second = BookingLookupShortcode::processCancellationRequest($res['booking_code'], 'cx@example.com', 'again');

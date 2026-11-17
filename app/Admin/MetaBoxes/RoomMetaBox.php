@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Admin\MetaBoxes;
+namespace Readscope\Admin\MetaBoxes;
 
-use Tourivo\Common\Abstracts\MetaBox;
-use Tourivo\PostTypes\HotelPostType;
-use Tourivo\PostTypes\RoomPostType;
-use Tourivo\Services\SeoService;
+use Readscope\Common\Abstracts\MetaBox;
+use Readscope\PostTypes\HotelPostType;
+use Readscope\PostTypes\RoomPostType;
+use Readscope\Services\SeoService;
 use WP_Post;
 use WP_Query;
 
@@ -21,11 +21,11 @@ if (!defined('ABSPATH')) {
  * Handles Room settings metabox: Parent Hotel link, Nightly price, Max capacity, Beds, Size, Quantity.
  * Also maintains the cached minimum room price on the parent Hotel post across all room lifecycle events.
  *
- * @package Tourivo\Admin\MetaBoxes
+ * @package Readscope\Admin\MetaBoxes
  */
 class RoomMetaBox extends MetaBox
 {
-    protected string $id = 'tourivo_room_settings';
+    protected string $id = 'readscope_room_settings';
     protected string $title = 'Room Configuration & Pricing';
     protected string|array $postTypes = RoomPostType::POST_TYPE;
     protected string $context = 'normal';
@@ -47,14 +47,14 @@ class RoomMetaBox extends MetaBox
 
     public function render(WP_Post $post): void
     {
-        $parentHotelId = (int) (get_post_meta($post->ID, '_tourivo_parent_hotel_id', true) ?: 0);
-        $nightlyPrice  = get_post_meta($post->ID, '_tourivo_nightly_price', true) ?: '';
-        $maxAdults     = get_post_meta($post->ID, '_tourivo_max_adults', true) ?: '2';
-        $maxChildren   = get_post_meta($post->ID, '_tourivo_max_children', true) ?: '0';
-        $maxGuests     = get_post_meta($post->ID, '_tourivo_max_guests', true) ?: '2';
-        $roomQuantity  = get_post_meta($post->ID, '_tourivo_room_quantity', true) ?: '1';
-        $roomSize      = get_post_meta($post->ID, '_tourivo_room_size', true) ?: '';
-        $bedType       = get_post_meta($post->ID, '_tourivo_bed_type', true) ?: '';
+        $parentHotelId = (int) (get_post_meta($post->ID, '_readscope_parent_hotel_id', true) ?: 0);
+        $nightlyPrice  = get_post_meta($post->ID, '_readscope_nightly_price', true) ?: '';
+        $maxAdults     = get_post_meta($post->ID, '_readscope_max_adults', true) ?: '2';
+        $maxChildren   = get_post_meta($post->ID, '_readscope_max_children', true) ?: '0';
+        $maxGuests     = get_post_meta($post->ID, '_readscope_max_guests', true) ?: '2';
+        $roomQuantity  = get_post_meta($post->ID, '_readscope_room_quantity', true) ?: '1';
+        $roomSize      = get_post_meta($post->ID, '_readscope_room_size', true) ?: '';
+        $bedType       = get_post_meta($post->ID, '_readscope_bed_type', true) ?: '';
 
         // Query available hotels for dropdown
         $hotelsQuery = new WP_Query([
@@ -89,17 +89,17 @@ class RoomMetaBox extends MetaBox
             return;
         }
 
-        $oldParentHotelId = (int) (get_post_meta($postId, '_tourivo_parent_hotel_id', true) ?: 0);
+        $oldParentHotelId = (int) (get_post_meta($postId, '_readscope_parent_hotel_id', true) ?: 0);
 
         $fields = [
-            '_tourivo_parent_hotel_id' => 'absint',
-            '_tourivo_nightly_price'   => static fn ($v) => number_format(max(0.0, (float) str_replace(',', '', (string) $v)), 2, '.', ''),
-            '_tourivo_max_adults'      => 'absint',
-            '_tourivo_max_children'    => 'absint',
-            '_tourivo_max_guests'      => 'absint',
-            '_tourivo_room_quantity'   => 'absint',
-            '_tourivo_room_size'       => 'sanitize_text_field',
-            '_tourivo_bed_type'        => 'sanitize_text_field',
+            '_readscope_parent_hotel_id' => 'absint',
+            '_readscope_nightly_price'   => static fn ($v) => number_format(max(0.0, (float) str_replace(',', '', (string) $v)), 2, '.', ''),
+            '_readscope_max_adults'      => 'absint',
+            '_readscope_max_children'    => 'absint',
+            '_readscope_max_guests'      => 'absint',
+            '_readscope_room_quantity'   => 'absint',
+            '_readscope_room_size'       => 'sanitize_text_field',
+            '_readscope_bed_type'        => 'sanitize_text_field',
         ];
 
         // phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Nonce and capability verified in MetaBox::handleSave(); each field is sanitized by its type below.
@@ -111,7 +111,7 @@ class RoomMetaBox extends MetaBox
             }
         }
 
-        $newParentHotelId = isset($_POST['_tourivo_parent_hotel_id']) ? absint(wp_unslash($_POST['_tourivo_parent_hotel_id'])) : 0;
+        $newParentHotelId = isset($_POST['_readscope_parent_hotel_id']) ? absint(wp_unslash($_POST['_readscope_parent_hotel_id'])) : 0;
         // phpcs:enable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
         if ($newParentHotelId > 0) {
@@ -126,7 +126,7 @@ class RoomMetaBox extends MetaBox
         // Invalidate SEO availability transient cache for room
         SeoService::clearItemAvailabilityCache($postId, 'room');
 
-        do_action('tourivo_save_room_meta', $postId, $post);
+        do_action('readscope_save_room_meta', $postId, $post);
     }
 
     /**
@@ -138,7 +138,7 @@ class RoomMetaBox extends MetaBox
             return;
         }
 
-        $parentHotelId = (int) get_post_meta($post->ID, '_tourivo_parent_hotel_id', true);
+        $parentHotelId = (int) get_post_meta($post->ID, '_readscope_parent_hotel_id', true);
         if ($parentHotelId > 0) {
             self::updateHotelMinPrice($parentHotelId);
         }
@@ -153,7 +153,7 @@ class RoomMetaBox extends MetaBox
             return;
         }
 
-        $parentHotelId = (int) get_post_meta($postId, '_tourivo_parent_hotel_id', true);
+        $parentHotelId = (int) get_post_meta($postId, '_readscope_parent_hotel_id', true);
         if ($parentHotelId > 0) {
             self::updateHotelMinPrice($parentHotelId);
         }
@@ -168,7 +168,7 @@ class RoomMetaBox extends MetaBox
             return;
         }
 
-        $parentHotelId = (int) get_post_meta($postId, '_tourivo_parent_hotel_id', true);
+        $parentHotelId = (int) get_post_meta($postId, '_readscope_parent_hotel_id', true);
         if ($parentHotelId > 0) {
             self::updateHotelMinPrice($parentHotelId);
         }
@@ -183,7 +183,7 @@ class RoomMetaBox extends MetaBox
             return;
         }
 
-        $parentHotelId = (int) get_post_meta($postId, '_tourivo_parent_hotel_id', true);
+        $parentHotelId = (int) get_post_meta($postId, '_readscope_parent_hotel_id', true);
         if ($parentHotelId > 0) {
             self::updateHotelMinPrice($parentHotelId);
         }
@@ -207,8 +207,8 @@ class RoomMetaBox extends MetaBox
         $minPrice = $wpdb->get_var($wpdb->prepare(
             "SELECT MIN(CAST(pm_price.meta_value AS DECIMAL(10,2))) 
              FROM {$wpdb->posts} p
-             INNER JOIN {$wpdb->postmeta} pm_hotel ON p.ID = pm_hotel.post_id AND pm_hotel.meta_key = '_tourivo_parent_hotel_id'
-             INNER JOIN {$wpdb->postmeta} pm_price ON p.ID = pm_price.post_id AND pm_price.meta_key = '_tourivo_nightly_price'
+             INNER JOIN {$wpdb->postmeta} pm_hotel ON p.ID = pm_hotel.post_id AND pm_hotel.meta_key = '_readscope_parent_hotel_id'
+             INNER JOIN {$wpdb->postmeta} pm_price ON p.ID = pm_price.post_id AND pm_price.meta_key = '_readscope_nightly_price'
              WHERE p.post_type = %s AND p.post_status = 'publish' AND pm_hotel.meta_value = %d AND CAST(pm_price.meta_value AS DECIMAL(10,2)) > 0",
             RoomPostType::POST_TYPE,
             $hotelId
@@ -216,9 +216,9 @@ class RoomMetaBox extends MetaBox
         // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
         if ($minPrice !== null && is_numeric($minPrice)) {
-            update_post_meta($hotelId, '_tourivo_min_price', (float) $minPrice);
+            update_post_meta($hotelId, '_readscope_min_price', (float) $minPrice);
         } else {
-            delete_post_meta($hotelId, '_tourivo_min_price');
+            delete_post_meta($hotelId, '_readscope_min_price');
         }
     }
 }

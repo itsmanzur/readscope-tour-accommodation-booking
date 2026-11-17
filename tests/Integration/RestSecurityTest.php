@@ -5,16 +5,16 @@
 
 declare(strict_types=1);
 
-namespace Tourivo\Tests\Integration;
+namespace Readscope\Tests\Integration;
 
-use Tourivo\Common\Container;
-use Tourivo\Controllers\Api\BookingController;
-use Tourivo\Repositories\InventoryRepository;
-use Tourivo\Services\BookingService;
-use Tourivo\Services\EmailService;
-use Tourivo\Services\InventoryService;
-use Tourivo\Support\ClientIp;
-use Tourivo\Tests\TestCase;
+use Readscope\Common\Container;
+use Readscope\Controllers\Api\BookingController;
+use Readscope\Repositories\InventoryRepository;
+use Readscope\Services\BookingService;
+use Readscope\Services\EmailService;
+use Readscope\Services\InventoryService;
+use Readscope\Support\ClientIp;
+use Readscope\Tests\TestCase;
 use WP_REST_Request;
 
 class RestSecurityTest extends TestCase
@@ -42,7 +42,7 @@ class RestSecurityTest extends TestCase
         $tourId = $this->createTour(200.0, 10);
         $date = gmdate('Y-m-d', strtotime('+35 days'));
 
-        $request = new WP_REST_Request('POST', '/tourivo/v1/bookings/direct');
+        $request = new WP_REST_Request('POST', '/readscope/v1/bookings/direct');
         $request->set_body_params([
             'item_id'        => $tourId,
             'item_type'      => 'tour',
@@ -62,7 +62,7 @@ class RestSecurityTest extends TestCase
         if ($wpdb) {
             $data = $response->get_data();
             $booking = $wpdb->get_row($wpdb->prepare(
-                "SELECT * FROM {$wpdb->prefix}tourivo_bookings WHERE id = %d",
+                "SELECT * FROM {$wpdb->prefix}readscope_bookings WHERE id = %d",
                 $data['booking_id']
             ));
             $this->assertEquals('pending', $booking->booking_status);
@@ -76,9 +76,9 @@ class RestSecurityTest extends TestCase
      */
     public function test_honeypot_triggers_block(): void
     {
-        $request = new WP_REST_Request('POST', '/tourivo/v1/bookings/direct');
+        $request = new WP_REST_Request('POST', '/readscope/v1/bookings/direct');
         $request->set_body_params([
-            'tourivo_hp_check' => 'I am a bot',
+            'readscope_hp_check' => 'I am a bot',
             'customer_name'    => 'Bot user',
         ]);
 
@@ -96,12 +96,12 @@ class RestSecurityTest extends TestCase
         $date = gmdate('Y-m-d', strtotime('+50 days'));
 
         $ip = ClientIp::get();
-        $rateLimitKey = 'tourivo_rl_booking_' . md5($ip);
+        $rateLimitKey = 'readscope_rl_booking_' . md5($ip);
         for ($i = 0; $i < 5; $i++) {
-            \Tourivo\Support\RateLimiter::hit($rateLimitKey, 5, 600); // Pre-fill 5 attempts
+            \Readscope\Support\RateLimiter::hit($rateLimitKey, 5, 600); // Pre-fill 5 attempts
         }
 
-        $request = new WP_REST_Request('POST', '/tourivo/v1/bookings/direct');
+        $request = new WP_REST_Request('POST', '/readscope/v1/bookings/direct');
         $request->set_body_params([
             'item_id'        => $tourId,
             'check_in'       => $date,
@@ -123,13 +123,13 @@ class RestSecurityTest extends TestCase
         // 1. Spoofed CF header from non-CF remote IP
         $_SERVER['REMOTE_ADDR'] = '1.2.3.4';
         $_SERVER['HTTP_CF_CONNECTING_IP'] = '5.6.7.8';
-        update_option('tourivo_settings', ['proxy_mode' => 'cloudflare']);
+        update_option('readscope_settings', ['proxy_mode' => 'cloudflare']);
         $this->assertEquals('1.2.3.4', ClientIp::get());
 
         // 2. Spoofed XFF header from untrusted proxy
         $_SERVER['REMOTE_ADDR'] = '1.2.3.4';
         $_SERVER['HTTP_X_FORWARDED_FOR'] = '5.6.7.8';
-        update_option('tourivo_settings', ['proxy_mode' => 'reverse_proxy', 'trusted_proxies' => '10.0.0.0/8']);
+        update_option('readscope_settings', ['proxy_mode' => 'reverse_proxy', 'trusted_proxies' => '10.0.0.0/8']);
         $this->assertEquals('1.2.3.4', ClientIp::get());
     }
 }
