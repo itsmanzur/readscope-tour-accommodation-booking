@@ -21,6 +21,7 @@ class LegacyMigrator
 {
     public const DONE_OPTION = 'readscope_legacy_migrated';
     public const LOCK_OPTION = 'readscope_legacy_migrating';
+    public const ERROR_OPTION = 'readscope_legacy_last_error';
 
     /** @var string[] Database errors seen while running. */
     private static array $errors = [];
@@ -110,6 +111,8 @@ class LegacyMigrator
         wp_cache_flush();
 
         if (self::$errors) {
+            update_option(self::ERROR_OPTION, substr(implode(' | ', array_unique(self::$errors)), 0, 500), false);
+
             if (defined('WP_DEBUG_LOG') && WP_DEBUG_LOG) {
                 error_log('Readscope 1.0.x data migration will retry: ' . implode(' | ', array_unique(self::$errors))); // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Only when WP_DEBUG_LOG is on; tells the owner why the migration is retrying.
             }
@@ -117,7 +120,31 @@ class LegacyMigrator
             return false;
         }
 
+        delete_option(self::ERROR_OPTION);
+
         return true;
+    }
+
+    /**
+     * True when a run failed and old data is still waiting to be moved.
+     */
+    public static function hasFailed(): bool
+    {
+        return get_option(self::DONE_OPTION) === false && get_option(self::ERROR_OPTION) !== false;
+    }
+
+    public static function lastError(): string
+    {
+        return (string) get_option(self::ERROR_OPTION, '');
+    }
+
+    /**
+     * Try again now, clearing a lock left behind by a request that died.
+     */
+    public static function retry(): void
+    {
+        delete_option(self::LOCK_OPTION);
+        self::maybeRun();
     }
 
     /**
@@ -143,7 +170,7 @@ class LegacyMigrator
     {
         global $wpdb;
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared -- One-time rename of this plugin's own data; callers pass prepared SQL or fixed table names.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- One-time rename of this plugin's own data; callers pass prepared SQL or fixed table names.
         if ($wpdb->query($query) === false) {
             self::$errors[] = (string) $wpdb->last_error;
         }

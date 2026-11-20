@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       The Readscope Tour and Accommodation Booking
  * Description:       The Next-Gen Travel, Tour & Accommodation Booking Engine for WordPress.
- * Version:           1.1.0
+ * Version:           1.1.1
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            The Readscope
@@ -20,7 +20,7 @@ if (!defined('ABSPATH')) {
 }
 
 // 1. Define Global Constants
-define('READSCOPE_VERSION', '1.1.0');
+define('READSCOPE_VERSION', '1.1.1');
 // Integer that only grows when the public hooks / helpers add-ons rely on change. Readscope Booking Pro compares it, not the version.
 define('READSCOPE_API_LEVEL', 1);
 define('READSCOPE_MIN_PHP_VER', '8.0');

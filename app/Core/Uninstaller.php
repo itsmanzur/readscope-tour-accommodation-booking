@@ -59,6 +59,9 @@ class Uninstaller
             delete_option('readscope_db_version');
             delete_option('readscope_flush_rewrite');
             delete_option('readscope_notification_email');
+            delete_option('readscope_legacy_migrated');
+            delete_option('readscope_legacy_migrating');
+            delete_option('readscope_legacy_last_error');
 
             // Purge rate-limiting, hold sessions, and cached transients
             // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching

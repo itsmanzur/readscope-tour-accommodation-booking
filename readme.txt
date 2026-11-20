@@ -4,7 +4,7 @@ Tags: travel, tour booking, hotel booking, booking engine, accommodation
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -128,6 +128,11 @@ Readscope Booking is engineered from the ground up for strict privacy regulation
 
 == Changelog ==
 
+= 1.1.1 =
+* Fix: the stored plugin version now updates after every update, not only on activation.
+* If moving your 1.0.x data cannot finish, an admin notice now shows the reason and a "Retry now" button. Nothing is ever deleted.
+* Fix: after moving old data, Elementor widgets from 1.0.x show their content again (Elementor render cache is cleared).
+
 = 1.1.0 =
 * Internal names changed from "tourivo" to "readscope" (shortcodes, database tables, post types, options, hooks, CSS classes) to match the plugin name.
 * Automatic one-time migration of all existing data: bookings, listings, settings, capabilities and scheduled jobs are kept.
@@ -150,6 +155,9 @@ Readscope Booking is engineered from the ground up for strict privacy regulation
 * Bundled Anek Bangla font for Bengali and Latin text.
 
 == Upgrade Notice ==
+
+= 1.1.1 =
+Maintenance release: safer upgrade from 1.0.x, with a retry button if the data move needs help.
 
 = 1.1.0 =
 Names changed from "tourivo" to "readscope". Your data is migrated automatically on update; take a backup first as with any update.
